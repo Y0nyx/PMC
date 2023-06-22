@@ -1,5 +1,12 @@
 # PMC
 
+## Commencer à coder 
+Il faut s'assurer que le requirements.txt en utilisant la commande
+
+`pip install -r requirements.txt`
+
+** Il faut essayer d'éviter d'ajouter des librairie pour rendre notre code le plus léger.
+
 ## Flux de Travail (Workflow)
 
 Durant le développement du PMC, nous allons utiliser la méthodologie GitFlow, qui est décrite en détail dans ce tutoriel: [GitFlow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).
