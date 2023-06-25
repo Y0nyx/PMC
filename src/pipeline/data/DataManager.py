@@ -1,20 +1,62 @@
+import pathlib
+import yaml
+import numpy as np
+from src.pipeline.camera.cameraManager import CameraManager
+from src.common.image.Image import Image
+
 class DataManager:
-    def __init__(self):
+
+    def __init__(self, yaml_path):
         """
         Initializes the DataManager.
         """
-        # Add initialization code here
+        self._yaml_path = yaml_path
+        self._param = _read_yaml(self)
 
-    def concate_img(self, Images, size):
+
+    def concate_img(self) -> Image:
         """
-        Concatenates multiple images together with the desired size.
-
-        Args:
-            Images (list): List of Image objects.
-            size (tuple): Desired size of the concatenated image.
-
-        Returns:
-            Image: The concatenated image.
+        Concatenates the images from the CameraManager into one Image object.
+        :param self:
+        :Returns:
+            Image: Image object containing the value attribute of all images concatenated as a one dimension NumPy array.
         """
-        # Add concatenation logic here
-        # Return the concatenated image
+
+        # Get the CameraManager Instance
+        camera_manager = CameraManager.getInstance()
+        
+        #Get all the images from the CameraManager
+        images = camera_manager.get_all_img()
+
+        #Create a null ndArray that will contain all the image values to be concatenated
+        concatenated_image_values = np.empty()
+
+        # TODO: Implement different concatenating algorithms to fit the self._param attribute
+
+        # Iterate over the list of images
+        for img in images:
+            concatenated_image_values = np.concatenate((concatenated_image_values, img.value), axis=1)
+
+        #Create the Image object containing the concatenated values
+        concatenated_images = Image(concatenated_image_values)
+
+        return concatenated_images
+
+
+    def _read_yaml(self):
+        """
+        Function to read yaml
+        :param self: 
+        :return: None
+        """
+
+        with open(self.yaml_path, 'r') as file:
+            try:
+
+                self.param = yaml.safe_load(file)
+
+            except yaml.YAMLError as exc:
+
+                print(exc)
+        
+
