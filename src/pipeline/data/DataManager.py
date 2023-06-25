@@ -1,7 +1,7 @@
 import pathlib
 import yaml
 import numpy as np
-from src.pipeline.camera.cameraManager import CameraManager
+from src.pipeline.camera.cameraManager import CameraManager #May have to be modified depending on implementation
 from src.common.image.Image import Image
 
 class DataManager:
