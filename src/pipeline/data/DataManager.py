@@ -52,11 +52,8 @@ class DataManager:
 
         with open(self.yaml_path, 'r') as file:
             try:
-
                 self.param = yaml.safe_load(file)
-
             except yaml.YAMLError as exc:
-
                 print(exc)
         
 
