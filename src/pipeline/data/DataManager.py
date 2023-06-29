@@ -6,12 +6,13 @@ from src.common.image.Image import Image
 
 class DataManager:
 
-    def __init__(self, yaml_path):
+    def __init__(self, yaml_path: Path) -> None:
         """
         Initializes the DataManager.
         """
         self._yaml_path = yaml_path
-        self._param = _read_yaml(self)
+        self._param = _read_yaml()
+        self._camera_manager = CameraManager.get_instance();
 
 
     def concate_img(self) -> Image:
@@ -21,12 +22,9 @@ class DataManager:
         :Returns:
             Image: Image object containing the value attribute of all images concatenated as a one dimension NumPy array.
         """
-
-        # Get the CameraManager Instance
-        camera_manager = CameraManager.getInstance()
         
         #Get all the images from the CameraManager
-        images = camera_manager.get_all_img()
+        images = self._camera_manager.get_all_img()
 
         #Create a null ndArray that will contain all the image values to be concatenated
         concatenated_image_values = np.empty()
@@ -43,7 +41,7 @@ class DataManager:
         return concatenated_images
 
 
-    def _read_yaml(self):
+    def _read_yaml(self) -> None:
         """
         Function to read yaml
         :param self: 
