@@ -21,10 +21,15 @@ class NNManager:
         return self.array_NeuralNetwork[index_NN].predict(features)    # predict() est un placeholder pour la vraie method
 
     def trains(self):
-        for nn in self.array_NeuralNetwork:                            # Assomption que plusieurs NN seront entraînés en même temps
+        for nn in self.array_NeuralNetwork:                            # Assumption que plusieurs NN seront entraînés en même temps
             nn.train()                                                 # train() est un placeholder pour la vraie method
 
     def trains(self, index_NN):
         if index_NN < 0 or index_NN >= len(self.array_NeuralNetwork):
             return
         self.array_NeuralNetwork[index_NN].train()                     # train() est un placeholder pour la vraie method
+
+    def get_state(self):
+        if NNManager.instance is None:
+            return None
+        return self.NeuralNetworkState                                 # self.NeuralNetworkState est un placeholder pour le vrai enum
