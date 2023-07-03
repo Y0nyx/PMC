@@ -1,11 +1,14 @@
 # PMC
-
 ## Commencer à coder 
 Il faut s'assurer que le requirements.txt en utilisant la commande
 
 `pip install -r requirements.txt`
 
 ** Il faut essayer d'éviter d'ajouter des librairie pour rendre notre code le plus léger.
+
+Pour mettre le requirements a jours, veiller utiliser la librairie pipreqs avec cette commande. Cela va scanner le projet entièrement et rajouter les librairie nécessaire.
+
+`pipreqs /home/project/location`
 
 ## Flux de Travail (Workflow)
 
