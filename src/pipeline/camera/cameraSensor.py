@@ -1,6 +1,6 @@
 from src.common.image.Image import Image
 from src.pipeline.camera.sensorState import SensorState
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class CameraSensor(ABC):
@@ -11,6 +11,7 @@ class CameraSensor(ABC):
         """
         pass
 
+    @abstractmethod
     def get_img(self) -> Image:
         """
         function to get image from sensor
@@ -18,6 +19,7 @@ class CameraSensor(ABC):
         """
         pass
 
+    @abstractmethod
     def get_state(self) -> SensorState:
         """
         function to get the state of the sensor
