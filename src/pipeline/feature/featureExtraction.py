@@ -14,19 +14,17 @@ class FeatureExtraction(ABC):
     _name: str
 
     def __init__(self) -> None:
+        """
+        function of initiation of a Feature Extraction
+        return: None
+        """
         pass
 
     @abstractmethod
     def get_feature(self, img: Image) -> Tensor:
         """
         get feature from the neural network
-        Parameters
-        ----------
-        img
-
-        Returns
-        -------
-        Tensor
+        :return: Tensor
         """
         pass
 
@@ -36,16 +34,13 @@ class FeatureExtraction(ABC):
     def get_name(self) -> str:
         """
         get the name of the neural network
-        Returns
-        -------
-        str
+        :return: str
         """
         return self._name
 
     def _read_yaml(self) -> None:
         """
-            Function to read yaml
-        :param self:
+        Function to read yaml
         :return: None
         """
         with open(self._yaml_path, 'r') as file:

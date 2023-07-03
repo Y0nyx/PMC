@@ -19,8 +19,8 @@ if __name__ == '__main__':
     features = featureExtraction.get_feature(input_image)
 
     if features is None:
-        print('didnt work')
+        print('Failed to extract features')
     else:
-        print('succes')
+        print('Extracted features successfully')
 
 

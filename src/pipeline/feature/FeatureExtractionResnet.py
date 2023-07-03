@@ -11,11 +11,15 @@ from src.common.neuralNetwork.neuralNetworkState import NeuralNetworkState
 
 
 class FeatureExtractionResnet(FeatureExtraction, ABC):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._state = NeuralNetworkState.INIT
-        self._model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
-        self._state = NeuralNetworkState.READY
+        try:
+            self._model = resnet50(weights=ResNet50_Weights.IMAGENET1K_V1)
+            self._state = NeuralNetworkState.READY
+        except Exception as ex:
+            print(ex.args)
+            self._state = NeuralNetworkState.ERROR
 
     def get_feature(self, img: Image) -> Tensor:
         try:
