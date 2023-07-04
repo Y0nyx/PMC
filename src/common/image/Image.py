@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 import numpy as np
+import cv2
 
 
 def _validate_img(img: np.ndarray) -> bool:
     return True
-
 
 @dataclass
 class Image:
@@ -43,5 +43,13 @@ class Image:
             self._img = img
         else:
             raise Exception("Not valid image")
+
+    def get_size(self):
+        height, width, channels = self.image.shape
+        return channels, height, width
+
+    def resize(self, width, height):
+        resized_image = cv2.resize(self.image, (width, height))
+        return Image(resized_image)
 
 
