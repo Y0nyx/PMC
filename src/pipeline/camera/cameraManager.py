@@ -2,14 +2,15 @@ from src.common.image.Image import Image
 from src.pipeline.camera.cameraSensor import CameraSensor
 from src.pipeline.camera.sensorState import SensorState
 from typing import List
+from warnings import warn
 
 
 class CameraManager:
-    nbr_camera = 1
-    __instance = None
+    _instance = None
 
-    def __init__(self, yaml_file):
+    def __init__(self, yaml_file) -> None:
         self.yaml_file = yaml_file
+        self.nbr_camera = 1
         self.cameras = []
         self.read_yaml()
         self.state = SensorState.INIT
@@ -26,18 +27,22 @@ class CameraManager:
                 self.cameras.append(camera)
                 return True
             else:
-                print(f"Erreur : L'objet {camera} n'est pas une instance de CameraSensor.")
+                warn("Erreur : L'objet {camera} n'est pas une instance de CameraSensor.")
                 return False
-            
+
     def remove_camera(self, index_camera):
         if index_camera < len(self.cameras):
             del self.cameras[index_camera]
             return True
         else:
-            print("Erreur : Index de caméra invalide.")
+            warn("Erreur : Index de caméra invalide.")
             return False
 
     def get_all_img(self: List[CameraSensor]) -> List[Image]:
+        """
+        function to get all the image of all camera
+        :return: image
+        """
         images = []
         for camera in self:
             image = camera.get_img()
@@ -45,11 +50,15 @@ class CameraManager:
             return images
 
     def get_img(self, index_camera) -> Image:
+        """
+        function to gat the image of a camera
+        :return: image
+        """
         if 0 <= index_camera < len(self):
             camera = self[index_camera]
             return camera.get_img()
         else:
-            print("Erreur : Index de caméra invalide.")
+            warn("Erreur : Index de caméra invalide.")
             return None
 
     def get_state(self) -> SensorState:
@@ -71,4 +80,4 @@ class CameraManager:
                     camera = CameraSensor(camera_id)
                     self.add_camera(camera)
             except yaml.YAMLError as e:
-                print(f"Erreur lors de la lecture du fichier YAML : {e}")
+                warn("Erreur lors de la lecture du fichier YAML : {e}")

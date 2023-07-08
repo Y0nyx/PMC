@@ -6,6 +6,7 @@ import cv2
 def _validate_img(img: np.ndarray) -> bool:
     return True
 
+
 @dataclass
 class Image:
     """
@@ -49,7 +50,5 @@ class Image:
         return channels, height, width
 
     def resize(self, width, height):
-        resized_image = cv2.resize(self.image, (width, height))
-        return Image(resized_image)
-
-
+        cv2.resize(self.image, (width, height))
+        return True
