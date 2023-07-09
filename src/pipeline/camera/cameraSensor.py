@@ -1,21 +1,20 @@
 from src.common.image.Image import Image
 from src.pipeline.camera.sensorState import SensorState
-from abc import ABC
+from abc import ABC, abstractmethod
 
 
 class CameraSensor(ABC):
-    def __init__(self) -> None:
+    def __init__(self, camera_id, state) -> None:
         """
         function of initiation of a Camera Sensor
         return: None
         """
-        pass
+        self.state = state
+        self.camera_id = camera_id
+        self.is_active = False
 
+    @abstractmethod
     def get_img(self) -> Image:
-        """
-        function to get image from sensor
-        :return: Image
-        """
         pass
 
     def get_state(self) -> SensorState:
@@ -23,4 +22,4 @@ class CameraSensor(ABC):
         function to get the state of the sensor
         :return: SensorState
         """
-        pass
+        return self.state.value
