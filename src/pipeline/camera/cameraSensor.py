@@ -1,13 +1,6 @@
-<<<<<<< HEAD
-from src.common.image.Image import Image
-from src.pipeline.camera.sensorState import SensorState
-from abc import ABC, abstractmethod
-
-=======
 from common.image.Image import Image
 from pipeline.camera.sensorState import SensorState
 from abc import ABC, abstractmethod
->>>>>>> data_manager
 
 class CameraSensor(ABC):
     def __init__(self, camera_id=0, state=SensorState.INIT) -> None:
