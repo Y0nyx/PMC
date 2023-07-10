@@ -2,15 +2,16 @@ import yaml
 from torch import Tensor
 from pathlib import Path
 from abc import ABC, abstractmethod
+from typing import Dict
 
-from src.common.image.Image import Image
-from src.common.neuralNetwork.neuralNetworkState import NeuralNetworkState
+from common.image.Image import Image
+from common.neuralNetwork.neuralNetworkState import NeuralNetworkState
 
 
 class FeatureExtraction(ABC):
     _state: NeuralNetworkState
     _yaml_path: Path
-    _param: {}
+    _param: Dict[str, any]
     _name: str
 
     def __init__(self) -> None:
