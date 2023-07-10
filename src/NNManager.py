@@ -8,6 +8,7 @@ class NNManager:
     def get_instance():
         if NNManager.instance is None:
             NNManager.instance = NNManager()
+        print("Hello get_instance")
         return NNManager.instance
 
     def predicts(self, features):
