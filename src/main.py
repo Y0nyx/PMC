@@ -1,7 +1,12 @@
-from pipeline.data import DataManager
+from NNManager import NNManager
 
 print("Hello world")
 
-dataManager = DataManager.DataManager("")
+#dataManager = DataManager.DataManager("")
 
-print(dataManager.concate_img())
+nnmanager = NNManager.get_instance()
+
+
+print("dataManager.concate_img()")
+
+nnmanager.predicts()

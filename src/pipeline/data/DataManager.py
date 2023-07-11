@@ -7,17 +7,24 @@ from ..camera.webcamCamera import WebcamCamera
 from ..camera.sensorState import SensorState
 
 class DataManager:
+    instance = None
 
-    def __init__(self, yaml_path: Path) -> None:
+    def __init__(self, yaml_path: Path = "") -> None:
         """
         Initializes the DataManager.
         """
         self._yaml_path = yaml_path
         self._param = self._read_yaml()
-        self._camera_manager = CameraManager.get_instance("");
+        self._camera_manager = CameraManager.get_instance("")
         webcamCamera = WebcamCamera(0, SensorState.INIT)
         self._camera_manager.add_camera(webcamCamera)
 
+    @staticmethod
+    def get_instance():
+        if DataManager.instance is None:
+            DataManager.instance = DataManager()
+        print("Hello get_instance")
+        return DataManager.instance
 
     def concate_img(self) -> Image:
         """

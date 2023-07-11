@@ -1,13 +1,14 @@
 from torch import Tensor
 from  typing import List
 from .featureExtraction import FeatureExtraction
-from ..data.dataManager import DataManager
+from ..data.DataManager import DataManager
 from common.image.Image import Image
 
 
 class FeatureExtractionManager:
     _featureExtractions: List[FeatureExtraction]
     _dataManager: DataManager
+    instance = None
 
     def __init__(self) -> None:
         """
@@ -15,6 +16,13 @@ class FeatureExtractionManager:
         :return: None
         """
         self._dataManager = DataManager.get_instance()
+
+    @staticmethod
+    def get_instance():
+        if FeatureExtractionManager.instance is None:
+            FeatureExtractionManager.instance = FeatureExtractionManager()
+        print("Hello get_instance")
+        return FeatureExtractionManager.instance
 
     def get_all_features(self) -> List[Tensor]:
         """

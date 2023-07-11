@@ -1,8 +1,12 @@
+from pipeline.feature.featureExtractionManager import FeatureExtractionManager
+
+
 class NNManager:
     instance = None
 
     def __init__(self):
         self.array_NeuralNetwork = []
+        self._featureExtractionManager = FeatureExtractionManager.get_instance()
 
     @staticmethod
     def get_instance():
@@ -10,13 +14,16 @@ class NNManager:
             NNManager.instance = NNManager()
         print("Hello get_instance")
         return NNManager.instance
-
-    def predicts(self, features):
+    
+    def predicts(self):
+        features = self._featureExtractionManager.get_all_features()
         if not self.array_NeuralNetwork:
             return None
-        return self.array_NeuralNetwork[0].predict(features)           # predict() est un placeholder pour la vraie method
+        #return self.array_NeuralNetwork[0].predict(features)           # predict() est un placeholder pour la vraie method
+        return print("ta mère")
 
-    def predicts(self, index_NN, features):
+    def predicts(self, index_NN):
+        features = self._featureExtractionManager.get_all_features(index_NN)
         if index_NN < 0 or index_NN >= len(self.array_NeuralNetwork):
             return None
         return self.array_NeuralNetwork[index_NN].predict(features)    # predict() est un placeholder pour la vraie method
