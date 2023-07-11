@@ -7,10 +7,10 @@ from PIL import Image as PILImage
 import torchvision.models as models
 from torchvision import transforms
 
-from src.common.image.Image import Image
+from common.image.Image import Image
 
 
-def get_feat_vector(img: Image, model: models) -> Tensor:
+def get_feat_vector(img: [Image], model: models) -> Tensor:
     """
     function to get the feature at the avgpool
     Input:
@@ -25,10 +25,12 @@ def get_feat_vector(img: Image, model: models) -> Tensor:
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
     # Process img with the transforms then unsqueeze it to be able to feed it to the model
-    input_batch = preprocess(PILImage.fromarray(np.asarray(img.value))).unsqueeze(0)
+    # Todo: faire le code pour avoir plusieurs images
+    input_batch = preprocess(PILImage.fromarray(np.asarray(img[0].value))).unsqueeze(0)
 
     # Construct a new model by removing layers after avgpool
     new_model = nn.Sequential(*list(model.children())[:-2])
-
     with torch.no_grad():
-        return new_model(input_batch)
+        model = new_model(input_batch)
+        print(model)
+        return model

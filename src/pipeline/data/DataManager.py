@@ -26,7 +26,7 @@ class DataManager:
         print("Hello get_instance")
         return DataManager.instance
 
-    def concate_img(self) -> Image:
+    def concate_img(self) -> [Image]:
         """
         Concatenates the images from the CameraManager into one Image object.
         :param self:
@@ -48,7 +48,7 @@ class DataManager:
         #Create the Image object containing the concatenated values
         concatenated_images = Image(concatenated_image_values)
 
-        return concatenated_images
+        return images
 
 
     def _read_yaml(self) -> None:

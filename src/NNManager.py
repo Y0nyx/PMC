@@ -20,9 +20,9 @@ class NNManager:
         if not self.array_NeuralNetwork:
             return None
         #return self.array_NeuralNetwork[0].predict(features)           # predict() est un placeholder pour la vraie method
-        return print("ta mère")
+        return features
 
-    def predicts(self, index_NN):
+    def predicts_index(self, index_NN):
         features = self._featureExtractionManager.get_all_features(index_NN)
         if index_NN < 0 or index_NN >= len(self.array_NeuralNetwork):
             return None
@@ -32,7 +32,7 @@ class NNManager:
         for nn in self.array_NeuralNetwork:                            # Assumption que plusieurs NN seront entraînés en même temps
             nn.train()                                                 # train() est un placeholder pour la vraie method
 
-    def trains(self, index_NN):
+    def trains_index(self, index_NN):
         if index_NN < 0 or index_NN >= len(self.array_NeuralNetwork):
             return
         self.array_NeuralNetwork[index_NN].train()                     # train() est un placeholder pour la vraie method

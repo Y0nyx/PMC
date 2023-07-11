@@ -19,8 +19,4 @@ class CameraSensor(ABC):
 
     @abstractmethod
     def get_state(self) -> SensorState:
-        """
-        function to get the state of the sensor
-        :return: SensorState
-        """
-        return self.state.value
+        pass

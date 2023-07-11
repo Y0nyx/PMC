@@ -1,5 +1,6 @@
 from common.image.Image import Image
 from pipeline.camera.cameraSensor import CameraSensor
+from .sensorState import SensorState
 import cv2
 import warnings
 
@@ -29,3 +30,10 @@ class WebcamCamera(CameraSensor):
         else:
             warnings.warn("Erreur : La caméra n'est pas activée.")
             return None
+
+    def get_state(self) -> SensorState:
+        """
+        function to get the state of the sensor
+        :return: SensorState
+        """
+        return self.state.value

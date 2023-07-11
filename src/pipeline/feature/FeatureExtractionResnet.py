@@ -4,10 +4,10 @@ from torch import Tensor
 from torchvision.models import resnet50
 from torchvision.models.resnet import ResNet50_Weights
 
-from src.common.image.Image import Image
-from src.tools.featureExtraction.featureVector import get_feat_vector
-from src.pipeline.feature.featureExtraction import FeatureExtraction
-from src.common.neuralNetwork.neuralNetworkState import NeuralNetworkState
+from common.image.Image import Image
+from tools.featureExtraction.featureVector import get_feat_vector
+from pipeline.feature.featureExtraction import FeatureExtraction
+from common.neuralNetwork.neuralNetworkState import NeuralNetworkState
 
 
 class FeatureExtractionResnet(FeatureExtraction, ABC):
@@ -21,11 +21,12 @@ class FeatureExtractionResnet(FeatureExtraction, ABC):
             print(ex.args)
             self._state = NeuralNetworkState.ERROR
 
-    def get_feature(self, img: Image) -> Tensor:
+    def get_feature(self, img: [Image]) -> Tensor:
         try:
             self._state = NeuralNetworkState.PREDICT
             return get_feat_vector(img, self._model)
         except Exception as e:
+            print("Resnet feature extraction error")
             print(e.args)
             self._state = NeuralNetworkState.ERROR
             return None

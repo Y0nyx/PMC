@@ -1,6 +1,7 @@
 from torch import Tensor
 from  typing import List
 from .featureExtraction import FeatureExtraction
+from .FeatureExtractionResnet import FeatureExtractionResnet
 from ..data.DataManager import DataManager
 from common.image.Image import Image
 
@@ -15,6 +16,7 @@ class FeatureExtractionManager:
         Initialize the data manager instance
         :return: None
         """
+        self._featureExtractions = [FeatureExtractionResnet()]
         self._dataManager = DataManager.get_instance()
 
     @staticmethod
@@ -30,7 +32,7 @@ class FeatureExtractionManager:
         :return: array of Tensor
         """
         print("Hello get_all_features")
-        img: Image = self._dataManager.concate_img()
+        img: [Image] = self._dataManager.concate_img()
         return [feature_ex.get_feature(img) for feature_ex in self._featureExtractions]
 
     def get_feature(self, index_feature_ex: int) -> Tensor:

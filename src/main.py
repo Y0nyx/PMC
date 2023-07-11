@@ -9,4 +9,4 @@ nnmanager = NNManager.get_instance()
 
 print("dataManager.concate_img()")
 
-nnmanager.predicts()
+print(nnmanager.predicts())
