@@ -22,9 +22,9 @@ class WebcamCamera(CameraSensor):
             image = Image(frame)
             #------------------------------------------------
             #To be removed, mais je veux voir ma sale tete quand je debug
-            cv2.imshow('Captured Image', frame)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            # cv2.imshow('Captured Image', frame)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
             #------------------------------------------------
             return image
         else:
