@@ -1,5 +1,22 @@
 # PMC
 ## Commencer à coder 
+
+### Installation de wsl
+Suivre les instructions d'installation de wsl sous la version Ubuntu-22.04, ne pas oublier d'upgrader à wsl 2.
+
+[wsl](https://learn.microsoft.com/fr-fr/windows/wsl/install)
+
+Pour vérifier si votre installation à bien été fait, vous pouvez exécuter dans le terminal :
+
+```
+    wsl -l -v
+```
+Cela devrait retourner:
+```
+    NAME                   STATE           VERSION
+  * Ubuntu-22.04           Running         2
+```
+
 Il faut s'assurer que le requirements.txt en utilisant la commande
 
 `pip install -r requirements.txt`
