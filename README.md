@@ -2,28 +2,54 @@
 ## Commencer à coder 
 
 ### Installation de wsl
-Suivre les instructions d'installation de wsl sous la version Ubuntu-22.04, ne pas oublier d'upgrader à wsl 2.
+Suivre les instructions d'installation de wsl sous la version Ubuntu-22.04, ne pas oublier d'upgrader à [wsl 2](https://learn.microsoft.com/fr-fr/windows/wsl/install).
 
-[wsl](https://learn.microsoft.com/fr-fr/windows/wsl/install)
+Pour vérifier si votre installation s'est bien déroulée, exécutez la commande suivante dans le terminal :
 
-Pour vérifier si votre installation à bien été fait, vous pouvez exécuter dans le terminal :
-
+```bash
+wsl -l -v
 ```
-    wsl -l -v
-```
-Cela devrait retourner:
-```
+Vous devriez obtenir la sortie suivante :
+```bash
     NAME                   STATE           VERSION
   * Ubuntu-22.04           Running         2
 ```
 
-Il faut s'assurer que le requirements.txt en utilisant la commande
+### Installation Conda
 
-`pip install -r requirements.txt`
+Dans WSL, commencez par exécuter la commande suivante pour récupérer la dernière version de Miniconda :
 
-** Il faut essayer d'éviter d'ajouter des librairie pour rendre notre code le plus léger.
+```bash
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+```
+Exécutez ensuite cette commande en modifiant le chemin avec votre emplacement pour initialiser Conda :
 
-Pour mettre le requirements a jours, veiller utiliser la librairie pipreqs avec cette commande. Cela va scanner le projet entièrement et rajouter les librairie nécessaire.
+```bash
+./home/YOUR_NAME/miniconda3/bin/conda init
+```
+
+Fermez ensuite votre terminal, puis ouvrez-en un nouveau et redémarrez votre WSL :
+```bash
+wsl --shutdown
+```
+
+Ouvrez un nouveau WSL, votre ligne de commande devrait maintenant afficher le préfixe (base). Enfin, créez votre environnement de développement :
+
+```bash
+conda create -n PMC python=3.10.9
+conda activate PMC
+```
+
+Accédez au projet PMC et exécutez la commande suivante :
+
+```bash
+pip install -r requirements.txt
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 
+```
+
+** Essayez de minimiser l'ajout de bibliothèques pour rendre votre code aussi léger que possible.
+
+Pour mettre à jour le fichier requirements.txt, utilisez la bibliothèque pipreqs avec la commande suivante. Cela analysera entièrement le projet et ajoutera les bibliothèques nécessaires.
 
 `pipreqs /home/project/location`
 

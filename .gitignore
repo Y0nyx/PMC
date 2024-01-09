@@ -1,3 +1,7 @@
+idea/
+__pycache__/
 
-.idea
-src/pipeline/data/__pycache__/DataManager.cpython-310.pyc
+# format de data
+*.json
+*.png
+*.pyc
