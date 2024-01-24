@@ -1,8 +1,11 @@
 import keras
 from keras import layers
+from keras.datasets import mnist
+import matplotlib.pyplot as plt
+import numpy as np
 
 #This is the size of our encoded representations
-encoding_dim = 32 # Float 32 -> compresseion of factor 24.5, assuming the input is 784 floats.
+encoding_dim = 32 # Float 32 -> compresseion of factor 24.5, assuming the input is 784 floats. (Flatten 28x28 pixel grayscale images)
 
 #This is our input image
 input_img = keras.Input(shape=(784,))
@@ -28,8 +31,6 @@ decoder = keras.Model(encoded_input, decoder_layer(encoded_input))
 autoencoder.compile(optimizer='adam', loss='binary_crossentropy')
 
 #Prepare the data and import it from the MNIST
-from keras.datasets import mnist
-import numpy as np
 (x_train, _), (x_test, _) = mnist.load_data()
 
 #Normalize all value between 0 and 1. 
@@ -53,8 +54,6 @@ encoded_imgs = encoder.predict(x_test)
 decoded_imgs = decoder.predict(encoded_imgs)
 
 #Plot the image
-import matplotlib.pyplot as plt
-
 n = 10 #How many digits we will display
 plt.figure(figsize=(20,4))
 for i in range(n):
