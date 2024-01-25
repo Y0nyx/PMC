@@ -9,34 +9,33 @@ import keras
 from keras import layers
 import tensorflow as tf
 
-def autoencoder_fran_chol(learning_rate):
-    """
-    Francois Chollet auto-encoder (AE) architecture from this link:
-    https://blog.keras.io/building-autoencoders-in-keras.html 
-    This is the bench mark used because it is an easy model to start with 
-    and was proposed by Francois Grondin. 
-    INPUT
-    :float Learning_rate: Size of the steps taken during the gradient descent
-    OUTPUT
-    :Objet model: Neural network architecture.
-    """
-    #Define the input shape of the model
-    input_img = keras.Input(shape=(784,))
+class AeModels():
+    def __init__(self, learning_rate: float=0.001):
+        self.learning_rate = learning_rate
 
-    #"Encoded" is the encoded representation of the input
-    x = layers.Dense(32, activation='relu')(input_img)
-    #"decoded" is the lossy reconstruction of the input
-    x = layers.Dense(784, activation='sigmoid')(x)
+    def build_francois_chollet_autoencoder(self, input_shape: tuple=(784,), encoding_dim: int=32) -> keras.Model:
+        """
+        Francois Chollet auto-encoder (AE) architecture from this link:
+        https://blog.keras.io/building-autoencoders-in-keras.html 
+        Which is a Single fully-connected neural layer. 
+        """
+        #Define the input shape of the model.
+        input_img = keras.Input(shape=input_shape)
 
-    #Define the input and output of the model
-    model = keras.Model(inputs=input_img, outputs=x)
+        #Encoder
+        Encoder = layers.Dense(encoding_dim, activation='relu')(input_img)
+        #Decoder
+        Decoder = layers.Dense(784, activation='sigmoid')(Encoder)
 
-    #Create the loss function 
-    opt = tf.keras.optimizers.Adam(learning_rate=0.001)
-    model.compile(
-        optimizer=opt, 
-        loss='binary_crossentropy',
-        metrics='mean_absolute_error'
-    )
+        #Define the input and output of the model
+        model = keras.Model(inputs=input_img, outputs=Decoder)
 
-    return model
+        #Create the loss function 
+        opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
+        model.compile(
+            optimizer=opt, 
+            loss='binary_crossentropy',
+            metrics=['mean_absolute_error']
+        )
+
+        return model
