@@ -1,3 +1,10 @@
+"""
+Author: Jean-Sebastien Giroux
+Contributor(s): 
+Date: 01/25/2024
+Description: Callbacks used in the training of the model to minimize bad hyper-parameters(hp) combinaisons to
+             maximize GPU utilization. A bad hp based on the monitor metrics which is in our case the mae.
+"""
 import tensorflow as tf
 
 
