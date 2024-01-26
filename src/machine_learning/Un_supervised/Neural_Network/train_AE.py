@@ -1,6 +1,3 @@
-import tensorflow
-import keras
-from keras import layers
 from keras.datasets import mnist
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +10,8 @@ import model as mod
 epochs = 5
 batch_size = 256
 
-filepath_weights = '/home/jean-sebastien/Documents/s7/PMC/results_ae/best_model_weights'
+test_name = 'First'
+filepath_weights = f'/home/jean-sebastien/Documents/s7/PMC/results_ae/best_model_weights/{test_name}/'
 monitor_metric = 'mean_absolute_error'
 mode_metric = 'min'
 verbose = 1
