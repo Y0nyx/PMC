@@ -1,11 +1,17 @@
+"""
+Author: Jean-Sebastien Giroux
+Contributor(s): 
+Date: 01/25/2024
+Description: Training and Testing(*temporaty*) of the neural network.
+"""
 from keras.datasets import mnist
 import matplotlib.pyplot as plt
 import numpy as np
+import tensorflow as tf
 
 import callbacks as cb
 #import hyper_parameters_tuner as hp_tuner
 import model as mod
-
 
 epochs = 5
 batch_size = 256
@@ -16,6 +22,11 @@ monitor_metric = 'mean_absolute_error'
 mode_metric = 'min'
 verbose = 1
 
+epochs_hp = 5
+num_trials_hp = 50
+executions_per_trial_hp = 2
+directory_hp = '/home/jean-sebastien/Documents/s7/PMC/results_ae/hp_search/'
+name_hp = 'First_search'
 
 def normalize(input_train, input_test):
     input_train = input_train.astype('float32') / 255.
@@ -109,8 +120,38 @@ def createPredImg(input_train, input_test):
 
     plt.show()
 
+# class ModelTrainer:
+#     def __init__(self, use_tuner: bool=False, tuner_params: list=None):
+#         self.use_tuner = use_tuner
+#         self.tuner_params = tuner_params
+    
+#     def train(self, model, callbacks_list):
+#         if self.use_tuner:
+#             #Doing hp search and working with keras_tuner
+#             hp_tuner_instance = hp_tuner.KerasTuner(input_train, input_test, epochs_hp, num_trials_hp, 
+#                                                     executions_per_trial_hp, monitor_metric, mode_metric, verbose)
+#             n_best_hp = hp_tuner_instance.get_hp_search(directory_hp, name_hp)
+
+#             #Train the N best HP
+#             for j, hp in enumerate(n_best_hp, start=1):
+#                 #Building model 
+#                 model = mod.AeModels(learning_rate=hp.get(''))
+#                 build_model = model.build_francois_chollet_autoencoder(input_shape=(784,), encoding_dim=32)
+#                 pass
+#         else:
+#             #Building model 
+#             model = mod.AeModels(learning_rate=0.001)
+#             build_model = model.build_francois_chollet_autoencoder(input_shape=(784,), encoding_dim=32)
+#             #Standard training process
+#             history = train(build_model, input_train_norm, input_test_norm, epochs, batch_size, callbacks_list)
+
+#         return history
+
 
 if __name__ == '__main__':
+    physical_device = tf.config.experimental.list_physical_devices('GPU')
+    print(f'Device found : {physical_device}')
+
     #Data loading
     (input_train, _), (input_test, _) = mnist.load_data()
 

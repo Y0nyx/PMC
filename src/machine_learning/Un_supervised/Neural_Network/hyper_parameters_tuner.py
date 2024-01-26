@@ -1,3 +1,9 @@
+"""
+Author: Jean-Sebastien Giroux
+Contributor(s): 
+Date: 01/25/2024
+Description: Utilization of keras_tuner to find the best hyper-parameter combinaison. 
+"""
 import keras_tuner
 from keras_tuner import BayesianOptimization, HyperParameters, Objective
 from keras_tuner.engine.trial import Trial
