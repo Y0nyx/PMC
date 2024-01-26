@@ -1,8 +1,8 @@
 import keras_tuner
-from keras_tuner import BayesianOptimization
-from keras_tuner import HyperParameters
+from keras_tuner import BayesianOptimization, HyperParameters, Objective
 from keras_tuner.engine.trial import Trial
 from kerastuner.engine import multi_execution_tuner
+import tensorflow as tf
 
 import callbacks as cb
 import model as mod
@@ -24,7 +24,7 @@ class KerasTuner():
         """
         return BayesianOptimization(
             hypermodel=hypermodel,
-            objective=keras_tuner.Objective(self.monitor, direction=self.mode),
+            objective=Objective(self.monitor, direction=self.mode),
             max_trials=self.num_trials,
             executions_per_trial=self.executions_per_trial,
             overwrite=True,
@@ -57,7 +57,7 @@ class KerasTuner():
         best_metric = min(keys[3])
         self.oracle.update_trial(trial.trial_id, {keys[3]: best_metric})
 
-    def tuner_search(self, tuner: Trial, early_stop, reduce_lr_plateau, end_nan) -> None:
+    def tuner_search(self, tuner: Trial, callbacks: list[tf.keras.callbacks.Callback]) -> None:
         """
         Manages the execution of multiple trials, each involving training a model once per trial with a specific set 
         of hyperparameters. 
@@ -67,22 +67,23 @@ class KerasTuner():
             y=self.input_train,
             epochs=self.epochs,
             validation_data=(self.input_test, self.input_test),
-            callbacks=[early_stop, reduce_lr_plateau, end_nan],
+            callbacks=callbacks,
             verbose=self.verbose,
             shuffle=True
         )
     
-    def get_hp_search(self, executions_per_trial: int, directory: str, directory_hp: str):
+    def get_hp_search(self, directory: str, directory_hp: str):
         """
         Do the hp search and act as the main for hyper_parameters_tuners. 
         """
-        tuner = self.tuner_initializer(self.hyper_parameter_search, self.monitor, self.mode, self.num_trials, executions_per_trial, directory, directory_hp)
-        multi_execution_tuner.MultiExecutionTuner.run_trial = self.run_trial
+        tuner = self.tuner_initializer(self.hyper_parameter_search, self.monitor, self.mode, self.num_trials, self.executions_per_trial, directory, directory_hp)
+        multi_execution_tuner.MultiExecutionTuner.run_trial = self.run_trial()
 
-        callbacks = cb.TrainingCallbacks(None, self.monitor, self.mode, self.verbose)
-        _, early_stop, reduce_lr_plateau, end_nan = callbacks.get_callbacks()
+        callbacks_instance = cb.TrainingCallbacks(None, self.monitor, self.mode, self.verbose)
+        callbacks_list = callbacks_instance.get_callbacks()
+        callbacks_list = callbacks_list[1:]
 
-        tuner = self.tuner_search(tuner, early_stop, reduce_lr_plateau, end_nan)
+        tuner = self.tuner_search(tuner, callbacks_list)
 
         return tuner.oracle.get_best_trials(num_trials=self.num_trials)
          

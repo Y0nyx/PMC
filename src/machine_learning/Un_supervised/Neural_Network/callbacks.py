@@ -70,3 +70,5 @@ class TrainingCallbacks():
             self.reduce_lr_plateau(factor_rp, patience_rp, min_delta_rp),
             self.end_nan()
         ]
+    
+    
