@@ -39,5 +39,3 @@ class AeModels():
         )
 
         return model
-    
-    
