@@ -6,3 +6,5 @@
 .idea/vcs.xml
 .idea/workspace.xml
 src/pipeline/data/__pycache__/DataManager.cpython-310.pyc
+
+.runs/
