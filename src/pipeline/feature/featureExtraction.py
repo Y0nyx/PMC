@@ -44,7 +44,7 @@ class FeatureExtraction(ABC):
         Function to read yaml
         :return: None
         """
-        with open(self._yaml_path, 'r') as file:
+        with open(self._yaml_path, "r") as file:
             try:
                 self._param = yaml.safe_load(file)
             except yaml.YAMLError as exc:

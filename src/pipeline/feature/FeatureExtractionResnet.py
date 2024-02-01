@@ -30,4 +30,3 @@ class FeatureExtractionResnet(FeatureExtraction, ABC):
             print(e.args)
             self._state = NeuralNetworkState.ERROR
             return None
-

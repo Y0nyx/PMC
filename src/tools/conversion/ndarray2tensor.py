@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def ndarray_to_tensor(array: np.ndarray):
     """
     function to convert ndarray to tensor
@@ -7,4 +8,3 @@ def ndarray_to_tensor(array: np.ndarray):
     :return:
     """
     pass
-

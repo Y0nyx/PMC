@@ -1,5 +1,7 @@
 
-src/pipeline/data/__pycache__/DataManager.cpython-310.pyc
+__pycache__/
+runs/*
+idea/*
 
-.runs/*
-.idea/*
+# yolo models
+yolo*pt

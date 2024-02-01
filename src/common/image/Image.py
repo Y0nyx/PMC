@@ -12,6 +12,7 @@ class Image:
     """
     Dataclass of an Image
     """
+
     _img: np.ndarray = None
 
     def __init__(self, img: np.ndarray) -> None:
@@ -52,3 +53,6 @@ class Image:
     def resize(self, width, height):
         cv2.resize(self.image, (width, height))
         return True
+
+    def save(self, file_path):
+        cv2.imwrite(file_path, self._img)

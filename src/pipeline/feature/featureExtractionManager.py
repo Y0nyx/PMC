@@ -1,5 +1,5 @@
 from torch import Tensor
-from  typing import List
+from typing import List
 from .featureExtraction import FeatureExtraction
 from .FeatureExtractionResnet import FeatureExtractionResnet
 from ..data.DataManager import DataManager
@@ -40,11 +40,16 @@ class FeatureExtractionManager:
         Retrieve feature from one neural network
         :return: Tensor
         """
-        return self._featureExtractions[index_feature_ex].get_feature(self._dataManager.concate_img())
+        return self._featureExtractions[index_feature_ex].get_feature(
+            self._dataManager.concate_img()
+        )
 
     def get_state(self) -> List[dict]:
         """
         get all the state from the neural network with their name
         :return: list of dict {str : NeuralNetworkState}
         """
-        return [{feature_ex.get_name(), feature_ex.get_state()} for feature_ex in self._featureExtractions]
+        return [
+            {feature_ex.get_name(), feature_ex.get_state()}
+            for feature_ex in self._featureExtractions
+        ]
