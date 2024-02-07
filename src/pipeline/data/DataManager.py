@@ -25,7 +25,6 @@ class DataManager:
     def get_instance():
         if DataManager.instance is None:
             DataManager.instance = DataManager()
-        print("Hello get_instance")
         return DataManager.instance
     
     def get_img(self) -> Image:
@@ -76,7 +75,7 @@ class DataManager:
             images: Preprocessed images
         """
         # if(condition):
-        images = self._grayscale_conversion(images)
+        # images = self._grayscale_conversion(images)
         # if(condition):
         #    images = _normalization_conversion(images)
         # if(condition):

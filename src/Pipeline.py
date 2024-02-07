@@ -4,14 +4,16 @@ from common.enums.PipelineStates import PipelineState
 
 import os
 import cv2
-    
+
+from ultralytics import YOLO
+from clearml import Task
+
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
+
 class Pipeline:
     def __init__(self):
         self._state = PipelineState.INIT
         self._dataManager = DataManager("", "./src/cameras.yaml").get_instance()
-
-        self._boundingBoxTracker = BoundingBoxTracker()
-        self.piece_detection_model = YoloModel('D:/APP/PMC/repos/src/piece_detection.pt')
     
     def get_dataset(self) -> None:
         """ Génère un dataset avec tout les caméras instancié lors du init du pipeline.
@@ -33,19 +35,24 @@ class Pipeline:
                 break
 
         while True:
-            key = cv2.waitKey(0)
+            key = input("Press 'q' to capture photo, 'e' to exit: ")
 
-            if key == 13:  # Touche "Enter"
+            if key == 'q':
                 Images = self._dataManager.get_all_img()
-                for i, Image in enumerate(Images):
-                    Image.save(os.path.join(session_path, f'photo_camera_{counter}_{i}.png'))
-                counter += 1
-
-            elif key == 8:  # Touche "Backspace"
+                if isinstance(Images, list):
+                    for i, Image in enumerate(Images):
+                        Image.save(os.path.join(session_path, f'photo_camera_{counter}_{i}.png'))
+                    counter += 1
+                else:
+                    Image.save(os.path.join(session_path, f'photo_camera_{counter}_{0}.png'))
+                    counter += 1
+                print('Capture Done')
+            
+            if key == 'e':
+                print('Exit Capture')
                 break
         
         self._state = PipelineState.INIT
-        cv2.destroyAllWindows()
     
     def detect_piece(self):
         """ Effectuer un détection de pièce avec le modèle choisie.
@@ -61,60 +68,34 @@ class Pipeline:
         while True:
             key = cv2.waitKey(0)
 
-            if key == 13:  # Touche "Enter"
+            if key == ord('q'):  # Touche "q"
                 Images = self._dataManager.get_all_img()
                 self.piece_detection_model.predict(Images)
 
-            elif key == 8:  # Touche "Backspace"
+            if key == ord('e'):  # Touche "e"
                 break
         
         self._state = PipelineState.INIT
         cv2.destroyAllWindows()
+    
+    def train(self, yaml_path, yolo_model, kargs):
+        task = Task.init(
+            project_name="PMC",
+            task_name=f"{yolo_model} task"
+        )
 
-class BoundingBoxTracker:
-    def __init__(self, iou_threshold=0.5):
-        self.prev_bounding_boxes = []
-        self.iou_threshold = iou_threshold
+        task.set_parameter("model_variant", yolo_model)
 
-    def calculate_iou(self, box1, box2):
-        # Calcule l'Intersection over Union (IoU) entre deux bounding boxes
-        x1, y1, w1, h1, p1 = box1
-        x2, y2, w2, h2, p2 = box2
+        model = YoloModel(f'{yolo_model}.pt')
 
-        intersection_x = max(0, min(x1 + w1, x2 + w2) - max(x1, x2))
-        intersection_y = max(0, min(y1 + h1, y2 + h2) - max(y1, y2))
+        args = dict(data=yaml_path, **kargs)
+        task.connect(args)
 
-        intersection_area = intersection_x * intersection_y
-        union_area = w1 * h1 + w2 * h2 - intersection_area
+        results = model.train(yaml_path, **args)
 
-        iou = intersection_area / max(union_area, 1e-10)  # éviter la division par zéro
-
-        return iou
-
-    def is_similar(self, box1, box2):
-        # Retourne True si les bounding boxes sont similaires en utilisant IoU
-        iou = self.calculate_iou(box1, box2)
-        return iou >= self.iou_threshold
-
-    def process_prediction(self, new_bounding_box) -> bool:
-        similar_count = 0
-
-        for prev_box in self.prev_bounding_boxes:
-            if self.is_similar(new_bounding_box, prev_box):
-                similar_count += 1
-
-        self.prev_bounding_boxes.append(new_bounding_box)
-
-        if len(self.prev_bounding_boxes) > 5:
-            self.prev_bounding_boxes.pop(0)
-
-        if similar_count >= 4:
-            return True
-        else:
-            return False
-
-
-
+    def detect(self, pt_file):
+        model = YOLO(pt_file)
+        model.predict(source='D:\Documents\Test', show=True, save=True, conf=0.5)
 
 if __name__ == "__main__":
     Pipeline = Pipeline()
@@ -122,3 +103,19 @@ if __name__ == "__main__":
     #Pipeline.detect_piece()
 
     Pipeline.get_dataset()
+
+    #data_path = "D:\dataset\dofa_2\data.yaml"
+
+    #import torch
+
+    #if torch.cuda.is_available():
+        #model.predict(source="C:\Users\Charles\Pictures\Camera Roll\WIN_20240206_12_40_26_Pro.mp4", show=True, save=True, conf=0.5, device='gpu')
+
+        # Hyperparameter optimizer 
+        #model = YOLO('yolov8n-seg.pt')
+        #model.tune(data=data_path, epochs=30, iterations=20, val=False, batch=-1)
+
+    # Model Training
+    #Pipeline.train(data_path, 'yolov8s-seg', epochs=250, plots=False)
+
+        #Pipeline.detect("D:/APP/PMC/repos/runs/segment/train4/weights/best.pt")

@@ -2,6 +2,8 @@
 __pycache__/
 runs/*
 idea/*
+wandb/*
+dataset/*
 
 # yolo models
 yolo*pt

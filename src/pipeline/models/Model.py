@@ -17,8 +17,8 @@ class YoloModel(Model):
     def __init__(self, model: str = 'yolov8n.pt'):
         super().__init__(YOLO(model))
 
-    def train(self):
-        self._model.train(data="coco128.yaml", epochs=3)
+    def train(self, data_path, args):
+        self._model.train(data=data_path, **args)
 
     def predict(self, images):
         return self._model(images, save=True)

@@ -50,7 +50,7 @@ class CameraManager:
         images = []
         for camera in self.cameras:
             image = camera.get_img()
-            images.append(image.value)
+            images.append(image)
         return images
 
     def get_img(self, index_camera) -> Image:
