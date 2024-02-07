@@ -5,8 +5,8 @@ import warnings
 
 
 class WebcamCamera(CameraSensor):
-    def __init__(self, camera_id, resolution, fps) -> None:
-        super().__init__(camera_id, resolution, fps)
+    def __init__(self, camera_id, resolution, fps, verbose: bool = False) -> None:
+        super().__init__(camera_id, resolution, fps, verbose)
 
     def get_img(self) -> Image:
         """

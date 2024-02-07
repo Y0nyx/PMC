@@ -11,16 +11,17 @@ from clearml import Task
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class Pipeline:
-    def __init__(self, models):
+    def __init__(self, models, verbose: bool = False):
+        self.verbose = verbose
+
+        self.print('=== Init Pipeline ===')
+
         self.models = []
-        if isinstance(models, list):
-            for model in models:
-                self.models.append(model)
-        elif isinstance(models, YoloModel):
-            self.models.append(models)
+        for model in models:
+            self.models.append(model)
         
         self._state = PipelineState.INIT
-        self._dataManager = DataManager("", "./src/cameras.yaml").get_instance()
+        self._dataManager = DataManager("", "./src/cameras.yaml", self.verbose).get_instance()
     
     def get_dataset(self) -> None:
         """ Génère un dataset avec tout les caméras instancié lors du init du pipeline.
@@ -90,12 +91,16 @@ class Pipeline:
                 print('Exit Capture')
                 break
         self._state = PipelineState.INIT
-
+    
+    def print(self, string):
+        if self.verbose:
+            print(string)
+            
 if __name__ == "__main__":
     models = []
     models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
     models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
-    Pipeline = Pipeline(models)
+    Pipeline = Pipeline(models, verbose=True)
 
     Pipeline.detect()
 

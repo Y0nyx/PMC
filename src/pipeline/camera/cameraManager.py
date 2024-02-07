@@ -3,7 +3,7 @@ from .webcamCamera import WebcamCamera
 from .cameraSensor import CameraSensor
 from .sensorState import SensorState
 
-import os
+import tqdm
 import yaml
 from typing import List
 from warnings import warn
@@ -12,17 +12,20 @@ from warnings import warn
 class CameraManager:
     _instance = None
 
-    def __init__(self, yaml_file) -> None:
+    def __init__(self, yaml_file, verbose) -> None:
+        self.verbose = verbose
+
+        self.print("=== Init CameraManager ===")
+
         self.yaml_file = yaml_file
-        self.nbr_camera = 1
         self.cameras = []
         self.read_yaml(yaml_file)
         self.state = SensorState.INIT
 
     @staticmethod
-    def get_instance(yaml_file):
+    def get_instance(yaml_file, verbose: bool = False):
         if CameraManager._instance is None:
-            CameraManager._instance = CameraManager(yaml_file)
+            CameraManager._instance = CameraManager(yaml_file, verbose)
         return CameraManager._instance
 
     def add_camera(self, *cameras):
@@ -75,13 +78,19 @@ class CameraManager:
         return self.state
 
     def read_yaml(self, yaml_path):
-        print(os.getcwd())
         with open(yaml_path, 'r') as file:
             try:
                 yaml_data = yaml.safe_load(file)
                 camera_configs = yaml_data['cameras']
-                for config in camera_configs:
-                    camera = WebcamCamera(config['camera_id'], config['resolution'], config['fps'])
-                    self.add_camera(camera)
+                with tqdm.tqdm(total=len(camera_configs), desc="cameras init") as pbar:
+                    for config in camera_configs:
+                        resolution = tuple(map(int, config['resolution'].strip('()').split(','))) or None
+                        camera = WebcamCamera(config.get('camera_id', None), resolution, config.get('fps', None), self.verbose)
+                        self.add_camera(camera)
+                        pbar.update(1)
             except yaml.YAMLError as e:
                 warn("Erreur lors de la lecture du fichier YAML : {e}")
+
+    def print(self, string):
+        if self.verbose:
+            print(string)

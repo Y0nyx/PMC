@@ -1,4 +1,5 @@
 import cv2
+import platform
 import warnings
 from common.image.Image import Image
 from pipeline.camera.sensorState import SensorState
@@ -20,14 +21,23 @@ class CameraSensor(ABC):
         self.verbose = verbose
         try:
             self.print(f"Init camera : {self.camera_id}")
-            self.cap = cv2.VideoCapture(self.camera_id) 
+            self.print(f' - resolution : {self.resolution}')
+            self.print(f' - fps : {self.fps}')
+            if platform.system() == "Windows":
+                cv2.CAP_DSHOW
+                #sets the Windows cv2 backend to DSHOW (Direct Video Input Show)
+                self.cap = cv2.VideoCapture(self.camera_id)
+            elif platform.system() == "Linux":
+                cv2.CAP_GSTREAMER # set the Linux cv2 backend to GTREAMER
+                #cv2.CAP_V4L
+                self.cap = cv2.VideoCapture(self.camera_id)
 
             # Set resolution
-            #self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.resolution[0])
-            #self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.resolution[1])
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.resolution[0])
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.resolution[1])
 
             # Set frames per second (fps)
-            #self.cap.set(cv2.CAP_PROP_FPS, self.fps)
+            self.cap.set(cv2.CAP_PROP_FPS, self.fps)
 
             self.is_active = True
             self.state = SensorState.INIT

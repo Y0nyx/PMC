@@ -13,13 +13,17 @@ from ..camera.sensorState import SensorState
 class DataManager:
     instance = None
 
-    def __init__(self, yaml_path_data: Path = "", yaml_path_cameras: Path = "") -> None:
+    def __init__(self, yaml_path_data: Path = "", yaml_path_cameras: Path = "", verbose: bool = False) -> None:
         """
         Initializes the DataManager.
         """
+        self.verbose = verbose
+
+        self.print('=== Init DataManager ===')
+
         self._yaml_path = yaml_path_data
         self._param = self._read_yaml()
-        self._camera_manager = CameraManager.get_instance(yaml_path_cameras)
+        self._camera_manager = CameraManager.get_instance(yaml_path_cameras, verbose)
 
     @staticmethod
     def get_instance():
@@ -175,3 +179,7 @@ class DataManager:
         #         self.param = yaml.safe_load(file)
         #     except yaml.YAMLError as exc:
         #         print(exc)
+
+    def print(self, string):
+        if self.verbose:
+            print(string)
