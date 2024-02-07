@@ -17,11 +17,11 @@ class YoloModel(Model):
     def __init__(self, model: str = 'yolov8n.pt'):
         super().__init__(YOLO(model))
 
-    def train(self, data_path, args):
-        self._model.train(data=data_path, **args)
+    def train(self, **kwargs):
+        self._model.train(**kwargs)
 
-    def predict(self, images):
-        return self._model(images, save=True)
+    def predict(self, **kwargs):
+        return self._model(**kwargs)
 
     def eval(self):
         return self._model.val()

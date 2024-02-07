@@ -11,7 +11,14 @@ from clearml import Task
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class Pipeline:
-    def __init__(self):
+    def __init__(self, models):
+        self.models = []
+        if isinstance(models, list):
+            for model in models:
+                self.models.append(model)
+        elif isinstance(models, YoloModel):
+            self.models.append(models)
+        
         self._state = PipelineState.INIT
         self._dataManager = DataManager("", "./src/cameras.yaml").get_instance()
     
@@ -54,30 +61,6 @@ class Pipeline:
         
         self._state = PipelineState.INIT
     
-    def detect_piece(self):
-        """ Effectuer un détection de pièce avec le modèle choisie.
-            peut sauvegarder le crop si nécessaire.
-
-            Utiliser ENTER pour prendre une photo
-            Utiliser BACKSPACE pour sortir de la boucle
-
-            Return None
-        """
-        self._state = PipelineState.ANALYSING
-
-        while True:
-            key = cv2.waitKey(0)
-
-            if key == ord('q'):  # Touche "q"
-                Images = self._dataManager.get_all_img()
-                self.piece_detection_model.predict(Images)
-
-            if key == ord('e'):  # Touche "e"
-                break
-        
-        self._state = PipelineState.INIT
-        cv2.destroyAllWindows()
-    
     def train(self, yaml_path, yolo_model, kargs):
         task = Task.init(
             project_name="PMC",
@@ -93,16 +76,30 @@ class Pipeline:
 
         results = model.train(yaml_path, **args)
 
-    def detect(self, pt_file):
-        model = YOLO(pt_file)
-        model.predict(source='D:\Documents\Test', show=True, save=True, conf=0.5)
+    def detect(self, show: bool = False, save: bool = True, conf: float = 0.5):
+        self._state = PipelineState.ANALYSING
+        while True:
+            key = input("Press 'q' to detect on cameras, 'e' to exit: ")
+            
+            if key == 'q':
+                for model in self.models:
+                    Images = self._dataManager.get_all_img()
+                    Images_to_detect = [img.value for img in Images]
+                    model.predict(source=Images_to_detect, show=show, save=save, conf=conf)
+            if key == 'e':
+                print('Exit Capture')
+                break
+        self._state = PipelineState.INIT
 
 if __name__ == "__main__":
-    Pipeline = Pipeline()
+    models = []
+    models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
+    models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
+    Pipeline = Pipeline(models)
 
-    #Pipeline.detect_piece()
+    Pipeline.detect()
 
-    Pipeline.get_dataset()
+    #Pipeline.get_dataset()
 
     #data_path = "D:\dataset\dofa_2\data.yaml"
 
