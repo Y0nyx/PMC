@@ -12,9 +12,10 @@ readonly PATH_NN='/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning
 readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate'
 readonly SCRIPT_NAME='train.py'
 
+readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images'
 #Variable for Callbacks
 readonly MODEL='ae_fchollet'
-readonly TEST_NAME='First_HP_Search'
+readonly TEST_NAME='Second_HP_Search'
 readonly MONITOR_METRIC='mean_absolute_error'
 readonly MODE_METRIC='min'
 readonly VERBOSE=TRUE #If false remove --VERBOSE from line 40
@@ -26,7 +27,7 @@ readonly EXECUTION_PER_TRIAL_HP=1
 readonly NBEST=2
 #Variable for default training
 readonly EPOCHS=5
-readonly BATCH_SIZE=256
+readonly BATCH_SIZE=50
 
 #Never change this constants (Only adapt PATH_RESULTS to the computer you are using)
 readonly PATH_RESULTS="/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/${MODEL}/${TEST_NAME}"
@@ -46,4 +47,4 @@ fi
 
 #Run the script train_AE.py
 cd $PATH_NN
-./$SCRIPT_NAME --EPOCHS $EPOCHS --BATCH_SIZE $BATCH_SIZE --PATH_RESULTS $PATH_RESULTS --FILEPATH_WEIGHTS $FILEPATH_WEIGHTS --FILEPATH_WEIGHTS_SERCH $FILEPATH_WEIGHTS_SERCH --HP_SEARCH $HP_SEARCH --HP_NAME $HP_NAME --MONITOR_METRIC $MONITOR_METRIC --MODE_METRIC $MODE_METRIC --VERBOSE --DO_HP_SEARCH --EPOCHS_HP $EPOCHS_HP --NUM_TRIALS_HP $NUM_TRIALS_HP --EXECUTION_PER_TRIAL_HP $EXECUTION_PER_TRIAL_HP --NBEST $NBEST
+./$SCRIPT_NAME --EPOCHS $EPOCHS --BATCH_SIZE $BATCH_SIZE --PATH_RESULTS $PATH_RESULTS --FILEPATH_WEIGHTS $FILEPATH_WEIGHTS --FILEPATH_WEIGHTS_SERCH $FILEPATH_WEIGHTS_SERCH --HP_SEARCH $HP_SEARCH --HP_NAME $HP_NAME --MONITOR_METRIC $MONITOR_METRIC --MODE_METRIC $MODE_METRIC --VERBOSE --DO_HP_SEARCH --EPOCHS_HP $EPOCHS_HP --NUM_TRIALS_HP $NUM_TRIALS_HP --EXECUTION_PER_TRIAL_HP $EXECUTION_PER_TRIAL_HP --NBEST $NBEST --DATA_PATH $DATA_PATH

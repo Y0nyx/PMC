@@ -10,7 +10,7 @@ readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate'
 readonly SCRIPT_NAME='test.py'
 
 readonly MODEL='ae_fchollet'
-readonly TEST_NAME='First_HP_Search'
+readonly TEST_NAME='Second_HP_Search'
 readonly NBEST=2 #same as test_AE.sh
 readonly NUM_TRAIN_REGENERATE=20
 

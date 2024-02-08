@@ -12,8 +12,10 @@ import keras_tuner
 import model as mod
 
 class MyHyperModel(keras_tuner.HyperModel):  
-    def __init__(self, input_train, input_test, epochs, callbacks): 
+    def __init__(self, input_train, input_train_aug, input_test_aug, input_test, epochs, callbacks): 
+        self.input_train_aug = input_train_aug, 
         self.input_train = input_train,
+        self.input_test_aug = input_test_aug,
         self.input_test = input_test,
         self.epochs = epochs
         self.callbacks = callbacks
@@ -24,10 +26,10 @@ class MyHyperModel(keras_tuner.HyperModel):
         """
         encoding_dim = hp.Choice('encoding_dim', values=[8, 16, 24, 32, 40])
         lr = hp.Choice('lr', values=[0.0001, 0.001])
-        batch_size = hp.Int('batch_size', 32, 128, step=32, default=64)
+        batch_size = hp.Int('batch_size', 1, 10, step=1, default=1)
 
         model_to_build = mod.AeModels(learning_rate=lr)
-        model = model_to_build.build_francois_chollet_autoencoder(input_shape=(784,), encoding_dim=encoding_dim)
+        model = model_to_build.build_basic_cae()
 
         return model
     
@@ -44,9 +46,9 @@ class CustomBayesianTuner(BayesianOptimization):
         model = self.hypermodel.build(hp)
 
         history = model.fit(        
-            x=self.hypermodel.input_train,
+            x=self.hypermodel.input_train_aug,
             y=self.hypermodel.input_train,
-            validation_data=(self.hypermodel.input_test, self.hypermodel.input_test),
+            validation_data=(self.hypermodel.input_test_aug, self.hypermodel.input_test),
             **kwargs
         )
 
@@ -55,9 +57,11 @@ class CustomBayesianTuner(BayesianOptimization):
 
     
 class KerasTuner():
-    def __init__(self, input_train, input_test, epochs, num_trials, executions_per_trial, monitor, mode, verbose, callbacks):
-        self.input_train = input_train
-        self.input_test = input_test
+    def __init__(self, input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm, epochs, num_trials, executions_per_trial, monitor, mode, verbose, callbacks):
+        self.input_train = input_train_norm
+        self.input_train_aug = input_train_aug_norm
+        self.input_test = input_test_norm
+        self.input_test_aug = input_test_aug_norm
         self.epochs = epochs
         self.num_trials = num_trials
         self.executions_per_trial = executions_per_trial
@@ -71,7 +75,9 @@ class KerasTuner():
         Initialization of a Bayesian optimization tuner for hyperparameter tuning. 
         """
         hypermodel = MyHyperModel(
+            input_train_aug = self.input_train_aug,
             input_train = self.input_train,
+            input_test_aug = self.input_test_aug,
             input_test = self.input_test,
             epochs = self.epochs, 
             callbacks = self.callbacks[0]
@@ -94,11 +100,13 @@ class KerasTuner():
         Manages the execution of multiple trials, each involving training a model once per trial with a specific set 
         of hyperparameters. 
         """
+        print("Splitted dataset in arrays of shape: ", self.input_train.shape, " | ", self.input_test.shape)
+        print("Augmented splitted dataset in arrays of shape: ", self.input_train_aug.shape, " | ", self.input_test_aug.shape)
         tuner.search(
-            self.input_train,
+            self.input_train_aug,
             self.input_train,
             epochs=self.epochs,
-            validation_data=(self.input_test, self.input_test),
+            validation_data=(self.input_test_aug, self.input_test),
             callbacks=callbacks[1:],
             verbose=self.verbose,
             shuffle=True

@@ -9,7 +9,6 @@ Description: Callbacks used in the training of the model to minimize bad hyper-p
 
 import tensorflow as tf
 
-
 class TrainingCallbacks():
     def __init__(self, filepath: str, monitor: str, mode: str, verbose: int):
         self.filepath = filepath

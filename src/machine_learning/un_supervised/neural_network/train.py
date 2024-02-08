@@ -13,28 +13,80 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import tensorflow as tf
+from keras.preprocessing import image
+from sklearn.model_selection import train_test_split
 
 import callbacks as cb
 import hyper_parameters_tuner as hp_tuner
 import model as mod
 
+def load_data(DATA_PATH):
+
+    images = []
+
+    #Data loading
+    for filename in os.listdir(DATA_PATH):
+        if filename.endswith(".png"):
+            img = image.load_img(f'{DATA_PATH}/{filename}', target_size=(256, 256))
+            images.append(image.img_to_array(img))
+    images = np.array(images)
+
+    print("=====================================")
+    print("Loaded image np.array of shape: ", images.shape)
+    print("=====================================")
+
+    # Split the dataset into training and testing sets (70/30 split)
+    input_train, input_test = train_test_split(images, train_size=0.8, test_size=0.2, random_state=59)
+    print("=====================================")
+    print("Splitted dataset in arrays of shape: ", input_train.shape, " | ", input_test.shape)
+    print("=====================================")
+
+    del images
+
+    train_augmented = apply_random_blackout(input_train)
+    test_augmented = apply_random_blackout(input_test)
+    print("=====================================")
+    print("Augmented splitted dataset in arrays of shape: ", train_augmented.shape, " | ", test_augmented.shape)
+    print("=====================================")
+
+    #Normalizing the data (0-1)
+    input_train_norm, input_test_norm = normalize(input_train, input_test)
+    input_train_aug_norm, input_test_aug_norm = normalize(train_augmented, test_augmented)
+
+    return input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm
+
+def apply_random_blackout(images, blackout_size=(32, 32)):
+    augmented_images = images.copy()
+
+    for i in range(images.shape[0]):
+        # Randomly select the position to blackout
+        x = np.random.randint(0, images.shape[1] - blackout_size[0] + 1)
+        y = np.random.randint(0, images.shape[2] - blackout_size[1] + 1)
+
+        # Black out the selected region for each channel
+        channels = 3
+        for channel in range(channels):
+            augmented_images[i, x:x+blackout_size[0], y:y+blackout_size[1], channel] = 0.0
+
+    return augmented_images
+
 def normalize(input_train, input_test):
     input_train = input_train.astype('float32') / 255.
     input_test = input_test.astype('float32') / 255.
-    input_train = input_train.reshape((len(input_train), np.prod(input_train.shape[1:])))
-    input_test = input_test.reshape((len(input_test), np.prod(input_test.shape[1:])))
+    # input_train = input_train.reshape((len(input_train), np.prod(input_train.shape[1:]))) #For MNIST only. 
+    # input_test = input_test.reshape((len(input_test), np.prod(input_test.shape[1:])))
 
     return input_train, input_test
 
-def train(model, input_train, input_test, epochs, batch_size, callbacks):
+def train(model, input_train, input_train_aug, input_test, input_test_aug, epochs, batch_size, callbacks):
     history = model.fit(
-        x=input_train, 
+        x=input_train_aug, 
         y=input_train,
         batch_size=batch_size,
         epochs=epochs,
         callbacks=callbacks,
         verbose=1,
-        validation_data=(input_test, input_test),
+        validation_data=(input_test_aug, input_test),
         shuffle=True
     )
 
@@ -103,13 +155,16 @@ def argparser():
     parser.add_argument('--NUM_TRIALS_HP', type=int, help='Number of try to find the best hyper-parameters combinaison.')
     parser.add_argument('--EXECUTION_PER_TRIAL_HP', type=int, help='Number of time the same hyper-parameters combinaison will be tested.')
     parser.add_argument('--NBEST', type=int, help='Number of best hp search that will be taken to train the model with.')
+    parser.add_argument('--DATA_PATH', type=str, help='Path where are located the data.')
 
     return parser.parse_args()
     
 class ModelTrainer:
-    def __init__(self, input_train_norm, input_test_norm, VERBOSE, MODE_METRIC, MONITOR_METRIC):
+    def __init__(self, input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm, VERBOSE, MODE_METRIC, MONITOR_METRIC):
         self.input_train_norm = input_train_norm
+        self.input_train_aug_norm = input_train_aug_norm
         self.input_test_norm = input_test_norm
+        self.input_test_aug_norm = input_test_aug_norm
         self.verbose = VERBOSE
         self.mode_metric = MODE_METRIC
         self.monitor_metric = MONITOR_METRIC
@@ -121,7 +176,7 @@ class ModelTrainer:
         callback_search = cb.TrainingCallbacks(args.FILEPATH_WEIGHTS_SERCH, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
         callbacks_list_search = callback_search.get_callbacks(None)
 
-        hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_test_norm, EPOCHS_HP, NUM_TRIALS_HP, 
+        hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_aug_norm, self.input_test_norm, self.input_test_aug_norm, EPOCHS_HP, NUM_TRIALS_HP, 
                                                 EXECUTION_PER_TRIAL_HP, self.monitor_metric, self.mode_metric, self.verbose, callbacks_list_search)
         hp_search = hp_tuner_instance.get_hp_search(args.HP_SEARCH, args.HP_NAME)
 
@@ -135,13 +190,13 @@ class ModelTrainer:
         for j, trial in enumerate(best_hp, start=1):
             hp = trial.hyperparameters
             model = mod.AeModels(learning_rate=hp.get('lr'))
-            build_model = model.build_francois_chollet_autoencoder(input_shape=(784,), encoding_dim=32)
+            build_model = model.build_basic_cae()
 
             name = f'model{j}'
             callback = cb.TrainingCallbacks(args.FILEPATH_WEIGHTS, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
             callbacks_list = callback.get_callbacks(name)
 
-            history = train(build_model, self.input_train_norm, self.input_test_norm, int(1.2*EPOCHS_HP), 32, callbacks_list)
+            history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_test_norm, self.input_test_aug_norm, int(1.2*EPOCHS_HP), 32, callbacks_list)
             plot_graph(history, name, PATH_RESULTS)
         
     def train(self, EPOCHS, BATCH_SIZE, PATH_RESULTS):
@@ -149,8 +204,8 @@ class ModelTrainer:
         Here we are training the model with the default parameters given in the initial variables. 
         """
         model = mod.AeModels(learning_rate=0.001)
-        build_model = model.build_francois_chollet_autoencoder(input_shape=(784,), encoding_dim=32)
-        history = train(build_model, self.input_train_norm, self.input_test_norm, EPOCHS, BATCH_SIZE, self.callbacks_list)
+        build_model = model.build_basic_cae()
+        history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_test_norm, self.input_test_aug_norm, EPOCHS, BATCH_SIZE, self.callbacks_list)
 
         name = 'default_param'
         plot_graph(history, name, PATH_RESULTS)
@@ -162,10 +217,10 @@ if __name__ == '__main__':
     physical_device = tf.config.experimental.list_physical_devices('GPU')
     print(f'Device found : {physical_device}')
 
-    (input_train, _), (input_test, _) = mnist.load_data()
-    input_train_norm, input_test_norm = normalize(input_train, input_test)
+    #(input_train, _), (input_test, _) = mnist.load_data() 
+    input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm = load_data(args.DATA_PATH)
 
-    train_model = ModelTrainer(input_train_norm, input_test_norm, args.VERBOSE, args.MODE_METRIC, args.MONITOR_METRIC)
+    train_model = ModelTrainer(input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm, args.VERBOSE, args.MODE_METRIC, args.MONITOR_METRIC)
     if args.DO_HP_SEARCH:
         history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, args.PATH_RESULTS)
     else:

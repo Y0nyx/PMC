@@ -53,7 +53,7 @@ class AeModels():
         Convolutional auto-encoder for denoising. architecture from this link:
         https://keras.io/examples/vision/autoencoder/ 
         """
-        input = layers.Input(shape=(28, 28, 1))
+        input = layers.Input(shape=(256, 256, 3))
 
         #Encoder 
         x = Conv2D(32, (3,3), activation='relu', padding='same')(input)
@@ -76,7 +76,7 @@ class AeModels():
         return model
     
     #TODO: Pass all parameters to tune
-    def build_basic_cae(self, input_shape: tuple=(128, 128, 3)) -> keras.Model:
+    def build_basic_cae(self, input_shape: tuple=(256, 256, 3)) -> keras.Model:
         """
         Model based on this kaggle notebook: https://www.kaggle.com/code/orion99/autoencoder-made-easy/notebook
         Tested using the subdivided dataset
