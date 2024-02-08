@@ -6,12 +6,12 @@ import os
 import cv2
 
 from ultralytics import YOLO
-from clearml import Task
+#from clearml import Task
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class Pipeline:
-    def __init__(self, models, verbose: bool = False):
+    def __init__(self, models, verbose: bool = True):
         self.verbose = verbose
 
         self.print('=== Init Pipeline ===')
@@ -77,16 +77,16 @@ class Pipeline:
 
         results = model.train(yaml_path, **args)
 
-    def detect(self, show: bool = False, save: bool = True, conf: float = 0.5):
+    def detect(self, show: bool = False, save: bool = True, conf: float = 0.7):
         self._state = PipelineState.ANALYSING
         while True:
             key = input("Press 'q' to detect on cameras, 'e' to exit: ")
             
             if key == 'q':
+                Images = self._dataManager.get_all_img()
+                Images_to_detect = [img.value for img in Images]
                 for model in self.models:
-                    Images = self._dataManager.get_all_img()
-                    Images_to_detect = [img.value for img in Images]
-                    model.predict(source=Images_to_detect, show=show, save=save, conf=conf)
+                    model.predict(source=Images_to_detect, show=show, save=save, conf=conf, save_crop=True)
             if key == 'e':
                 print('Exit Capture')
                 break
