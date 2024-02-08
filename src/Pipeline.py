@@ -100,13 +100,28 @@ if __name__ == "__main__":
     models = []
     models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
     models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
-    Pipeline = Pipeline(models, verbose=True)
 
-    Pipeline.detect()
+    welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
+
+    data_path = "D:\dataset\dofa_2\data.yaml"
+    test_model = YoloModel()
+    test_model.train(epochs=3, data=data_path, batch=-1)
+
+    test_resultats = test_model.eval()
+
+    welding_resultats = welding_model.eval()
+
+    if test_resultats.fitness > welding_resultats.fitness:
+        print('wrong')
+    
+    print(f'test fitness: {test_resultats.fitness}')
+    print(f'welding fitness: {welding_resultats.fitness}')
+
+    #Pipeline = Pipeline(models, verbose=True)
+
+    #Pipeline.detect()
 
     #Pipeline.get_dataset()
-
-    #data_path = "D:\dataset\dofa_2\data.yaml"
 
     #import torch
 
