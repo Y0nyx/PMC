@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Author: Jean-Sebastien Giroux
 Contributor(s): 
@@ -5,6 +6,7 @@ Date: 01/25/2024
 Description: Callbacks used in the training of the model to minimize bad hyper-parameters(hp) combinaisons to
              maximize GPU utilization. A bad hp based on the monitor metrics which is in our case the mae.
 """
+
 import tensorflow as tf
 
 
@@ -15,12 +17,12 @@ class TrainingCallbacks():
         self.mode = mode
         self.verbose = verbose
 
-    def best_model_weights(self) -> tf.keras.callbacks.Callback:
+    def best_model_weights(self, name) -> tf.keras.callbacks.Callback:
         """
         Modelcheckpoint callback to save the best model weights.
         """
         return tf.keras.callbacks.ModelCheckpoint(
-            filepath=self.filepath, 
+            filepath=f'{self.filepath}/search_{name}', 
             monitor=self.monitor, 
             save_best_only=True,
             mode=self.mode,
@@ -62,13 +64,12 @@ class TrainingCallbacks():
         """
         return tf.keras.callbacks.TerminateOnNaN()
 
-    def get_callbacks(self, min_delta_es: float=0.001, patience_es: int=15, factor_rp: float=0.1, 
+    def get_callbacks(self, name, min_delta_es: float=0.001, patience_es: int=15, factor_rp: float=0.1, 
                       patience_rp: int=10, min_delta_rp: float=0.001) -> list:
         return [
-            self.best_model_weights(),
+            self.best_model_weights(name),
             self.early_stop(min_delta_es, patience_es),
             self.reduce_lr_plateau(factor_rp, patience_rp, min_delta_rp),
             self.end_nan()
         ]
-    
     
