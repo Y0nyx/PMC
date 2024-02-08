@@ -7,7 +7,7 @@ Description: Run test_AE on a super_computer or localy.
 """
 readonly PATH_NN='/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network'
 readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate'
-readonly SCRIPT_NAME='test_AE.py'
+readonly SCRIPT_NAME='test.py'
 
 readonly MODEL='ae_fchollet'
 readonly TEST_NAME='First_HP_Search'

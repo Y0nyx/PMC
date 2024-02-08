@@ -10,7 +10,7 @@ Description: Training Neural Network.
 #Variable for environment set-up
 readonly PATH_NN='/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network'
 readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate'
-readonly SCRIPT_NAME='train_AE.py'
+readonly SCRIPT_NAME='train.py'
 
 #Variable for Callbacks
 readonly MODEL='ae_fchollet'

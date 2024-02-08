@@ -96,7 +96,7 @@ if __name__ =='__main__':
     learning_rate = data_frame['lr']
 
     for j in range(args.NBEST):
-        model = mod.AeModels(learning_rate=learning_rate[j])
+        model = mod.AeModels(learning_rate=float(learning_rate[j]))
         build_model = model.build_francois_chollet_autoencoder(input_shape=(784,), encoding_dim=32)    #Change this line if the model change. 
 
         name = f"model{j+1}"
