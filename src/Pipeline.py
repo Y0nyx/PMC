@@ -84,9 +84,22 @@ class Pipeline:
             
             if key == 'q':
                 Images = self._dataManager.get_all_img()
-                Images_to_detect = [img.value for img in Images]
-                for model in self.models:
-                    model.predict(source=Images_to_detect, show=show, save=save, conf=conf, save_crop=True)
+                for img in Images:
+                    for model in self.models:
+                        results = model.predict(source=img.value, show=show, save=save, conf=conf, save_crop=True)
+
+                        # crop images with bounding box 
+                        cropped_imgs = []
+                        for result in results:
+                            for boxes in result.boxes:
+                                cropped_imgs.append(img.crop(boxes))
+                        
+                        # for i, img in enumerate(cropped_imgs):
+                        #     img.save(f'test_{i}.png')
+                                
+                    #TODO Integrate non supervised model
+
+
             if key == 'e':
                 print('Exit Capture')
                 break
@@ -101,25 +114,25 @@ if __name__ == "__main__":
     models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
     models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
 
-    welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
+    # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
 
-    data_path = "D:\dataset\dofa_2\data.yaml"
-    test_model = YoloModel()
-    test_model.train(epochs=3, data=data_path, batch=-1)
+    # data_path = "D:\dataset\dofa_2\data.yaml"
+    # test_model = YoloModel()
+    # test_model.train(epochs=3, data=data_path, batch=-1)
 
-    test_resultats = test_model.eval()
+    # test_resultats = test_model.eval()
 
-    welding_resultats = welding_model.eval()
+    # welding_resultats = welding_model.eval()
 
-    if test_resultats.fitness > welding_resultats.fitness:
-        print('wrong')
+    # if test_resultats.fitness > welding_resultats.fitness:
+    #     print('wrong')
     
-    print(f'test fitness: {test_resultats.fitness}')
-    print(f'welding fitness: {welding_resultats.fitness}')
+    # print(f'test fitness: {test_resultats.fitness}')
+    # print(f'welding fitness: {welding_resultats.fitness}')
 
-    #Pipeline = Pipeline(models, verbose=True)
+    Pipeline = Pipeline(models, verbose=True)
 
-    #Pipeline.detect()
+    Pipeline.detect()
 
     #Pipeline.get_dataset()
 

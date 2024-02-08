@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from PIL import Image as Img
 import numpy as np
 import cv2
 
@@ -25,6 +26,13 @@ class Image:
             self._img = img
         else:
             raise Exception("Not valid image")
+    
+    def __call__(self) -> np.ndarray:
+        """
+        Get the value of the Image class
+        :return:
+        """
+        return self._img 
 
     @property
     def value(self) -> np.ndarray:
@@ -56,3 +64,9 @@ class Image:
 
     def save(self, file_path):
         cv2.imwrite(file_path, self._img)
+
+    def crop(self, boxes):
+        image = Img.fromarray(self._img)
+        cropped_image = image.crop(boxes.xyxy.tolist()[0])
+
+        return Image(np.array(cropped_image))
