@@ -93,8 +93,8 @@ def train(model, input_train_norm, input_train_aug_norm, input_test_norm, input_
     print("Fit with test dataset in arrays of shape: ", input_test_aug_norm.shape, " | ", input_test_norm.shape)
     print("=====================================")
 
-    wandb_save_image_sample(input_train_norm[0], "Test expected output")
-    wandb_save_image_sample(input_train_aug_norm[0], "Test input (black square image)")
+    wandb_save_image_sample(input_train_norm[np.random.randint(0, 200 + 1)], "Test expected output")
+    wandb_save_image_sample(input_train_aug_norm[np.random.randint(0, 200 + 1)], "Test input (black square image)")
 
     model.fit(
         x=input_train_aug_norm, 
@@ -114,7 +114,7 @@ def wandb_save_image_sample(image, name):
     plt.axis('off')
 
     # Log the plot
-    wandb.log({name + "plot": plt})
+    wandb.log({name: plt})
 
 def apply_random_blackout(images, blackout_size=(32, 32)):
     augmented_images = images.copy()

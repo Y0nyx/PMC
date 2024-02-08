@@ -133,24 +133,25 @@ def create_transformed_images_and_compare(original_image, square_size, image_num
             prediction = prediction.reshape(image_size, image_size, channels)
 
             # Test to compare
-            prediction_unmodified = model.predict(original_image.reshape((-1, image_size, image_size, channels)))
-            prediction_unmodified = prediction_unmodified.reshape(image_size, image_size, channels)
+            #prediction_unmodified = model.predict(original_image.reshape((-1, image_size, image_size, channels)))
+            #prediction_unmodified = prediction_unmodified.reshape(image_size, image_size, channels)
 
             # Compare the blacked out square for each channel separately
             ssim_values = []
             for channel in range(channels):
-                #img1_channel = original_image[:,:,channel]
-                img1_channel = prediction_unmodified[:,:,channel]
-                img2_channel = prediction[:,:,channel]
-                ssim_index, _ = ssim(img1_channel, img2_channel, full=True, data_range=1)
-                ssim_values.append(ssim_index)
+                img1_channel = original_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel]
+                #img1_channel = prediction_unmodified[:,:,channel]
+                img2_channel = prediction[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel]
+                #ssim_index, _ = ssim(img1_channel, img2_channel, full=True, data_range=1)
+                #ssim_values.append(ssim_index)
+                ssim_values.append(np.mean(img2_channel)/np.mean(img1_channel)*100)
 
             # Average the SSIM values across channels
             avg_ssim = np.mean(ssim_values)
-            print(avg_ssim)
-            if avg_ssim < 0.95:
-
-                if avg_ssim < worst_ssim:
+            print(avg_ssim, "%")
+            if avg_ssim > 120:
+                print("entered")
+                if avg_ssim > worst_ssim:
                     worst_ssim = avg_ssim
                     worst_ssim_position = [i, j]
                     worst_ssim_square = current_image
@@ -197,7 +198,7 @@ if __name__ == '__main__':
     for i in range(nb_random_images):
         worst_ssim, worst_ssim_position, worst_ssim_square, worst_ssim_prediction = create_transformed_images_and_compare(images[i], square_size, i, model)
 
-        if worst_ssim < 1:
+        if worst_ssim > 1:
             
             fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
