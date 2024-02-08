@@ -20,7 +20,7 @@ class CameraSensor(ABC):
 
         self.verbose = verbose
         try:
-            self.print(f"Init camera : {self.camera_id}")
+            self.print(f"\nInit camera : {self.camera_id}")
             self.print(f' - resolution : {self.resolution}')
             self.print(f' - fps : {self.fps}')
             if platform.system() == "Windows":

@@ -30,7 +30,7 @@ class CameraManager:
 
     def add_camera(self, *cameras):
         for camera in cameras:
-            if isinstance(camera, CameraSensor):
+            if isinstance(camera, CameraSensor) and camera is not None:
                 self.cameras.append(camera)
                 return True
             else:
@@ -53,7 +53,10 @@ class CameraManager:
         images = []
         for camera in self.cameras:
             image = camera.get_img()
-            images.append(image)
+            if image.value is not None:
+                images.append(image)
+            else:
+                self.print(f'camera {camera.camera_id} was not able to capture an Image')
         return images
 
     def get_img(self, index_camera) -> Image:
@@ -86,7 +89,10 @@ class CameraManager:
                     for config in camera_configs:
                         resolution = tuple(map(int, config['resolution'].strip('()').split(','))) or None
                         camera = WebcamCamera(config.get('camera_id', None), resolution, config.get('fps', None), self.verbose)
-                        self.add_camera(camera)
+                        if camera is not None:
+                            self.add_camera(camera)
+                        else:
+                            self.print(f'Camera {config.get("camera_id", None)} was not initialize')
                         pbar.update(1)
             except yaml.YAMLError as e:
                 warn("Erreur lors de la lecture du fichier YAML : {e}")
