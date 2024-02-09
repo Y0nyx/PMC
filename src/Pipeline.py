@@ -1,9 +1,14 @@
 from pipeline.models.Model import YoloModel
 from pipeline.data.DataManager import DataManager
 from common.enums.PipelineStates import PipelineState
+from common.image.Image import Image
 
 import os
 import cv2
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from PIL import Image as Img
+import numpy as np
 
 from ultralytics import YOLO
 #from clearml import Task
@@ -11,7 +16,7 @@ from ultralytics import YOLO
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class Pipeline:
-    def __init__(self, models, verbose: bool = True):
+    def __init__(self, models, unsupervised_model, verbose: bool = True):
         self.verbose = verbose
 
         self.print('=== Init Pipeline ===')
@@ -19,9 +24,9 @@ class Pipeline:
         self.models = []
         for model in models:
             self.models.append(model)
-        
+        self.unsupervised_model = unsupervised_model
         self._state = PipelineState.INIT
-        self._dataManager = DataManager("", "./src/cameras.yaml", self.verbose).get_instance()
+        self._dataManager = DataManager("", "Code/src/cameras.yaml", self.verbose).get_instance()
     
     def get_dataset(self) -> None:
         """ Génère un dataset avec tout les caméras instancié lors du init du pipeline.
@@ -77,7 +82,7 @@ class Pipeline:
 
         results = model.train(yaml_path, **args)
 
-    def detect(self, show: bool = False, save: bool = True, conf: float = 0.7):
+    def detect(self, show: bool = False, save: bool = True, conf: float = 0.5):
         self._state = PipelineState.ANALYSING
         while True:
             key = input("Press 'q' to detect on cameras, 'e' to exit: ")
@@ -87,32 +92,179 @@ class Pipeline:
                 for img in Images:
                     for model in self.models:
                         results = model.predict(source=img.value, show=show, save=save, conf=conf, save_crop=True)
-
                         # crop images with bounding box 
                         cropped_imgs = []
                         for result in results:
                             for boxes in result.boxes:
                                 cropped_imgs.append(img.crop(boxes))
                         
-                        # for i, img in enumerate(cropped_imgs):
-                        #     img.save(f'test_{i}.png')
-                                
-                    #TODO Integrate non supervised model
-
-
+                        print("Nb cropped img", len(cropped_imgs))
+                        # Directory where images are saved
+                        directory = 'C:/Users/mafrc/Desktop/Uni/PMC/CodePMC/test_dataset/'
+                        
+                        # Find the index of the last saved image
+                        last_index = 0
+                        for filename in os.listdir(directory):
+                            if filename.endswith('.png'):
+                                index = int(filename.split('_')[-1].split('.')[0])
+                                last_index = max(last_index, index)
+                        
+                        # Start saving new images from the next index
+                        for i, img in enumerate(cropped_imgs):
+                            img_index = last_index + i + 1
+                            img.save(os.path.join(directory, f'test_dataset_{img_index}.png'))
+                               
+                
+                        #for image in cropped_imgs:
+                        #    if True: #C'est un if le model non supervise prend des images subdivises
+                        #        # Calculate the closest multiples for both dimensions
+                        #        closest_width = int(np.ceil(image.value.shape[1] / unsupervised_model.input_shape[1]) * unsupervised_model.input_shape[1])
+                        #        closest_height = int(np.ceil(image.value.shape[0] / unsupervised_model.input_shape[2]) * unsupervised_model.input_shape[2])
+#
+#
+                        #        image.value = cv2.resize(image.value, (closest_width, closest_height))
+                        #        cv2.imshow('Resized Image',image.value)
+                        #        cv2.waitKey(0)
+                        #        cv2.destroyAllWindows()
+#
+                        #        sub_images = image.subdivise(128, 0, "untranslated")
+#
+                        #        for i, sub_image in enumerate(sub_images):
+                        #            cv2.imshow('Sub image', sub_image.value)
+                        #            cv2.waitKey(0)
+                        #            cv2.destroyAllWindows()
+#
+                        #            worst_ssim, worst_ssim_position, worst_ssim_square, worst_ssim_prediction = self.detect_default(sub_image.value, 32, i)
+#
+                        #            if True:
+                        #            
+                        #                fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+#
+                        #                # Plot the first RGB image
+                        #                axes[0].imshow(sub_image.value)
+                        #                axes[0].set_title(f"Error in image {i}")
+                        #                axes[0].axis('off')
+#
+                        #                # Plot the second grayscale image
+                        #                axes[1].imshow(worst_ssim_square)
+                        #                axes[1].set_title(f"At position x={worst_ssim_position[0]} y={worst_ssim_position[1]}")
+                        #                axes[1].axis('off')
+#
+                        #                # Plot the third grayscale image
+                        #                axes[2].imshow(worst_ssim_prediction)
+                        #                axes[2].set_title(f"Prediction made")
+                        #                axes[2].axis('off')
+#
+                        #                # Show the combined plot
+                        #                plt.show()
+#
+#
             if key == 'e':
                 print('Exit Capture')
                 break
         self._state = PipelineState.INIT
     
+    def detect_default(self, sub_image, square_size, image_numb, debug=False):
+        # Initialize an array to store the transformed images
+        transformed_images = []
+
+        # Get the dimensions of the original image
+        rows, cols, channels = sub_image.shape
+
+        # Calculate the number of squares in each dimension
+        num_squares_rows = rows // square_size
+        num_squares_cols = cols // square_size
+
+        worst_ssim = 1
+        worst_ssim_position = [0, 0]
+        worst_ssim_square = []
+        worst_ssim_prediction = []
+
+        # Iterate through each position
+        for j in range(num_squares_cols):
+            for i in range(num_squares_rows):
+                # Create a copy of the original image
+                current_image = np.copy(sub_image)
+
+                # Calculate the coordinates of the square
+                square_top_left = (i * square_size, j * square_size)
+                square_bottom_right = (square_top_left[0] + square_size, square_top_left[1] + square_size)
+
+                # Black out the square for each channel
+                for channel in range(channels):
+                    current_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel] = 0
+
+                current_image_reshaped = current_image.reshape((-1, rows, cols, channels))
+
+                # Generate image
+                prediction = unsupervised_model.predict(current_image_reshaped)
+                prediction = prediction.reshape(rows, cols, channels)
+
+                # Test to compare
+                #prediction_unmodified = model.predict(image.reshape((-1, image_size, image_size, channels)))
+                #prediction_unmodified = prediction_unmodified.reshape(image_size, image_size, channels)
+
+                # Compare the blacked out square for each channel separately
+                ssim_values = []
+                for channel in range(channels):
+                    img1_channel = sub_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel]
+                    #img1_channel = prediction_unmodified[:,:,channel]
+                    img2_channel = prediction[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel]
+                    #ssim_index, _ = ssim(img1_channel, img2_channel, full=True, data_range=1)
+                    #ssim_values.append(ssim_index)
+                    ssim_values.append(np.mean(img2_channel)/np.mean(img1_channel)*100)
+
+                # Average the SSIM values across channels
+                avg_ssim = np.mean(ssim_values)
+                print(avg_ssim, "%")
+                if avg_ssim > 1:
+                    print("entered")
+                    if avg_ssim > worst_ssim:
+                        worst_ssim = avg_ssim
+                        worst_ssim_position = [i, j]
+                        worst_ssim_square = current_image
+                        worst_ssim_prediction = prediction
+
+                    if debug:
+                        print(f"Flag in image {image_numb} at square {i} : {j} = {avg_ssim}")
+
+                        # Create subplots for predicted images
+                        plt.imshow(sub_image)
+                        plt.title(f"Original Image {image_numb}")
+                        plt.axis('off')
+                        plt.show()
+
+                        # Create subplots for predicted images
+                        plt.imshow(prediction)
+                        plt.title(f"Predicted Image {image_numb}")
+                        plt.axis('off')
+                        plt.show()
+
+                        # Create subplots for comparison
+                        plt.imshow(current_image)
+                        plt.title(f"Original comparison at square {i} : {j}")
+                        plt.axis('off')
+                        plt.show()
+
+                        # Create subplots for comparison
+                        plt.imshow(sub_image)
+                        plt.title(f"Predicted comparison at square {i} : {j}")
+                        plt.axis('off')
+                        plt.show()
+
+        return worst_ssim, worst_ssim_position, worst_ssim_square, worst_ssim_prediction
+        
+
     def print(self, string):
         if self.verbose:
             print(string)
-            
+
+
 if __name__ == "__main__":
     models = []
-    models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
-    models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
+    models.append(YoloModel('./Code/src/ia/welding_detection_v1.pt'))
+    models.append(YoloModel('./Code/src/ia/piece_detection_v1.pt'))
+    unsupervised_model = tf.keras.models.load_model('./Code/src/ia/wandb_night_run_basic_CAE_best_gen.keras')
 
     # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
 
@@ -130,7 +282,7 @@ if __name__ == "__main__":
     # print(f'test fitness: {test_resultats.fitness}')
     # print(f'welding fitness: {welding_resultats.fitness}')
 
-    Pipeline = Pipeline(models, verbose=True)
+    Pipeline = Pipeline(models, unsupervised_model, verbose=True)
 
     Pipeline.detect()
 
