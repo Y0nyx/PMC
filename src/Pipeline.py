@@ -6,12 +6,12 @@ import os
 import cv2
 
 from ultralytics import YOLO
-#from clearml import Task
+from clearml import Task
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 class Pipeline:
-    def __init__(self, models, verbose: bool = True):
+    def __init__(self, models: list = [], verbose: bool = True):
         self.verbose = verbose
 
         self.print('=== Init Pipeline ===')
@@ -62,7 +62,7 @@ class Pipeline:
         
         self._state = PipelineState.INIT
     
-    def train(self, yaml_path, yolo_model, kargs):
+    def train(self, yaml_path, yolo_model, **kargs):
         task = Task.init(
             project_name="PMC",
             task_name=f"{yolo_model} task"
@@ -75,7 +75,7 @@ class Pipeline:
         args = dict(data=yaml_path, **kargs)
         task.connect(args)
 
-        results = model.train(yaml_path, **args)
+        results = model.train(**args)
 
     def detect(self, show: bool = False, save: bool = True, conf: float = 0.7):
         self._state = PipelineState.ANALYSING
@@ -110,13 +110,13 @@ class Pipeline:
             print(string)
             
 if __name__ == "__main__":
-    models = []
-    models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
-    models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
+    # models = []
+    # models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
+    # models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
 
     # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
 
-    # data_path = "D:\dataset\dofa_2\data.yaml"
+    data_path = "D:\dataset\dofa_2\data.yaml"
     # test_model = YoloModel()
     # test_model.train(epochs=3, data=data_path, batch=-1)
 
@@ -130,9 +130,9 @@ if __name__ == "__main__":
     # print(f'test fitness: {test_resultats.fitness}')
     # print(f'welding fitness: {welding_resultats.fitness}')
 
-    Pipeline = Pipeline(models, verbose=True)
+    Pipeline = Pipeline()
 
-    Pipeline.detect()
+    Pipeline.train(data_path,'yolov8m-seg', epochs=350, batch=15, workers=4)
 
     #Pipeline.get_dataset()
 
