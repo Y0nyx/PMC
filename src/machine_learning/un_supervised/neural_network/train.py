@@ -15,6 +15,8 @@ import os
 import tensorflow as tf
 from keras.preprocessing import image
 from sklearn.model_selection import train_test_split
+from keras import backend as K
+import gc
 
 import callbacks as cb
 import hyper_parameters_tuner as hp_tuner
@@ -198,6 +200,10 @@ class ModelTrainer:
 
             history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_test_norm, self.input_test_aug_norm, int(1.2*EPOCHS_HP), 32, callbacks_list)
             plot_graph(history, name, PATH_RESULTS)
+
+            # Nettoyage de la session Keras et collecte des déchets
+            K.clear_session()
+            gc.collect()
         
     def train(self, EPOCHS, BATCH_SIZE, PATH_RESULTS):
         """
@@ -214,8 +220,24 @@ class ModelTrainer:
 if __name__ == '__main__':
     args = argparser()
 
-    physical_device = tf.config.experimental.list_physical_devices('GPU')
-    print(f'Device found : {physical_device}')
+    # physical_device = tf.config.experimental.list_physical_devices('GPU')
+    # print(f'Device found : {physical_device}')
+
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+
+    if gpus:
+        try:
+            # Active la croissance de la mémoire pour chaque GPU
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+            
+            # Définit le premier GPU comme le seul périphérique GPU visible
+            # Cela indique à TensorFlow d'utiliser uniquement le premier GPU
+            tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
+
+        except RuntimeError as e:
+            # La gestion de la mémoire doit être définie avant l'initialisation des GPUs
+            print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
     #(input_train, _), (input_test, _) = mnist.load_data() 
     input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm = load_data(args.DATA_PATH)

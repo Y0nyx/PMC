@@ -14,20 +14,20 @@ readonly SCRIPT_NAME='train.py'
 
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images'
 #Variable for Callbacks
-readonly MODEL='ae_fchollet'
-readonly TEST_NAME='Second_HP_Search'
+readonly MODEL='build_basic_cae'
+readonly TEST_NAME='First_HP_Search'
 readonly MONITOR_METRIC='mean_absolute_error'
 readonly MODE_METRIC='min'
 readonly VERBOSE=TRUE #If false remove --VERBOSE from line 40
 #Variable for HP search 
 readonly DO_HP_SEARCH=True #If false remove --DO_HP_SEARCH from line 40
-readonly EPOCHS_HP=3
-readonly NUM_TRIALS_HP=3
-readonly EXECUTION_PER_TRIAL_HP=1
-readonly NBEST=2
+readonly EPOCHS_HP=30
+readonly NUM_TRIALS_HP=10
+readonly EXECUTION_PER_TRIAL_HP=2
+readonly NBEST=5
 #Variable for default training
 readonly EPOCHS=5
-readonly BATCH_SIZE=50
+readonly BATCH_SIZE=256
 
 #Never change this constants (Only adapt PATH_RESULTS to the computer you are using)
 readonly PATH_RESULTS="/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/${MODEL}/${TEST_NAME}"

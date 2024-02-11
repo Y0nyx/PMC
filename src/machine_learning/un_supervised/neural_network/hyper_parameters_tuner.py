@@ -8,6 +8,8 @@ Description: Utilization of keras_tuner to find the best hyper-parameter combina
 
 from keras_tuner import BayesianOptimization, Objective
 import keras_tuner
+from keras import backend as K
+import gc
 
 import model as mod
 
@@ -25,8 +27,8 @@ class MyHyperModel(keras_tuner.HyperModel):
         Build the model with the HP to test. 
         """
         encoding_dim = hp.Choice('encoding_dim', values=[8, 16, 24, 32, 40])
-        lr = hp.Choice('lr', values=[0.0001, 0.001])
-        batch_size = hp.Int('batch_size', 1, 10, step=1, default=1)
+        lr = hp.Choice('lr', values=[0.0001, 0.001, 0.01])
+        batch_size = hp.Int('batch_size', 2, 40, step=2, default=1)
 
         model_to_build = mod.AeModels(learning_rate=lr)
         model = model_to_build.build_basic_cae()
@@ -54,6 +56,11 @@ class CustomBayesianTuner(BayesianOptimization):
 
         best_metric = min(history.history['mean_absolute_error']) 
         self.oracle.update_trial(trial.trial_id, {'mean_absolute_error': best_metric}) 
+
+        # Nettoyage après chaque essai
+        del model  # Supprimer explicitement le modèle
+        K.clear_session()  # Nettoyer la session Keras
+        gc.collect()  # Forcer la collecte des déchets de Python
 
     
 class KerasTuner():

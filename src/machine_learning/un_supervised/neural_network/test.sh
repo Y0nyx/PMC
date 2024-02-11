@@ -9,9 +9,10 @@ readonly PATH_NN='/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning
 readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate'
 readonly SCRIPT_NAME='test.py'
 
-readonly MODEL='ae_fchollet'
-readonly TEST_NAME='Second_HP_Search'
-readonly NBEST=2 #same as test_AE.sh
+readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images' #same as test_AE.sh
+readonly MODEL='build_basic_cae'     #same as test_AE.sh
+readonly TEST_NAME='First_HP_Search' #same as test_AE.sh
+readonly NBEST=5                     #same as test_AE.sh
 readonly NUM_TRAIN_REGENERATE=20
 
 #Never change this constants (Only adapt PATH_RESULTS to the computer you are using)
@@ -30,4 +31,4 @@ fi
 
 #Run the script test_AE.py
 cd $PATH_NN
-./$SCRIPT_NAME --PATH_RESULTS $PATH_RESULTS --NBEST $NBEST --NUM_TRAIN_REGENERATE $NUM_TRAIN_REGENERATE --FILEPATH_WEIGHTS $FILEPATH_WEIGHTS
+./$SCRIPT_NAME --PATH_RESULTS $PATH_RESULTS --NBEST $NBEST --NUM_TRAIN_REGENERATE $NUM_TRAIN_REGENERATE --FILEPATH_WEIGHTS $FILEPATH_WEIGHTS --DATA_PATH $DATA_PATH
