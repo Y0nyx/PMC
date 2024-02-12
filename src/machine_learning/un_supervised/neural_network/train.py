@@ -17,10 +17,12 @@ from keras.preprocessing import image
 from sklearn.model_selection import train_test_split
 from keras import backend as K
 import gc
+import math
 
 import callbacks as cb
 import hyper_parameters_tuner as hp_tuner
 import model as mod
+
 
 def load_data(DATA_PATH):
 
@@ -37,25 +39,31 @@ def load_data(DATA_PATH):
     print("Loaded image np.array of shape: ", images.shape)
     print("=====================================")
 
-    # Split the dataset into training and testing sets (70/30 split)
-    input_train, input_test = train_test_split(images, train_size=0.8, test_size=0.2, random_state=59)
+    # Split the dataset into training and testing sets (90/10 split)
+    input_train_valid, input_test = train_test_split(images, train_size=0.9, test_size=0.1, random_state=59)
+    #Create a validation set
+    len_separation = int( math.floor(len(input_train_valid) * 0.91) )
+    input_train = input_train_valid[:len_separation]
+    input_valid = input_train_valid[len_separation:]
     print("=====================================")
-    print("Splitted dataset in arrays of shape: ", input_train.shape, " | ", input_test.shape)
+    print(f'The sata is splitted into three set. TRAIN, VALIDATION and TEST')
+    print("Splitted dataset in arrays of shape: ", input_train.shape, " | ", input_valid.shape, " | ", input_test.shape)
     print("=====================================")
 
     del images
 
     train_augmented = apply_random_blackout(input_train)
+    valid_augmented = apply_random_blackout(input_valid)
     test_augmented = apply_random_blackout(input_test)
     print("=====================================")
-    print("Augmented splitted dataset in arrays of shape: ", train_augmented.shape, " | ", test_augmented.shape)
+    print("Augmented splitted dataset in arrays of shape: ", train_augmented.shape, " | ",valid_augmented.shape, " | ", test_augmented.shape)
     print("=====================================")
 
     #Normalizing the data (0-1)
-    input_train_norm, input_test_norm = normalize(input_train, input_test)
-    input_train_aug_norm, input_test_aug_norm = normalize(train_augmented, test_augmented)
+    input_train_norm, input_valid_norm, input_test_norm = normalize(input_train, input_valid, input_test)
+    input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = normalize(train_augmented, valid_augmented, test_augmented)
 
-    return input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm
+    return input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm
 
 def apply_random_blackout(images, blackout_size=(32, 32)):
     augmented_images = images.copy()
@@ -72,13 +80,12 @@ def apply_random_blackout(images, blackout_size=(32, 32)):
 
     return augmented_images
 
-def normalize(input_train, input_test):
+def normalize(input_train, input_valid, input_test):
     input_train = input_train.astype('float32') / 255.
+    input_valid = input_valid.astype('float32') / 255.
     input_test = input_test.astype('float32') / 255.
-    # input_train = input_train.reshape((len(input_train), np.prod(input_train.shape[1:]))) #For MNIST only. 
-    # input_test = input_test.reshape((len(input_test), np.prod(input_test.shape[1:])))
 
-    return input_train, input_test
+    return input_train, input_valid, input_test
 
 def train(model, input_train, input_train_aug, input_test, input_test_aug, epochs, batch_size, callbacks):
     history = model.fit(
@@ -105,7 +112,7 @@ def write_hp_csv(dir, n_best_hp):
             row_dict = {
                 'model_rank': i+1, 
                 'lr': hps.get('lr'),
-                'batch_size': hps.get('batch_size'),
+                'batch_size': hps.get('bFirstatch_size'),
                 'metric_loss': validation_loss
             }
             writer.writerow(row_dict)
@@ -162,11 +169,11 @@ def argparser():
     return parser.parse_args()
     
 class ModelTrainer:
-    def __init__(self, input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm, VERBOSE, MODE_METRIC, MONITOR_METRIC):
+    def __init__(self, input_train_norm, input_train_aug_norm, input_valid_norm, input_valid_aug_norm, VERBOSE, MODE_METRIC, MONITOR_METRIC):
         self.input_train_norm = input_train_norm
         self.input_train_aug_norm = input_train_aug_norm
-        self.input_test_norm = input_test_norm
-        self.input_test_aug_norm = input_test_aug_norm
+        self.input_valid_norm = input_valid_norm
+        self.input_valid_aug_norm = input_valid_aug_norm
         self.verbose = VERBOSE
         self.mode_metric = MODE_METRIC
         self.monitor_metric = MONITOR_METRIC
@@ -178,7 +185,7 @@ class ModelTrainer:
         callback_search = cb.TrainingCallbacks(args.FILEPATH_WEIGHTS_SERCH, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
         callbacks_list_search = callback_search.get_callbacks(None)
 
-        hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_aug_norm, self.input_test_norm, self.input_test_aug_norm, EPOCHS_HP, NUM_TRIALS_HP, 
+        hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_aug_norm, self.input_valid_norm, self.input_valid_aug_norm, EPOCHS_HP, NUM_TRIALS_HP, 
                                                 EXECUTION_PER_TRIAL_HP, self.monitor_metric, self.mode_metric, self.verbose, callbacks_list_search)
         hp_search = hp_tuner_instance.get_hp_search(args.HP_SEARCH, args.HP_NAME)
 
@@ -198,7 +205,7 @@ class ModelTrainer:
             callback = cb.TrainingCallbacks(args.FILEPATH_WEIGHTS, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
             callbacks_list = callback.get_callbacks(name)
 
-            history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_test_norm, self.input_test_aug_norm, int(1.2*EPOCHS_HP), 32, callbacks_list)
+            history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_valid_norm, self.input_valid_aug_norm, int(1.2*EPOCHS_HP), 32, callbacks_list)
             plot_graph(history, name, PATH_RESULTS)
 
             # Nettoyage de la session Keras et collecte des déchets
@@ -211,7 +218,7 @@ class ModelTrainer:
         """
         model = mod.AeModels(learning_rate=0.001)
         build_model = model.build_basic_cae()
-        history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_test_norm, self.input_test_aug_norm, EPOCHS, BATCH_SIZE, self.callbacks_list)
+        history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_valid_norm, self.input_valid_aug_norm, EPOCHS, BATCH_SIZE, self.callbacks_list)
 
         name = 'default_param'
         plot_graph(history, name, PATH_RESULTS)
@@ -220,29 +227,21 @@ class ModelTrainer:
 if __name__ == '__main__':
     args = argparser()
 
-    # physical_device = tf.config.experimental.list_physical_devices('GPU')
-    # print(f'Device found : {physical_device}')
-
     gpus = tf.config.experimental.list_physical_devices('GPU')
 
     if gpus:
         try:
-            # Active la croissance de la mémoire pour chaque GPU
             for gpu in gpus:
                 tf.config.experimental.set_memory_growth(gpu, True)
             
-            # Définit le premier GPU comme le seul périphérique GPU visible
-            # Cela indique à TensorFlow d'utiliser uniquement le premier GPU
             tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
 
         except RuntimeError as e:
-            # La gestion de la mémoire doit être définie avant l'initialisation des GPUs
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
-    #(input_train, _), (input_test, _) = mnist.load_data() 
-    input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm = load_data(args.DATA_PATH)
+    input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = load_data(args.DATA_PATH)
 
-    train_model = ModelTrainer(input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm, args.VERBOSE, args.MODE_METRIC, args.MONITOR_METRIC)
+    train_model = ModelTrainer(input_train_norm, input_train_aug_norm, input_valid_norm, input_valid_aug_norm, args.VERBOSE, args.MODE_METRIC, args.MONITOR_METRIC)
     if args.DO_HP_SEARCH:
         history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, args.PATH_RESULTS)
     else:

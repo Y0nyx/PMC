@@ -15,7 +15,7 @@ readonly SCRIPT_NAME='train.py'
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images'
 #Variable for Callbacks
 readonly MODEL='build_basic_cae'
-readonly TEST_NAME='First_HP_Search'
+readonly TEST_NAME='Second_HP_Search'
 readonly MONITOR_METRIC='mean_absolute_error'
 readonly MODE_METRIC='min'
 readonly VERBOSE=TRUE #If false remove --VERBOSE from line 40
