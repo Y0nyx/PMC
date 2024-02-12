@@ -101,10 +101,6 @@ class Pipeline:
                 Images = self._dataManager.get_all_img()
                 for img in Images:
                     for model in self.models:
-<<<<<<< HEAD
-                        results = model.predict(source=img.value, show=show, save=save, conf=conf, save_crop=True)
-                        # crop images with bounding box 
-=======
                         results = model.predict(
                             source=img.value,
                             show=show,
@@ -114,12 +110,10 @@ class Pipeline:
                         )
 
                         # crop images with bounding box
->>>>>>> ae72b887cd39cefe931ed0491fd3f7d71c42775e
                         cropped_imgs = []
                         for result in results:
                             for boxes in result.boxes:
                                 cropped_imgs.append(img.crop(boxes))
-<<<<<<< HEAD
                         
                         print("Nb cropped img", len(cropped_imgs))
                         # Directory where images are saved
@@ -277,18 +271,6 @@ class Pipeline:
 
         return worst_ssim, worst_ssim_position, worst_ssim_square, worst_ssim_prediction
         
-=======
-
-                        # for i, img in enumerate(cropped_imgs):
-                        #     img.save(f'test_{i}.png')
-
-                    # TODO Integrate non supervised model
-
-            if key == "e":
-                print("Exit Capture")
-                break
-        self._state = PipelineState.INIT
->>>>>>> ae72b887cd39cefe931ed0491fd3f7d71c42775e
 
     def print(self, string):
         if self.verbose:
@@ -296,16 +278,10 @@ class Pipeline:
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     models = []
     models.append(YoloModel('./Code/src/ia/welding_detection_v1.pt'))
     models.append(YoloModel('./Code/src/ia/piece_detection_v1.pt'))
     unsupervised_model = tf.keras.models.load_model('./Code/src/ia/wandb_night_run_basic_CAE_best_gen.keras')
-=======
-    # models = []
-    # models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
-    # models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
->>>>>>> ae72b887cd39cefe931ed0491fd3f7d71c42775e
 
     # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
 
@@ -324,11 +300,7 @@ if __name__ == "__main__":
     # print(f'test fitness: {test_resultats.fitness}')
     # print(f'welding fitness: {welding_resultats.fitness}')
 
-<<<<<<< HEAD
     Pipeline = Pipeline(models, unsupervised_model, verbose=True)
-=======
-    Pipeline = Pipeline()
->>>>>>> ae72b887cd39cefe931ed0491fd3f7d71c42775e
 
     Pipeline.train(data_path, "yolov8m-cls", epochs=350, batch=15, workers=4)
 
