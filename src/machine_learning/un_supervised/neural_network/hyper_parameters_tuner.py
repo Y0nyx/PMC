@@ -8,9 +8,12 @@ Description: Utilization of keras_tuner to find the best hyper-parameter combina
 
 import gc
 import keras_tuner
+import wandb
 
 from keras import backend as K
 from keras_tuner import BayesianOptimization, Objective
+from wandb.keras import WandbMetricsLogger
+from wandb.keras import WandbModelCheckpoint
 
 import model as mod
 

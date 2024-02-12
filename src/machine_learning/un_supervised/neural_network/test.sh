@@ -11,7 +11,7 @@ readonly SCRIPT_NAME='test.py'
 
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images' #same as test_AE.sh
 readonly MODEL='build_basic_cae'     #same as test_AE.sh
-readonly TEST_NAME='First_HP_Search' #same as test_AE.sh
+readonly TEST_NAME='Second_HP_Search' #same as test_AE.sh
 readonly NBEST=5                     #same as test_AE.sh
 readonly NUM_TRAIN_REGENERATE=20
 

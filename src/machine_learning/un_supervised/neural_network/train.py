@@ -9,83 +9,16 @@ Description: Training Neural Network.
 import argparse
 import csv
 import gc
-import math
 import matplotlib.pyplot as plt
-import numpy as np
 import os
 import tensorflow as tf
 
-from keras.preprocessing import image
-from sklearn.model_selection import train_test_split
 from keras import backend as K
 
 import callbacks as cb
+import data_processing as dp
 import hyper_parameters_tuner as hp_tuner
 import model as mod
-
-
-def load_data(DATA_PATH):
-
-    images = []
-
-    #Data loading
-    for filename in os.listdir(DATA_PATH):
-        if filename.endswith(".png"):
-            img = image.load_img(f'{DATA_PATH}/{filename}', target_size=(256, 256))
-            images.append(image.img_to_array(img))
-    images = np.array(images)
-
-    print("=====================================")
-    print("Loaded image np.array of shape: ", images.shape)
-    print("=====================================")
-
-    # Split the dataset into training and testing sets (90/10 split)
-    input_train_valid, input_test = train_test_split(images, train_size=0.9, test_size=0.1, random_state=59)
-    #Create a validation set
-    len_separation = int( math.floor(len(input_train_valid) * 0.91) )
-    input_train = input_train_valid[:len_separation]
-    input_valid = input_train_valid[len_separation:]
-    print("=====================================")
-    print(f'The sata is splitted into three set. TRAIN, VALIDATION and TEST')
-    print("Splitted dataset in arrays of shape: ", input_train.shape, " | ", input_valid.shape, " | ", input_test.shape)
-    print("=====================================")
-
-    del images
-
-    train_augmented = apply_random_blackout(input_train)
-    valid_augmented = apply_random_blackout(input_valid)
-    test_augmented = apply_random_blackout(input_test)
-    print("=====================================")
-    print("Augmented splitted dataset in arrays of shape: ", train_augmented.shape, " | ",valid_augmented.shape, " | ", test_augmented.shape)
-    print("=====================================")
-
-    #Normalizing the data (0-1)
-    input_train_norm, input_valid_norm, input_test_norm = normalize(input_train, input_valid, input_test)
-    input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = normalize(train_augmented, valid_augmented, test_augmented)
-
-    return input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm
-
-def apply_random_blackout(images, blackout_size=(32, 32)):
-    augmented_images = images.copy()
-
-    for i in range(images.shape[0]):
-        # Randomly select the position to blackout
-        x = np.random.randint(0, images.shape[1] - blackout_size[0] + 1)
-        y = np.random.randint(0, images.shape[2] - blackout_size[1] + 1)
-
-        # Black out the selected region for each channel
-        channels = 3
-        for channel in range(channels):
-            augmented_images[i, x:x+blackout_size[0], y:y+blackout_size[1], channel] = 0.0
-
-    return augmented_images
-
-def normalize(input_train, input_valid, input_test):
-    input_train = input_train.astype('float32') / 255.
-    input_valid = input_valid.astype('float32') / 255.
-    input_test = input_test.astype('float32') / 255.
-
-    return input_train, input_valid, input_test
 
 def train(model, input_train, input_train_aug, input_test, input_test_aug, epochs, batch_size, callbacks):
     history = model.fit(
@@ -112,7 +45,7 @@ def write_hp_csv(dir, n_best_hp):
             row_dict = {
                 'model_rank': i+1, 
                 'lr': hps.get('lr'),
-                'batch_size': hps.get('bFirstatch_size'),
+                'batch_size': hps.get('batch_size'),
                 'metric_loss': validation_loss
             }
             writer.writerow(row_dict)
@@ -208,7 +141,7 @@ class ModelTrainer:
             history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_valid_norm, self.input_valid_aug_norm, int(1.2*EPOCHS_HP), 32, callbacks_list)
             plot_graph(history, name, PATH_RESULTS)
 
-            # Nettoyage de la session Keras et collecte des déchets
+            # Nettoyage de la session Keras et collecte des dechets
             K.clear_session()
             gc.collect()
         
@@ -239,7 +172,8 @@ if __name__ == '__main__':
         except RuntimeError as e:
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
-    input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = load_data(args.DATA_PATH)
+    data_processing = dp.DataProcessing()
+    input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = data_processing.get_data_processing(args.DATA_PATH)
 
     train_model = ModelTrainer(input_train_norm, input_train_aug_norm, input_valid_norm, input_valid_aug_norm, args.VERBOSE, args.MODE_METRIC, args.MONITOR_METRIC)
     if args.DO_HP_SEARCH:

@@ -7,96 +7,13 @@ Description: Testing the Neural Network.
 """
 
 import argparse
-import math
 import matplotlib.pyplot as plt
-import numpy as np
 import os
 import pandas as pd
 
-from keras.preprocessing import image
-from sklearn.model_selection import train_test_split
+import data_processing as dp
 
 import model as mod
-
-def load_data(DATA_PATH):
-
-    images = []
-
-    #Data loading
-    for filename in os.listdir(DATA_PATH):
-        if filename.endswith(".png"):
-            img = image.load_img(f'{DATA_PATH}/{filename}', target_size=(256, 256))
-            images.append(image.img_to_array(img))
-    images = np.array(images)
-
-    print("=====================================")
-    print("Loaded image np.array of shape: ", images.shape)
-    print("=====================================")
-
-    # Split the dataset into training and testing sets (90/10 split)
-    input_train_valid, input_test = train_test_split(images, train_size=0.9, test_size=0.1, random_state=59)
-    #Create a validation set
-    len_separation = int( math.floor(len(input_train_valid) * 0.91) )
-    input_train = input_train_valid[:len_separation]
-    input_valid = input_train_valid[len_separation:]
-    print("=====================================")
-    print(f'The sata is splitted into three set. TRAIN, VALIDATION and TEST')
-    print("Splitted dataset in arrays of shape: ", input_train.shape, " | ", input_valid.shape, " | ", input_test.shape)
-    print("=====================================")
-
-    del images
-
-    train_augmented = apply_random_blackout(input_train)
-    valid_augmented = apply_random_blackout(input_valid)
-    test_augmented = apply_random_blackout(input_test)
-    print("=====================================")
-    print("Augmented splitted dataset in arrays of shape: ", train_augmented.shape, " | ",valid_augmented.shape, " | ", test_augmented.shape)
-    print("=====================================")
-
-    #Normalizing the data (0-1)
-    input_train_norm, input_valid_norm, input_test_norm = normalize(input_train, input_valid, input_test)
-    input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = normalize(train_augmented, valid_augmented, test_augmented)
-
-    return input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm
-
-def apply_random_blackout(images, blackout_size=(32, 32)):
-    augmented_images = images.copy()
-
-    for i in range(images.shape[0]):
-        # Randomly select the position to blackout
-        x = np.random.randint(0, images.shape[1] - blackout_size[0] + 1)
-        y = np.random.randint(0, images.shape[2] - blackout_size[1] + 1)
-
-        # Black out the selected region for each channel
-        channels = 3
-        for channel in range(channels):
-            augmented_images[i, x:x+blackout_size[0], y:y+blackout_size[1], channel] = 0.0
-
-    return augmented_images
-
-def normalize(input_train, input_valid, input_test):
-    input_train = input_train.astype('float32') / 255.
-    input_valid = input_valid.astype('float32') / 255.
-    input_test = input_test.astype('float32') / 255.
-
-    return input_train, input_valid, input_test
-
-def de_normalize(input_test, result_test):
-    difference_abs = np.abs(input_test - result_test)
-
-    #Normalisation
-    min_val = np.min(difference_abs)
-    max_val = np.max(difference_abs)
-
-    #Ajustement des valeurs pour couvrir la gamme de 0 à 255
-    normalized_diff = (difference_abs - min_val) / (max_val - min_val) * 255
-
-    #Conversion en uint8
-    difference_reshaped = normalized_diff.astype('uint8')
-    input_test = (input_test * 255).astype('uint8')
-    result_test = (result_test * 255).astype('uint8')
-
-    return input_test, result_test, difference_reshaped
 
 def evaluate_model(model, input_test, batch_size=32, verbose=1):
     test_loss = model.evaluate(
@@ -149,8 +66,9 @@ def argparser():
 if __name__ =='__main__':
     args = argparser()
 
+    data_processing = dp.DataProcessing()
     # input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm
-    input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = load_data(args.DATA_PATH)
+    input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = data_processing.get_data_processing(args.DATA_PATH)
 
     data_frame = pd.read_csv(f'{args.PATH_RESULTS}/hp_search_results.csv')
     #TODO Might by a way to automatize this. 
@@ -167,7 +85,7 @@ if __name__ =='__main__':
 
         result_norm = prediction(build_model, input_test_norm)
 
-        input_test_denorm, result_denorm, difference_reshaped = de_normalize(input_test_norm, result_norm)
+        input_test_denorm, result_denorm, difference_reshaped = data_processing.de_normalize(input_test_norm, result_norm)
 
         for i in range(args.NUM_TRAIN_REGENERATE):
             createPredImg(input_test_denorm[i], result_denorm[i], difference_reshaped[i], i, j, args.PATH_RESULTS)
