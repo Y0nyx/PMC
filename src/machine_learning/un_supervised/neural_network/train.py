@@ -8,16 +8,16 @@ Description: Training Neural Network.
 
 import argparse
 import csv
-from keras.datasets import mnist
+import gc
+import math
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 import tensorflow as tf
+
 from keras.preprocessing import image
 from sklearn.model_selection import train_test_split
 from keras import backend as K
-import gc
-import math
 
 import callbacks as cb
 import hyper_parameters_tuner as hp_tuner

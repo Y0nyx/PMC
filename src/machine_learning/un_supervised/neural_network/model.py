@@ -8,14 +8,12 @@ Description: Contain the list of GAN model that will be used to train the GAN wi
 """
 
 import keras
-from keras import layers
-from keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, BatchNormalization, LeakyReLU, Add, UpSampling2D, Activation
 import tensorflow as tf
 
-import numpy as np
-from keras.layers import Input, Dense, Conv2D, MaxPooling2D, UpSampling2D, Conv2DTranspose, Activation
+from keras import layers
+from keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, BatchNormalization, LeakyReLU, Add, UpSampling2D, Activation, Dense, Input
+
 from keras.models import Model
-from keras.preprocessing import image
 
 class AeModels():
     def __init__(self, learning_rate: float=0.001):

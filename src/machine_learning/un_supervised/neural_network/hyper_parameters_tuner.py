@@ -6,10 +6,11 @@ Date: 01/25/2024
 Description: Utilization of keras_tuner to find the best hyper-parameter combinaison. 
 """
 
-from keras_tuner import BayesianOptimization, Objective
-import keras_tuner
-from keras import backend as K
 import gc
+import keras_tuner
+
+from keras import backend as K
+from keras_tuner import BayesianOptimization, Objective
 
 import model as mod
 

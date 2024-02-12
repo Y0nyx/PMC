@@ -7,14 +7,14 @@ Description: Testing the Neural Network.
 """
 
 import argparse
-from keras.datasets import mnist
+import math
 import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
+
 from keras.preprocessing import image
 from sklearn.model_selection import train_test_split
-import math
 
 import model as mod
 
