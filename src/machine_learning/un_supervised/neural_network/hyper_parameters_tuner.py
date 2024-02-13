@@ -50,7 +50,7 @@ class CustomBayesianTuner(BayesianOptimization):
         
         model = self.hypermodel.build(hp)
 
-        wandb.init(project='Essai3 wandb', entity='dofa_unsupervised', config=trial.hyperparameters.values)
+        wandb.init(project='Essai3 wandb', entity='dofa_unsupervised', config=trial.hyperparameters.values, mode="online")
 
         callbacks = self.hypermodel.callbacks.copy() 
         callbacks.append(WandbCallback(save_model=False))

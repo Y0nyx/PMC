@@ -1,0 +1,70 @@
+
+Epoch 1/30
+
+
+185/185 [==============================] - 8s 26ms/step - loss: 0.6427 - mean_absolute_error: 0.0633 - val_loss: 0.6330 - val_mean_absolute_error: 0.0362
+Epoch 2/30
+185/185 [==============================] - 3s 18ms/step - loss: 0.6252 - mean_absolute_error: 0.0336 - val_loss: 0.6310 - val_mean_absolute_error: 0.0295
+Epoch 3/30
+
+185/185 [==============================] - 3s 18ms/step - loss: 0.6240 - mean_absolute_error: 0.0303 - val_loss: 0.6304 - val_mean_absolute_error: 0.0273
+Epoch 4/30
+
+185/185 [==============================] - 3s 18ms/step - loss: 0.6235 - mean_absolute_error: 0.0285 - val_loss: 0.6300 - val_mean_absolute_error: 0.0268
+Epoch 5/30
+ 71/185 [==========>...................] - ETA: 2s - loss: 0.6222 - mean_absolute_error: 0.0273
+Traceback (most recent call last):
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py", line 180, in <module>
+    history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, args.PATH_RESULTS)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py", line 123, in train_hp
+    hp_search = hp_tuner_instance.get_hp_search(args.HP_SEARCH, args.HP_NAME)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 140, in get_hp_search
+    self.tuner_search(tuner, self.callbacks[1:])
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 122, in tuner_search
+    tuner.search(
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 210, in search
+    self._try_run_and_update_trial(trial, *fit_args, **fit_kwargs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 250, in _try_run_and_update_trial
+    self._run_and_update_trial(trial, *fit_args, **fit_kwargs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 215, in _run_and_update_trial
+    results = self.run_trial(trial, *fit_args, **fit_kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 58, in run_trial
+    history = model.fit(
+      ^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/utils/traceback_utils.py", line 65, in error_handler
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py", line 1807, in fit
+    tmp_logs = self.train_function(iterator)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/util/traceback_utils.py", line 150, in error_handler
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/eager/polymorphic_function/polymorphic_function.py", line 832, in __call__
+    result = self._call(*args, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/eager/polymorphic_function/polymorphic_function.py", line 868, in _call
+    return tracing_compilation.call_function(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/eager/polymorphic_function/tracing_compilation.py", line 139, in call_function
+    return function._call_flat(  # pylint: disable=protected-access
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/eager/polymorphic_function/concrete_function.py", line 1323, in _call_flat
+    return self._inference_function.call_preflattened(args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/eager/polymorphic_function/atomic_function.py", line 216, in call_preflattened
+    flat_outputs = self.call_flat(*args)
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/eager/polymorphic_function/atomic_function.py", line 251, in call_flat
+    outputs = self._bound_context.call_function(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/eager/context.py", line 1486, in call_function
+    outputs = execute.execute(
+              ^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/eager/execute.py", line 53, in quick_execute
+    tensors = pywrap_tfe.TFE_Py_Execute(ctx._handle, device_name, op_name,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
