@@ -118,7 +118,7 @@ class ModelTrainer:
         callback_search = cb.TrainingCallbacks(args.FILEPATH_WEIGHTS_SERCH, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
         callbacks_list_search = callback_search.get_callbacks(None)
 
-        hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_aug_norm, self.input_valid_norm, self.input_valid_aug_norm, EPOCHS_HP, NUM_TRIALS_HP, 
+        hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_norm, self.input_valid_norm, self.input_valid_norm, EPOCHS_HP, NUM_TRIALS_HP, 
                                                 EXECUTION_PER_TRIAL_HP, self.monitor_metric, self.mode_metric, self.verbose, callbacks_list_search)
         hp_search = hp_tuner_instance.get_hp_search(args.HP_SEARCH, args.HP_NAME)
 
@@ -132,13 +132,13 @@ class ModelTrainer:
         for j, trial in enumerate(best_hp, start=1):
             hp = trial.hyperparameters
             model = mod.AeModels(learning_rate=hp.get('lr'))
-            build_model = model.build_basic_cae()
+            build_model = model.aes_defect_detection()
 
             name = f'model{j}'
             callback = cb.TrainingCallbacks(args.FILEPATH_WEIGHTS, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
             callbacks_list = callback.get_callbacks(name)
 
-            history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_valid_norm, self.input_valid_aug_norm, int(1.2*EPOCHS_HP), 32, callbacks_list)
+            history = train(build_model, self.input_train_norm, self.input_train_norm, self.input_valid_norm, self.input_valid_norm, int(1.2*EPOCHS_HP), hp.get('batch_size'), callbacks_list)
             plot_graph(history, name, PATH_RESULTS)
 
             # Nettoyage de la session Keras et collecte des dechets
@@ -150,7 +150,7 @@ class ModelTrainer:
         Here we are training the model with the default parameters given in the initial variables. 
         """
         model = mod.AeModels(learning_rate=0.001)
-        build_model = model.build_basic_cae()
+        build_model = model.aes_defect_detection()
         history = train(build_model, self.input_train_norm, self.input_train_aug_norm, self.input_valid_norm, self.input_valid_aug_norm, EPOCHS, BATCH_SIZE, self.callbacks_list)
 
         name = 'default_param'

@@ -14,17 +14,17 @@ readonly SCRIPT_NAME='train.py'
 
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images'
 #Variable for Callbacks
-readonly MODEL='build_basic_cae'
-readonly TEST_NAME='Third_HP_Search'
+readonly MODEL='aes_defect_detection'
+readonly TEST_NAME='A_First_HP_Search'
 readonly MONITOR_METRIC='mean_absolute_error'
 readonly MODE_METRIC='min'
 readonly VERBOSE=TRUE #If false remove --VERBOSE from line 40
 #Variable for HP search 
 readonly DO_HP_SEARCH=True #If false remove --DO_HP_SEARCH from line 40
-readonly EPOCHS_HP=30
+readonly EPOCHS_HP=100
 readonly NUM_TRIALS_HP=10
 readonly EXECUTION_PER_TRIAL_HP=2
-readonly NBEST=5
+readonly NBEST=3
 #Variable for default training
 readonly EPOCHS=5
 readonly BATCH_SIZE=256

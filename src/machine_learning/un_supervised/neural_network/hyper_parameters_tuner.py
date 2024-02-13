@@ -29,12 +29,11 @@ class MyHyperModel(keras_tuner.HyperModel):
         """
         Build the model with the HP to test. 
         """
-        encoding_dim = hp.Choice('encoding_dim', values=[8, 16, 24, 32, 40])
-        lr = hp.Choice('lr', values=[0.0001, 0.001, 0.01])
-        batch_size = hp.Int('batch_size', 2, 40, step=2, default=1)
+        lr = hp.Choice('lr', values=[0.00001, 0.0001, 0.001, 0.01])
+        batch_size = hp.Int('batch_size', 2, 20, step=2, default=1)
 
         model_to_build = mod.AeModels(learning_rate=lr)
-        model = model_to_build.build_basic_cae()
+        model = model_to_build.aes_defect_detection()
 
         return model
     
@@ -45,14 +44,15 @@ class CustomBayesianTuner(BayesianOptimization):
 
         kwargs.pop('batch_size', None)
         kwargs.pop('validation_data', None)
-        kwargs.pop('callbacks', None)
         kwargs['batch_size'] = batch_size
         
         model = self.hypermodel.build(hp)
 
-        wandb.init(project='Essai3 wandb', entity='dofa_unsupervised', config=trial.hyperparameters.values, mode="online")
+        wandb.init(project='aes_defect_detection_ATest', entity='dofa_unsupervised', config=trial.hyperparameters.values, mode="online", dir='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised')
+
 
         callbacks = self.hypermodel.callbacks.copy() 
+        kwargs.pop('callbacks', None)
         callbacks.append(WandbCallback(save_model=False))
 
         history = model.fit(        
@@ -99,7 +99,7 @@ class KerasTuner():
             input_test_aug = self.input_test_aug,
             input_test = self.input_test,
             epochs = self.epochs, 
-            callbacks = [self.callbacks[0]]
+            callbacks = [self.callbacks[1:]]
         )
 
         tuner = CustomBayesianTuner(  
@@ -114,7 +114,7 @@ class KerasTuner():
 
         return tuner
     
-    def tuner_search(self, tuner, callbacks):
+    def tuner_search(self, tuner):
         """
         Manages the execution of multiple trials, each involving training a model once per trial with a specific set 
         of hyperparameters. 
@@ -124,7 +124,6 @@ class KerasTuner():
             self.input_train,
             epochs=self.epochs,
             validation_data=(self.input_test_aug, self.input_test),
-            callbacks=callbacks,
             verbose=self.verbose,
             shuffle=True
         )
@@ -137,7 +136,7 @@ class KerasTuner():
         """
         tuner = self.tuner_initializer(HP_SEARCH, HP_NAME)
 
-        self.tuner_search(tuner, self.callbacks[1:])
+        self.tuner_search(tuner)
 
         return tuner.oracle.get_best_trials(num_trials=self.num_trials)
     

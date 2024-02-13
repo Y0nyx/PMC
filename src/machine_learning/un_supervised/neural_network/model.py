@@ -174,7 +174,7 @@ class AeModels():
         d1 = LeakyReLU(alpha=0.1)(d1)
 
         output = UpSampling2D()(d1)
-        output = Conv2D(1, (5,5), strides=1, padding='same')(output)
+        output = Conv2D(3, (5,5), strides=1, padding='same')(output)
         output = Activation('sigmoid')(output)
 
         #Autoencoder

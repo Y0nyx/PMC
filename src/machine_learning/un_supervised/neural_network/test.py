@@ -76,7 +76,7 @@ if __name__ =='__main__':
 
     for j in range(args.NBEST):
         model = mod.AeModels(learning_rate=float(learning_rate[j]))
-        build_model = model.build_basic_cae()   #Change this line if the model change. 
+        build_model = model.aes_defect_detection()   #Change this line if the model change. 
 
         name = f"model{j+1}"
         build_model.load_weights(f'{args.FILEPATH_WEIGHTS}/search_{name}')

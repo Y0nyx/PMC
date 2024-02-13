@@ -64,7 +64,7 @@ class TrainingCallbacks():
         return tf.keras.callbacks.TerminateOnNaN()
 
     def get_callbacks(self, name, min_delta_es: float=0.001, patience_es: int=15, factor_rp: float=0.1, 
-                      patience_rp: int=20, min_delta_rp: float=0.001) -> list:
+                      patience_rp: int=10, min_delta_rp: float=0.001) -> list:
         return [
             self.best_model_weights(name),
             self.early_stop(min_delta_es, patience_es),
