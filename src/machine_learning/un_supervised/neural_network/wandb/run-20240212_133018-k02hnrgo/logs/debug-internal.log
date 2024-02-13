@@ -1,0 +1,929 @@
+2024-02-12 13:30:19,157 INFO    StreamThr :51606 [internal.py:wandb_internal():86] W&B internal server running at pid: 51606, started at: 2024-02-12 13:30:19.156609
+2024-02-12 13:30:19,160 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status
+2024-02-12 13:30:19,164 INFO    WriterThread:51606 [datastore.py:open_for_write():87] open: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/run-k02hnrgo.wandb
+2024-02-12 13:30:19,166 DEBUG   SenderThread:51606 [sender.py:send():382] send: header
+2024-02-12 13:30:19,167 DEBUG   SenderThread:51606 [sender.py:send():382] send: run
+2024-02-12 13:30:19,620 INFO    SenderThread:51606 [dir_watcher.py:__init__():211] watching files in: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files
+2024-02-12 13:30:19,621 INFO    SenderThread:51606 [sender.py:_start_run_threads():1136] run started: k02hnrgo with start time 1707762618.507169
+2024-02-12 13:30:19,634 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: check_version
+2024-02-12 13:30:19,635 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: check_version
+2024-02-12 13:30:19,932 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: run_start
+2024-02-12 13:30:19,933 DEBUG   HandlerThread:51606 [system_info.py:__init__():27] System info init
+2024-02-12 13:30:19,933 DEBUG   HandlerThread:51606 [system_info.py:__init__():42] System info init done
+2024-02-12 13:30:19,933 INFO    HandlerThread:51606 [system_monitor.py:start():194] Starting system monitor
+2024-02-12 13:30:19,934 INFO    SystemMonitor:51606 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-02-12 13:30:19,934 INFO    HandlerThread:51606 [system_monitor.py:probe():214] Collecting system info
+2024-02-12 13:30:19,935 INFO    SystemMonitor:51606 [interfaces.py:start():190] Started cpu monitoring
+2024-02-12 13:30:19,936 INFO    SystemMonitor:51606 [interfaces.py:start():190] Started disk monitoring
+2024-02-12 13:30:19,937 INFO    SystemMonitor:51606 [interfaces.py:start():190] Started gpu monitoring
+2024-02-12 13:30:19,938 INFO    SystemMonitor:51606 [interfaces.py:start():190] Started memory monitoring
+2024-02-12 13:30:19,939 INFO    SystemMonitor:51606 [interfaces.py:start():190] Started network monitoring
+2024-02-12 13:30:19,947 DEBUG   HandlerThread:51606 [system_info.py:probe():151] Probing system
+2024-02-12 13:30:19,948 DEBUG   HandlerThread:51606 [system_info.py:_probe_git():136] Probing git
+2024-02-12 13:30:20,001 DEBUG   HandlerThread:51606 [system_info.py:_probe_git():144] Probing git done
+2024-02-12 13:30:20,002 DEBUG   HandlerThread:51606 [system_info.py:probe():199] Probing system done
+2024-02-12 13:30:20,002 DEBUG   HandlerThread:51606 [system_monitor.py:probe():223] {'os': 'Linux-6.2.0-39-generic-x86_64-with-glibc2.37', 'python': '3.11.4', 'heartbeatAt': '2024-02-12T18:30:19.947170', 'startedAt': '2024-02-12T18:30:18.502562', 'docker': None, 'cuda': None, 'args': ('--EPOCHS', '5', '--BATCH_SIZE', '256', '--PATH_RESULTS', '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search', '--FILEPATH_WEIGHTS', '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/training_weights/', '--FILEPATH_WEIGHTS_SERCH', '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/search_weights/', '--HP_SEARCH', '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/', '--HP_NAME', 'hp_search_results', '--MONITOR_METRIC', 'mean_absolute_error', '--MODE_METRIC', 'min', '--VERBOSE', '--DO_HP_SEARCH', '--EPOCHS_HP', '30', '--NUM_TRIALS_HP', '10', '--EXECUTION_PER_TRIAL_HP', '2', '--NBEST', '5', '--DATA_PATH', '/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images'), 'state': 'running', 'program': '/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py', 'codePathLocal': 'train.py', 'codePath': 'src/machine_learning/un_supervised/neural_network/train.py', 'git': {'remote': 'git@github.com:Y0nyx/PMC.git', 'commit': '9dc6abd85d522bbd681ca1e46c834ca1e586f5e0'}, 'email': 'jeanseb0598@hotmail.com', 'root': '/home/jean-sebastien/Documents/s7/PMC/PMC', 'host': 'jean-sebastien-MS-7D42', 'username': 'jean-sebastien', 'executable': '/home/jean-sebastien/Documents/s7/PMC/venv/bin/python', 'cpu_count': 6, 'cpu_count_logical': 12, 'cpu_freq': {'current': 1443.57425, 'min': 800.0, 'max': 4400.0}, 'cpu_freq_per_core': [{'current': 1329.887, 'min': 800.0, 'max': 4400.0}, {'current': 1217.88, 'min': 800.0, 'max': 4400.0}, {'current': 1008.488, 'min': 800.0, 'max': 4400.0}, {'current': 2500.0, 'min': 800.0, 'max': 4400.0}, {'current': 800.673, 'min': 800.0, 'max': 4400.0}, {'current': 946.748, 'min': 800.0, 'max': 4400.0}, {'current': 1264.868, 'min': 800.0, 'max': 4400.0}, {'current': 1100.509, 'min': 800.0, 'max': 4400.0}, {'current': 1125.162, 'min': 800.0, 'max': 4400.0}, {'current': 1104.406, 'min': 800.0, 'max': 4400.0}, {'current': 1396.061, 'min': 800.0, 'max': 4400.0}, {'current': 1399.322, 'min': 800.0, 'max': 4400.0}], 'disk': {'/': {'total': 191.18775939941406, 'used': 80.04967880249023}}, 'gpu': 'NVIDIA GeForce RTX 3060 Ti', 'gpu_count': 2, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 3060 Ti', 'memory_total': 8589934592}, {'name': 'NVIDIA GeForce RTX 3060', 'memory_total': 12884901888}], 'memory': {'total': 31.19765853881836}}
+2024-02-12 13:30:20,002 INFO    HandlerThread:51606 [system_monitor.py:probe():224] Finished collecting system info
+2024-02-12 13:30:20,002 INFO    HandlerThread:51606 [system_monitor.py:probe():227] Publishing system info
+2024-02-12 13:30:20,003 INFO    HandlerThread:51606 [system_monitor.py:probe():229] Finished publishing system info
+2024-02-12 13:30:20,004 DEBUG   SenderThread:51606 [sender.py:send():382] send: files
+2024-02-12 13:30:20,004 INFO    SenderThread:51606 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2024-02-12 13:30:20,020 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: python_packages
+2024-02-12 13:30:20,021 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: python_packages
+2024-02-12 13:30:20,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:30:20,024 DEBUG   SenderThread:51606 [sender.py:send():382] send: telemetry
+2024-02-12 13:30:20,025 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:30:20,029 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:30:20,030 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: get_summary
+2024-02-12 13:30:20,272 DEBUG   SenderThread:51606 [sender.py:send():382] send: telemetry
+2024-02-12 13:30:20,272 DEBUG   SenderThread:51606 [sender.py:send():382] send: telemetry
+2024-02-12 13:30:20,272 DEBUG   SenderThread:51606 [sender.py:send():382] send: files
+2024-02-12 13:30:20,272 INFO    SenderThread:51606 [sender.py:_save_file():1403] saving file model-best.h5 with policy live
+2024-02-12 13:30:20,273 DEBUG   SenderThread:51606 [sender.py:send():382] send: telemetry
+2024-02-12 13:30:20,541 INFO    wandb-upload_0:51606 [upload_job.py:push():131] Uploaded file /tmp/tmp_s5fha0wwandb/yu6s8mph-wandb-metadata.json
+2024-02-12 13:30:20,622 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/wandb-metadata.json
+2024-02-12 13:30:20,622 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:20,622 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/requirements.txt
+2024-02-12 13:30:22,621 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:24,183 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:30:24,622 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:26,623 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:28,624 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:29,192 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:30:30,624 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:32,625 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:34,197 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:30:34,626 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:35,019 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:30:35,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:30:35,024 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:30:36,626 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:38,628 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:39,215 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:30:40,629 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:42,629 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:44,260 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:30:44,631 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:46,631 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:48,632 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:49,279 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:30:49,632 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/config.yaml
+2024-02-12 13:30:50,019 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:30:50,019 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:30:50,020 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:30:50,633 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:52,634 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:54,463 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:30:54,634 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:56,635 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:58,635 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:30:59,493 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:00,636 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:02,637 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:04,523 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:04,638 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:05,020 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:31:05,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:31:05,025 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:31:06,639 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:08,639 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:09,580 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:10,640 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:12,640 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:14,600 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:14,641 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:16,642 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:18,643 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:19,652 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:19,939 DEBUG   SystemMonitor:51606 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-02-12 13:31:19,946 DEBUG   SenderThread:51606 [sender.py:send():382] send: stats
+2024-02-12 13:31:20,019 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:31:20,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:31:20,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:31:20,643 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:22,645 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:24,646 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:24,675 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:26,647 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:28,648 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:29,724 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:30,649 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:32,650 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:34,650 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:34,770 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:35,020 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:31:35,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:31:35,023 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:31:36,651 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:38,652 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:39,775 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:40,653 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:42,654 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:44,654 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:44,782 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:46,656 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:48,656 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:49,785 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:49,945 DEBUG   SenderThread:51606 [sender.py:send():382] send: stats
+2024-02-12 13:31:50,020 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:31:50,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:31:50,023 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:31:50,657 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:52,657 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:54,658 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:54,795 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:31:56,659 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:58,659 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:31:59,827 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:32:00,661 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:02,662 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:04,662 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:04,878 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:32:05,019 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:32:05,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:32:05,021 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:32:06,663 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:08,664 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:09,893 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:32:10,664 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:12,665 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:14,666 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:15,107 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:32:16,667 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:18,667 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:19,945 DEBUG   SenderThread:51606 [sender.py:send():382] send: stats
+2024-02-12 13:32:20,019 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 13:32:20,019 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 13:32:20,021 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:32:20,668 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:26,020 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:32:31,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:32:35,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:32:40,024 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:32:41,431 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:32:42,676 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:44,676 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:45,024 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:32:46,468 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:32:46,677 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:48,678 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:49,949 DEBUG   SenderThread:51606 [sender.py:send():382] send: stats
+2024-02-12 13:32:50,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:32:50,679 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:51,495 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:32:52,680 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:54,680 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:55,027 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:32:56,522 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:32:56,681 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:32:58,682 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:00,028 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:33:00,682 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:01,537 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:02,683 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:04,683 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:05,023 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:33:06,584 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:06,684 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:08,685 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:10,030 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:33:10,686 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:11,607 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:12,687 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:14,689 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:15,031 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:33:16,613 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:16,690 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:18,691 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:19,948 DEBUG   SenderThread:51606 [sender.py:send():382] send: stats
+2024-02-12 13:33:20,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:33:20,692 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:21,660 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:22,693 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:24,694 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:25,032 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:33:26,694 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:26,701 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:28,695 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:30,033 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: keepalive
+2024-02-12 13:33:30,695 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:31,711 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:32,696 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:34,697 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:35,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 13:33:36,698 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:36,743 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:38,698 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:38,780 DEBUG   SenderThread:51606 [sender.py:send():382] send: telemetry
+2024-02-12 13:33:38,781 DEBUG   SenderThread:51606 [sender.py:send():382] send: exit
+2024-02-12 13:33:38,781 INFO    SenderThread:51606 [sender.py:send_exit():589] handling exit code: 0
+2024-02-12 13:33:38,781 INFO    SenderThread:51606 [sender.py:send_exit():591] handling runtime: 198
+2024-02-12 13:33:38,781 INFO    SenderThread:51606 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 13:33:38,782 INFO    SenderThread:51606 [sender.py:send_exit():597] send defer
+2024-02-12 13:33:38,782 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:38,782 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 0
+2024-02-12 13:33:38,782 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:38,782 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 0
+2024-02-12 13:33:38,782 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 1
+2024-02-12 13:33:38,783 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:38,783 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 1
+2024-02-12 13:33:38,783 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:38,783 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 1
+2024-02-12 13:33:38,783 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 2
+2024-02-12 13:33:38,783 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:38,783 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 2
+2024-02-12 13:33:38,783 INFO    HandlerThread:51606 [system_monitor.py:finish():203] Stopping system monitor
+2024-02-12 13:33:38,784 INFO    HandlerThread:51606 [interfaces.py:finish():202] Joined cpu monitor
+2024-02-12 13:33:38,784 INFO    HandlerThread:51606 [interfaces.py:finish():202] Joined disk monitor
+2024-02-12 13:33:38,784 DEBUG   SystemMonitor:51606 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-02-12 13:33:38,785 DEBUG   SystemMonitor:51606 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-02-12 13:33:38,841 INFO    HandlerThread:51606 [interfaces.py:finish():202] Joined gpu monitor
+2024-02-12 13:33:38,841 INFO    HandlerThread:51606 [interfaces.py:finish():202] Joined memory monitor
+2024-02-12 13:33:38,841 INFO    HandlerThread:51606 [interfaces.py:finish():202] Joined network monitor
+2024-02-12 13:33:38,842 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:38,842 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 2
+2024-02-12 13:33:38,842 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 3
+2024-02-12 13:33:38,842 DEBUG   SenderThread:51606 [sender.py:send():382] send: stats
+2024-02-12 13:33:38,842 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:38,842 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 3
+2024-02-12 13:33:38,842 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:38,842 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 3
+2024-02-12 13:33:38,842 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 4
+2024-02-12 13:33:38,842 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:38,842 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 4
+2024-02-12 13:33:38,842 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:38,842 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 4
+2024-02-12 13:33:38,842 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 5
+2024-02-12 13:33:38,843 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:38,843 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 5
+2024-02-12 13:33:38,843 DEBUG   SenderThread:51606 [sender.py:send():382] send: summary
+2024-02-12 13:33:38,843 INFO    SenderThread:51606 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 13:33:38,843 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:38,843 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 5
+2024-02-12 13:33:38,843 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 6
+2024-02-12 13:33:38,843 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:38,843 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 6
+2024-02-12 13:33:38,843 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:38,843 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 6
+2024-02-12 13:33:38,845 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:38,952 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 7
+2024-02-12 13:33:38,952 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:38,952 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 7
+2024-02-12 13:33:38,953 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:38,953 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 7
+2024-02-12 13:33:39,699 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/config.yaml
+2024-02-12 13:33:39,700 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/wandb-summary.json
+2024-02-12 13:33:39,782 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:40,426 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 8
+2024-02-12 13:33:40,427 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:40,427 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:40,427 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 8
+2024-02-12 13:33:40,428 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:40,428 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 8
+2024-02-12 13:33:40,428 INFO    SenderThread:51606 [job_builder.py:build():296] Attempting to build job artifact
+2024-02-12 13:33:40,429 INFO    SenderThread:51606 [job_builder.py:_get_source_type():426] is repo sourced job
+2024-02-12 13:33:40,430 INFO    SenderThread:51606 [job_builder.py:build():402] adding wandb-job metadata file
+2024-02-12 13:33:40,433 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 9
+2024-02-12 13:33:40,433 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:40,433 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 9
+2024-02-12 13:33:40,433 DEBUG   SenderThread:51606 [sender.py:send():382] send: artifact
+2024-02-12 13:33:40,700 INFO    Thread-50 :51606 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:33:40,783 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:41,177 INFO    SenderThread:51606 [sender.py:send_artifact():1494] sent artifact job-git_github.com_Y0nyx_PMC.git_src_machine_learning_un_supervised_neural_network_train.py - {'id': 'QXJ0aWZhY3Q6NzIwMTk1NDgz', 'state': 'COMMITTED', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTIwMzI3MA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwMTk1NDgz', 'versionIndex': 0}}}
+2024-02-12 13:33:41,177 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:41,177 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 9
+2024-02-12 13:33:41,177 INFO    SenderThread:51606 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-02-12 13:33:41,701 INFO    SenderThread:51606 [dir_watcher.py:finish():388] scan: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files
+2024-02-12 13:33:41,702 INFO    SenderThread:51606 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/requirements.txt requirements.txt
+2024-02-12 13:33:41,702 INFO    SenderThread:51606 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/wandb-metadata.json wandb-metadata.json
+2024-02-12 13:33:41,702 INFO    SenderThread:51606 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/config.yaml config.yaml
+2024-02-12 13:33:41,703 INFO    SenderThread:51606 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log output.log
+2024-02-12 13:33:41,703 INFO    SenderThread:51606 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/wandb-summary.json wandb-summary.json
+2024-02-12 13:33:41,703 INFO    SenderThread:51606 [sender.py:transition_state():617] send defer: 10
+2024-02-12 13:33:41,704 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:41,705 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 13:33:41,709 INFO    HandlerThread:51606 [handler.py:handle_request_defer():172] handle defer: 10
+2024-02-12 13:33:41,717 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: defer
+2024-02-12 13:33:41,718 INFO    SenderThread:51606 [sender.py:send_request_defer():613] handle sender defer: 10
+2024-02-12 13:33:41,718 INFO    SenderThread:51606 [file_pusher.py:finish():172] shutting down file pusher
+2024-02-12 13:33:41,783 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:41,783 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:42,181 INFO    wandb-upload_1:51606 [upload_job.py:push():131] Uploaded file /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/requirements.txt
+2024-02-12 13:33:42,184 INFO    wandb-upload_3:51606 [upload_job.py:push():131] Uploaded file /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/wandb-summary.json
+2024-02-12 13:33:42,784 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:42,785 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:43,784 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:43,785 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:44,785 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:44,785 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:45,787 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:45,788 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:46,787 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:46,787 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:46,787 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:47,787 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:47,787 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:48,787 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:48,788 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:49,789 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:49,790 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:50,789 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:50,789 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:51,790 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:51,790 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:51,791 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:52,790 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:52,791 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:53,791 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:53,791 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:54,792 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:54,793 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:55,793 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:55,795 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:56,795 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:56,796 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:56,796 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:33:57,796 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:57,797 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:58,797 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:58,798 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:33:59,798 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:33:59,799 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:00,799 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:00,800 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:01,800 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:01,801 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:01,802 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:02,802 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:02,802 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:03,200 INFO    wandb-upload_0:51606 [upload_job.py:push():131] Uploaded file /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/output.log
+2024-02-12 13:34:03,803 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:03,804 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:04,804 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:04,805 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:05,805 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:05,806 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:06,806 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:06,807 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:06,808 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:07,807 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:07,808 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:08,808 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:08,810 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:09,810 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:09,811 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:10,811 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:10,812 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:11,812 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:11,813 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:11,814 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:12,814 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:12,815 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:13,815 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:13,816 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:14,816 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:14,817 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:15,818 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:15,819 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:16,819 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:16,820 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:16,821 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:17,820 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:17,820 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:18,821 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:18,822 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:19,822 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:19,823 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:20,823 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:20,824 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:21,824 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:21,825 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:21,826 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:22,825 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:22,826 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:23,825 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:23,826 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:24,827 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:24,827 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:25,828 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:25,829 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:26,829 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:26,830 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:26,831 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:27,830 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:27,831 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:28,831 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:28,833 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:29,832 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:29,833 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:30,834 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:30,835 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:31,835 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:31,835 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:31,836 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:32,836 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:32,837 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:33,837 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:33,837 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:34,837 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:34,837 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:35,837 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:35,837 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:36,838 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:36,838 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:36,838 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:37,839 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:37,840 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:38,839 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:38,839 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:39,841 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:39,841 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:40,842 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:40,843 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:41,843 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:41,843 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:41,844 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:42,844 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:42,844 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:43,845 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:43,846 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:44,846 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:44,847 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:45,847 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:45,847 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:46,848 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:46,849 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:46,850 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:47,849 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:47,850 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:48,849 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:48,850 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:49,851 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:49,852 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:50,852 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:50,853 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:51,853 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:51,854 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:51,855 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:52,854 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:52,855 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:53,855 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:53,856 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:54,856 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:54,857 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:55,858 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:55,858 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:56,858 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:56,859 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:56,860 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:34:57,859 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:57,860 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:58,860 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:58,860 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:34:59,861 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:34:59,862 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:00,862 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:00,863 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:01,863 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:01,864 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:01,865 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:02,864 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:02,864 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:03,865 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:03,866 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:04,867 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:04,867 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:05,868 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:05,869 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:06,868 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:06,868 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:06,869 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:07,870 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:07,870 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:08,871 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:08,871 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:09,872 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:09,872 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:10,872 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:10,872 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:11,873 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:11,874 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:11,875 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:12,874 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:12,875 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:13,875 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:13,877 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:14,877 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:14,877 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:15,877 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:15,877 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:16,878 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:16,879 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:16,880 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:17,879 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:17,879 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:18,462 WARNING FileStreamThread:51606 [file_stream.py:request_with_retry():668] requests_with_retry encountered retryable exception: HTTPSConnectionPool(host='api.wandb.ai', port=443): Read timed out. (read timeout=180.0). func: functools.partial(<bound method Session.post of <requests.sessions.Session object at 0x7fcf641e4c50>>, timeout=180.0), args: ('https://api.wandb.ai/files/dofa_unsupervised/Essai wandb/k02hnrgo/file_stream',), kwargs: {'json': {'files': {'output.log': {'offset': 39, 'content': ['2024-02-12T18:32:10.375685 1106/1106 [==============================] - 6s 5ms/step - loss: 0.6219 - mean_absolute_error: 0.0221 - val_loss: 0.6287 - val_mean_absolute_error: 0.0205 - lr: 0.0010\n', '2024-02-12T18:32:10.375685 Epoch 17/30\n', '2024-02-12T18:32:16.379632 1106/1106 [==============================] - 7s 6ms/step - loss: 0.6219 - mean_absolute_error: 0.0223 - val_loss: 0.6287 - val_mean_absolute_error: 0.0206 - lr: 0.0010\n', '2024-02-12T18:32:16.379632 Epoch 18/30\n', '2024-02-12T18:32:18.380225  606/1106 [===============>..............] - ETA: 2s - loss: 0.6203 - mean_absolute_error: 0.0219\n']}}, 'dropped': 0}}
+2024-02-12 13:35:18,879 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:18,880 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:19,880 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:19,880 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:20,881 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:20,882 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:21,882 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:21,884 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:21,884 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:22,883 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:22,883 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:23,883 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:23,883 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:24,884 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:24,885 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:25,885 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:25,886 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:26,886 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:26,887 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:26,888 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:27,888 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:27,888 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:28,889 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:28,890 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:29,890 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:29,891 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:30,891 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:30,892 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:31,892 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:31,893 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:31,894 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:32,893 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:32,894 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:33,894 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:33,895 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:34,895 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:34,897 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:35,897 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:35,897 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:36,898 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:36,899 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:36,900 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:37,898 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:37,899 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:38,900 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:38,901 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:39,900 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:39,900 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:40,901 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:40,902 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:41,902 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:41,903 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:41,904 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:42,903 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:42,903 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:43,904 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:43,905 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:44,905 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:44,905 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:45,906 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:45,907 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:46,907 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:46,908 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:46,909 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:47,908 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:47,908 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:48,908 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:48,909 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:49,909 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:49,910 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:50,911 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:50,912 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:51,912 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:51,913 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:51,914 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:52,913 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:52,914 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:53,914 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:53,915 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:54,915 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:54,916 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:55,916 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:55,917 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:56,917 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:56,917 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:56,917 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:35:57,917 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:57,918 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:58,918 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:58,919 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:35:59,918 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:35:59,919 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:00,920 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:00,920 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:01,921 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:01,922 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:01,922 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:02,922 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:02,923 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:03,923 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:03,924 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:04,923 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:04,923 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:05,924 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:05,925 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:06,925 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:06,925 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:06,925 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:07,925 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:07,925 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:08,926 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:08,927 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:09,927 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:09,928 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:10,929 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:10,930 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:11,930 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:11,930 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:11,931 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:12,931 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:12,932 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:13,932 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:13,933 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:14,933 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:14,933 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:15,934 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:15,935 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:16,935 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:16,936 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:16,937 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:17,936 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:17,937 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:18,936 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:18,937 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:19,938 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:19,939 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:20,939 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:20,940 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:21,940 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:21,941 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:21,942 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:22,941 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:22,942 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:23,942 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:23,943 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:24,943 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:24,944 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:25,945 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:25,946 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:26,946 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:26,947 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:26,948 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:27,947 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:27,948 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:28,948 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:28,948 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:29,949 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:29,950 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:30,950 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:30,951 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:31,951 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:31,952 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:31,953 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:32,952 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:32,953 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:33,954 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:33,954 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:34,955 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:34,956 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:35,956 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:35,957 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:36,957 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:36,958 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:36,959 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:37,958 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:37,959 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:38,959 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:38,960 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:39,960 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:39,960 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:40,961 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:40,962 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:41,962 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:41,962 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:41,963 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:42,963 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:42,964 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:43,964 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:43,965 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:44,965 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:44,967 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:45,967 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:45,967 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:46,968 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:46,968 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:46,969 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:47,969 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:47,970 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:48,970 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:48,971 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:49,971 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:49,972 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:50,972 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:50,973 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:51,973 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:51,974 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:51,975 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:52,974 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:52,975 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:53,975 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:53,976 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:54,977 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:54,977 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:55,978 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:55,978 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:56,979 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:56,980 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:36:56,981 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:57,980 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:57,981 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:58,981 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:58,982 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:36:59,982 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:36:59,983 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:00,983 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:00,984 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:01,984 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:01,985 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:01,986 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:02,985 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:02,986 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:03,986 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:03,987 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:04,988 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:04,989 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:05,989 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:05,989 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:06,990 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:06,991 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:06,992 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:07,991 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:07,992 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:08,992 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:08,993 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:09,992 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:09,992 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:10,994 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:10,995 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:11,995 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:11,996 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:11,997 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:12,996 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:12,997 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:13,997 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:13,998 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:14,998 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:15,000 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:15,999 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:16,000 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:17,000 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:17,000 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:17,001 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:18,001 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:18,002 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:19,002 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:19,004 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:20,003 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:20,004 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:21,004 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:21,005 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:22,005 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:22,006 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:22,007 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:23,006 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:23,007 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:24,007 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:24,009 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:25,009 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:25,010 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:26,011 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:26,012 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:27,012 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:27,012 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:27,013 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:28,013 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:28,013 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:29,014 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:29,015 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:30,015 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:30,016 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:31,016 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:31,017 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:32,017 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:32,018 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:32,019 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:33,018 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:33,018 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:34,019 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:34,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:35,020 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:35,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:36,020 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:36,020 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:37,021 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:37,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:37,023 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:38,022 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:38,023 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:39,024 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:39,025 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:40,025 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:40,026 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:41,026 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:41,027 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:42,027 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:42,028 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:42,029 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:43,028 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:43,029 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:44,030 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:44,030 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:45,031 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:45,032 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:46,032 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:46,033 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:47,033 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:47,034 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:47,035 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:48,034 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:48,035 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:49,035 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:49,036 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:50,036 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:50,037 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:51,037 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:51,038 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:52,038 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:52,039 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:52,040 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:53,039 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:53,040 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:54,040 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:54,041 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:55,041 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:55,042 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:56,043 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:56,043 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:57,044 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:57,045 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:37:57,046 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:58,045 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:58,046 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:37:59,046 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:37:59,047 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:00,047 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:00,048 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:01,048 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:01,050 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:02,049 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:02,050 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:02,051 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:38:03,051 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:03,051 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:04,051 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:04,052 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:05,052 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:05,053 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:06,054 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:06,055 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:07,055 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:07,056 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:07,057 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:38:08,056 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:08,057 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:09,057 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:09,058 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:10,058 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:10,059 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:11,058 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:11,058 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:12,060 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:38:12,060 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:12,061 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:13,061 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 13:38:13,062 DEBUG   SenderThread:51606 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 13:38:17,064 DEBUG   HandlerThread:51606 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 13:38:20,229 WARNING StreamThr :51606 [internal.py:is_dead():414] Internal process exiting, parent pid 51532 disappeared
+2024-02-12 13:38:20,230 ERROR   StreamThr :51606 [internal.py:wandb_internal():152] Internal process shutdown.
+2024-02-12 13:38:21,065 INFO    SenderThread:51606 [sender.py:finish():1572] shutting down sender
+2024-02-12 13:38:21,065 INFO    HandlerThread:51606 [handler.py:finish():869] shutting down handler
+2024-02-12 13:38:21,065 INFO    SenderThread:51606 [file_pusher.py:finish():172] shutting down file pusher
+2024-02-12 13:38:21,066 INFO    WriterThread:51606 [datastore.py:close():296] close: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/run-k02hnrgo.wandb
+2024-02-12 13:38:21,066 INFO    SenderThread:51606 [file_pusher.py:join():178] waiting for file pusher
+2024-02-12 13:49:53,762 ERROR   wandb-upload_2:51606 [internal_api.py:upload_file():2765] upload_file exception https://storage.googleapis.com/wandb-production.appspot.com/dofa_unsupervised/Essai%20wandb/k02hnrgo/config.yaml?Expires=1707849221&GoogleAccessId=gorilla-files-url-signer-man%40wandb-production.iam.gserviceaccount.com&Signature=soV2AtyoRonEjFMhKfaBOgmfBycnaprzVhSCsSJuqVyqGgWjygmnC9eN1xiXuTbudxBSqJ9qVLHIpLABP3ApEFWO0fXTSD%2BkkYDD5No9Bjr7T151y849p0m8kA9BC0TfSqAyzzKTzhWoEi9h6EW4E3Fvb%2B3uq7sNoTmn2PxrdkZQy5baASZPYljM6Xj1GpzF8Me3BBvHQQ2NhUCN1BfS6q1vUlo30TQ5ugI1Ybo0tQik6nEQKjgc5Y1I9%2F4ftJSg9HwUcbONWT7XCUrafJ%2BZibsQng2C1U%2B7%2B%2Bt%2FET0qADL0IJtjMsphnsY2aZXobRqFiJzDg8Gj6UW6DmiNhwXZWA%3D%3D: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))
+2024-02-12 13:49:53,763 ERROR   wandb-upload_2:51606 [internal_api.py:upload_file():2767] upload_file request headers: {'User-Agent': 'python-requests/2.31.0', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Length': '599'}
+2024-02-12 13:49:53,763 ERROR   wandb-upload_2:51606 [internal_api.py:upload_file():2769] upload_file response body: 
+2024-02-12 13:49:55,108 INFO    wandb-upload_2:51606 [upload_job.py:push():131] Uploaded file /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_133018-k02hnrgo/files/config.yaml
+2024-02-12 13:49:55,109 INFO    MainThread:51606 [internal.py:handle_exit():76] Internal process exited
+2024-02-12 13:49:55,109 INFO    MainThread:51606 [internal.py:handle_exit():76] Internal process exited
+2024-02-12 13:49:55,109 INFO    MainThread:51606 [internal.py:handle_exit():76] Internal process exited
+2024-02-12 13:49:55,109 INFO    MainThread:51606 [internal.py:handle_exit():76] Internal process exited
+2024-02-12 13:49:55,309 INFO    Thread-49 (_thread_body):51606 [sender.py:transition_state():617] send defer: 11
+2024-02-12 13:49:55,736 INFO    SenderThread:51606 [file_stream.py:finish():595] file stream finish called
+2024-02-12 13:49:55,816 INFO    SenderThread:51606 [file_stream.py:finish():599] file stream finish is done

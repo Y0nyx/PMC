@@ -1,0 +1,143 @@
+{
+    "os": "Linux-6.2.0-39-generic-x86_64-with-glibc2.37",
+    "python": "3.11.4",
+    "heartbeatAt": "2024-02-13T00:03:49.360747",
+    "startedAt": "2024-02-13T00:03:48.149953",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--EPOCHS",
+        "5",
+        "--BATCH_SIZE",
+        "256",
+        "--PATH_RESULTS",
+        "/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search",
+        "--FILEPATH_WEIGHTS",
+        "/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/training_weights/",
+        "--FILEPATH_WEIGHTS_SERCH",
+        "/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/search_weights/",
+        "--HP_SEARCH",
+        "/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/",
+        "--HP_NAME",
+        "hp_search_results",
+        "--MONITOR_METRIC",
+        "mean_absolute_error",
+        "--MODE_METRIC",
+        "min",
+        "--VERBOSE",
+        "--DO_HP_SEARCH",
+        "--EPOCHS_HP",
+        "30",
+        "--NUM_TRIALS_HP",
+        "10",
+        "--EXECUTION_PER_TRIAL_HP",
+        "2",
+        "--NBEST",
+        "5",
+        "--DATA_PATH",
+        "/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images"
+    ],
+    "state": "running",
+    "program": "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py",
+    "codePathLocal": "train.py",
+    "codePath": "src/machine_learning/un_supervised/neural_network/train.py",
+    "git": {
+        "remote": "git@github.com:Y0nyx/PMC.git",
+        "commit": "9dc6abd85d522bbd681ca1e46c834ca1e586f5e0"
+    },
+    "email": "jeanseb0598@hotmail.com",
+    "root": "/home/jean-sebastien/Documents/s7/PMC/PMC",
+    "host": "jean-sebastien-MS-7D42",
+    "username": "jean-sebastien",
+    "executable": "/home/jean-sebastien/Documents/s7/PMC/venv/bin/python",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 1083.48825,
+        "min": 800.0,
+        "max": 4400.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 799.562,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 799.997,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 799.952,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 1162.998,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 800.0,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 799.992,
+            "min": 800.0,
+            "max": 4400.0
+        },
+        {
+            "current": 2500.0,
+            "min": 800.0,
+            "max": 4400.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 191.18775939941406,
+            "used": 80.09748077392578
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3060 Ti",
+    "gpu_count": 2,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3060 Ti",
+            "memory_total": 8589934592
+        },
+        {
+            "name": "NVIDIA GeForce RTX 3060",
+            "memory_total": 12884901888
+        }
+    ],
+    "memory": {
+        "total": 31.19765853881836
+    }
+}

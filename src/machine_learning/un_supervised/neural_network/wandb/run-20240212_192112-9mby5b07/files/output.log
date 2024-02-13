@@ -1,0 +1,73 @@
+
+Epoch 1/30
+
+86/86 [==============================] - 9s 51ms/step - loss: 0.6640 - mean_absolute_error: 0.0956 - val_loss: 0.6344 - val_mean_absolute_error: 0.0410
+Epoch 2/30
+
+86/86 [==============================] - 3s 34ms/step - loss: 0.6257 - mean_absolute_error: 0.0344 - val_loss: 0.6330 - val_mean_absolute_error: 0.0386
+Epoch 3/30
+37/86 [===========>..................] - ETA: 1s - loss: 0.6254 - mean_absolute_error: 0.0312
+Traceback (most recent call last):
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py", line 180, in <module>
+    history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, args.PATH_RESULTS)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py", line 123, in train_hp
+    hp_search = hp_tuner_instance.get_hp_search(args.HP_SEARCH, args.HP_NAME)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 140, in get_hp_search
+    self.tuner_search(tuner, self.callbacks[1:])
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 122, in tuner_search
+    tuner.search(
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 210, in search
+    self._try_run_and_update_trial(trial, *fit_args, **fit_kwargs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 250, in _try_run_and_update_trial
+    self._run_and_update_trial(trial, *fit_args, **fit_kwargs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 215, in _run_and_update_trial
+    results = self.run_trial(trial, *fit_args, **fit_kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 58, in run_trial
+    history = model.fit(
+      ^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/utils/traceback_utils.py", line 65, in error_handler
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py", line 1813, in fit
+    callbacks.on_train_batch_end(end_step, logs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/callbacks.py", line 475, in on_train_batch_end
+    self._call_batch_hook(ModeKeys.TRAIN, "end", batch, logs=logs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/callbacks.py", line 322, in _call_batch_hook
+    self._call_batch_end_hook(mode, batch, logs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/callbacks.py", line 345, in _call_batch_end_hook
+    self._call_batch_hook_helper(hook_name, batch, logs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/callbacks.py", line 393, in _call_batch_hook_helper
+    hook(batch, logs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/callbacks.py", line 1093, in on_train_batch_end
+    self._batch_update_progbar(batch, logs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/callbacks.py", line 1169, in _batch_update_progbar
+    logs = tf_utils.sync_to_numpy_or_python_type(logs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/utils/tf_utils.py", line 694, in sync_to_numpy_or_python_type
+    return tf.nest.map_structure(_to_single_numpy_or_python_type, tensors)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/util/nest.py", line 631, in map_structure
+    return nest_util.map_structure(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/util/nest_util.py", line 1066, in map_structure
+    return _tf_core_map_structure(func, *structure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/util/nest_util.py", line 1106, in _tf_core_map_structure
+    [func(*x) for x in entries],
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/util/nest_util.py", line 1106, in <listcomp>
+    [func(*x) for x in entries],
+     ^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/utils/tf_utils.py", line 687, in _to_single_numpy_or_python_type
+    t = t.numpy()
+        ^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/framework/ops.py", line 394, in numpy
+    maybe_arr = self._numpy()  # pylint: disable=protected-access
+                ^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/framework/ops.py", line 360, in _numpy
+    return self._numpy_internal()
+           ^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

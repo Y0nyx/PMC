@@ -1,0 +1,179 @@
+
+Epoch 1/30
+
+
+549/553 [============================>.] - ETA: 0s - loss: 0.6354 - mean_absolute_error: 0.0500
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+  saving_api.save_model(
+553/553 [==============================] - 9s 12ms/step - loss: 0.6352 - mean_absolute_error: 0.0500 - val_loss: 0.6348 - val_mean_absolute_error: 0.0480
+Epoch 2/30
+
+
+553/553 [==============================] - ETA: 0s - loss: 0.6237 - mean_absolute_error: 0.0293
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+553/553 [==============================] - 6s 11ms/step - loss: 0.6237 - mean_absolute_error: 0.0293 - val_loss: 0.6300 - val_mean_absolute_error: 0.0266
+Epoch 3/30
+ 35/553 [>.............................] - ETA: 4s - loss: 0.6179 - mean_absolute_error: 0.0273
+
+
+537/553 [============================>.] - ETA: 0s - loss: 0.6225 - mean_absolute_error: 0.0242
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+
+552/553 [============================>.] - ETA: 0s - loss: 0.6225 - mean_absolute_error: 0.0241
+553/553 [==============================] - 6s 12ms/step - loss: 0.6226 - mean_absolute_error: 0.0241 - val_loss: 0.6285 - val_mean_absolute_error: 0.0171
+Epoch 4/30
+
+489/553 [=========================>....] - ETA: 0s - loss: 0.6208 - mean_absolute_error: 0.0183
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+
+551/553 [============================>.] - ETA: 0s - loss: 0.6215 - mean_absolute_error: 0.0181
+553/553 [==============================] - 6s 11ms/step - loss: 0.6216 - mean_absolute_error: 0.0181 - val_loss: 0.6282 - val_mean_absolute_error: 0.0154
+Epoch 5/30
+
+445/553 [=======================>......] - ETA: 0s - loss: 0.6215 - mean_absolute_error: 0.0170
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+
+553/553 [==============================] - ETA: 0s - loss: 0.6213 - mean_absolute_error: 0.0167
+553/553 [==============================] - 6s 11ms/step - loss: 0.6213 - mean_absolute_error: 0.0167 - val_loss: 0.6282 - val_mean_absolute_error: 0.0154
+Epoch 6/30
+
+
+552/553 [============================>.] - ETA: 0s - loss: 0.6212 - mean_absolute_error: 0.0165
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+  saving_api.save_model(
+553/553 [==============================] - 6s 12ms/step - loss: 0.6212 - mean_absolute_error: 0.0165 - val_loss: 0.6280 - val_mean_absolute_error: 0.0148
+Epoch 7/30
+
+
+552/553 [============================>.] - ETA: 0s - loss: 0.6211 - mean_absolute_error: 0.0156
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+553/553 [==============================] - 7s 12ms/step - loss: 0.6211 - mean_absolute_error: 0.0156 - val_loss: 0.6279 - val_mean_absolute_error: 0.0139
+Epoch 8/30
+ 40/553 [=>............................] - ETA: 5s - loss: 0.6215 - mean_absolute_error: 0.0144
+
+
+553/553 [==============================] - 5s 8ms/step - loss: 0.6210 - mean_absolute_error: 0.0150 - val_loss: 0.6285 - val_mean_absolute_error: 0.0206
+Epoch 9/30
+
+548/553 [============================>.] - ETA: 0s - loss: 0.6209 - mean_absolute_error: 0.0150
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+553/553 [==============================] - 5s 10ms/step - loss: 0.6210 - mean_absolute_error: 0.0150 - val_loss: 0.6278 - val_mean_absolute_error: 0.0138
+Epoch 10/30
+ 64/553 [==>...........................] - ETA: 3s - loss: 0.6313 - mean_absolute_error: 0.0136
+
+553/553 [==============================] - 4s 7ms/step - loss: 0.6210 - mean_absolute_error: 0.0152 - val_loss: 0.6280 - val_mean_absolute_error: 0.0146
+Epoch 11/30
+
+553/553 [==============================] - 4s 7ms/step - loss: 0.6209 - mean_absolute_error: 0.0145 - val_loss: 0.6282 - val_mean_absolute_error: 0.0177
+Epoch 12/30
+
+553/553 [==============================] - 4s 7ms/step - loss: 0.6209 - mean_absolute_error: 0.0146 - val_loss: 0.6282 - val_mean_absolute_error: 0.0170
+Epoch 13/30
+
+
+553/553 [==============================] - ETA: 0s - loss: 0.6208 - mean_absolute_error: 0.0136
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+553/553 [==============================] - 6s 11ms/step - loss: 0.6208 - mean_absolute_error: 0.0136 - val_loss: 0.6277 - val_mean_absolute_error: 0.0129
+Epoch 14/30
+ 66/553 [==>...........................] - ETA: 3s - loss: 0.6186 - mean_absolute_error: 0.0139
+
+
+553/553 [==============================] - 5s 8ms/step - loss: 0.6208 - mean_absolute_error: 0.0143 - val_loss: 0.6281 - val_mean_absolute_error: 0.0179
+Epoch 15/30
+
+470/553 [========================>.....] - ETA: 0s - loss: 0.6208 - mean_absolute_error: 0.0143
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+
+547/553 [============================>.] - ETA: 0s - loss: 0.6207 - mean_absolute_error: 0.0141
+553/553 [==============================] - 6s 11ms/step - loss: 0.6208 - mean_absolute_error: 0.0141 - val_loss: 0.6276 - val_mean_absolute_error: 0.0123
+Epoch 16/30
+
+546/553 [============================>.] - ETA: 0s - loss: 0.6208 - mean_absolute_error: 0.0130
+/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py:3103: UserWarning: You are saving your model as an HDF5 file via `model.save()`. This file format is considered legacy. We recommend using instead the native Keras format, e.g. `model.save('my_model.keras')`.
+  saving_api.save_model(
+Traceback (most recent call last):
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py", line 180, in <module>
+    history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, args.PATH_RESULTS)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py", line 123, in train_hp
+    hp_search = hp_tuner_instance.get_hp_search(args.HP_SEARCH, args.HP_NAME)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 140, in get_hp_search
+    self.tuner_search(tuner, self.callbacks[1:])
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 122, in tuner_search
+    tuner.search(
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 210, in search
+    self._try_run_and_update_trial(trial, *fit_args, **fit_kwargs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 250, in _try_run_and_update_trial
+    self._run_and_update_trial(trial, *fit_args, **fit_kwargs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras_tuner/engine/base_tuner.py", line 215, in _run_and_update_trial
+    results = self.run_trial(trial, *fit_args, **fit_kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/hyper_parameters_tuner.py", line 58, in run_trial
+    history = model.fit(
+      ^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/utils/traceback_utils.py", line 65, in error_handler
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py", line 1874, in fit
+    callbacks.on_epoch_end(epoch, epoch_logs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/callbacks.py", line 453, in on_epoch_end
+    callback.on_epoch_end(epoch, logs)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/wandb/integration/keras/keras.py", line 630, in on_epoch_end
+    self._save_model_as_artifact(epoch)
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/wandb/integration/keras/keras.py", line 1021, in _save_model_as_artifact
+    self.model.save(self.filepath[:-3], overwrite=True, save_format="tf")
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/utils/traceback_utils.py", line 65, in error_handler
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/engine/training.py", line 3103, in save
+    saving_api.save_model(
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/saving/saving_api.py", line 167, in save_model
+    return legacy_sm_saving_lib.save_model(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/utils/traceback_utils.py", line 65, in error_handler
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/saving/legacy/save.py", line 168, in save_model
+    saved_model_save.save(
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/keras/src/saving/legacy/saved_model/save.py", line 98, in save
+    saved_nodes, node_paths = save_lib.save_and_return_nodes(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/saved_model/save.py", line 1371, in save_and_return_nodes
+    _build_meta_graph(obj, signatures, options, meta_graph_def))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/saved_model/save.py", line 1584, in _build_meta_graph
+    return _build_meta_graph_impl(obj, signatures, options, meta_graph_def)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/saved_model/save.py", line 1509, in _build_meta_graph_impl
+    asset_info, exported_graph = _fill_meta_graph_def(
+                                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/saved_model/save.py", line 878, in _fill_meta_graph_def
+    object_map, tensor_map, asset_info = saveable_view.map_resources()
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/saved_model/save.py", line 420, in map_resources
+    tensors = obj._export_to_saved_model_graph(  # pylint: disable=protected-access
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/ops/resource_variable_ops.py", line 748, in _export_to_saved_model_graph
+    new_variable = copy_to_graph_uninitialized(self)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/ops/resource_variable_ops.py", line 2523, in copy_to_graph_uninitialized
+    new_variable = UninitializedVariable(
+                   ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/util/traceback_utils.py", line 150, in error_handler
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/ops/variables.py", line 198, in __call__
+    return super(VariableMetaclass, cls).__call__(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/ops/resource_variable_ops.py", line 2311, in __init__
+    value = gen_resource_variable_ops.read_variable_op(handle, dtype)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/ops/gen_resource_variable_ops.py", line 548, in read_variable_op
+    _, _, _op, _outputs = _op_def_library._apply_op_helper(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/framework/op_def_library.py", line 785, in _apply_op_helper
+    _ExtractOutputStructure(op_type_name, op_def, attr_protos,
+  File "/home/jean-sebastien/Documents/s7/PMC/venv/lib/python3.11/site-packages/tensorflow/python/framework/op_def_library.py", line 350, in _ExtractOutputStructure
+    def _ExtractOutputStructure(op_type_name, op_def, attr_protos,
+KeyboardInterrupt

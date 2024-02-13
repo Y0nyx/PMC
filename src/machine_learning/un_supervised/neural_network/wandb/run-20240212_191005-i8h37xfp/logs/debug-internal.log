@@ -1,0 +1,688 @@
+2024-02-12 19:10:06,043 INFO    StreamThr :77184 [internal.py:wandb_internal():86] W&B internal server running at pid: 77184, started at: 2024-02-12 19:10:06.042581
+2024-02-12 19:10:06,045 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status
+2024-02-12 19:10:06,046 INFO    WriterThread:77184 [datastore.py:open_for_write():87] open: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/run-i8h37xfp.wandb
+2024-02-12 19:10:06,046 DEBUG   SenderThread:77184 [sender.py:send():382] send: header
+2024-02-12 19:10:06,046 DEBUG   SenderThread:77184 [sender.py:send():382] send: run
+2024-02-12 19:10:06,337 INFO    SenderThread:77184 [dir_watcher.py:__init__():211] watching files in: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files
+2024-02-12 19:10:06,337 INFO    SenderThread:77184 [sender.py:_start_run_threads():1136] run started: i8h37xfp with start time 1707783005.40228
+2024-02-12 19:10:06,354 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: check_version
+2024-02-12 19:10:06,354 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: check_version
+2024-02-12 19:10:06,533 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: run_start
+2024-02-12 19:10:06,535 DEBUG   HandlerThread:77184 [system_info.py:__init__():27] System info init
+2024-02-12 19:10:06,535 DEBUG   HandlerThread:77184 [system_info.py:__init__():42] System info init done
+2024-02-12 19:10:06,535 INFO    HandlerThread:77184 [system_monitor.py:start():194] Starting system monitor
+2024-02-12 19:10:06,535 INFO    SystemMonitor:77184 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-02-12 19:10:06,536 INFO    HandlerThread:77184 [system_monitor.py:probe():214] Collecting system info
+2024-02-12 19:10:06,537 INFO    SystemMonitor:77184 [interfaces.py:start():190] Started cpu monitoring
+2024-02-12 19:10:06,538 INFO    SystemMonitor:77184 [interfaces.py:start():190] Started disk monitoring
+2024-02-12 19:10:06,540 INFO    SystemMonitor:77184 [interfaces.py:start():190] Started gpu monitoring
+2024-02-12 19:10:06,541 INFO    SystemMonitor:77184 [interfaces.py:start():190] Started memory monitoring
+2024-02-12 19:10:06,543 INFO    SystemMonitor:77184 [interfaces.py:start():190] Started network monitoring
+2024-02-12 19:10:06,555 DEBUG   HandlerThread:77184 [system_info.py:probe():151] Probing system
+2024-02-12 19:10:06,557 DEBUG   HandlerThread:77184 [system_info.py:_probe_git():136] Probing git
+2024-02-12 19:10:06,565 DEBUG   HandlerThread:77184 [system_info.py:_probe_git():144] Probing git done
+2024-02-12 19:10:06,565 DEBUG   HandlerThread:77184 [system_info.py:probe():199] Probing system done
+2024-02-12 19:10:06,565 DEBUG   HandlerThread:77184 [system_monitor.py:probe():223] {'os': 'Linux-6.2.0-39-generic-x86_64-with-glibc2.37', 'python': '3.11.4', 'heartbeatAt': '2024-02-13T00:10:06.556116', 'startedAt': '2024-02-13T00:10:05.397484', 'docker': None, 'cuda': None, 'args': ('--EPOCHS', '5', '--BATCH_SIZE', '256', '--PATH_RESULTS', '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search', '--FILEPATH_WEIGHTS', '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/training_weights/', '--FILEPATH_WEIGHTS_SERCH', '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/search_weights/', '--HP_SEARCH', '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/build_basic_cae/Third_HP_Search/', '--HP_NAME', 'hp_search_results', '--MONITOR_METRIC', 'mean_absolute_error', '--MODE_METRIC', 'min', '--VERBOSE', '--DO_HP_SEARCH', '--EPOCHS_HP', '30', '--NUM_TRIALS_HP', '10', '--EXECUTION_PER_TRIAL_HP', '2', '--NBEST', '5', '--DATA_PATH', '/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images'), 'state': 'running', 'program': '/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/./train.py', 'codePathLocal': 'train.py', 'codePath': 'src/machine_learning/un_supervised/neural_network/train.py', 'git': {'remote': 'git@github.com:Y0nyx/PMC.git', 'commit': '9dc6abd85d522bbd681ca1e46c834ca1e586f5e0'}, 'email': 'jeanseb0598@hotmail.com', 'root': '/home/jean-sebastien/Documents/s7/PMC/PMC', 'host': 'jean-sebastien-MS-7D42', 'username': 'jean-sebastien', 'executable': '/home/jean-sebastien/Documents/s7/PMC/venv/bin/python', 'cpu_count': 6, 'cpu_count_logical': 12, 'cpu_freq': {'current': 1119.93325, 'min': 800.0, 'max': 4400.0}, 'cpu_freq_per_core': [{'current': 799.613, 'min': 800.0, 'max': 4400.0}, {'current': 800.0, 'min': 800.0, 'max': 4400.0}, {'current': 800.0, 'min': 800.0, 'max': 4400.0}, {'current': 800.034, 'min': 800.0, 'max': 4400.0}, {'current': 800.0, 'min': 800.0, 'max': 4400.0}, {'current': 800.314, 'min': 800.0, 'max': 4400.0}, {'current': 800.0, 'min': 800.0, 'max': 4400.0}, {'current': 800.002, 'min': 800.0, 'max': 4400.0}, {'current': 800.0, 'min': 800.0, 'max': 4400.0}, {'current': 2500.0, 'min': 800.0, 'max': 4400.0}, {'current': 2500.0, 'min': 800.0, 'max': 4400.0}, {'current': 800.0, 'min': 800.0, 'max': 4400.0}], 'disk': {'/': {'total': 191.18775939941406, 'used': 80.1182861328125}}, 'gpu': 'NVIDIA GeForce RTX 3060 Ti', 'gpu_count': 2, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 3060 Ti', 'memory_total': 8589934592}, {'name': 'NVIDIA GeForce RTX 3060', 'memory_total': 12884901888}], 'memory': {'total': 31.19765853881836}}
+2024-02-12 19:10:06,565 INFO    HandlerThread:77184 [system_monitor.py:probe():224] Finished collecting system info
+2024-02-12 19:10:06,565 INFO    HandlerThread:77184 [system_monitor.py:probe():227] Publishing system info
+2024-02-12 19:10:06,566 INFO    HandlerThread:77184 [system_monitor.py:probe():229] Finished publishing system info
+2024-02-12 19:10:06,567 DEBUG   SenderThread:77184 [sender.py:send():382] send: files
+2024-02-12 19:10:06,567 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2024-02-12 19:10:06,577 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: python_packages
+2024-02-12 19:10:06,578 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: python_packages
+2024-02-12 19:10:06,620 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 19:10:06,620 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:10:06,621 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: get_summary
+2024-02-12 19:10:06,624 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 19:10:06,711 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: get_summary
+2024-02-12 19:10:06,882 DEBUG   SenderThread:77184 [sender.py:send():382] send: telemetry
+2024-02-12 19:10:06,883 DEBUG   SenderThread:77184 [sender.py:send():382] send: telemetry
+2024-02-12 19:10:06,883 DEBUG   SenderThread:77184 [sender.py:send():382] send: telemetry
+2024-02-12 19:10:06,883 DEBUG   SenderThread:77184 [sender.py:send():382] send: files
+2024-02-12 19:10:06,883 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file model-best.h5 with policy live
+2024-02-12 19:10:06,883 DEBUG   SenderThread:77184 [sender.py:send():382] send: telemetry
+2024-02-12 19:10:06,883 DEBUG   SenderThread:77184 [sender.py:send():382] send: files
+2024-02-12 19:10:06,883 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file model-best.h5 with policy live
+2024-02-12 19:10:06,950 INFO    wandb-upload_0:77184 [upload_job.py:push():131] Uploaded file /tmp/tmpwm0on2x2wandb/eho136g1-wandb-metadata.json
+2024-02-12 19:10:07,338 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/requirements.txt
+2024-02-12 19:10:07,338 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-metadata.json
+2024-02-12 19:10:08,338 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:10,338 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:11,712 DEBUG   SenderThread:77184 [sender.py:send():382] send: files
+2024-02-12 19:10:11,712 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file media/graph/graph_summary_d27d8d085bc2f8b6fea7.graph.json with policy now
+2024-02-12 19:10:11,712 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:11,713 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:11,713 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:12,002 INFO    wandb-upload_0:77184 [upload_job.py:push():131] Uploaded file /tmp/tmpwm0on2x2wandb/5zvn8x8f-media/graph/graph_summary_d27d8d085bc2f8b6fea7.graph.json
+2024-02-12 19:10:12,338 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:12,339 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/media/graph/graph_summary_d27d8d085bc2f8b6fea7.graph.json
+2024-02-12 19:10:12,339 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/media
+2024-02-12 19:10:12,339 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/media/graph
+2024-02-12 19:10:12,821 INFO    wandb-upload_0:77184 [upload_job.py:push():131] Uploaded file /tmp/tmpwm0on2x2wandb/nzawiezo-media/graph/graph_summary_d27d8d085bc2f8b6fea7.graph.json
+2024-02-12 19:10:14,339 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:14,922 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:14,923 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:14,928 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:14,928 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:14,930 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:14,931 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:14,931 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:14,931 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:14,932 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:15,339 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:15,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:10:15,794 INFO    wandb-upload_0:77184 [upload_job.py:push():131] Uploaded file /tmp/tmpwm0on2x2wandb/fnz2psbk-model-best.h5
+2024-02-12 19:10:16,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:16,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.index
+2024-02-12 19:10:16,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.data-00000-of-00001
+2024-02-12 19:10:16,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables
+2024-02-12 19:10:16,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best
+2024-02-12 19:10:16,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/assets
+2024-02-12 19:10:16,557 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:10:16,557 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:10:17,034 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1MTAz', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': None}}
+2024-02-12 19:10:17,034 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:17,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:17,487 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp113a2zus
+2024-02-12 19:10:17,510 INFO    wandb-upload_4:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp6weqmrab
+2024-02-12 19:10:17,606 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp22qwcdpb
+2024-02-12 19:10:17,646 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpzjipmylr
+2024-02-12 19:10:17,842 INFO    wandb-upload_2:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpeiy7xi_5
+2024-02-12 19:10:18,340 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:19,391 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:19,392 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:19,394 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:19,395 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:19,397 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:20,342 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:20,342 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:21,577 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 19:10:21,578 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 19:10:21,579 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:10:22,067 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:22,343 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:22,347 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:22,348 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:22,352 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:22,353 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:22,353 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:22,354 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:22,354 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:22,354 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:22,355 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:23,343 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:23,344 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:10:23,344 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:23,892 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:10:23,892 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:10:24,148 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1MTg2', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1MTAz', 'versionIndex': 0}}}
+2024-02-12 19:10:24,344 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:24,495 INFO    wandb-upload_4:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpch3rjbai
+2024-02-12 19:10:24,859 INFO    wandb-upload_2:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpnv7i4txg
+2024-02-12 19:10:24,865 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpgbq5evq1
+2024-02-12 19:10:24,945 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpb9q5wpff
+2024-02-12 19:10:25,114 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpvyt0bn_s
+2024-02-12 19:10:25,344 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:26,345 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:26,695 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:26,695 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:26,695 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:26,695 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:26,696 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:27,069 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:27,345 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:28,345 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:29,520 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:29,520 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:29,523 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:29,526 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:29,527 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:29,528 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:29,528 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:29,529 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:29,529 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:30,346 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:30,346 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:10:30,346 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:31,018 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:10:31,018 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:10:31,346 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:33,347 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:33,879 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:33,879 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:34,347 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:10:35,347 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/fingerprint.pb
+2024-02-12 19:10:35,347 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/saved_model.pb
+2024-02-12 19:10:35,347 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.index
+2024-02-12 19:10:35,347 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.data-00000-of-00001
+2024-02-12 19:10:35,348 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/keras_metadata.pb
+2024-02-12 19:10:35,348 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables
+2024-02-12 19:10:35,348 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best
+2024-02-12 19:10:35,348 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/assets
+2024-02-12 19:10:35,632 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:10:35,737 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1Mjc1', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1MTg2', 'versionIndex': 1}}}
+2024-02-12 19:10:35,738 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:35,738 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:35,738 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:35,739 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:35,739 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:35,739 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:35,739 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:35,739 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:35,739 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:10:36,071 INFO    wandb-upload_2:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp3_mbwye5
+2024-02-12 19:10:36,190 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1Mjk2', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1MTg2', 'versionIndex': 1}}}
+2024-02-12 19:10:36,348 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:36,356 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp1b5r5z8_
+2024-02-12 19:10:36,379 INFO    wandb-upload_4:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp07d7lhkw
+2024-02-12 19:10:36,426 INFO    wandb-upload_2:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp2vyi4urj
+2024-02-12 19:10:36,459 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpyffv12dx
+2024-02-12 19:10:36,577 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 19:10:36,578 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 19:10:36,578 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:10:36,603 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp2ydiivxp
+2024-02-12 19:10:36,888 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp1msj7__c
+2024-02-12 19:10:37,348 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:37,649 INFO    wandb-upload_2:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpr9pzcp1p
+2024-02-12 19:10:37,951 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpmddmup12
+2024-02-12 19:10:38,034 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpocdrx1qd
+2024-02-12 19:10:38,348 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:38,561 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:38,561 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:38,564 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:38,564 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:38,564 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:38,565 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:38,565 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:38,565 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:38,565 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:39,348 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:39,349 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:10:40,161 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:10:40,161 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:10:40,349 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:40,438 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1Mzgw', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1Mjk2', 'versionIndex': 3}}}
+2024-02-12 19:10:40,744 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:40,749 INFO    wandb-upload_2:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp2f7yd22r
+2024-02-12 19:10:41,028 INFO    wandb-upload_4:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp5l934d1b
+2024-02-12 19:10:41,051 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpk237jz7f
+2024-02-12 19:10:41,109 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpvfmsy6v4
+2024-02-12 19:10:41,349 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/config.yaml
+2024-02-12 19:10:41,350 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:41,391 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmprj3hzmk4
+2024-02-12 19:10:42,350 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:43,098 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:43,098 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:43,099 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:43,099 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:43,100 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:43,350 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:44,350 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:45,989 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:45,989 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:45,990 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:45,990 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:45,990 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:45,990 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:46,351 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:46,351 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:48,351 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:48,948 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:48,948 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:48,950 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:48,951 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:48,952 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:49,352 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:50,352 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:51,036 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:51,577 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 19:10:51,578 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:10:51,578 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 19:10:51,829 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:51,829 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:51,832 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:51,832 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:51,833 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:51,833 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:51,833 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:51,833 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:51,833 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:52,353 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:52,353 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:10:52,353 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:53,354 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:53,354 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/fingerprint.pb
+2024-02-12 19:10:53,354 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/saved_model.pb
+2024-02-12 19:10:53,354 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.index
+2024-02-12 19:10:53,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.data-00000-of-00001
+2024-02-12 19:10:53,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/keras_metadata.pb
+2024-02-12 19:10:53,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables
+2024-02-12 19:10:53,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best
+2024-02-12 19:10:53,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/assets
+2024-02-12 19:10:53,364 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:10:53,364 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:10:53,589 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1NTI0', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1Mzgw', 'versionIndex': 4}}}
+2024-02-12 19:10:53,793 INFO    wandb-upload_4:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpuvcmubop
+2024-02-12 19:10:54,071 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpjz3g8bpf
+2024-02-12 19:10:54,150 INFO    wandb-upload_2:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpub8q8gu_
+2024-02-12 19:10:54,150 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpqrbv7cn4
+2024-02-12 19:10:54,306 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpnm6r4vs0
+2024-02-12 19:10:54,354 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:55,354 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:56,209 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:56,210 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:10:56,215 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:10:56,216 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:56,216 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:10:56,217 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:56,217 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:56,218 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:56,218 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:10:56,219 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:10:56,354 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:10:56,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:10:56,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:57,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:57,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.index
+2024-02-12 19:10:57,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.data-00000-of-00001
+2024-02-12 19:10:57,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables
+2024-02-12 19:10:57,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best
+2024-02-12 19:10:57,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/assets
+2024-02-12 19:10:57,723 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:10:57,724 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:10:57,936 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1NTc3', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1NTI0', 'versionIndex': 5}}}
+2024-02-12 19:10:58,152 INFO    wandb-upload_1:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp7rmvz12w
+2024-02-12 19:10:58,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:10:58,467 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp4zy_bby4
+2024-02-12 19:10:58,577 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp2xqwrr3s
+2024-02-12 19:10:58,615 INFO    wandb-upload_4:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp8qb1gk3w
+2024-02-12 19:10:58,697 INFO    wandb-upload_2:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpdmsmdtko
+2024-02-12 19:10:59,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:00,355 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:00,563 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:00,563 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:00,563 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:00,564 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:00,564 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:01,266 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:01,356 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:02,356 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:03,516 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:03,517 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:03,519 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:03,520 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:03,521 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:04,358 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:04,359 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:06,338 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:06,338 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:06,339 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:06,339 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:06,339 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:06,340 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:06,359 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:06,359 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:06,543 DEBUG   SystemMonitor:77184 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-02-12 19:11:06,544 DEBUG   SenderThread:77184 [sender.py:send():382] send: stats
+2024-02-12 19:11:06,577 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 19:11:06,578 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:11:06,578 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 19:11:08,360 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:09,205 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:09,206 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:09,209 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:09,209 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:09,210 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:09,360 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:10,361 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:11,389 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:12,017 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:12,017 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:12,019 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:12,019 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:12,019 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:12,019 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:12,019 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:12,019 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:12,019 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:12,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:12,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:11:12,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:13,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:13,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.index
+2024-02-12 19:11:13,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.data-00000-of-00001
+2024-02-12 19:11:13,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables
+2024-02-12 19:11:13,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best
+2024-02-12 19:11:13,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/assets
+2024-02-12 19:11:13,584 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:11:13,584 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:11:13,780 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1NzY3', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1NTc3', 'versionIndex': 6}}}
+2024-02-12 19:11:14,081 INFO    wandb-upload_0:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpth1i3qq1
+2024-02-12 19:11:14,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:14,366 INFO    wandb-upload_2:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpuxphcd62
+2024-02-12 19:11:14,381 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpfeffbr12
+2024-02-12 19:11:14,455 INFO    wandb-upload_4:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpusg9vfvl
+2024-02-12 19:11:14,675 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpm1bj1vwx
+2024-02-12 19:11:15,362 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:16,363 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:16,455 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:16,456 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:16,459 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:16,459 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:16,460 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:16,461 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:17,363 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:18,363 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:19,217 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:19,218 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:19,222 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:19,222 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:19,224 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:19,364 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:20,364 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:21,464 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:21,579 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:11:21,579 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 19:11:21,580 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 19:11:22,023 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:22,067 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:22,070 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:22,070 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:22,071 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:22,365 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:22,365 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:24,365 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:24,894 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:24,895 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:24,897 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:24,898 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:24,899 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:25,365 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:26,366 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:26,513 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:27,777 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:27,778 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:27,783 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:27,783 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:27,783 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:27,784 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:27,784 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:27,785 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:27,785 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:28,366 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:28,366 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:11:28,367 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:29,239 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:11:29,239 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:11:29,367 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:29,506 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE1OTk3', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1NzY3', 'versionIndex': 7}}}
+2024-02-12 19:11:29,831 INFO    wandb-upload_2:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp8r3e1d_u
+2024-02-12 19:11:30,138 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmperm2sy6t
+2024-02-12 19:11:30,146 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp44bwyb5g
+2024-02-12 19:11:30,231 INFO    wandb-upload_4:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpqqj5fnhd
+2024-02-12 19:11:30,367 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp2rdvb_gp
+2024-02-12 19:11:30,368 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:31,369 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:31,550 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:31,995 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:31,995 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:31,999 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:31,999 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:32,000 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:32,000 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:32,001 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:32,001 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:32,001 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:32,369 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:32,369 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:11:32,369 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:33,369 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:33,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/fingerprint.pb
+2024-02-12 19:11:33,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/saved_model.pb
+2024-02-12 19:11:33,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.index
+2024-02-12 19:11:33,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.data-00000-of-00001
+2024-02-12 19:11:33,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/keras_metadata.pb
+2024-02-12 19:11:33,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables
+2024-02-12 19:11:33,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best
+2024-02-12 19:11:33,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/assets
+2024-02-12 19:11:33,481 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:11:33,481 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:11:33,755 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE2MDU0', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE1OTk3', 'versionIndex': 8}}}
+2024-02-12 19:11:34,076 INFO    wandb-upload_3:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpf4t1mn4k
+2024-02-12 19:11:34,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:34,396 INFO    wandb-upload_2:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpehfp4ot2
+2024-02-12 19:11:34,410 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmprx8_8bl7
+2024-02-12 19:11:34,471 INFO    wandb-upload_4:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpb9nlev0u
+2024-02-12 19:11:34,745 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpkc5wy4r6
+2024-02-12 19:11:35,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:36,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:36,409 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:36,410 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:36,411 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:36,411 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:36,412 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:36,545 DEBUG   SenderThread:77184 [sender.py:send():382] send: stats
+2024-02-12 19:11:36,571 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:36,578 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 19:11:36,578 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:11:36,578 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 19:11:37,370 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:38,371 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:39,300 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:39,301 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:39,302 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:39,303 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:39,303 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:39,371 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:40,372 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:41,617 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:42,257 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:42,258 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:42,260 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:42,261 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:42,262 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:42,372 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:42,373 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:44,373 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:45,037 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:45,037 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:45,040 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:45,040 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:45,041 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:45,373 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:46,374 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:46,659 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:47,868 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:47,868 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:47,869 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:47,869 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:47,869 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:47,869 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:47,876 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:47,876 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:47,876 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:48,374 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:48,374 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5
+2024-02-12 19:11:48,374 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:49,374 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:49,375 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/saved_model.pb
+2024-02-12 19:11:49,375 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.index
+2024-02-12 19:11:49,375 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables/variables.data-00000-of-00001
+2024-02-12 19:11:49,375 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/fingerprint.pb
+2024-02-12 19:11:49,375 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/variables
+2024-02-12 19:11:49,375 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best
+2024-02-12 19:11:49,375 INFO    Thread-172:77184 [dir_watcher.py:_on_file_created():271] file/dir created: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best/assets
+2024-02-12 19:11:49,546 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: log_artifact
+2024-02-12 19:11:49,547 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: log_artifact
+2024-02-12 19:11:49,767 INFO    SenderThread:77184 [sender.py:send_request_log_artifact():1470] logged artifact model-red-dog-8 - {'id': 'QXJ0aWZhY3Q6NzIwNTE2Mjk4', 'state': 'PENDING', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI4MDU3OA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTE2MDU0', 'versionIndex': 9}}}
+2024-02-12 19:11:50,104 INFO    wandb-upload_2:77184 [upload_job.py:push():86] Skipped uploading /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpa4k11cf8
+2024-02-12 19:11:50,359 INFO    wandb-upload_0:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmp5zetb8yt
+2024-02-12 19:11:50,375 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:50,454 INFO    wandb-upload_4:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmpywjclpwj
+2024-02-12 19:11:50,502 INFO    wandb-upload_3:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmptw1vi_6p
+2024-02-12 19:11:50,822 INFO    wandb-upload_1:77184 [upload_job.py:push():89] Uploaded file /home/jean-sebastien/.local/share/wandb/artifacts/staging/tmplkkzd9ob
+2024-02-12 19:11:51,376 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:51,602 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-12 19:11:51,603 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:11:51,604 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: stop_status
+2024-02-12 19:11:51,715 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:52,376 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:52,517 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:52,517 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:52,518 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:52,518 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:52,519 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:53,376 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:54,377 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:55,363 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:55,363 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:55,366 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:55,367 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:55,367 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:55,369 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-12 19:11:55,372 DEBUG   SenderThread:77184 [sender.py:send():382] send: history
+2024-02-12 19:11:55,372 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: summary_record
+2024-02-12 19:11:55,377 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:55,380 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:55,380 DEBUG   SenderThread:77184 [sender.py:send():382] send: telemetry
+2024-02-12 19:11:55,381 DEBUG   SenderThread:77184 [sender.py:send():382] send: exit
+2024-02-12 19:11:55,381 INFO    SenderThread:77184 [sender.py:send_exit():589] handling exit code: 0
+2024-02-12 19:11:55,381 INFO    SenderThread:77184 [sender.py:send_exit():591] handling runtime: 108
+2024-02-12 19:11:55,382 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:55,382 INFO    SenderThread:77184 [sender.py:send_exit():597] send defer
+2024-02-12 19:11:55,382 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:55,382 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 0
+2024-02-12 19:11:55,383 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:55,383 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 0
+2024-02-12 19:11:55,383 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 1
+2024-02-12 19:11:55,383 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:55,383 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 1
+2024-02-12 19:11:55,383 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:55,384 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 1
+2024-02-12 19:11:55,384 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 2
+2024-02-12 19:11:55,384 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:55,384 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 2
+2024-02-12 19:11:55,384 INFO    HandlerThread:77184 [system_monitor.py:finish():203] Stopping system monitor
+2024-02-12 19:11:55,385 DEBUG   SystemMonitor:77184 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-02-12 19:11:55,385 DEBUG   SystemMonitor:77184 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-02-12 19:11:55,385 INFO    HandlerThread:77184 [interfaces.py:finish():202] Joined cpu monitor
+2024-02-12 19:11:55,387 INFO    HandlerThread:77184 [interfaces.py:finish():202] Joined disk monitor
+2024-02-12 19:11:55,444 INFO    HandlerThread:77184 [interfaces.py:finish():202] Joined gpu monitor
+2024-02-12 19:11:55,444 INFO    HandlerThread:77184 [interfaces.py:finish():202] Joined memory monitor
+2024-02-12 19:11:55,444 INFO    HandlerThread:77184 [interfaces.py:finish():202] Joined network monitor
+2024-02-12 19:11:55,445 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:55,445 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 2
+2024-02-12 19:11:55,445 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 3
+2024-02-12 19:11:55,445 DEBUG   SenderThread:77184 [sender.py:send():382] send: stats
+2024-02-12 19:11:55,445 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:55,445 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 3
+2024-02-12 19:11:55,445 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:55,445 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 3
+2024-02-12 19:11:55,445 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 4
+2024-02-12 19:11:55,446 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:55,446 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 4
+2024-02-12 19:11:55,446 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:55,446 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 4
+2024-02-12 19:11:55,446 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 5
+2024-02-12 19:11:55,446 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:55,446 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 5
+2024-02-12 19:11:55,446 DEBUG   SenderThread:77184 [sender.py:send():382] send: summary
+2024-02-12 19:11:55,446 INFO    SenderThread:77184 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-12 19:11:55,447 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:55,447 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 5
+2024-02-12 19:11:55,447 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 6
+2024-02-12 19:11:55,447 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:55,447 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 6
+2024-02-12 19:11:55,447 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:55,447 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 6
+2024-02-12 19:11:55,448 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: status_report
+2024-02-12 19:11:55,556 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 7
+2024-02-12 19:11:55,556 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:55,556 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 7
+2024-02-12 19:11:55,557 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:55,557 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 7
+2024-02-12 19:11:56,373 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 19:11:56,378 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:56,378 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/config.yaml
+2024-02-12 19:11:56,378 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:56,967 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 8
+2024-02-12 19:11:56,968 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 19:11:56,968 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:56,969 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 8
+2024-02-12 19:11:56,970 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:56,970 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 8
+2024-02-12 19:11:56,970 INFO    SenderThread:77184 [job_builder.py:build():296] Attempting to build job artifact
+2024-02-12 19:11:56,971 INFO    SenderThread:77184 [job_builder.py:_get_source_type():426] is repo sourced job
+2024-02-12 19:11:56,973 INFO    SenderThread:77184 [job_builder.py:build():402] adding wandb-job metadata file
+2024-02-12 19:11:56,985 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 9
+2024-02-12 19:11:56,986 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:56,986 DEBUG   SenderThread:77184 [sender.py:send():382] send: artifact
+2024-02-12 19:11:56,986 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 9
+2024-02-12 19:11:57,260 INFO    SenderThread:77184 [sender.py:send_artifact():1494] sent artifact job-git_github.com_Y0nyx_PMC.git_src_machine_learning_un_supervised_neural_network_train.py - {'id': 'QXJ0aWZhY3Q6NzIwNTA2Njg4', 'state': 'COMMITTED', 'artifactSequence': {'id': 'QXJ0aWZhY3RDb2xsZWN0aW9uOjEzOTI3MTkzMA==', 'latestArtifact': {'id': 'QXJ0aWZhY3Q6NzIwNTA2Njg4', 'versionIndex': 2}}}
+2024-02-12 19:11:57,260 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:57,260 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 9
+2024-02-12 19:11:57,260 INFO    SenderThread:77184 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-02-12 19:11:57,374 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 19:11:57,378 INFO    Thread-172:77184 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:57,380 INFO    SenderThread:77184 [dir_watcher.py:finish():388] scan: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files
+2024-02-12 19:11:57,380 INFO    SenderThread:77184 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/requirements.txt requirements.txt
+2024-02-12 19:11:57,380 INFO    SenderThread:77184 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-metadata.json wandb-metadata.json
+2024-02-12 19:11:57,380 INFO    SenderThread:77184 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/config.yaml config.yaml
+2024-02-12 19:11:57,381 INFO    SenderThread:77184 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log output.log
+2024-02-12 19:11:57,381 INFO    SenderThread:77184 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/model-best.h5 model-best.h5
+2024-02-12 19:11:57,382 INFO    SenderThread:77184 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json wandb-summary.json
+2024-02-12 19:11:57,391 INFO    SenderThread:77184 [dir_watcher.py:finish():402] scan save: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/media/graph/graph_summary_d27d8d085bc2f8b6fea7.graph.json media/graph/graph_summary_d27d8d085bc2f8b6fea7.graph.json
+2024-02-12 19:11:57,396 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 10
+2024-02-12 19:11:57,396 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 19:11:57,397 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:57,397 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 10
+2024-02-12 19:11:57,402 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:57,406 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 10
+2024-02-12 19:11:57,406 INFO    SenderThread:77184 [file_pusher.py:finish():172] shutting down file pusher
+2024-02-12 19:11:57,616 INFO    wandb-upload_2:77184 [upload_job.py:push():131] Uploaded file /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/requirements.txt
+2024-02-12 19:11:57,725 INFO    wandb-upload_4:77184 [upload_job.py:push():131] Uploaded file /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/output.log
+2024-02-12 19:11:57,726 INFO    wandb-upload_0:77184 [upload_job.py:push():131] Uploaded file /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/config.yaml
+2024-02-12 19:11:57,827 INFO    wandb-upload_3:77184 [upload_job.py:push():131] Uploaded file /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/files/wandb-summary.json
+2024-02-12 19:11:58,005 INFO    wandb-upload_1:77184 [upload_job.py:push():131] Uploaded file /tmp/tmpwm0on2x2wandb/dlzemcpt-model-best.h5
+2024-02-12 19:11:58,206 INFO    Thread-171 (_thread_body):77184 [sender.py:transition_state():617] send defer: 11
+2024-02-12 19:11:58,207 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:58,207 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 11
+2024-02-12 19:11:58,208 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:58,208 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 11
+2024-02-12 19:11:58,208 INFO    SenderThread:77184 [file_pusher.py:join():178] waiting for file pusher
+2024-02-12 19:11:58,210 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 12
+2024-02-12 19:11:58,210 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:58,210 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 12
+2024-02-12 19:11:58,211 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:58,211 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 12
+2024-02-12 19:11:58,211 INFO    SenderThread:77184 [file_stream.py:finish():595] file stream finish called
+2024-02-12 19:11:58,377 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 19:11:58,458 INFO    SenderThread:77184 [file_stream.py:finish():599] file stream finish is done
+2024-02-12 19:11:58,459 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 13
+2024-02-12 19:11:58,459 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 19:11:58,460 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:58,460 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 13
+2024-02-12 19:11:58,461 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:58,461 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 13
+2024-02-12 19:11:58,462 INFO    SenderThread:77184 [sender.py:transition_state():617] send defer: 14
+2024-02-12 19:11:58,462 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: defer
+2024-02-12 19:11:58,462 INFO    HandlerThread:77184 [handler.py:handle_request_defer():172] handle defer: 14
+2024-02-12 19:11:58,463 DEBUG   SenderThread:77184 [sender.py:send():382] send: final
+2024-02-12 19:11:58,464 DEBUG   SenderThread:77184 [sender.py:send():382] send: footer
+2024-02-12 19:11:58,464 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: defer
+2024-02-12 19:11:58,464 INFO    SenderThread:77184 [sender.py:send_request_defer():613] handle sender defer: 14
+2024-02-12 19:11:58,466 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-12 19:11:58,467 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: poll_exit
+2024-02-12 19:11:58,470 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-12 19:11:58,473 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: server_info
+2024-02-12 19:11:58,473 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: server_info
+2024-02-12 19:11:58,514 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: get_summary
+2024-02-12 19:11:58,515 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: sampled_history
+2024-02-12 19:11:58,517 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: job_info
+2024-02-12 19:11:58,544 DEBUG   SenderThread:77184 [sender.py:send_request():409] send_request: job_info
+2024-02-12 19:11:58,565 DEBUG   HandlerThread:77184 [handler.py:handle_request():146] handle_request: shutdown
+2024-02-12 19:11:58,566 INFO    HandlerThread:77184 [handler.py:finish():869] shutting down handler
+2024-02-12 19:11:59,518 INFO    WriterThread:77184 [datastore.py:close():296] close: /home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240212_191005-i8h37xfp/run-i8h37xfp.wandb
+2024-02-12 19:11:59,545 INFO    SenderThread:77184 [sender.py:finish():1572] shutting down sender
+2024-02-12 19:11:59,545 INFO    SenderThread:77184 [file_pusher.py:finish():172] shutting down file pusher
+2024-02-12 19:11:59,545 INFO    SenderThread:77184 [file_pusher.py:join():178] waiting for file pusher

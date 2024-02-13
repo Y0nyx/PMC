@@ -12,8 +12,7 @@ import wandb
 
 from keras import backend as K
 from keras_tuner import BayesianOptimization, Objective
-from wandb.keras import WandbMetricsLogger
-from wandb.keras import WandbModelCheckpoint
+from wandb.keras import WandbCallback
 
 import model as mod
 
@@ -46,20 +45,29 @@ class CustomBayesianTuner(BayesianOptimization):
 
         kwargs.pop('batch_size', None)
         kwargs.pop('validation_data', None)
-
+        kwargs.pop('callbacks', None)
         kwargs['batch_size'] = batch_size
         
         model = self.hypermodel.build(hp)
+
+        wandb.init(project='Essai3 wandb', entity='dofa_unsupervised', config=trial.hyperparameters.values)
+
+        callbacks = self.hypermodel.callbacks.copy() 
+        callbacks.append(WandbCallback(save_model=False))
 
         history = model.fit(        
             x=self.hypermodel.input_train_aug,
             y=self.hypermodel.input_train,
             validation_data=(self.hypermodel.input_test_aug, self.hypermodel.input_test),
+            callbacks = callbacks,
             **kwargs
         )
 
         best_metric = min(history.history['mean_absolute_error']) 
         self.oracle.update_trial(trial.trial_id, {'mean_absolute_error': best_metric}) 
+        wandb.log({'best_metric': best_metric})
+
+        wandb.finish()
 
         # Nettoyage après chaque essai
         del model  # Supprimer explicitement le modèle
@@ -91,7 +99,7 @@ class KerasTuner():
             input_test_aug = self.input_test_aug,
             input_test = self.input_test,
             epochs = self.epochs, 
-            callbacks = self.callbacks[0]
+            callbacks = [self.callbacks[0]]
         )
 
         tuner = CustomBayesianTuner(  
@@ -111,14 +119,12 @@ class KerasTuner():
         Manages the execution of multiple trials, each involving training a model once per trial with a specific set 
         of hyperparameters. 
         """
-        print("Splitted dataset in arrays of shape: ", self.input_train.shape, " | ", self.input_test.shape)
-        print("Augmented splitted dataset in arrays of shape: ", self.input_train_aug.shape, " | ", self.input_test_aug.shape)
         tuner.search(
             self.input_train_aug,
             self.input_train,
             epochs=self.epochs,
             validation_data=(self.input_test_aug, self.input_test),
-            callbacks=callbacks[1:],
+            callbacks=callbacks,
             verbose=self.verbose,
             shuffle=True
         )
