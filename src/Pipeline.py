@@ -11,7 +11,7 @@ from PIL import Image as Img
 import numpy as np
 
 from ultralytics import YOLO
-from clearml import Task
+#from clearml import Task
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
@@ -30,7 +30,7 @@ class Pipeline:
         
         self._state = PipelineState.INIT
         self._dataManager = DataManager(
-            "", "./src/cameras.yaml", self.verbose
+            "", "./Code/src/cameras.yaml", self.verbose
         ).get_instance()
         self.unsupervised_model = unsupervised_model
 
@@ -116,66 +116,54 @@ class Pipeline:
                                 cropped_imgs.append(img.crop(boxes))
                         
                         print("Nb cropped img", len(cropped_imgs))
-                        # Directory where images are saved
-                        directory = 'C:/Users/mafrc/Desktop/Uni/PMC/CodePMC/test_dataset/'
-                        
-                        # Find the index of the last saved image
-                        last_index = 0
-                        for filename in os.listdir(directory):
-                            if filename.endswith('.png'):
-                                index = int(filename.split('_')[-1].split('.')[0])
-                                last_index = max(last_index, index)
-                        
-                        # Start saving new images from the next index
-                        for i, img in enumerate(cropped_imgs):
-                            img_index = last_index + i + 1
-                            img.save(os.path.join(directory, f'test_dataset_{img_index}.png'))
                                
                 
-                        #for image in cropped_imgs:
-                        #    if True: #C'est un if le model non supervise prend des images subdivises
-                        #        # Calculate the closest multiples for both dimensions
-                        #        closest_width = int(np.ceil(image.value.shape[1] / unsupervised_model.input_shape[1]) * unsupervised_model.input_shape[1])
-                        #        closest_height = int(np.ceil(image.value.shape[0] / unsupervised_model.input_shape[2]) * unsupervised_model.input_shape[2])
-#
-#
-                        #        image.value = cv2.resize(image.value, (closest_width, closest_height))
-                        #        cv2.imshow('Resized Image',image.value)
-                        #        cv2.waitKey(0)
-                        #        cv2.destroyAllWindows()
-#
-                        #        sub_images = image.subdivise(128, 0, "untranslated")
-#
-                        #        for i, sub_image in enumerate(sub_images):
-                        #            cv2.imshow('Sub image', sub_image.value)
-                        #            cv2.waitKey(0)
-                        #            cv2.destroyAllWindows()
-#
-                        #            worst_ssim, worst_ssim_position, worst_ssim_square, worst_ssim_prediction = self.detect_default(sub_image.value, 32, i)
-#
-                        #            if True:
-                        #            
-                        #                fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-#
-                        #                # Plot the first RGB image
-                        #                axes[0].imshow(sub_image.value)
-                        #                axes[0].set_title(f"Error in image {i}")
-                        #                axes[0].axis('off')
-#
-                        #                # Plot the second grayscale image
-                        #                axes[1].imshow(worst_ssim_square)
-                        #                axes[1].set_title(f"At position x={worst_ssim_position[0]} y={worst_ssim_position[1]}")
-                        #                axes[1].axis('off')
-#
-                        #                # Plot the third grayscale image
-                        #                axes[2].imshow(worst_ssim_prediction)
-                        #                axes[2].set_title(f"Prediction made")
-                        #                axes[2].axis('off')
-#
-                        #                # Show the combined plot
-                        #                plt.show()
-#
-#
+                        for image in cropped_imgs:
+                            if True: #C'est un if le model non supervise prend des images subdivises
+                                # Calculate the closest multiples for both dimensions
+                                closest_width = int(np.ceil(image.value.shape[1] / unsupervised_model.input_shape[1]) * unsupervised_model.input_shape[1])
+                                closest_height = int(np.ceil(image.value.shape[0] / unsupervised_model.input_shape[2]) * unsupervised_model.input_shape[2])
+
+
+                                image.value = cv2.resize(image.value, (closest_width, closest_height))
+                                cv2.imshow('Resized Image',image.value)
+                                cv2.waitKey(0)
+                                cv2.destroyAllWindows()
+
+                                sub_images = image.subdivise(unsupervised_model.input_shape[1], 0, "untranslated")
+
+                                for i, sub_image in enumerate(sub_images):
+                                    cv2.imshow('Sub image', sub_image.value)
+                                    cv2.waitKey(0)
+                                    cv2.destroyAllWindows()
+
+                                    sub_image.value = sub_image.value.astype('float32') /255
+
+                                    worst_ssim, worst_ssim_position, worst_ssim_square, worst_ssim_prediction = self.detect_default(sub_image.value, 32, i)
+
+                                    if True:
+                                    
+                                        fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+                                        # Plot the first RGB image
+                                        axes[0].imshow(sub_image.value)
+                                        axes[0].set_title(f"Error in image {i}")
+                                        axes[0].axis('off')
+
+                                        # Plot the second grayscale image
+                                        axes[1].imshow(worst_ssim_square)
+                                        axes[1].set_title(f"At position x={worst_ssim_position[0]} y={worst_ssim_position[1]}")
+                                        axes[1].axis('off')
+
+                                        # Plot the third grayscale image
+                                        axes[2].imshow(worst_ssim_prediction)
+                                        axes[2].set_title(f"Prediction made")
+                                        axes[2].axis('off')
+
+                                        # Show the combined plot
+                                        plt.show()
+
+
             if key == 'e':
                 print('Exit Capture')
                 break
@@ -211,11 +199,19 @@ class Pipeline:
                 for channel in range(channels):
                     current_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel] = 0
 
+                cv2.imshow('To be predicted', current_image)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+
                 current_image_reshaped = current_image.reshape((-1, rows, cols, channels))
 
                 # Generate image
                 prediction = unsupervised_model.predict(current_image_reshaped)
                 prediction = prediction.reshape(rows, cols, channels)
+
+                cv2.imshow('To be predicted', prediction)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
                 # Test to compare
                 #prediction_unmodified = model.predict(image.reshape((-1, image_size, image_size, channels)))
@@ -281,7 +277,7 @@ if __name__ == "__main__":
     models = []
     models.append(YoloModel('./Code/src/ia/welding_detection_v1.pt'))
     models.append(YoloModel('./Code/src/ia/piece_detection_v1.pt'))
-    unsupervised_model = tf.keras.models.load_model('./Code/src/ia/wandb_night_run_basic_CAE_best_gen.keras')
+    unsupervised_model = tf.keras.models.load_model('./Code/src/ia/wandb_fev12_demo.h5')
 
     # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
 
@@ -302,7 +298,7 @@ if __name__ == "__main__":
 
     Pipeline = Pipeline(models, unsupervised_model, verbose=True)
 
-    Pipeline.train(data_path, "yolov8m-cls", epochs=350, batch=15, workers=4)
+    #Pipeline.train(data_path, "yolov8m-cls", epochs=350, batch=15, workers=4)
 
     # Pipeline.get_dataset()
 
@@ -318,4 +314,4 @@ if __name__ == "__main__":
     # Model Training
     # Pipeline.train(data_path, 'yolov8s-seg', epochs=250, plots=False)
 
-    # Pipeline.detect("D:/APP/PMC/repos/runs/segment/train4/weights/best.pt")
+    Pipeline.detect()
