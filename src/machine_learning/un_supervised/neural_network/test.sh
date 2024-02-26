@@ -11,8 +11,8 @@ readonly SCRIPT_NAME='test.py'
 
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images' #same as test_AE.sh
 readonly MODEL='aes_defect_detection'     #same as test_AE.sh
-readonly TEST_NAME='A_First_HP_Search' #same as test_AE.sh
-readonly NBEST=3                     #same as test_AE.sh
+readonly TEST_NAME='B_First_HP_Search' #same as test_AE.sh
+readonly NBEST=1                     #same as test_AE.sh
 readonly NUM_TRAIN_REGENERATE=20
 
 #Never change this constants (Only adapt PATH_RESULTS to the computer you are using)

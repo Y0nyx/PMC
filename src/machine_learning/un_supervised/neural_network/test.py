@@ -36,15 +36,21 @@ def prediction(model, input_test):
     )
 
 def createPredImg(input_train, input_test, difference_reshaped, image, num, PATH_RESULTS):
-    fig, axes = plt.subplots(1, 3)
+    fig, axes = plt.subplots(1, 3, figsize=(24,8))
     fig.suptitle('Input data vs Results')
 
     axes[0].set_title('Inputs')
-    axes[0].imshow(input_train, cmap='gray')
+    im0 = axes[0].imshow(input_train, cmap='gray')
     axes[1].set_title('Results')
-    axes[1].imshow(input_test, cmap='gray')
+    im1 = axes[1].imshow(input_test, cmap='gray')
     axes[2].set_title('difference')
-    axes[2].imshow(difference_reshaped, cmap='jet')
+    im2 = axes[2].imshow(difference_reshaped, cmap='jet')
+
+    fig.subplots_adjust(wspace=0.3, hspace=0.3)
+
+    fig.colorbar(im0, ax=axes[0], fraction=0.046, pad=0.04)
+    fig.colorbar(im1, ax=axes[1], fraction=0.046, pad=0.04)
+    fig.colorbar(im2, ax=axes[2], fraction=0.046, pad=0.04)
 
     dir = f'{PATH_RESULTS}/image/result_model_{num+1}'
     if not os.path.exists(dir):
@@ -67,11 +73,10 @@ if __name__ =='__main__':
     args = argparser()
 
     data_processing = dp.DataProcessing()
-    # input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm
-    input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = data_processing.get_data_processing(args.DATA_PATH)
+    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(args.DATA_PATH)
 
     data_frame = pd.read_csv(f'{args.PATH_RESULTS}/hp_search_results.csv')
-    #TODO Might by a way to automatize this. 
+    #List all the hp used during training. 
     learning_rate = data_frame['lr']
 
     for j in range(args.NBEST):
@@ -81,7 +86,7 @@ if __name__ =='__main__':
         name = f"model{j+1}"
         build_model.load_weights(f'{args.FILEPATH_WEIGHTS}/search_{name}')
 
-        input_test_norm = input_test_norm[0:args.NUM_TRAIN_REGENERATE]
+        input_test_norm = test_input[0:args.NUM_TRAIN_REGENERATE]
 
         result_norm = prediction(build_model, input_test_norm)
 

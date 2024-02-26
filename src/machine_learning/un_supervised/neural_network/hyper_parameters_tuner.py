@@ -17,13 +17,14 @@ from wandb.keras import WandbCallback
 import model as mod
 
 class MyHyperModel(keras_tuner.HyperModel):  
-    def __init__(self, input_train, input_train_aug, input_test_aug, input_test, epochs, callbacks): 
-        self.input_train_aug = input_train_aug, 
-        self.input_train = input_train,
-        self.input_test_aug = input_test_aug,
-        self.input_test = input_test,
-        self.epochs = epochs
-        self.callbacks = callbacks
+    def __init__(self, train_input, train_label, valid_input, valid_label, epochs, callbacks, MONITOR_METRIC): 
+            self.train_input = train_input,
+            self.train_label = train_label,
+            self.valid_input = valid_input,
+            self.valid_label = valid_label,
+            self.epochs = epochs, 
+            self.callbacks = [callbacks[1:]]
+            self.MONITOR_METRIC = MONITOR_METRIC
  
     def build(self, hp):
         """
@@ -48,7 +49,7 @@ class CustomBayesianTuner(BayesianOptimization):
         
         model = self.hypermodel.build(hp)
 
-        wandb.init(project='aes_defect_detection_ATest', entity='dofa_unsupervised', config=trial.hyperparameters.values, mode="online", dir='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised')
+        wandb.init(project='aes_defect_detection_BTest', entity='dofa_unsupervised', config=trial.hyperparameters.values, mode="online", dir='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised')
 
 
         callbacks = self.hypermodel.callbacks.copy() 
@@ -56,15 +57,15 @@ class CustomBayesianTuner(BayesianOptimization):
         callbacks.append(WandbCallback(save_model=False))
 
         history = model.fit(        
-            x=self.hypermodel.input_train_aug,
-            y=self.hypermodel.input_train,
-            validation_data=(self.hypermodel.input_test_aug, self.hypermodel.input_test),
+            x=self.hypermodel.train_input,
+            y=self.hypermodel.train_label,
+            validation_data=(self.hypermodel.valid_input, self.hypermodel.valid_label),
             callbacks = callbacks,
             **kwargs
         )
 
-        best_metric = min(history.history['mean_absolute_error']) 
-        self.oracle.update_trial(trial.trial_id, {'mean_absolute_error': best_metric}) 
+        best_metric = min(history.history[self.hypermodel.MONITOR_METRIC]) 
+        self.oracle.update_trial(trial.trial_id, {self.hypermodel.MONITOR_METRIC : best_metric}) 
         wandb.log({'best_metric': best_metric})
 
         wandb.finish()
@@ -76,11 +77,11 @@ class CustomBayesianTuner(BayesianOptimization):
 
     
 class KerasTuner():
-    def __init__(self, input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm, epochs, num_trials, executions_per_trial, monitor, mode, verbose, callbacks):
-        self.input_train = input_train_norm
-        self.input_train_aug = input_train_aug_norm
-        self.input_test = input_test_norm
-        self.input_test_aug = input_test_aug_norm
+    def __init__(self, input_train_norm, input_train_norm_label, input_valid_norm, input_valid_norm_label, epochs, num_trials, executions_per_trial, monitor, mode, verbose, callbacks, MONITOR_METRIC):
+        self.train_input = input_train_norm
+        self.train_label = input_train_norm_label
+        self.valid_input = input_valid_norm
+        self.valid_label = input_valid_norm_label
         self.epochs = epochs
         self.num_trials = num_trials
         self.executions_per_trial = executions_per_trial
@@ -88,18 +89,20 @@ class KerasTuner():
         self.mode = mode 
         self.verbose = verbose
         self.callbacks = callbacks
+        self.MONITOR_METRIC = MONITOR_METRIC
 
     def tuner_initializer(self, HP_SEARCH, HP_NAME) -> BayesianOptimization:
         """
         Initialization of a Bayesian optimization tuner for hyperparameter tuning. 
         """
         hypermodel = MyHyperModel(
-            input_train_aug = self.input_train_aug,
-            input_train = self.input_train,
-            input_test_aug = self.input_test_aug,
-            input_test = self.input_test,
+            train_input = self.train_input,
+            train_label = self.train_label,
+            valid_input = self.valid_input,
+            valid_label = self.valid_label,
             epochs = self.epochs, 
-            callbacks = [self.callbacks[1:]]
+            callbacks = [self.callbacks[1:]],
+            MONITOR_METRIC = self.MONITOR_METRIC
         )
 
         tuner = CustomBayesianTuner(  
@@ -120,10 +123,10 @@ class KerasTuner():
         of hyperparameters. 
         """
         tuner.search(
-            self.input_train_aug,
-            self.input_train,
+            self.train_input,
+            self.train_label,
             epochs=self.epochs,
-            validation_data=(self.input_test_aug, self.input_test),
+            validation_data=(self.valid_input, self.valid_label),
             verbose=self.verbose,
             shuffle=True
         )

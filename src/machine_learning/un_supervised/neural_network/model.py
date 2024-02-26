@@ -10,7 +10,6 @@ Description: Contain the list of GAN model that will be used to train the GAN wi
 import keras
 import tensorflow as tf
 
-from keras import layers
 from keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, BatchNormalization, LeakyReLU, Add, UpSampling2D, Activation, Dense, Input
 
 from keras.models import Model
@@ -19,22 +18,22 @@ class AeModels():
     def __init__(self, learning_rate: float=0.001):
         self.learning_rate = learning_rate
 
-    def build_francois_chollet_autoencoder(self, input_shape: tuple=(784,), encoding_dim: int=32) -> keras.Model:
+    def build_francois_chollet_autoencoder(self, input_shape: tuple=(784,), encoding_dim: int=32) -> Model:
         """
         Francois Chollet auto-encoder (AE) architecture from this link:
         https://blog.keras.io/building-autoencoders-in-keras.html 
         Which is a Single fully-connected neural layer. 
         """
         #Define the input shape of the model.
-        input_img = keras.Input(shape=input_shape)
+        input_img = Input(shape=input_shape)
 
         #Encoder
-        Encoder = layers.Dense(encoding_dim, activation='relu')(input_img)
+        Encoder = Dense(encoding_dim, activation='relu')(input_img)
         #Decoder
-        Decoder = layers.Dense(784, activation='sigmoid')(Encoder)
+        Decoder = Dense(784, activation='sigmoid')(Encoder)
 
         #Define the input and output of the model
-        model = keras.Model(inputs=input_img, outputs=Decoder)
+        model = Model(inputs=input_img, outputs=Decoder)
 
         #Create the loss function 
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
@@ -46,12 +45,12 @@ class AeModels():
 
         return model
     
-    def convolutional_ae(self) -> keras.Model:
+    def convolutional_ae(self) -> Model:
         """
         Convolutional auto-encoder for denoising. architecture from this link:
         https://keras.io/examples/vision/autoencoder/ 
         """
-        input = layers.Input(shape=(256, 256, 3))
+        input = Input(shape=(256, 256, 3))
 
         #Encoder 
         x = Conv2D(32, (3,3), activation='relu', padding='same')(input)
@@ -73,13 +72,13 @@ class AeModels():
 
         return model
     
-    #TODO: Pass all parameters to tune
-    def build_basic_cae(self, input_shape: tuple=(256, 256, 3)) -> keras.Model:
+    def build_basic_cae(self, input_shape: tuple=(256, 256, 3)) -> Model:
         """
         Model based on this kaggle notebook: https://www.kaggle.com/code/orion99/autoencoder-made-easy/notebook
         Tested using the subdivided dataset
         """
         input_layer = Input(shape=input_shape, name="INPUT")
+
         x = Conv2D(16, (3, 3), activation='relu', padding='same')(input_layer)
         x = MaxPooling2D((2, 2))(x)
         x = Conv2D(8, (3, 3), activation='relu', padding='same')(x)
@@ -110,14 +109,15 @@ class AeModels():
 
         return model
     
-    def aes_defect_detection(self) -> keras.Model:
+    def aes_defect_detection(self) -> Model:
         """
         Convolution auto-encoder for defect detection found in the literature
         https://arxiv.org/pdf/2008.12977.pdf 
         """
-        input = layers.Input(shape=(256, 256, 3))
+        input_with_defect = Input(shape=(256, 256, 3))
+
         #Encoder
-        e1 = Conv2D(16, (5,5), strides=2, padding='same')(input)
+        e1 = Conv2D(16, (5,5), strides=2, padding='same')(input_with_defect)
         e1 = BatchNormalization()(e1)
         e1 = LeakyReLU(alpha=0.1)(e1)
 
@@ -178,12 +178,12 @@ class AeModels():
         output = Activation('sigmoid')(output)
 
         #Autoencoder
-        model = keras.Model(inputs=input, outputs=output)
+        model = Model(inputs=input_with_defect, outputs=output)
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='binary_crossentropy',
-            metrics=['mean_absolute_error']
+            loss='mean_absolute_error',
+            metrics=['mean_squared_error']
         )
 
         return model
