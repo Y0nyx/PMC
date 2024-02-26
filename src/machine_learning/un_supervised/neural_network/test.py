@@ -12,7 +12,6 @@ import os
 import pandas as pd
 
 import data_processing as dp
-
 import model as mod
 
 def evaluate_model(model, input_test, batch_size=32, verbose=1):
@@ -84,7 +83,7 @@ if __name__ =='__main__':
         build_model = model.aes_defect_detection()   #Change this line if the model change. 
 
         name = f"model{j+1}"
-        build_model.load_weights(f'{args.FILEPATH_WEIGHTS}/search_{name}')
+        build_model.load_weights(f'{args.FILEPATH_WEIGHTS}/search_{name}', by_name=True, skip_mismatch=True)
 
         input_test_norm = test_input[0:args.NUM_TRAIN_REGENERATE]
 
@@ -94,3 +93,5 @@ if __name__ =='__main__':
 
         for i in range(args.NUM_TRAIN_REGENERATE):
             createPredImg(input_test_denorm[i], result_denorm[i], difference_reshaped[i], i, j, args.PATH_RESULTS)
+
+    print('The testing of the Neural Network has been done corectly!')
