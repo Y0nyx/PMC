@@ -5,12 +5,16 @@ from skimage.metrics import structural_similarity as ssim
 import os
 from keras.preprocessing import image
 
+#TODO: Mettre dans le fichier constantes
 image_size = 128
 nb_random_images = 3
 square_size = 16
+image_width = 128
+image_height = 128
 
 def load_model():
     # Load the model
+    #TODO: Relatif
     model_path = 'C:/Users/mafrc/Desktop/Uni/PMC/CodePMC/models/wandb_night_run_basic_CAE_best_gen.h5'
     loaded_model = tf.keras.models.load_model(model_path)
 
@@ -35,14 +39,15 @@ def create_square(image, side_length, x, y):
 
 def prepare_data():
 
+    #TODO: Relatif
     # Data loading
     image_path = "C:/Users/mafrc/Desktop/Uni/PMC/CodePMC/final_dataset/"
     default_image_path = "C:/Users/mafrc/Desktop/Uni/PMC/CodePMC/trous/"
 
     images = []
     for filename in os.listdir(image_path):
-        if filename.endswith(".png"):
-            img = image.load_img(image_path+filename, target_size=(128, 128))
+        if filename.endswith('.png', '.jpg', '.jpeg', '.gif', '.bmp'):
+            img = image.load_img(image_path+filename, target_size=(image_width, image_height))
             images.append(image.img_to_array(img))
     images = np.array(images)
     print("images", images.shape)
@@ -50,16 +55,6 @@ def prepare_data():
     # Select 3 random images
     random_indices = np.random.choice(images.shape[0], nb_random_images-1, replace=False)
     random_images = images[random_indices]
-
-    default_images = []  # List to store default images as NumPy arrays
-
-    for filename in os.listdir(default_image_path):
-        if filename.endswith(".jpg"):
-            img = image.load_img(default_image_path+filename, target_size=(128, 128))
-            default_images.append(np.array(image.img_to_array(img)))
-
-    # Convert the list of default images to a NumPy array
-    default_images = np.array(default_images)
     
     # Combine the two arrays
     random_images = np.concatenate((random_images, default_images), axis=0)
@@ -72,6 +67,7 @@ def prepare_data():
 
     return random_images
 
+#TODO: Plus propre, mais osef pcq on le gardera pas
 def show_inital_predict(random_images,  model):
     # Display the selected RGB images
     for i in range(nb_random_images):
