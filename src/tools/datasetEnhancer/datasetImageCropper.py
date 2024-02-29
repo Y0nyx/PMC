@@ -44,19 +44,20 @@ def crop_and_save_images(input_folder, output_folder, cropping_specs):
 
                 print(f"Processed: {file}, Cropped Version: {idx}")
 
-# Provide the input and output folder paths
-input_folder_path = "dataset_selected_cam_images"
-output_folder_path = "dataset_cropped_images"
-subdivisor = 128
-
-# Define cropping specifications
-cropping_specs = [
-    {"coordinates": (806, 479, 1275, 814), "subdivisor": subdivisor},
-    {"coordinates": (1224, 682, 1804, 1057), "subdivisor": subdivisor},
-    # Add more cropping specifications as needed
-]
-
-# Crop and save images
-crop_and_save_images(input_folder_path, output_folder_path, cropping_specs)
-
-print("Images have been cropped and saved to the output folder.")
+if __name__ == "__main__":
+    # Provide the input and output folder paths
+    input_folder_path = "dataset_selected_cam_images"
+    output_folder_path = "dataset_cropped_images"
+    subdivisor = 128
+    
+    # Define cropping specifications
+    cropping_specs = [
+        {"coordinates": (806, 479, 1275, 814), "subdivisor": subdivisor},
+        {"coordinates": (1224, 682, 1804, 1057), "subdivisor": subdivisor},
+        # Add more cropping specifications as needed
+    ]
+    
+    # Crop and save images
+    crop_and_save_images(input_folder_path, output_folder_path, cropping_specs)
+    
+    print("Images have been cropped and saved to the output folder.")

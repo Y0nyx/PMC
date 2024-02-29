@@ -21,14 +21,15 @@ def copy_images_from_selected_cameras(src_directory, dest_directory, cameras):
         dest_path = os.path.join(dest_directory, image)
         shutil.copy2(src_path, dest_path)
 
-# Provide the source and destination directory paths
-source_directory_path = "captured_images_1_2_3"
-destination_directory_path = "dataset_selected_cam_images"
-
-#Provide the camera selection
-cameras = [1]
-
-# Copy images with filename ending with '1' and '2' to the destination directory
-copy_images_from_selected_cameras(source_directory_path, destination_directory_path, cameras)
-
-print("The images have been copied to the destination directory.")
+if __name__ == "__main__":
+    # Provide the source and destination directory paths
+    source_directory_path = "captured_images_1_2_3"
+    destination_directory_path = "dataset_selected_cam_images"
+    
+    #Provide the camera selection
+    cameras = [1]
+    
+    # Copy images with filename ending with '1' and '2' to the destination directory
+    copy_images_from_selected_cameras(source_directory_path, destination_directory_path, cameras)
+    
+    print("The images have been copied to the destination directory.")
