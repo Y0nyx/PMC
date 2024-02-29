@@ -1,20 +1,22 @@
 class Model:
     def __init__(self, model):
         self._model = model
-    
+
     def train(self):
-        raise NotImplementedError('This function needs to be implemented')
-    
+        raise NotImplementedError("This function needs to be implemented")
+
     def eval(self):
-        raise NotImplementedError('This function needs to be implemented')
-    
+        raise NotImplementedError("This function needs to be implemented")
+
     def predict(self):
-        raise NotImplementedError('This function needs to be implemented')
+        raise NotImplementedError("This function needs to be implemented")
+
 
 from ultralytics import YOLO
 
+
 class YoloModel(Model):
-    def __init__(self, model: str = 'yolov8n.pt'):
+    def __init__(self, model: str = "yolov8n.pt"):
         super().__init__(YOLO(model))
 
     def train(self, **kwargs):

@@ -13,13 +13,18 @@ from ..camera.sensorState import SensorState
 class DataManager:
     instance = None
 
-    def __init__(self, yaml_path_data: Path = "", yaml_path_cameras: Path = "", verbose: bool = False) -> None:
+    def __init__(
+        self,
+        yaml_path_data: Path = "",
+        yaml_path_cameras: Path = "",
+        verbose: bool = False,
+    ) -> None:
         """
         Initializes the DataManager.
         """
         self.verbose = verbose
 
-        self.print('=== Init DataManager ===')
+        self.print("=== Init DataManager ===")
 
         self._yaml_path = yaml_path_data
         self._param = self._read_yaml()
@@ -30,10 +35,10 @@ class DataManager:
         if DataManager.instance is None:
             DataManager.instance = DataManager()
         return DataManager.instance
-    
+
     def get_img(self) -> Image:
         return self._apply_preprocessing(self._camera_manager.get_img(0))
-    
+
     def get_all_img(self) -> [Image]:
         return self._apply_preprocessing(self._camera_manager.get_all_img())
 

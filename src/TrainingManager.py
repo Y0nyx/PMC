@@ -3,8 +3,11 @@ from datetime import datetime
 from shutil import move
 from common.Constants import *
 
+
 class TrainingManager:
-    def __init__(self, is_time_threshold: bool = True, is_number_threshold: bool = True) -> None:
+    def __init__(
+        self, is_time_threshold: bool = True, is_number_threshold: bool = True
+    ) -> None:
         self.is_time_threshold = is_time_threshold
         self.is_number_threshold = is_number_threshold
         self.flags = []
@@ -28,7 +31,7 @@ class TrainingManager:
             self.check_img_number()
             self.is_ready_training = all(self.flags)
         return self.is_ready_training
-    
+
     def separate_dataset(self):
         if self.check_flags():
             # Get a list of image files in IMG_SAVE_FILE
@@ -43,8 +46,14 @@ class TrainingManager:
 
             # Move images to train directory
             for img_file in image_files[:num_train]:
-                move(os.path.join(IMG_SAVE_FILE, img_file), os.path.join(TRAIN_FILE, img_file))
+                move(
+                    os.path.join(IMG_SAVE_FILE, img_file),
+                    os.path.join(TRAIN_FILE, img_file),
+                )
 
             # Move remaining images to valid directory
             for img_file in image_files[num_train:]:
-                move(os.path.join(IMG_SAVE_FILE, img_file), os.path.join(VALID_FILE, img_file))
+                move(
+                    os.path.join(IMG_SAVE_FILE, img_file),
+                    os.path.join(VALID_FILE, img_file),
+                )

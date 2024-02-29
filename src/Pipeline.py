@@ -14,7 +14,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 
 class Pipeline:
-    def __init__(self, models: list = [], verbose: bool = True, training = False):
+    def __init__(self, models: list = [], verbose: bool = True, training=False):
         self.verbose = verbose
         self.training = training
 
@@ -26,7 +26,7 @@ class Pipeline:
 
         self._state = PipelineState.INIT
         if self.training:
-            self._dataManager = Mock_DataManager('D:\\APP\\PMC\\repos\\dataset\\mock')
+            self._dataManager = Mock_DataManager("D:\\APP\\PMC\\repos\\dataset\\mock")
         else:
             self._dataManager = DataManager(
                 "", "./src/cameras.yaml", self.verbose
@@ -90,7 +90,7 @@ class Pipeline:
         task.connect(args)
 
         results = model.train(**args)
-    
+
     def detect(self, show: bool = False, save: bool = True, conf: float = 0.7):
         while True:
             key = None
@@ -103,19 +103,19 @@ class Pipeline:
                     images = self._process_image(img, show, save, conf)
 
                     # TODO Integrate non supervised model
-                                
+
                     # TODO Integrate supervised model
 
                     # Integrate save
                     images.save(IMG_SAVE_FILE)
-                                
+
                     # Integrate training loop
                     self._trainingManager.check_flags()
 
                     # Integrate save
-                                
+
                     # TODO Integrate Classification
-                                
+
                     # TODO send to interface
 
             if key == "e":
@@ -128,19 +128,14 @@ class Pipeline:
 
     def _process_image(self, img: Image, save: bool, show: bool, conf: float):
         for model in self.models:
-            results = model.predict(
-                        source=img.value,
-                        show=show,
-                        conf=conf,
-                        save=save
-                    )
+            results = model.predict(source=img.value, show=show, conf=conf, save=save)
 
             # crop images with bounding box
             imageCollection = ImageCollection()
             for result in results:
                 for boxes in result.boxes:
                     imageCollection.add(img.crop(boxes))
-        
+
         return imageCollection
 
     def print(self, string):
@@ -150,13 +145,13 @@ class Pipeline:
 
 if __name__ == "__main__":
     models = []
-    models.append(YoloModel('./src/ia/welding_detection_v1.pt'))
+    models.append(YoloModel("./src/ia/welding_detection_v1.pt"))
     # models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
 
     # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
 
     # data_path = "D:\dataset\dofa_3"
-    
+
     # test_model = YoloModel()
     # test_model.train(epochs=3, data=data_path, batch=-1)
 

@@ -21,7 +21,9 @@ class DataManager:
             warnings.warn("This path is empty")
 
     def get_all_img(self) -> ImageCollection:
-        current_iteration_dir = self.dataset_path / Path(self.iteration_dirs[self.current_iteration - 1])
+        current_iteration_dir = self.dataset_path / Path(
+            self.iteration_dirs[self.current_iteration - 1]
+        )
 
         image_files = current_iteration_dir.glob("*.jpg")
         images = [Image(img_path) for img_path in image_files]
