@@ -84,7 +84,7 @@ class DataProcessing():
 
     def apply_random_blackout(self, images, blackout_size=(32, 32)):
         """
-        Apply random blackout to data in order to simulate data defect. 
+        Apply random blackout to data for self supervised training. 
         """
         augmented_images = images.copy()
 

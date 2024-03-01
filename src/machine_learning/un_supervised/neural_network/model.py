@@ -72,7 +72,7 @@ class AeModels():
 
         return model
     
-    def build_basic_cae(self, input_shape: tuple=(256, 256, 3)) -> Model:
+    def build_basic_cae(self, input_shape: tuple=(128, 128, 3)) -> Model:
         """
         Model based on this kaggle notebook: https://www.kaggle.com/code/orion99/autoencoder-made-easy/notebook
         Tested using the subdivided dataset

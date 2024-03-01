@@ -1,0 +1,224 @@
+2024-02-28 11:49:29,387 INFO    StreamThr :13912 [internal.py:wandb_internal():86] W&B internal server running at pid: 13912, started at: 2024-02-28 11:49:29.387237
+2024-02-28 11:49:29,388 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: status
+2024-02-28 11:49:29,390 INFO    WriterThread:13912 [datastore.py:open_for_write():87] open: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/run-7wppix9v.wandb
+2024-02-28 11:49:29,390 DEBUG   SenderThread:13912 [sender.py:send():382] send: header
+2024-02-28 11:49:29,399 DEBUG   SenderThread:13912 [sender.py:send():382] send: run
+2024-02-28 11:49:29,696 INFO    SenderThread:13912 [dir_watcher.py:__init__():211] watching files in: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files
+2024-02-28 11:49:29,696 INFO    SenderThread:13912 [sender.py:_start_run_threads():1136] run started: 7wppix9v with start time 1709138969.387209
+2024-02-28 11:49:29,702 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: check_version
+2024-02-28 11:49:29,702 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: check_version
+2024-02-28 11:49:29,818 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: run_start
+2024-02-28 11:49:29,827 DEBUG   HandlerThread:13912 [system_info.py:__init__():27] System info init
+2024-02-28 11:49:29,827 DEBUG   HandlerThread:13912 [system_info.py:__init__():42] System info init done
+2024-02-28 11:49:29,827 INFO    HandlerThread:13912 [system_monitor.py:start():194] Starting system monitor
+2024-02-28 11:49:29,827 INFO    SystemMonitor:13912 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-02-28 11:49:29,827 INFO    HandlerThread:13912 [system_monitor.py:probe():214] Collecting system info
+2024-02-28 11:49:29,828 INFO    SystemMonitor:13912 [interfaces.py:start():190] Started cpu monitoring
+2024-02-28 11:49:29,828 INFO    SystemMonitor:13912 [interfaces.py:start():190] Started disk monitoring
+2024-02-28 11:49:29,828 INFO    SystemMonitor:13912 [interfaces.py:start():190] Started gpu monitoring
+2024-02-28 11:49:29,828 INFO    SystemMonitor:13912 [interfaces.py:start():190] Started memory monitoring
+2024-02-28 11:49:29,829 INFO    SystemMonitor:13912 [interfaces.py:start():190] Started network monitoring
+2024-02-28 11:49:29,837 DEBUG   HandlerThread:13912 [system_info.py:probe():151] Probing system
+2024-02-28 11:49:29,839 DEBUG   HandlerThread:13912 [system_info.py:_probe_git():136] Probing git
+2024-02-28 11:49:29,841 DEBUG   HandlerThread:13912 [system_info.py:_probe_git():144] Probing git done
+2024-02-28 11:49:29,841 DEBUG   HandlerThread:13912 [system_info.py:probe():199] Probing system done
+2024-02-28 11:49:29,841 DEBUG   HandlerThread:13912 [system_monitor.py:probe():223] {'os': 'Linux-6.2.0-26-generic-x86_64-with-glibc2.35', 'python': '3.12.2', 'heartbeatAt': '2024-02-28T16:49:29.837962', 'startedAt': '2024-02-28T16:49:29.383105', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/train_CAE.py', 'codePathLocal': 'train_CAE.py', 'codePath': 'src/machine_learning/un_supervised/neural_network/train_CAE.py', 'git': {'remote': 'git@github.com:Y0nyx/PMC.git', 'commit': '471637c4a1a5ad1ad0607e5db7f9f19051482534'}, 'email': '“dofapromo@gmail.com”', 'root': '/home/dofa/Desktop/code/PMC', 'host': 'dofa-MS-7E27', 'username': 'dofa', 'executable': '/home/dofa/miniconda3/envs/test/bin/python3', 'cpu_count': 8, 'cpu_count_logical': 16, 'cpu_freq': {'current': 3551.3777499999997, 'min': 3000.0, 'max': 4500.0}, 'cpu_freq_per_core': [{'current': 5352.574, 'min': 3000.0, 'max': 4500.0}, {'current': 3182.811, 'min': 3000.0, 'max': 4500.0}, {'current': 5329.729, 'min': 3000.0, 'max': 4500.0}, {'current': 3556.855, 'min': 3000.0, 'max': 4500.0}, {'current': 3750.504, 'min': 3000.0, 'max': 4500.0}, {'current': 3324.217, 'min': 3000.0, 'max': 4500.0}, {'current': 4380.524, 'min': 3000.0, 'max': 4500.0}, {'current': 5087.938, 'min': 3000.0, 'max': 4500.0}, {'current': 5331.336, 'min': 3000.0, 'max': 4500.0}, {'current': 5077.648, 'min': 3000.0, 'max': 4500.0}, {'current': 3386.061, 'min': 3000.0, 'max': 4500.0}, {'current': 3236.27, 'min': 3000.0, 'max': 4500.0}, {'current': 4391.362, 'min': 3000.0, 'max': 4500.0}, {'current': 5306.278, 'min': 3000.0, 'max': 4500.0}, {'current': 4153.566, 'min': 3000.0, 'max': 4500.0}, {'current': 5324.932, 'min': 3000.0, 'max': 4500.0}], 'disk': {'/': {'total': 915.3232879638672, 'used': 58.20730972290039}}, 'gpu': 'NVIDIA GeForce RTX 4070 Ti SUPER', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 4070 Ti SUPER', 'memory_total': 17171480576}], 'memory': {'total': 61.95372772216797}}
+2024-02-28 11:49:29,841 INFO    HandlerThread:13912 [system_monitor.py:probe():224] Finished collecting system info
+2024-02-28 11:49:29,841 INFO    HandlerThread:13912 [system_monitor.py:probe():227] Publishing system info
+2024-02-28 11:49:29,841 DEBUG   HandlerThread:13912 [system_info.py:_save_conda():208] Saving list of conda packages installed into the current environment
+2024-02-28 11:49:30,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/conda-environment.yaml
+2024-02-28 11:49:31,555 DEBUG   HandlerThread:13912 [system_info.py:_save_conda():220] Saving conda packages done
+2024-02-28 11:49:31,555 INFO    HandlerThread:13912 [system_monitor.py:probe():229] Finished publishing system info
+2024-02-28 11:49:31,559 DEBUG   SenderThread:13912 [sender.py:send():382] send: files
+2024-02-28 11:49:31,559 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2024-02-28 11:49:31,563 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: python_packages
+2024-02-28 11:49:31,563 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: python_packages
+2024-02-28 11:49:31,563 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-28 11:49:31,563 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: stop_status
+2024-02-28 11:49:31,564 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-28 11:49:31,696 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/conda-environment.yaml
+2024-02-28 11:49:31,696 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/wandb-metadata.json
+2024-02-28 11:49:31,696 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/requirements.txt
+2024-02-28 11:49:31,794 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: get_summary
+2024-02-28 11:49:31,833 DEBUG   SenderThread:13912 [sender.py:send():382] send: telemetry
+2024-02-28 11:49:31,834 DEBUG   SenderThread:13912 [sender.py:send():382] send: telemetry
+2024-02-28 11:49:31,834 DEBUG   SenderThread:13912 [sender.py:send():382] send: telemetry
+2024-02-28 11:49:31,834 DEBUG   SenderThread:13912 [sender.py:send():382] send: files
+2024-02-28 11:49:31,834 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file model-best.h5 with policy live
+2024-02-28 11:49:31,834 DEBUG   SenderThread:13912 [sender.py:send():382] send: telemetry
+2024-02-28 11:49:31,994 INFO    wandb-upload_0:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/s4mrz9ef-wandb-metadata.json
+2024-02-28 11:49:32,696 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/output.log
+2024-02-28 11:49:33,104 DEBUG   SenderThread:13912 [sender.py:send():382] send: files
+2024-02-28 11:49:33,104 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file media/images/Train expected output_0_5ecf208eeaf9e43ea0e8.png with policy now
+2024-02-28 11:49:33,105 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 11:49:33,105 DEBUG   SenderThread:13912 [sender.py:send():382] send: history
+2024-02-28 11:49:33,105 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 11:49:33,106 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 11:49:33,190 DEBUG   SenderThread:13912 [sender.py:send():382] send: files
+2024-02-28 11:49:33,190 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file media/images/Train input (black square image)_1_d8b5a01c76a37528f7c9.png with policy now
+2024-02-28 11:49:33,190 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 11:49:33,191 DEBUG   SenderThread:13912 [sender.py:send():382] send: history
+2024-02-28 11:49:33,191 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 11:49:33,191 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 11:49:33,257 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 11:49:33,257 DEBUG   SenderThread:13912 [sender.py:send():382] send: files
+2024-02-28 11:49:33,257 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file media/images/Test expected output_2_f859a349ebab913a1f61.png with policy now
+2024-02-28 11:49:33,258 DEBUG   SenderThread:13912 [sender.py:send():382] send: history
+2024-02-28 11:49:33,258 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 11:49:33,258 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 11:49:33,316 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 11:49:33,316 DEBUG   SenderThread:13912 [sender.py:send():382] send: files
+2024-02-28 11:49:33,316 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file media/images/Test input (black square image)_3_1c0f99e07adc67ea5be7.png with policy now
+2024-02-28 11:49:33,317 DEBUG   SenderThread:13912 [sender.py:send():382] send: history
+2024-02-28 11:49:33,317 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 11:49:33,317 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 11:49:33,417 INFO    wandb-upload_0:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/7cwd02ea-media/images/Train expected output_0_5ecf208eeaf9e43ea0e8.png
+2024-02-28 11:49:33,547 INFO    wandb-upload_1:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/wjke1c0v-media/images/Train input (black square image)_1_d8b5a01c76a37528f7c9.png
+2024-02-28 11:49:33,573 DEBUG   SenderThread:13912 [sender.py:send():382] send: telemetry
+2024-02-28 11:49:33,573 DEBUG   SenderThread:13912 [sender.py:send():382] send: exit
+2024-02-28 11:49:33,573 INFO    SenderThread:13912 [sender.py:send_exit():589] handling exit code: 1
+2024-02-28 11:49:33,573 INFO    SenderThread:13912 [sender.py:send_exit():591] handling runtime: 3
+2024-02-28 11:49:33,573 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 11:49:33,573 INFO    SenderThread:13912 [sender.py:send_exit():597] send defer
+2024-02-28 11:49:33,573 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:33,574 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 0
+2024-02-28 11:49:33,574 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:33,574 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 0
+2024-02-28 11:49:33,574 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 1
+2024-02-28 11:49:33,574 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:33,574 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 1
+2024-02-28 11:49:33,574 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:33,574 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 1
+2024-02-28 11:49:33,574 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 2
+2024-02-28 11:49:33,574 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:33,574 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 2
+2024-02-28 11:49:33,574 INFO    HandlerThread:13912 [system_monitor.py:finish():203] Stopping system monitor
+2024-02-28 11:49:33,574 DEBUG   SystemMonitor:13912 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-02-28 11:49:33,574 DEBUG   SystemMonitor:13912 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-02-28 11:49:33,575 DEBUG   SystemMonitor:13912 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-02-28 11:49:33,575 INFO    HandlerThread:13912 [interfaces.py:finish():202] Joined cpu monitor
+2024-02-28 11:49:33,575 INFO    HandlerThread:13912 [interfaces.py:finish():202] Joined disk monitor
+2024-02-28 11:49:33,606 INFO    HandlerThread:13912 [interfaces.py:finish():202] Joined gpu monitor
+2024-02-28 11:49:33,606 INFO    HandlerThread:13912 [interfaces.py:finish():202] Joined memory monitor
+2024-02-28 11:49:33,606 INFO    HandlerThread:13912 [interfaces.py:finish():202] Joined network monitor
+2024-02-28 11:49:33,606 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:33,606 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 2
+2024-02-28 11:49:33,606 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 3
+2024-02-28 11:49:33,606 DEBUG   SenderThread:13912 [sender.py:send():382] send: stats
+2024-02-28 11:49:33,606 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:33,606 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 3
+2024-02-28 11:49:33,606 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:33,606 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 3
+2024-02-28 11:49:33,607 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 4
+2024-02-28 11:49:33,607 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:33,607 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 4
+2024-02-28 11:49:33,607 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:33,607 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 4
+2024-02-28 11:49:33,607 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 5
+2024-02-28 11:49:33,607 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:33,607 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 5
+2024-02-28 11:49:33,607 DEBUG   SenderThread:13912 [sender.py:send():382] send: summary
+2024-02-28 11:49:33,607 INFO    SenderThread:13912 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 11:49:33,607 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:33,607 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 5
+2024-02-28 11:49:33,607 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 6
+2024-02-28 11:49:33,607 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:33,607 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 6
+2024-02-28 11:49:33,607 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:33,607 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 6
+2024-02-28 11:49:33,609 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: status_report
+2024-02-28 11:49:33,649 INFO    wandb-upload_3:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/9x3s7fn5-media/images/Test input (black square image)_3_1c0f99e07adc67ea5be7.png
+2024-02-28 11:49:33,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images/Train input (black square image)_1_d8b5a01c76a37528f7c9.png
+2024-02-28 11:49:33,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/wandb-summary.json
+2024-02-28 11:49:33,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images/Test input (black square image)_3_1c0f99e07adc67ea5be7.png
+2024-02-28 11:49:33,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images/Test expected output_2_f859a349ebab913a1f61.png
+2024-02-28 11:49:33,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images/Train expected output_0_5ecf208eeaf9e43ea0e8.png
+2024-02-28 11:49:33,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images
+2024-02-28 11:49:33,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media
+2024-02-28 11:49:33,716 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 7
+2024-02-28 11:49:33,716 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:33,717 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 7
+2024-02-28 11:49:33,717 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:33,717 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 7
+2024-02-28 11:49:33,740 INFO    wandb-upload_2:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/64pfe1dz-media/images/Test expected output_2_f859a349ebab913a1f61.png
+2024-02-28 11:49:34,040 INFO    wandb-upload_0:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/5l8cj9xf-media/images/Train input (black square image)_1_d8b5a01c76a37528f7c9.png
+2024-02-28 11:49:34,087 INFO    wandb-upload_2:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/mwzei1k6-media/images/Test expected output_2_f859a349ebab913a1f61.png
+2024-02-28 11:49:34,129 INFO    wandb-upload_3:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/lit9mixe-media/images/Test input (black square image)_3_1c0f99e07adc67ea5be7.png
+2024-02-28 11:49:34,151 INFO    wandb-upload_1:13912 [upload_job.py:push():131] Uploaded file /tmp/tmpjztuomrjwandb/s3c3bpy8-media/images/Train expected output_0_5ecf208eeaf9e43ea0e8.png
+2024-02-28 11:49:34,529 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 8
+2024-02-28 11:49:34,529 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:34,529 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 8
+2024-02-28 11:49:34,529 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:34,529 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 8
+2024-02-28 11:49:34,529 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 9
+2024-02-28 11:49:34,529 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:34,529 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 9
+2024-02-28 11:49:34,529 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:34,529 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 9
+2024-02-28 11:49:34,529 INFO    SenderThread:13912 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-02-28 11:49:34,573 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-28 11:49:34,697 INFO    Thread-12 :13912 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/output.log
+2024-02-28 11:49:34,698 INFO    SenderThread:13912 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/config.yaml
+2024-02-28 11:49:34,698 INFO    SenderThread:13912 [dir_watcher.py:finish():388] scan: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files
+2024-02-28 11:49:34,698 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/config.yaml config.yaml
+2024-02-28 11:49:34,698 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/requirements.txt requirements.txt
+2024-02-28 11:49:34,698 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/wandb-summary.json wandb-summary.json
+2024-02-28 11:49:34,699 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/wandb-metadata.json wandb-metadata.json
+2024-02-28 11:49:34,700 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/output.log output.log
+2024-02-28 11:49:34,701 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/conda-environment.yaml conda-environment.yaml
+2024-02-28 11:49:34,703 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images/Test expected output_2_f859a349ebab913a1f61.png media/images/Test expected output_2_f859a349ebab913a1f61.png
+2024-02-28 11:49:34,703 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images/Test input (black square image)_3_1c0f99e07adc67ea5be7.png media/images/Test input (black square image)_3_1c0f99e07adc67ea5be7.png
+2024-02-28 11:49:34,703 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images/Train input (black square image)_1_d8b5a01c76a37528f7c9.png media/images/Train input (black square image)_1_d8b5a01c76a37528f7c9.png
+2024-02-28 11:49:34,703 INFO    SenderThread:13912 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/media/images/Train expected output_0_5ecf208eeaf9e43ea0e8.png media/images/Train expected output_0_5ecf208eeaf9e43ea0e8.png
+2024-02-28 11:49:34,703 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 10
+2024-02-28 11:49:34,704 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: poll_exit
+2024-02-28 11:49:34,704 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:34,705 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 10
+2024-02-28 11:49:34,705 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:34,705 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 10
+2024-02-28 11:49:34,705 INFO    SenderThread:13912 [file_pusher.py:finish():172] shutting down file pusher
+2024-02-28 11:49:34,929 INFO    wandb-upload_3:13912 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/wandb-summary.json
+2024-02-28 11:49:34,930 INFO    wandb-upload_0:13912 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/config.yaml
+2024-02-28 11:49:34,944 INFO    wandb-upload_2:13912 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/requirements.txt
+2024-02-28 11:49:35,102 INFO    wandb-upload_4:13912 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/output.log
+2024-02-28 11:49:35,146 INFO    wandb-upload_1:13912 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/files/conda-environment.yaml
+2024-02-28 11:49:35,346 INFO    Thread-11 (_thread_body):13912 [sender.py:transition_state():617] send defer: 11
+2024-02-28 11:49:35,347 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:35,347 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 11
+2024-02-28 11:49:35,347 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:35,347 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 11
+2024-02-28 11:49:35,347 INFO    SenderThread:13912 [file_pusher.py:join():178] waiting for file pusher
+2024-02-28 11:49:35,348 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 12
+2024-02-28 11:49:35,348 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:35,348 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 12
+2024-02-28 11:49:35,348 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:35,348 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 12
+2024-02-28 11:49:35,348 INFO    SenderThread:13912 [file_stream.py:finish():595] file stream finish called
+2024-02-28 11:49:35,419 INFO    SenderThread:13912 [file_stream.py:finish():599] file stream finish is done
+2024-02-28 11:49:35,419 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 13
+2024-02-28 11:49:35,419 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:35,419 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 13
+2024-02-28 11:49:35,419 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:35,419 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 13
+2024-02-28 11:49:35,419 INFO    SenderThread:13912 [sender.py:transition_state():617] send defer: 14
+2024-02-28 11:49:35,419 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 11:49:35,420 DEBUG   SenderThread:13912 [sender.py:send():382] send: final
+2024-02-28 11:49:35,420 INFO    HandlerThread:13912 [handler.py:handle_request_defer():172] handle defer: 14
+2024-02-28 11:49:35,420 DEBUG   SenderThread:13912 [sender.py:send():382] send: footer
+2024-02-28 11:49:35,420 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: defer
+2024-02-28 11:49:35,420 INFO    SenderThread:13912 [sender.py:send_request_defer():613] handle sender defer: 14
+2024-02-28 11:49:35,420 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-28 11:49:35,420 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: poll_exit
+2024-02-28 11:49:35,421 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-28 11:49:35,421 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: server_info
+2024-02-28 11:49:35,421 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: server_info
+2024-02-28 11:49:35,462 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: get_summary
+2024-02-28 11:49:35,463 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: sampled_history
+2024-02-28 11:49:35,463 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: job_info
+2024-02-28 11:49:35,476 DEBUG   SenderThread:13912 [sender.py:send_request():409] send_request: job_info
+2024-02-28 11:49:35,507 DEBUG   HandlerThread:13912 [handler.py:handle_request():146] handle_request: shutdown
+2024-02-28 11:49:35,507 INFO    HandlerThread:13912 [handler.py:finish():869] shutting down handler
+2024-02-28 11:49:36,463 INFO    WriterThread:13912 [datastore.py:close():296] close: /home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/wandb/run-20240228_114929-7wppix9v/run-7wppix9v.wandb
+2024-02-28 11:49:36,476 INFO    SenderThread:13912 [sender.py:finish():1572] shutting down sender
+2024-02-28 11:49:36,476 INFO    SenderThread:13912 [file_pusher.py:finish():172] shutting down file pusher
+2024-02-28 11:49:36,476 INFO    SenderThread:13912 [file_pusher.py:join():178] waiting for file pusher

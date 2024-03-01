@@ -1,0 +1,18 @@
+[34m[1mwandb[39m[22m: [33mWARNING[39m The save_model argument by default saves the model in the HDF5 format that cannot save custom objects like subclassed models and custom layers. This behavior will be deprecated in a future release in favor of the SavedModel format. Meanwhile, the HDF5 model is saved as W&B files and the SavedModel as W&B Artifacts.
+/home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/train_CAE.py:112: UserWarning: Starting a Matplotlib GUI outside of the main thread will likely fail.
+  plt.imshow(image)
+=====================================
+Loaded image np.array of shape:  (1520, 128, 128, 3)
+=====================================
+=====================================
+Splitted dataset in arrays of shape:  (1064, 128, 128, 3)  |  (456, 128, 128, 3)
+=====================================
+=====================================
+Augmented splitted dataset in arrays of shape:  (1064, 128, 128, 3)  |  (456, 128, 128, 3)
+=====================================
+=====================================
+Fit with train dataset in arrays of shape:  (1064, 128, 128, 3)  |  (1064, 128, 128, 3)
+=====================================
+=====================================
+Fit with test dataset in arrays of shape:  (456, 128, 128, 3)  |  (456, 128, 128, 3)
+=====================================

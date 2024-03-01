@@ -1,0 +1,16 @@
+=====================================
+Loaded image np.array of shape:  (1520, 128, 128, 3)
+=====================================
+=====================================
+Splitted dataset in arrays of shape:  (1064, 128, 128, 3)  |  (456, 128, 128, 3)
+=====================================
+=====================================
+Augmented splitted dataset in arrays of shape:  (1064, 128, 128, 3)  |  (456, 128, 128, 3)
+=====================================
+Traceback (most recent call last):
+  File "/home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/train_single.py", line 201, in <module>
+    build_and_train_model()
+  File "/home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/train_single.py", line 179, in build_and_train_model
+    train(model, input_train_norm, input_train_aug_norm, input_test_norm, input_test_aug_norm, config.epochs, config.batch_size, callbacks)
+                                                                                               ^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'epochs'

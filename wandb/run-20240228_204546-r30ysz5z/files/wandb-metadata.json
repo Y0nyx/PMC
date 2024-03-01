@@ -1,0 +1,128 @@
+{
+    "os": "Linux-6.2.0-26-generic-x86_64-with-glibc2.35",
+    "python": "3.12.2",
+    "heartbeatAt": "2024-02-29T01:45:47.152553",
+    "startedAt": "2024-02-29T01:45:46.697267",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/train_CAE.py",
+    "codePathLocal": "src/machine_learning/un_supervised/neural_network/train_CAE.py",
+    "codePath": "src/machine_learning/un_supervised/neural_network/train_CAE.py",
+    "git": {
+        "remote": "git@github.com:Y0nyx/PMC.git",
+        "commit": "471637c4a1a5ad1ad0607e5db7f9f19051482534"
+    },
+    "email": "\u201cdofapromo@gmail.com\u201d",
+    "root": "/home/dofa/Desktop/code/PMC",
+    "host": "dofa-MS-7E27",
+    "username": "dofa",
+    "executable": "/home/dofa/miniconda3/envs/test/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3777.89475,
+        "min": 3000.0,
+        "max": 4500.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3564.766,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 3764.022,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 3565.818,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 2703.671,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 5334.942,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 2667.672,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 5278.05,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 4749.965,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 3566.423,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 4781.747,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 3564.437,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 2670.303,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 4070.621,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 2673.837,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 3790.731,
+            "min": 3000.0,
+            "max": 4500.0
+        },
+        {
+            "current": 3699.311,
+            "min": 3000.0,
+            "max": 4500.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 915.3232879638672,
+            "used": 58.712215423583984
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+            "memory_total": 17171480576
+        }
+    ],
+    "memory": {
+        "total": 61.9537239074707
+    }
+}

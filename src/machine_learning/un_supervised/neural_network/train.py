@@ -132,10 +132,10 @@ if __name__ == '__main__':
     data_processing = dp.DataProcessing()
     train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(args.DATA_PATH)
 
-    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, args.VERBOSE, args.MODE_METRIC, args.MONITOR_METRIC)
-    if args.DO_HP_SEARCH:
-        history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, args.PATH_RESULTS)
-    else:
-        history = train_model.train_normal(args.EPOCHS, args.BATCH_SIZE, args.PATH_RESULTS)
+    #train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, args.VERBOSE, args.MODE_METRIC, args.MONITOR_METRIC)
+    #if args.DO_HP_SEARCH:
+        #history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, args.PATH_RESULTS)
+    #else:
+        #history = train_model.train_normal(args.EPOCHS, args.BATCH_SIZE, args.PATH_RESULTS)
 
-    print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
+    #print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')

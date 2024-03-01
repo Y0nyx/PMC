@@ -1,0 +1,259 @@
+2024-02-28 20:56:17,359 INFO    StreamThr :25069 [internal.py:wandb_internal():86] W&B internal server running at pid: 25069, started at: 2024-02-28 20:56:17.358784
+2024-02-28 20:56:17,360 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: status
+2024-02-28 20:56:17,361 INFO    WriterThread:25069 [datastore.py:open_for_write():87] open: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/run-3a7kwisy.wandb
+2024-02-28 20:56:17,361 DEBUG   SenderThread:25069 [sender.py:send():382] send: header
+2024-02-28 20:56:17,363 DEBUG   SenderThread:25069 [sender.py:send():382] send: run
+2024-02-28 20:56:17,677 INFO    SenderThread:25069 [dir_watcher.py:__init__():211] watching files in: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files
+2024-02-28 20:56:17,677 INFO    SenderThread:25069 [sender.py:_start_run_threads():1136] run started: 3a7kwisy with start time 1709171777.358527
+2024-02-28 20:56:17,679 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: check_version
+2024-02-28 20:56:17,679 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: check_version
+2024-02-28 20:56:17,778 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: run_start
+2024-02-28 20:56:17,787 DEBUG   HandlerThread:25069 [system_info.py:__init__():27] System info init
+2024-02-28 20:56:17,787 DEBUG   HandlerThread:25069 [system_info.py:__init__():42] System info init done
+2024-02-28 20:56:17,787 INFO    HandlerThread:25069 [system_monitor.py:start():194] Starting system monitor
+2024-02-28 20:56:17,787 INFO    SystemMonitor:25069 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-02-28 20:56:17,787 INFO    HandlerThread:25069 [system_monitor.py:probe():214] Collecting system info
+2024-02-28 20:56:17,787 INFO    SystemMonitor:25069 [interfaces.py:start():190] Started cpu monitoring
+2024-02-28 20:56:17,788 INFO    SystemMonitor:25069 [interfaces.py:start():190] Started disk monitoring
+2024-02-28 20:56:17,788 INFO    SystemMonitor:25069 [interfaces.py:start():190] Started gpu monitoring
+2024-02-28 20:56:17,788 INFO    SystemMonitor:25069 [interfaces.py:start():190] Started memory monitoring
+2024-02-28 20:56:17,788 INFO    SystemMonitor:25069 [interfaces.py:start():190] Started network monitoring
+2024-02-28 20:56:17,796 DEBUG   HandlerThread:25069 [system_info.py:probe():151] Probing system
+2024-02-28 20:56:17,797 DEBUG   HandlerThread:25069 [system_info.py:_probe_git():136] Probing git
+2024-02-28 20:56:17,799 DEBUG   HandlerThread:25069 [system_info.py:_probe_git():144] Probing git done
+2024-02-28 20:56:17,799 DEBUG   HandlerThread:25069 [system_info.py:probe():199] Probing system done
+2024-02-28 20:56:17,799 DEBUG   HandlerThread:25069 [system_monitor.py:probe():223] {'os': 'Linux-6.2.0-26-generic-x86_64-with-glibc2.35', 'python': '3.12.2', 'heartbeatAt': '2024-02-29T01:56:17.796337', 'startedAt': '2024-02-29T01:56:17.356082', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/home/dofa/Desktop/code/PMC/src/machine_learning/un_supervised/neural_network/train_CAE.py', 'codePathLocal': 'src/machine_learning/un_supervised/neural_network/train_CAE.py', 'codePath': 'src/machine_learning/un_supervised/neural_network/train_CAE.py', 'git': {'remote': 'git@github.com:Y0nyx/PMC.git', 'commit': '471637c4a1a5ad1ad0607e5db7f9f19051482534'}, 'email': '“dofapromo@gmail.com”', 'root': '/home/dofa/Desktop/code/PMC', 'host': 'dofa-MS-7E27', 'username': 'dofa', 'executable': '/home/dofa/miniconda3/envs/test/bin/python', 'cpu_count': 8, 'cpu_count_logical': 16, 'cpu_freq': {'current': 4572.732875, 'min': 3000.0, 'max': 4500.0}, 'cpu_freq_per_core': [{'current': 4903.673, 'min': 3000.0, 'max': 4500.0}, {'current': 3537.929, 'min': 3000.0, 'max': 4500.0}, {'current': 5007.776, 'min': 3000.0, 'max': 4500.0}, {'current': 5008.898, 'min': 3000.0, 'max': 4500.0}, {'current': 5055.378, 'min': 3000.0, 'max': 4500.0}, {'current': 3432.566, 'min': 3000.0, 'max': 4500.0}, {'current': 4981.525, 'min': 3000.0, 'max': 4500.0}, {'current': 5339.541, 'min': 3000.0, 'max': 4500.0}, {'current': 3394.869, 'min': 3000.0, 'max': 4500.0}, {'current': 5326.13, 'min': 3000.0, 'max': 4500.0}, {'current': 3790.208, 'min': 3000.0, 'max': 4500.0}, {'current': 5040.832, 'min': 3000.0, 'max': 4500.0}, {'current': 5345.63, 'min': 3000.0, 'max': 4500.0}, {'current': 3501.552, 'min': 3000.0, 'max': 4500.0}, {'current': 4918.661, 'min': 3000.0, 'max': 4500.0}, {'current': 4578.558, 'min': 3000.0, 'max': 4500.0}], 'disk': {'/': {'total': 915.3232879638672, 'used': 58.71900939941406}}, 'gpu': 'NVIDIA GeForce RTX 4070 Ti SUPER', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 4070 Ti SUPER', 'memory_total': 17171480576}], 'memory': {'total': 61.9537239074707}}
+2024-02-28 20:56:17,799 INFO    HandlerThread:25069 [system_monitor.py:probe():224] Finished collecting system info
+2024-02-28 20:56:17,799 INFO    HandlerThread:25069 [system_monitor.py:probe():227] Publishing system info
+2024-02-28 20:56:17,799 DEBUG   HandlerThread:25069 [system_info.py:_save_conda():208] Saving list of conda packages installed into the current environment
+2024-02-28 20:56:18,677 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/conda-environment.yaml
+2024-02-28 20:56:19,467 DEBUG   HandlerThread:25069 [system_info.py:_save_conda():220] Saving conda packages done
+2024-02-28 20:56:19,467 INFO    HandlerThread:25069 [system_monitor.py:probe():229] Finished publishing system info
+2024-02-28 20:56:19,470 DEBUG   SenderThread:25069 [sender.py:send():382] send: files
+2024-02-28 20:56:19,471 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-metadata.json with policy now
+2024-02-28 20:56:19,473 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: python_packages
+2024-02-28 20:56:19,473 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: python_packages
+2024-02-28 20:56:19,473 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: stop_status
+2024-02-28 20:56:19,473 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: stop_status
+2024-02-28 20:56:19,617 DEBUG   SenderThread:25069 [sender.py:send():382] send: telemetry
+2024-02-28 20:56:19,629 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-28 20:56:19,677 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/conda-environment.yaml
+2024-02-28 20:56:19,677 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/wandb-metadata.json
+2024-02-28 20:56:19,677 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/requirements.txt
+2024-02-28 20:56:19,811 INFO    wandb-upload_0:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/ea9egp6q-wandb-metadata.json
+2024-02-28 20:56:20,677 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log
+2024-02-28 20:56:20,798 DEBUG   SenderThread:25069 [sender.py:send():382] send: files
+2024-02-28 20:56:20,798 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file media/images/Train expected output_0_bf65dfca0ebb4ef627b2.png with policy now
+2024-02-28 20:56:20,798 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 20:56:20,799 DEBUG   SenderThread:25069 [sender.py:send():382] send: history
+2024-02-28 20:56:20,799 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 20:56:20,799 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:20,882 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 20:56:20,883 DEBUG   SenderThread:25069 [sender.py:send():382] send: files
+2024-02-28 20:56:20,883 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file media/images/Train input (black square image)_1_9eafb4101355d84a47b4.png with policy now
+2024-02-28 20:56:20,883 DEBUG   SenderThread:25069 [sender.py:send():382] send: history
+2024-02-28 20:56:20,883 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 20:56:20,884 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:20,951 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 20:56:20,951 DEBUG   SenderThread:25069 [sender.py:send():382] send: files
+2024-02-28 20:56:20,951 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file media/images/Test expected output_2_dae1b1e7f39c394fc5db.png with policy now
+2024-02-28 20:56:20,951 DEBUG   SenderThread:25069 [sender.py:send():382] send: history
+2024-02-28 20:56:20,952 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 20:56:20,952 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:21,036 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 20:56:21,037 DEBUG   SenderThread:25069 [sender.py:send():382] send: files
+2024-02-28 20:56:21,037 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file media/images/Test input (black square image)_3_e9f06762e4aa380c6285.png with policy now
+2024-02-28 20:56:21,037 DEBUG   SenderThread:25069 [sender.py:send():382] send: history
+2024-02-28 20:56:21,037 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 20:56:21,037 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:21,077 INFO    wandb-upload_0:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/w3xptzb4-media/images/Train expected output_0_bf65dfca0ebb4ef627b2.png
+2024-02-28 20:56:21,206 INFO    wandb-upload_1:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/b8vvzn66-media/images/Train input (black square image)_1_9eafb4101355d84a47b4.png
+2024-02-28 20:56:21,287 INFO    wandb-upload_2:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/9tvvj9hz-media/images/Test expected output_2_dae1b1e7f39c394fc5db.png
+2024-02-28 20:56:21,298 INFO    wandb-upload_3:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/o946lzdm-media/images/Test input (black square image)_3_e9f06762e4aa380c6285.png
+2024-02-28 20:56:21,677 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Test expected output_2_dae1b1e7f39c394fc5db.png
+2024-02-28 20:56:21,678 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/wandb-summary.json
+2024-02-28 20:56:21,678 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Train input (black square image)_1_9eafb4101355d84a47b4.png
+2024-02-28 20:56:21,678 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Test input (black square image)_3_e9f06762e4aa380c6285.png
+2024-02-28 20:56:21,678 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Train expected output_0_bf65dfca0ebb4ef627b2.png
+2024-02-28 20:56:21,678 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images
+2024-02-28 20:56:21,678 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media
+2024-02-28 20:56:22,008 INFO    wandb-upload_2:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/fnem1ezf-media/images/Train input (black square image)_1_9eafb4101355d84a47b4.png
+2024-02-28 20:56:22,012 INFO    wandb-upload_0:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/uvhi6kx9-media/images/Test expected output_2_dae1b1e7f39c394fc5db.png
+2024-02-28 20:56:22,113 INFO    wandb-upload_3:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/h63e3vam-media/images/Train expected output_0_bf65dfca0ebb4ef627b2.png
+2024-02-28 20:56:22,211 INFO    wandb-upload_1:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/h83v285g-media/images/Test input (black square image)_3_e9f06762e4aa380c6285.png
+2024-02-28 20:56:22,678 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log
+2024-02-28 20:56:23,321 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: status_report
+2024-02-28 20:56:24,679 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log
+2024-02-28 20:56:26,679 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log
+2024-02-28 20:56:28,328 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: status_report
+2024-02-28 20:56:28,680 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log
+2024-02-28 20:56:30,249 DEBUG   SenderThread:25069 [sender.py:send():382] send: files
+2024-02-28 20:56:30,249 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 20:56:30,250 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file media/images/Prediction expected output_4_adb24d4da0c7f5d4a3ba.png with policy now
+2024-02-28 20:56:30,250 DEBUG   SenderThread:25069 [sender.py:send():382] send: history
+2024-02-28 20:56:30,250 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 20:56:30,250 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:30,339 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 20:56:30,339 DEBUG   SenderThread:25069 [sender.py:send():382] send: files
+2024-02-28 20:56:30,339 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file media/images/Prediction input (black square image)_5_64423813cdfe8fdf5caf.png with policy now
+2024-02-28 20:56:30,339 DEBUG   SenderThread:25069 [sender.py:send():382] send: history
+2024-02-28 20:56:30,339 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 20:56:30,340 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:30,423 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: partial_history
+2024-02-28 20:56:30,424 DEBUG   SenderThread:25069 [sender.py:send():382] send: files
+2024-02-28 20:56:30,424 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file media/images/Prediction input_6_a13b8479f2dc076e06a9.png with policy now
+2024-02-28 20:56:30,424 DEBUG   SenderThread:25069 [sender.py:send():382] send: history
+2024-02-28 20:56:30,424 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: summary_record
+2024-02-28 20:56:30,424 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:30,425 DEBUG   SenderThread:25069 [sender.py:send():382] send: telemetry
+2024-02-28 20:56:30,425 DEBUG   SenderThread:25069 [sender.py:send():382] send: exit
+2024-02-28 20:56:30,425 INFO    SenderThread:25069 [sender.py:send_exit():589] handling exit code: 0
+2024-02-28 20:56:30,425 INFO    SenderThread:25069 [sender.py:send_exit():591] handling runtime: 12
+2024-02-28 20:56:30,425 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:30,425 INFO    SenderThread:25069 [sender.py:send_exit():597] send defer
+2024-02-28 20:56:30,425 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:30,425 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 0
+2024-02-28 20:56:30,425 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:30,425 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 0
+2024-02-28 20:56:30,425 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 1
+2024-02-28 20:56:30,425 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:30,425 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 1
+2024-02-28 20:56:30,426 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:30,426 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 1
+2024-02-28 20:56:30,426 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 2
+2024-02-28 20:56:30,426 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:30,426 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 2
+2024-02-28 20:56:30,426 INFO    HandlerThread:25069 [system_monitor.py:finish():203] Stopping system monitor
+2024-02-28 20:56:30,426 DEBUG   SystemMonitor:25069 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-02-28 20:56:30,427 DEBUG   SystemMonitor:25069 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-02-28 20:56:30,427 DEBUG   SystemMonitor:25069 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-02-28 20:56:30,427 INFO    HandlerThread:25069 [interfaces.py:finish():202] Joined cpu monitor
+2024-02-28 20:56:30,427 INFO    HandlerThread:25069 [interfaces.py:finish():202] Joined disk monitor
+2024-02-28 20:56:30,465 INFO    HandlerThread:25069 [interfaces.py:finish():202] Joined gpu monitor
+2024-02-28 20:56:30,465 INFO    HandlerThread:25069 [interfaces.py:finish():202] Joined memory monitor
+2024-02-28 20:56:30,465 INFO    HandlerThread:25069 [interfaces.py:finish():202] Joined network monitor
+2024-02-28 20:56:30,465 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:30,465 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 2
+2024-02-28 20:56:30,465 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 3
+2024-02-28 20:56:30,465 DEBUG   SenderThread:25069 [sender.py:send():382] send: stats
+2024-02-28 20:56:30,466 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:30,466 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 3
+2024-02-28 20:56:30,466 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:30,466 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 3
+2024-02-28 20:56:30,466 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 4
+2024-02-28 20:56:30,466 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:30,466 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 4
+2024-02-28 20:56:30,466 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:30,466 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 4
+2024-02-28 20:56:30,466 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 5
+2024-02-28 20:56:30,466 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:30,466 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 5
+2024-02-28 20:56:30,467 DEBUG   SenderThread:25069 [sender.py:send():382] send: summary
+2024-02-28 20:56:30,467 INFO    SenderThread:25069 [sender.py:_save_file():1403] saving file wandb-summary.json with policy end
+2024-02-28 20:56:30,467 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:30,467 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 5
+2024-02-28 20:56:30,467 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 6
+2024-02-28 20:56:30,467 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:30,467 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 6
+2024-02-28 20:56:30,468 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:30,468 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 6
+2024-02-28 20:56:30,470 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: status_report
+2024-02-28 20:56:30,526 INFO    wandb-upload_2:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/iuz06uiy-media/images/Prediction expected output_4_adb24d4da0c7f5d4a3ba.png
+2024-02-28 20:56:30,571 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 7
+2024-02-28 20:56:30,571 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:30,571 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 7
+2024-02-28 20:56:30,571 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:30,571 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 7
+2024-02-28 20:56:30,636 INFO    wandb-upload_3:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/9tpbsgnp-media/images/Prediction input (black square image)_5_64423813cdfe8fdf5caf.png
+2024-02-28 20:56:30,680 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log
+2024-02-28 20:56:30,680 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/wandb-summary.json
+2024-02-28 20:56:30,681 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/config.yaml
+2024-02-28 20:56:30,681 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Prediction expected output_4_adb24d4da0c7f5d4a3ba.png
+2024-02-28 20:56:30,681 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Prediction input_6_a13b8479f2dc076e06a9.png
+2024-02-28 20:56:30,681 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_created():271] file/dir created: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Prediction input (black square image)_5_64423813cdfe8fdf5caf.png
+2024-02-28 20:56:30,681 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images
+2024-02-28 20:56:30,701 INFO    wandb-upload_0:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/akjyjzqm-media/images/Prediction input_6_a13b8479f2dc076e06a9.png
+2024-02-28 20:56:31,028 INFO    wandb-upload_3:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/hl46ms1h-media/images/Prediction input (black square image)_5_64423813cdfe8fdf5caf.png
+2024-02-28 20:56:31,042 INFO    wandb-upload_2:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/mhllop0b-media/images/Prediction input_6_a13b8479f2dc076e06a9.png
+2024-02-28 20:56:31,077 INFO    wandb-upload_1:25069 [upload_job.py:push():131] Uploaded file /tmp/tmpjj4__r5_wandb/8iunm0uq-media/images/Prediction expected output_4_adb24d4da0c7f5d4a3ba.png
+2024-02-28 20:56:31,425 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-28 20:56:32,371 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 8
+2024-02-28 20:56:32,372 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: poll_exit
+2024-02-28 20:56:32,372 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:32,372 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 8
+2024-02-28 20:56:32,372 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:32,372 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 8
+2024-02-28 20:56:32,372 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 9
+2024-02-28 20:56:32,372 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:32,372 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 9
+2024-02-28 20:56:32,372 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:32,372 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 9
+2024-02-28 20:56:32,372 INFO    SenderThread:25069 [dir_watcher.py:finish():358] shutting down directory watcher
+2024-02-28 20:56:32,425 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-28 20:56:32,681 INFO    Thread-12 :25069 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log
+2024-02-28 20:56:32,682 INFO    SenderThread:25069 [dir_watcher.py:finish():388] scan: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files
+2024-02-28 20:56:32,682 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/config.yaml config.yaml
+2024-02-28 20:56:32,682 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/requirements.txt requirements.txt
+2024-02-28 20:56:32,682 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/wandb-summary.json wandb-summary.json
+2024-02-28 20:56:32,683 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/wandb-metadata.json wandb-metadata.json
+2024-02-28 20:56:32,683 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log output.log
+2024-02-28 20:56:32,684 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/conda-environment.yaml conda-environment.yaml
+2024-02-28 20:56:32,686 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Train input (black square image)_1_9eafb4101355d84a47b4.png media/images/Train input (black square image)_1_9eafb4101355d84a47b4.png
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Train expected output_0_bf65dfca0ebb4ef627b2.png media/images/Train expected output_0_bf65dfca0ebb4ef627b2.png
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Test expected output_2_dae1b1e7f39c394fc5db.png media/images/Test expected output_2_dae1b1e7f39c394fc5db.png
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Prediction input_6_a13b8479f2dc076e06a9.png media/images/Prediction input_6_a13b8479f2dc076e06a9.png
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Prediction input (black square image)_5_64423813cdfe8fdf5caf.png media/images/Prediction input (black square image)_5_64423813cdfe8fdf5caf.png
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Test input (black square image)_3_e9f06762e4aa380c6285.png media/images/Test input (black square image)_3_e9f06762e4aa380c6285.png
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [dir_watcher.py:finish():402] scan save: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/media/images/Prediction expected output_4_adb24d4da0c7f5d4a3ba.png media/images/Prediction expected output_4_adb24d4da0c7f5d4a3ba.png
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 10
+2024-02-28 20:56:32,687 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: poll_exit
+2024-02-28 20:56:32,687 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:32,687 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 10
+2024-02-28 20:56:32,687 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 10
+2024-02-28 20:56:32,687 INFO    SenderThread:25069 [file_pusher.py:finish():172] shutting down file pusher
+2024-02-28 20:56:32,916 INFO    wandb-upload_3:25069 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/requirements.txt
+2024-02-28 20:56:32,918 INFO    wandb-upload_2:25069 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/wandb-summary.json
+2024-02-28 20:56:32,918 INFO    wandb-upload_1:25069 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/conda-environment.yaml
+2024-02-28 20:56:32,918 INFO    wandb-upload_0:25069 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/config.yaml
+2024-02-28 20:56:33,084 INFO    wandb-upload_4:25069 [upload_job.py:push():131] Uploaded file /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/files/output.log
+2024-02-28 20:56:33,285 INFO    Thread-11 (_thread_body):25069 [sender.py:transition_state():617] send defer: 11
+2024-02-28 20:56:33,285 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:33,285 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 11
+2024-02-28 20:56:33,285 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:33,285 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 11
+2024-02-28 20:56:33,285 INFO    SenderThread:25069 [file_pusher.py:join():178] waiting for file pusher
+2024-02-28 20:56:33,286 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 12
+2024-02-28 20:56:33,286 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:33,286 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 12
+2024-02-28 20:56:33,286 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:33,286 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 12
+2024-02-28 20:56:33,287 INFO    SenderThread:25069 [file_stream.py:finish():595] file stream finish called
+2024-02-28 20:56:33,371 INFO    SenderThread:25069 [file_stream.py:finish():599] file stream finish is done
+2024-02-28 20:56:33,371 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 13
+2024-02-28 20:56:33,371 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:33,371 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 13
+2024-02-28 20:56:33,371 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:33,371 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 13
+2024-02-28 20:56:33,371 INFO    SenderThread:25069 [sender.py:transition_state():617] send defer: 14
+2024-02-28 20:56:33,371 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: defer
+2024-02-28 20:56:33,371 INFO    HandlerThread:25069 [handler.py:handle_request_defer():172] handle defer: 14
+2024-02-28 20:56:33,371 DEBUG   SenderThread:25069 [sender.py:send():382] send: final
+2024-02-28 20:56:33,372 DEBUG   SenderThread:25069 [sender.py:send():382] send: footer
+2024-02-28 20:56:33,372 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: defer
+2024-02-28 20:56:33,372 INFO    SenderThread:25069 [sender.py:send_request_defer():613] handle sender defer: 14
+2024-02-28 20:56:33,372 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: poll_exit
+2024-02-28 20:56:33,372 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: poll_exit
+2024-02-28 20:56:33,373 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: internal_messages
+2024-02-28 20:56:33,373 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: server_info
+2024-02-28 20:56:33,373 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: server_info
+2024-02-28 20:56:33,416 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: get_summary
+2024-02-28 20:56:33,416 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: sampled_history
+2024-02-28 20:56:33,416 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: job_info
+2024-02-28 20:56:33,450 DEBUG   SenderThread:25069 [sender.py:send_request():409] send_request: job_info
+2024-02-28 20:56:33,460 DEBUG   HandlerThread:25069 [handler.py:handle_request():146] handle_request: shutdown
+2024-02-28 20:56:33,460 INFO    HandlerThread:25069 [handler.py:finish():869] shutting down handler
+2024-02-28 20:56:34,416 INFO    WriterThread:25069 [datastore.py:close():296] close: /home/dofa/Desktop/code/PMC/wandb/run-20240228_205617-3a7kwisy/run-3a7kwisy.wandb
+2024-02-28 20:56:34,451 INFO    SenderThread:25069 [sender.py:finish():1572] shutting down sender
+2024-02-28 20:56:34,451 INFO    SenderThread:25069 [file_pusher.py:finish():172] shutting down file pusher
+2024-02-28 20:56:34,451 INFO    SenderThread:25069 [file_pusher.py:join():178] waiting for file pusher
