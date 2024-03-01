@@ -31,7 +31,7 @@ normalization_factor = 255
 #======================
 #Variables globales de dataset
 #======================
-dataset_path = "/home/dofa/Desktop/code/aug_dataset/"
+dataset_path = "/aug_dataset/"
 input_train_norm = []
 input_test_norm = []
 input_train_aug_norm = []

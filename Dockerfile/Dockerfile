@@ -18,10 +18,13 @@ RUN mkdir -p /root/.ssh && \
     ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 # Clone the repository using SSH
-RUN git clone git@github.com:Y0nyx/PMC.git
+RUN git clone -b Unsupervised_docker git@github.com:Y0nyx/PMC.git
 
 # Change the working directory to the cloned repository
 WORKDIR /PMC
+
+# Copy dataset folder from host machine to Docker image
+COPY /aug_dataset/ /aug_dataset
 
 # Install requirements
 RUN pip install -r unsupervised_docker_requirements.txt
