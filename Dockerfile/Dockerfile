@@ -2,7 +2,10 @@
 FROM pytorch/pytorch:latest
 
 # Install git to clone the repository
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git && \
+    apt-get install -y libgl1-mesa-dev && \
+    apt-get install -y libglib2.0-0 && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set up SSH config to prevent "host key verification failed" errors
 RUN mkdir -p /root/.ssh && \
@@ -23,5 +26,6 @@ RUN git clone -b Pipeline_dockerfile git@github.com:Y0nyx/PMC.git
 # Change the working directory to the cloned repository
 WORKDIR /workspace/PMC
 
-# Install requirements
-RUN pip install -r pipeline_requirements.txt
+# Upgrade pip and install requirements
+RUN pip install --upgrade pip && \
+    pip install -r pipeline_requirements.txt
