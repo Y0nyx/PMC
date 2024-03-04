@@ -36,23 +36,40 @@ def train(model, input_train, input_label, valid_input, valid_label, epochs, bat
 def argparser():
     parser = argparse.ArgumentParser(description='Argument used in the code passed by the bash file.')
 
-    parser.add_argument('--EPOCHS', type=int, help='Number of epoch used for the training of the model')
-    parser.add_argument('--BATCH_SIZE', type=int, help='Number of inputs that are processed in a single forward and backward pass during the training of the neural network')
-    parser.add_argument('--PATH_RESULTS', type=str, help='path where the results are going to be stored at.')
-    parser.add_argument('--FILEPATH_WEIGHTS', type=str, help='Path where will be stored the weights.')
-    parser.add_argument('--FILEPATH_WEIGHTS_SERCH', type=str, help='Path where will be stored the weights for the hp search.')
-    parser.add_argument('--HP_SEARCH', type=str, help='Path to store the results of the hyper-parameter search.')
-    parser.add_argument('--HP_NAME', type=str, help='Name used for karas tuner.')
-    parser.add_argument('--MONITOR_LOSS', type=str, help='The metric being used for the loss function.')
-    parser.add_argument('--MONITOR_METRIC', type=str, help='The metric that is being monitored.')
-    parser.add_argument('--MODE_METRIC', type=str, help='The mode in which the value will be monitored.')
-    parser.add_argument('--VERBOSE', action='store_true', help='lag if the user want the code to print to help debug.')
-    parser.add_argument('--DO_HP_SEARCH', action='store_true', help='Flag used to see if the user is doing a hp search or not.')
-    parser.add_argument('--EPOCHS_HP', type=int, help='Number of epoch used for the training of the model with the hp search.')
-    parser.add_argument('--NUM_TRIALS_HP', type=int, help='Number of try to find the best hyper-parameters combinaison.')
-    parser.add_argument('--EXECUTION_PER_TRIAL_HP', type=int, help='Number of time the same hyper-parameters combinaison will be tested.')
-    parser.add_argument('--NBEST', type=int, help='Number of best hp search that will be taken to train the model with.')
-    parser.add_argument('--DATA_PATH', type=str, help='Path where are located the data.')
+    parser.add_argument('--EPOCHS', type=int, default=100, 
+                        help='Number of epoch used for the training of the model')
+    parser.add_argument('--BATCH_SIZE', type=int, default=20,
+                         help='Number of inputs that are processed in a single forward and backward pass during the training of the neural network')
+    parser.add_argument('--PATH_RESULTS', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search', 
+                        help='path where the results are going to be stored at.')
+    parser.add_argument('--FILEPATH_WEIGHTS', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search/training_weights/',
+                        help='Path where will be stored the weights.')
+    parser.add_argument('--FILEPATH_WEIGHTS_SERCH', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search/training_weights/search_weights/',
+                        help='Path where will be stored the weights for the hp search.')
+    parser.add_argument('--HP_SEARCH', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search',
+                         help='Path to store the results of the hyper-parameter search.')
+    parser.add_argument('--HP_NAME', type=str, default='hp_search_results',
+                        help='Name used for karas tuner.')
+    parser.add_argument('--MONITOR_LOSS', type=str, default='mean_absolute_error',
+                         help='The metric being used for the loss function.')
+    parser.add_argument('--MONITOR_METRIC', type=str, default ='mean_squared_error', 
+                        help='The metric that is being monitored.')
+    parser.add_argument('--MODE_METRIC', type=str, default='min',
+                        help='The mode in which the value will be monitored.')
+    parser.add_argument('--VERBOSE', action='store_true', default=True,
+                        help='lag if the user want the code to print to help debug.')
+    parser.add_argument('--DO_HP_SEARCH', action='store_true', default=True,
+                        help='Flag used to see if the user is doing a hp search or not.')
+    parser.add_argument('--EPOCHS_HP', type=int, default=100, 
+                        help='Number of epoch used for the training of the model with the hp search.')
+    parser.add_argument('--NUM_TRIALS_HP', type=int, default=50, 
+                        help='Number of try to find the best hyper-parameters combinaison.')
+    parser.add_argument('--EXECUTION_PER_TRIAL_HP', type=int, default= 2, 
+                        help='Number of time the same hyper-parameters combinaison will be tested.')
+    parser.add_argument('--NBEST', type=int, default=10, 
+                        help='Number of best hp search that will be taken to train the model with.')
+    parser.add_argument('--DATA_PATH', type=str, default='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images', 
+                        help='Path where are located the data.')
 
     return parser.parse_args()
     
@@ -66,56 +83,74 @@ class ModelTrainer:
         self.mode_metric = MODE_METRIC
         self.monitor_metric = MONITOR_METRIC
 
-    def train_hp(self, EPOCHS_HP, NUM_TRIALS_HP, EXECUTION_PER_TRIAL_HP, PATH_RESULTS):
+    def train_hp(self, EPOCHS_HP, NUM_TRIALS_HP, EXECUTION_PER_TRIAL_HP, path_results):
         """
         Here we are doing an hp search and training the model with the N best results. 
         """
-        callback_search = cb.TrainingCallbacks(args.FILEPATH_WEIGHTS_SERCH, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
+        callback_search = cb.TrainingCallbacks(filepath_weights_search, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
         callbacks_list_search = callback_search.get_callbacks(None)
 
         hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, EPOCHS_HP, NUM_TRIALS_HP, 
                                                 EXECUTION_PER_TRIAL_HP, self.monitor_metric, self.mode_metric, self.verbose, callbacks_list_search, args.MONITOR_METRIC)
-        hp_search = hp_tuner_instance.get_hp_search(args.HP_SEARCH, args.HP_NAME)
+        hp_search_done = hp_tuner_instance.get_hp_search(hp_search, hp_name)
 
         #Store the results of the search
-        if not os.path.exists(PATH_RESULTS):
-            os.makedirs(PATH_RESULTS)
+        if not os.path.exists(path_results):
+            os.makedirs(path_results)
         training_info = tr_info.TrainingInformation()
-        training_info.write_hp_csv(PATH_RESULTS, hp_search, args.MONITOR_METRIC)
+        training_info.write_hp_csv(path_results, hp_search_done, args.MONITOR_METRIC)
 
         #Train the N best HP
-        best_hp = hp_search[:args.NBEST]
+        best_hp = hp_search_done[:args.NBEST]
         for j, trial in enumerate(best_hp, start=1):
             hp = trial.hyperparameters
             model = mod.AeModels(learning_rate=hp.get('lr'))
             build_model = model.aes_defect_detection()
 
             name = f'model{j}'
-            callback = cb.TrainingCallbacks(args.FILEPATH_WEIGHTS, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
+            callback = cb.TrainingCallbacks(filepath_weights, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
             callbacks_list = callback.get_callbacks(name)
 
             history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, int(1.2*EPOCHS_HP), hp.get('batch_size'), callbacks_list)
-            training_info.plot_graph(history, name, PATH_RESULTS, args.MONITOR_METRIC)
+            training_info.plot_graph(history, name, path_results, args.MONITOR_METRIC)
 
             # Nettoyage de la session Keras et collecte des dechets
             K.clear_session()
             gc.collect()
         
-    def train_normal(self, EPOCHS, BATCH_SIZE, PATH_RESULTS):
+    def train_normal(self, epochs, batch_size, path_results):
         """
         Here we are training the model with the default parameters given in the initial variables. 
         """
         model = mod.AeModels(learning_rate=0.001)
         build_model = model.aes_defect_detection()
-        history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_aug_norm, EPOCHS, BATCH_SIZE, self.callbacks_list)
+        history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_aug_norm, epochs, batch_size, self.callbacks_list)
 
         training_info = tr_info.TrainingInformation()
         name = 'default_param'
-        training_info.plot_graph(history, name, PATH_RESULTS, args.MONITOR_METRIC)
+        training_info.plot_graph(history, name, path_results, args.MONITOR_METRIC)
     
 
 if __name__ == '__main__':
     args = argparser()
+
+    epochs = args.EPOCHS   
+    batch_size = args.BATCH_SIZE
+    path_results = args.PATH_RESULTS
+    filepath_weights = args.FILEPATH_WEIGHTS
+    filepath_weights_search = args.FILEPATH_WEIGHTS_SERCH
+    hp_search = args.HP_SEARCH
+    hp_name = args.HP_NAME
+    monitor_loss = args.MONITOR_LOSS
+    monitor_metric = args.MONITOR_METRIC
+    mode_metric = args.MODE_METRIC
+    verbose = args.VERBOSE
+    do_hp_search = args.DO_HP_SEARCH
+    epochs_hp = args.EPOCHS_HP
+    num_trials_hp = args.NUM_TRIALS_HP
+    execution_per_trial_hp = args.EXECUTION_PER_TRIAL_HP
+    nbest = args.NBEST
+    data_path = args.DATA_PATH
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
 
@@ -132,10 +167,10 @@ if __name__ == '__main__':
     data_processing = dp.DataProcessing()
     train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(args.DATA_PATH)
 
-    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, args.VERBOSE, args.MODE_METRIC, args.MONITOR_METRIC)
+    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, args.VERBOSE, args.MODE_METRIC, monitor_metric)
     if args.DO_HP_SEARCH:
-        history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, args.PATH_RESULTS)
+        history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, path_results)
     else:
-        history = train_model.train_normal(args.EPOCHS, args.BATCH_SIZE, args.PATH_RESULTS)
+        history = train_model.train_normal(epochs, batch_size, path_results)
 
     print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
