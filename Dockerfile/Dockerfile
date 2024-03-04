@@ -23,8 +23,5 @@ RUN git clone -b Pipeline_dockerfile git@github.com:Y0nyx/PMC.git
 # Change the working directory to the cloned repository
 WORKDIR /PMC
 
-# Copy dataset folder from host machine to Docker image
-COPY /aug_dataset/ /aug_dataset
-
 # Install requirements
 RUN pip install -r pipeline_requirements.txt
