@@ -50,4 +50,3 @@ class TrainingInformation():
         plt.legend()
         plt.savefig(f'{dir}/train_val_acc_{name}.png')
         plt.close()
-        
