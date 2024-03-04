@@ -24,6 +24,16 @@ def add_overlap( left, top, right, bottom, width, height, overlap_size):
         return left, top, right, bottom
 
 def create_sub_images(input_folder, output_folder, sub_image_size, overlap_size, transformation_type):
+    """
+    Create sub-images from images in the input folder with specified parameters.
+
+    Parameters:
+        input_folder (str): Path to the folder containing input images.
+        output_folder (str): Path to the folder where sub-images will be saved.
+        sub_image_size (int): Size of each sub-image (width and height).
+        overlap_size (int): Size of the overlap (in pixels) between sub-images.
+        transformation_type (str): Type of transformation to apply to sub-images.
+    """
     # Create the output folder if it doesn't exist
     os.makedirs(output_folder, exist_ok=True)
 
@@ -32,6 +42,7 @@ def create_sub_images(input_folder, output_folder, sub_image_size, overlap_size,
 
     for file in files:
         # Check if the file is an image (you can add more extensions if needed)
+        #TODO: Mettre dans constants
         if file.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
             # Load the imagey
             image_path = os.path.join(input_folder, file)
