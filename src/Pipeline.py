@@ -30,7 +30,7 @@ class Pipeline:
         
         self._state = PipelineState.INIT
         self._dataManager = DataManager(
-            "", "./Code/src/cameras.yaml", self.verbose
+            "", "./cameras.yaml", self.verbose
         ).get_instance()
         self.unsupervised_model = unsupervised_model
 
@@ -122,13 +122,13 @@ class Pipeline:
 
 if __name__ == "__main__":
     models = []
-    models.append(YoloModel('./Code/src/ia/welding_detection_v1.pt'))
-    models.append(YoloModel('./Code/src/ia/piece_detection_v1.pt'))
-    unsupervised_model = tf.keras.models.load_model('./Code/src/ia/wandb_fev12_demo.h5')
+    models.append(YoloModel('./ia/welding_detection_v1.pt'))
+    models.append(YoloModel('./ia/piece_detection_v1.pt'))
+    unsupervised_model = []#tf.keras.models.load_model('./ia/wandb_fev12_demo.keras')
 
     # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
 
-    data_path = "D:\dataset\dofa_2\data.yaml"
+    #data_path = "D:\dataset\dofa_2\data.yaml"
     
     # test_model = YoloModel()
     # test_model.train(epochs=3, data=data_path, batch=-1)

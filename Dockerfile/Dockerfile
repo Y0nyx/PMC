@@ -21,7 +21,7 @@ RUN mkdir -p /root/.ssh && \
 RUN git clone -b Pipeline_dockerfile git@github.com:Y0nyx/PMC.git
 
 # Change the working directory to the cloned repository
-WORKDIR /PMC
+WORKDIR /workspace/PMC
 
 # Install requirements
 RUN pip install -r pipeline_requirements.txt
