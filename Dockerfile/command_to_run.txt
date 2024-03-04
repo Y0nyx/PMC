@@ -1,3 +1,0 @@
-1. sudo docker build --build-arg SSH_PRIVATE_KEY="$(cat /home/dofa/.ssh/id_rsa)" -t unsupervised_image .
-
-2. sudo docker run -gpus all -it unsupervised_image bash

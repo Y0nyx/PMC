@@ -31,7 +31,7 @@ normalization_factor = 255
 #======================
 #Variables globales de dataset
 #======================
-dataset_path = "/aug_dataset/"
+dataset_path = "../../../../../Datasets/mathias_test_dataset"
 input_train_norm = []
 input_test_norm = []
 input_train_aug_norm = []
@@ -137,7 +137,7 @@ def load_data():
     #Data loading
     for filename in os.listdir(dataset_path):
         if filename.endswith(".png"):
-            img = image.load_img(dataset_path+filename, target_size=(128, 128))
+            img = image.load_img(os.path.join(dataset_path, filename), target_size=(128, 128))
             images.append(image.img_to_array(img))
     images = np.array(images)
 
