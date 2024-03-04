@@ -51,7 +51,7 @@ class DataProcessing():
 
         return input_train, input_valid, input_test
     
-    def add_stain(self, image):
+    def add_stain(self, image, max_pixel_value):
         elipse_size = "5-10"
         blur = 0
 
@@ -70,9 +70,7 @@ class DataProcessing():
         if blur != 0:
             mask = gaussian_filter(mask, max(a,b)*blur)
 
-        # Choisissez une couleur aléatoire de l'image pour la tache
-        # Par exemple, prenez la couleur du centre de l'ellipse
-        color = image[cy, cx].astype('float32') / 255.  # Normaliser la couleur
+        color = image[cy, cx].astype('float32') / float(max_pixel_value)  # Normaliser la couleur
 
         rgb_mask = np.dstack([mask]*3)
 
@@ -113,13 +111,13 @@ class DataProcessing():
 
         return train_augmented, valid_augmented, test_augmented
 
-    def normalize(self, data):
+    def normalize(self, data, max_pixel_value):
         """
         Data domain will be between 0 and 1. 
         """
-        return data.astype('float32') / 255.
+        return data.astype('float32') / float(max_pixel_value)
     
-    def de_normalize(self, input_test, result_test):
+    def de_normalize(self, input_test, result_test, max_pixel_value):
         difference_abs = np.abs(input_test - result_test)
 
         #Normalisation
@@ -127,12 +125,12 @@ class DataProcessing():
         max_val = np.max(difference_abs)
 
         #Ajustement des valeurs pour couvrir la gamme de 0 à 255
-        normalized_diff = (difference_abs - min_val) / (max_val - min_val) * 255
+        normalized_diff = (difference_abs - min_val) / (max_val - min_val) * max_pixel_value
 
         #Conversion en uint8
         difference_reshaped = normalized_diff.astype('uint8')
-        input_test = (input_test * 255).astype('uint8')
-        result_test = (result_test * 255).astype('uint8')
+        input_test = (input_test * max_pixel_value).astype('uint8')
+        result_test = (result_test * max_pixel_value).astype('uint8')
 
         return input_test, result_test, difference_reshaped
         
@@ -150,7 +148,7 @@ class DataProcessing():
 
         return input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm
     
-    def get_data_processing_stain(self, data_path):
+    def get_data_processing_stain(self, data_path, max_pixel_value):
         """
         Do the data processing with Stain noise used to try to beat the bench mark
         """
@@ -158,13 +156,13 @@ class DataProcessing():
 
         images_stain = []
         for img in input_train:
-            images_stain.append(self.add_stain(img)) 
+            images_stain.append(self.add_stain(img, max_pixel_value)) 
         images_stain = np.array(images_stain)
 
-        train_input_norm = self.normalize(input_train)
-        train_input_loss_norm = self.normalize(images_stain)
-        valid_input_norm = self.normalize(input_valid)
-        test_input_norm = self.normalize(input_test)
+        train_input_norm = self.normalize(input_train, max_pixel_value)
+        train_input_loss_norm = self.normalize(images_stain, max_pixel_value)
+        valid_input_norm = self.normalize(input_valid, max_pixel_value)
+        test_input_norm = self.normalize(input_test, max_pixel_value)
 
         return train_input_norm, train_input_loss_norm, valid_input_norm, test_input_norm
     

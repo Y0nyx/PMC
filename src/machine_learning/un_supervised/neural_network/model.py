@@ -15,8 +15,10 @@ from keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, BatchNormalizati
 from keras.models import Model
 
 class AeModels():
-    def __init__(self, learning_rate: float=0.001):
+    def __init__(self, learning_rate: float=0.001, monitor_loss: str='mean_absolute_error', monitor_metric: str='mean_squared_error'):
         self.learning_rate = learning_rate
+        self.monitor_loss = monitor_loss
+        self.monitor_metric = monitor_metric
 
     def build_francois_chollet_autoencoder(self, input_shape: tuple=(784,), encoding_dim: int=32) -> Model:
         """
@@ -39,8 +41,8 @@ class AeModels():
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='binary_crossentropy',
-            metrics=['mean_absolute_error']
+            loss=self.monitor_loss,
+            metrics=[self.monitor_metric]
         )
 
         return model
@@ -66,8 +68,8 @@ class AeModels():
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='binary_crossentropy',
-            metrics=['mean_absolute_error']
+            loss=self.monitor_loss,
+            metrics=[self.monitor_metric]
         )
 
         return model
@@ -103,8 +105,8 @@ class AeModels():
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='binary_crossentropy',
-            metrics=['mean_absolute_error']
+            loss=self.monitor_loss,
+            metrics=[self.monitor_metric]
         )
 
         return model
@@ -182,8 +184,8 @@ class AeModels():
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='mean_absolute_error',
-            metrics=['mean_squared_error']
+            loss=self.monitor_loss,
+            metrics=[self.monitor_metric]
         )
 
         return model

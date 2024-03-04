@@ -6,14 +6,14 @@ class TrainingInformation():
     """
     Used during the training of the Neural Network to store information. 
     """
-    def write_hp_csv(self, dir, n_best_hp, MONITOR_METRIC):
+    def write_hp_csv(self, dir, n_best_hp, monitor_metric):
         fieldnames = ['model_rank', 'lr', 'batch_size', 'metric_loss']
         with open(f'{dir}/hp_search_results.csv', 'a', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             for i, trial in enumerate(n_best_hp):
                 hps = trial.hyperparameters
-                validation_loss = trial.metrics.get_best_value(MONITOR_METRIC)
+                validation_loss = trial.metrics.get_best_value(monitor_metric)
                 row_dict = {
                     'model_rank': i+1, 
                     'lr': hps.get('lr'),
@@ -22,7 +22,7 @@ class TrainingInformation():
                 }
                 writer.writerow(row_dict)
 
-    def plot_graph(self, history, name, directory, MONITOR_METRIC):
+    def plot_graph(self, history, name, directory, monitor_metric):
         loss = history.history['loss']
         val_loss = history.history['val_loss']
         epochs = range(1, len(loss)+1)
@@ -40,8 +40,8 @@ class TrainingInformation():
         plt.savefig(f'{dir}/train_val_loss_{name}.png')
         plt.close()
 
-        acc = history.history[MONITOR_METRIC]
-        val_acc = history.history[f'val_{MONITOR_METRIC}']
+        acc = history.history[monitor_metric]
+        val_acc = history.history[f'val_{monitor_metric}']
         plt.plot(epochs, acc, 'blue', label='Training accuracy')
         plt.plot(epochs, val_acc, 'orange', label='validation accuracy')
         plt.title('Training and validation accuracy')

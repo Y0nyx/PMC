@@ -40,6 +40,8 @@ def argparser():
                         help='Number of epoch used for the training of the model')
     parser.add_argument('--BATCH_SIZE', type=int, default=20,
                          help='Number of inputs that are processed in a single forward and backward pass during the training of the neural network')
+    parser.add_argument('--LEARNING_RATE', type=float, default=0.001, 
+                        help='Learning rate used when training the Neural Network with default value.')
     parser.add_argument('--PATH_RESULTS', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search', 
                         help='path where the results are going to be stored at.')
     parser.add_argument('--FILEPATH_WEIGHTS', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search/training_weights/',
@@ -70,65 +72,68 @@ def argparser():
                         help='Number of best hp search that will be taken to train the model with.')
     parser.add_argument('--DATA_PATH', type=str, default='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images', 
                         help='Path where are located the data.')
+    parser.add_argument('--MAX_PIXEL_VALUE', type=int, default=255,
+                        help='Maximum pixel value for the analysed original image.')
 
     return parser.parse_args()
     
 class ModelTrainer:
-    def __init__(self, train_input, train_input_loss, valid_input, valid_label, VERBOSE, MODE_METRIC, MONITOR_METRIC):
+    def __init__(self, train_input, train_input_loss, valid_input, valid_label, verbose, mode_metric, monitor_metric, monitor_loss):
         self.input_train_norm = train_input
         self.input_train_label = train_input_loss
         self.input_valid_norm = valid_input
         self.input_valid_label = valid_label
-        self.verbose = VERBOSE
-        self.mode_metric = MODE_METRIC
-        self.monitor_metric = MONITOR_METRIC
+        self.verbose = verbose
+        self.mode_metric = mode_metric
+        self.monitor_metric = monitor_metric
+        self.monitor_loss = monitor_loss
 
-    def train_hp(self, EPOCHS_HP, NUM_TRIALS_HP, EXECUTION_PER_TRIAL_HP, path_results):
+    def train_hp(self, epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search):
         """
         Here we are doing an hp search and training the model with the N best results. 
         """
-        callback_search = cb.TrainingCallbacks(filepath_weights_search, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
+        callback_search = cb.TrainingCallbacks(filepath_weights_search, self.monitor_metric, self.mode_metric, self.verbose)
         callbacks_list_search = callback_search.get_callbacks(None)
 
-        hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, EPOCHS_HP, NUM_TRIALS_HP, 
-                                                EXECUTION_PER_TRIAL_HP, self.monitor_metric, self.mode_metric, self.verbose, callbacks_list_search, args.MONITOR_METRIC)
+        hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, epochs_hp, num_trials_hp, 
+                                                execution_per_trial_hp, self.mode_metric, self.verbose, callbacks_list_search, self.monitor_metric, self.monitor_loss)
         hp_search_done = hp_tuner_instance.get_hp_search(hp_search, hp_name)
 
         #Store the results of the search
         if not os.path.exists(path_results):
             os.makedirs(path_results)
         training_info = tr_info.TrainingInformation()
-        training_info.write_hp_csv(path_results, hp_search_done, args.MONITOR_METRIC)
+        training_info.write_hp_csv(path_results, hp_search_done, self.monitor_metric)
 
         #Train the N best HP
-        best_hp = hp_search_done[:args.NBEST]
+        best_hp = hp_search_done[:nbest]
         for j, trial in enumerate(best_hp, start=1):
             hp = trial.hyperparameters
-            model = mod.AeModels(learning_rate=hp.get('lr'))
+            model = mod.AeModels(learning_rate=hp.get('lr'), monitor_loss=self.monitor_loss, monitor_metric=self.monitor_metric)
             build_model = model.aes_defect_detection()
 
             name = f'model{j}'
-            callback = cb.TrainingCallbacks(filepath_weights, args.MONITOR_METRIC, args.MODE_METRIC, args.VERBOSE)
+            callback = cb.TrainingCallbacks(filepath_weights, self.monitor_metric, self.mode_metric, self.verbose)
             callbacks_list = callback.get_callbacks(name)
 
-            history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, int(1.2*EPOCHS_HP), hp.get('batch_size'), callbacks_list)
-            training_info.plot_graph(history, name, path_results, args.MONITOR_METRIC)
+            history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, int(1.2*epochs_hp), hp.get('batch_size'), callbacks_list)
+            training_info.plot_graph(history, name, path_results, self.monitor_metric)
 
             # Nettoyage de la session Keras et collecte des dechets
             K.clear_session()
             gc.collect()
         
-    def train_normal(self, epochs, batch_size, path_results):
+    def train_normal(self, epochs, batch_size, learning_rate, path_results):
         """
         Here we are training the model with the default parameters given in the initial variables. 
         """
-        model = mod.AeModels(learning_rate=0.001)
+        model = mod.AeModels(learning_rate=learning_rate, monitor_loss=self.monitor_loss, monitor_metric=self.monitor_metric)
         build_model = model.aes_defect_detection()
         history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_aug_norm, epochs, batch_size, self.callbacks_list)
 
         training_info = tr_info.TrainingInformation()
         name = 'default_param'
-        training_info.plot_graph(history, name, path_results, args.MONITOR_METRIC)
+        training_info.plot_graph(history, name, path_results, self.monitor_metric)
     
 
 if __name__ == '__main__':
@@ -136,6 +141,7 @@ if __name__ == '__main__':
 
     epochs = args.EPOCHS   
     batch_size = args.BATCH_SIZE
+    learning_rate = args.LEARNING_RATE
     path_results = args.PATH_RESULTS
     filepath_weights = args.FILEPATH_WEIGHTS
     filepath_weights_search = args.FILEPATH_WEIGHTS_SERCH
@@ -151,6 +157,7 @@ if __name__ == '__main__':
     execution_per_trial_hp = args.EXECUTION_PER_TRIAL_HP
     nbest = args.NBEST
     data_path = args.DATA_PATH
+    max_pixel_value = args.MAX_PIXEL_VALUE
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
 
@@ -165,12 +172,12 @@ if __name__ == '__main__':
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
     data_processing = dp.DataProcessing()
-    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(args.DATA_PATH)
+    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path) #TRAINING Change this line if you want to change the artificial defaut created. 
 
-    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, args.VERBOSE, args.MODE_METRIC, monitor_metric)
-    if args.DO_HP_SEARCH:
-        history = train_model.train_hp(args.EPOCHS_HP, args.NUM_TRIALS_HP, args.EXECUTION_PER_TRIAL_HP, path_results)
+    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, verbose, mode_metric, monitor_metric, monitor_loss)
+    if do_hp_search:
+        history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search)
     else:
-        history = train_model.train_normal(epochs, batch_size, path_results)
+        history = train_model.train_normal(epochs, batch_size, learning_rate, path_results)
 
     print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
