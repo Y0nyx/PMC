@@ -54,10 +54,11 @@ class DataProcessing():
     def add_stain(self, image, max_pixel_value):
         elipse_size = "5-10"
         blur = 0
+        pourcentage_scale_factor = 100.
 
         row, column = image.shape[0], image.shape[1]
         min_range, max_range = float(elipse_size.split('-')[0]), float(elipse_size.split('-')[1])
-        a, b = randint(int(min_range/100.*column), int(max_range/100.*column)), randint(int(min_range/100.*row), int(max_range/100.*row))
+        a, b = randint(int(min_range/pourcentage_scale_factor*column), int(max_range/pourcentage_scale_factor*column)), randint(int(min_range/pourcentage_scale_factor*row), int(max_range/pourcentage_scale_factor*row))
         rotation = uniform(0, 2*np.pi)
 
         cx, cy = randint(max(a,b), int(column-max(a,b))), randint(max(a,b), int(row-max(a,b)))
