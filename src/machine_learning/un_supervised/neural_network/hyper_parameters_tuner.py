@@ -17,7 +17,7 @@ from wandb.keras import WandbCallback
 import model as mod
 
 class MyHyperModel(keras_tuner.HyperModel):  
-    def __init__(self, train_input, train_label, valid_input, valid_label, epochs, callbacks, monitor_metric, monitor_loss): 
+    def __init__(self, train_input, train_label, valid_input, valid_label, epochs, callbacks, monitor_metric, monitor_loss, image_dimentions): 
             self.train_input = train_input
             self.train_label = train_label
             self.valid_input = valid_input
@@ -26,6 +26,7 @@ class MyHyperModel(keras_tuner.HyperModel):
             self.callbacks = [callbacks[1:]]
             self.monitor_metric = monitor_metric
             self.monitor_loss = monitor_loss
+            self.image_dimentions = image_dimentions
  
     def build(self, hp):
         """
@@ -34,7 +35,7 @@ class MyHyperModel(keras_tuner.HyperModel):
         lr = hp.Choice('lr', values=[0.00001, 0.0001, 0.001, 0.01])
         batch_size = hp.Int('batch_size', 2, 20, step=2, default=1)
 
-        model_to_build = mod.AeModels(learning_rate=lr, monitor_loss=self.monitor_loss, monitor_metric=self.monitor_metric)
+        model_to_build = mod.AeModels(lr, self.monitor_loss, self.monitor_metric, self.image_dimentions)
         model = model_to_build.aes_defect_detection()
 
         return model
@@ -77,7 +78,7 @@ class CustomBayesianTuner(BayesianOptimization):
 
     
 class KerasTuner():
-    def __init__(self, input_train_norm, input_train_norm_label, input_valid_norm, input_valid_norm_label, epochs, num_trials, executions_per_trial, mode, verbose, callbacks, monitor_metric, monitor_loss):
+    def __init__(self, input_train_norm, input_train_norm_label, input_valid_norm, input_valid_norm_label, epochs, num_trials, executions_per_trial, mode, verbose, callbacks, monitor_metric, monitor_loss, image_dimentions):
         self.train_input = input_train_norm
         self.train_label = input_train_norm_label
         self.valid_input = input_valid_norm
@@ -90,6 +91,7 @@ class KerasTuner():
         self.callbacks = callbacks
         self.monitor_metric = monitor_metric
         self.monitor_loss = monitor_loss
+        self.image_dimentions = image_dimentions
 
     def tuner_initializer(self, hp_search, hp_name) -> BayesianOptimization:
         """
@@ -103,7 +105,8 @@ class KerasTuner():
             epochs = self.epochs, 
             callbacks = [self.callbacks[1:]],
             monitor_metric = self.monitor_metric,
-            monitor_loss = self.monitor_loss
+            monitor_loss = self.monitor_loss,
+            image_dimentions = self.image_dimentions
         )
 
         tuner = CustomBayesianTuner(  

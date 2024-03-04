@@ -92,18 +92,21 @@ if __name__ =='__main__':
     max_pixel_value = args.MAX_PIXEL_VALUE
 
     data_processing = dp.DataProcessing()
-    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path)
+    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value)
+
+    _, row, column, channels = train_input.shape
+    image_dimentions = (row, column, channels)
 
     data_frame = pd.read_csv(f'{path_results}/hp_search_results.csv')
     #List all the hp used during training. 
     learning_rate = data_frame['lr']
 
     for j in range(nbest):
-        model = mod.AeModels(learning_rate=float(learning_rate[j]), monitor_loss=monitor_loss, monitor_metric=monitor_metric)
+        model = mod.AeModels(float(learning_rate[j]), monitor_loss, monitor_metric, image_dimentions)
         build_model = model.aes_defect_detection()   #Change this line if the model change. 
 
         name = f"model{j+1}"
-        build_model.load_weights(f'{filepath_weights}/search_{name}', by_name=True, skip_mismatch=True)
+        build_model.load_weights(f'{filepath_weights}/search_{name}')
 
         input_test_norm = test_input[0:num_train_regenerate]
 

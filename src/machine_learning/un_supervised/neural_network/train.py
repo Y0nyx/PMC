@@ -78,7 +78,7 @@ def argparser():
     return parser.parse_args()
     
 class ModelTrainer:
-    def __init__(self, train_input, train_input_loss, valid_input, valid_label, verbose, mode_metric, monitor_metric, monitor_loss):
+    def __init__(self, train_input, train_input_loss, valid_input, valid_label, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions):
         self.input_train_norm = train_input
         self.input_train_label = train_input_loss
         self.input_valid_norm = valid_input
@@ -87,6 +87,7 @@ class ModelTrainer:
         self.mode_metric = mode_metric
         self.monitor_metric = monitor_metric
         self.monitor_loss = monitor_loss
+        self.image_dimentions = image_dimentions
 
     def train_hp(self, epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search):
         """
@@ -96,7 +97,7 @@ class ModelTrainer:
         callbacks_list_search = callback_search.get_callbacks(None)
 
         hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, epochs_hp, num_trials_hp, 
-                                                execution_per_trial_hp, self.mode_metric, self.verbose, callbacks_list_search, self.monitor_metric, self.monitor_loss)
+                                                execution_per_trial_hp, self.mode_metric, self.verbose, callbacks_list_search, self.monitor_metric, self.monitor_loss, self.image_dimentions)
         hp_search_done = hp_tuner_instance.get_hp_search(hp_search, hp_name)
 
         #Store the results of the search
@@ -109,7 +110,7 @@ class ModelTrainer:
         best_hp = hp_search_done[:nbest]
         for j, trial in enumerate(best_hp, start=1):
             hp = trial.hyperparameters
-            model = mod.AeModels(learning_rate=hp.get('lr'), monitor_loss=self.monitor_loss, monitor_metric=self.monitor_metric)
+            model = mod.AeModels(hp.get('lr'), self.monitor_loss, self.monitor_metric, self.image_dimentions)
             build_model = model.aes_defect_detection()
 
             name = f'model{j}'
@@ -127,9 +128,12 @@ class ModelTrainer:
         """
         Here we are training the model with the default parameters given in the initial variables. 
         """
-        model = mod.AeModels(learning_rate=learning_rate, monitor_loss=self.monitor_loss, monitor_metric=self.monitor_metric)
+        callback = cb.TrainingCallbacks(filepath_weights, self.monitor_metric, self.mode_metric, self.verbose)
+        callbacks_list = callback.get_callbacks(name)
+        
+        model = mod.AeModels(learning_rate, self.monitor_loss, self.monitor_metric, self.image_dimentions)
         build_model = model.aes_defect_detection()
-        history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_aug_norm, epochs, batch_size, self.callbacks_list)
+        history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, epochs, batch_size, callbacks_list)
 
         training_info = tr_info.TrainingInformation()
         name = 'default_param'
@@ -172,9 +176,12 @@ if __name__ == '__main__':
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
     data_processing = dp.DataProcessing()
-    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path) #TRAINING Change this line if you want to change the artificial defaut created. 
+    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
-    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, verbose, mode_metric, monitor_metric, monitor_loss)
+    _, row, column, channels = train_input.shape
+    image_dimentions = (row, column, channels)
+
+    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
     if do_hp_search:
         history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search)
     else:
