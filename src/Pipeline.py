@@ -1,17 +1,16 @@
 from pipeline.models.Model import YoloModel
 from pipeline.data.DataManager import DataManager
 from common.enums.PipelineStates import PipelineState
-from common.image import ImageCollection, Image
+from common.image.Image import Image
+from common.image.ImageCollection import ImageCollection
 from common.utils import DataManager as Mock_DataManager
 from common.Constants import *
 from TrainingManager import TrainingManager
 
 import os
-
-from clearml import Task
+from pathlib import Path
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
-
 
 class Pipeline:
     def __init__(self, models: list = [], verbose: bool = True, training=False):
@@ -26,7 +25,7 @@ class Pipeline:
 
         self._state = PipelineState.INIT
         if self.training:
-            self._dataManager = Mock_DataManager("D:\\APP\\PMC\\repos\\dataset\\mock")
+            self._dataManager = Mock_DataManager(Path("./dataset/mock"))
         else:
             self._dataManager = DataManager(
                 "", "./src/cameras.yaml", self.verbose
@@ -79,20 +78,26 @@ class Pipeline:
 
         self._state = PipelineState.INIT
 
-    def train(self, yaml_path, yolo_model, **kargs):
-        task = Task.init(project_name="PMC", task_name=f"{yolo_model} task")
-
-        task.set_parameter("model_variant", yolo_model)
+    def train(self, yaml_path: str, yolo_model: YoloModel, add_clearml: bool = True, **kargs):
 
         model = YoloModel(f"{yolo_model}.pt")
-
         args = dict(data=yaml_path, **kargs)
-        task.connect(args)
+
+        if add_clearml:
+            import clearml
+            clearml.browser_login()
+
+            task = clearml.Task.init(project_name="PMC", task_name=f"{yolo_model} task")
+            task.set_parameter("model_variant", yolo_model)
+            task.connect(args)
 
         results = model.train(**args)
 
+        return results
+
     def detect(self, show: bool = False, save: bool = True, conf: float = 0.7):
         while True:
+            # TODO Utiliser l'API de Mathieu
             key = None
             if not self.training:
                 key = input("Press 'q' to detect on cameras, 'e' to exit: ")
@@ -100,14 +105,14 @@ class Pipeline:
             if key == "q" or self.training:
                 images = self._get_images()
                 for img in images:
-                    images = self._process_image(img, show, save, conf)
+                    imagesCollection = self._segmentation_image(img, show, save, conf)
 
                     # TODO Integrate non supervised model
 
                     # TODO Integrate supervised model
 
                     # Integrate save
-                    images.save(IMG_SAVE_FILE)
+                    imagesCollection.save(IMG_SAVE_FILE)
 
                     # Integrate training loop
                     self._trainingManager.check_flags()
@@ -126,17 +131,17 @@ class Pipeline:
     def _get_images(self):
         return self._dataManager.get_all_img()
 
-    def _process_image(self, img: Image, save: bool, show: bool, conf: float):
+    def _segmentation_image(self, img: Image, save: bool, show: bool, conf: float):
+        imgCollection = ImageCollection([])
         for model in self.models:
             results = model.predict(source=img.value, show=show, conf=conf, save=save)
 
             # crop images with bounding box
-            imageCollection = ImageCollection()
             for result in results:
                 for boxes in result.boxes:
-                    imageCollection.add(img.crop(boxes))
+                    imgCollection.add(img.crop(boxes))
 
-        return imageCollection
+        return imgCollection
 
     def print(self, string):
         if self.verbose:
@@ -145,10 +150,13 @@ class Pipeline:
 
 if __name__ == "__main__":
     models = []
-    models.append(YoloModel("./src/ia/welding_detection_v1.pt"))
-    # models.append(YoloModel('./src/ia/piece_detection_v1.pt'))
+    models.append(YoloModel(Path("./src/ia/segmentation/v1.pt")))
+    # models.append(YoloModel(Path('./src/ia/piece_detection_v1.pt')))
 
     # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
+
+    pipeline = Pipeline(models=models, training=True)
+    pipeline.detect()
 
     # data_path = "D:\dataset\dofa_3"
 
@@ -165,8 +173,8 @@ if __name__ == "__main__":
     # print(f'test fitness: {test_resultats.fitness}')
     # print(f'welding fitness: {welding_resultats.fitness}')
 
-    Pipeline = Pipeline(models, training=True)
-    Pipeline.detect()
+    #Pipeline = Pipeline(models, training=True)
+    #Pipeline.detect()
 
     # Pipeline.train(data_path, "yolov8n-seg", epochs=350, batch=15, workers=4)
 

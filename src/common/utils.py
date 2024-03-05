@@ -9,7 +9,7 @@ from common.image.ImageCollection import ImageCollection
 class DataManager:
     def __init__(self, dataset_path: str):
         self.dataset_path = Path(dataset_path)
-        self.current_iteration = 1
+        self.current_iteration = 0
 
         self.iteration_dirs = sorted(
             item
@@ -21,12 +21,13 @@ class DataManager:
             warnings.warn("This path is empty")
 
     def get_all_img(self) -> ImageCollection:
-        current_iteration_dir = self.dataset_path / Path(
-            self.iteration_dirs[self.current_iteration - 1]
-        )
+        if len(self.iteration_dirs) > self.current_iteration:
+            current_iteration_dir = self.dataset_path / Path(
+                self.iteration_dirs[self.current_iteration]
+            )
 
-        image_files = current_iteration_dir.glob("*.jpg")
-        images = [Image(img_path) for img_path in image_files]
-        self.current_iteration += 1
+            image_files = current_iteration_dir.glob("*.jpg")
+            images = [Image(img_path) for img_path in image_files]
+            self.current_iteration += 1
 
-        return ImageCollection(images)
+            return ImageCollection(images)

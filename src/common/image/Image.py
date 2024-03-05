@@ -13,6 +13,7 @@ def _validate_img(img: np.ndarray) -> bool:
     :param img: Numpy array representing the image
     :return: True if image is valid, False otherwise
     """
+    # TODO Rajouter différentes erreurs de cam possibles
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     variance = np.var(gray_img)
 
@@ -45,8 +46,8 @@ class Image:
             except Exception:
                 warnings.warn("Couldn't load image")
 
-        if _validate_img(img):
-            self._img = img
+        # if _validate_img(img):
+        self._img = img
 
     def load_img_from_file(self, file_path: str) -> np.ndarray:
         """
@@ -84,17 +85,30 @@ class Image:
         else:
             raise Exception("Not valid image")
 
-    def get_size(self):
-        return self.image.shape
+    @property
+    def shape(self):
+        """
+        Get the shape of the Image class
+        :return:
+        """
+        return self._img.shape
 
-    def resize(self, width, height):
+    def resize(self, width, height) -> bool:
+        """
+        resize image
+        :return: bool
+        """
         try:
             cv2.resize(self.image, (width, height))
         except Exception:
             return False
         return True
 
-    def save(self, file_path):
+    def save(self, file_path) -> None:
+        """
+        save image to path, must include name + extension ex: img.png
+        :return:
+        """
         cv2.imwrite(file_path, self._img)
 
     def crop(self, boxes):
@@ -105,8 +119,6 @@ class Image:
 
 
 if __name__ == "__main__":
-    img = Image("D:\\APP\\PMC\\repos\\dataset\\session_5\\photo_camera_0_0.png")
-
     black_image = np.zeros((100, 100, 3), dtype=np.uint8)
 
     img = Image(black_image)

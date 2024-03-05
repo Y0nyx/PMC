@@ -1,3 +1,6 @@
+from ultralytics import YOLO
+
+
 class Model:
     def __init__(self, model):
         self._model = model
@@ -10,9 +13,6 @@ class Model:
 
     def predict(self):
         raise NotImplementedError("This function needs to be implemented")
-
-
-from ultralytics import YOLO
 
 
 class YoloModel(Model):

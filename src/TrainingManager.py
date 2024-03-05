@@ -6,8 +6,10 @@ from common.Constants import *
 
 class TrainingManager:
     def __init__(
-        self, is_time_threshold: bool = True, is_number_threshold: bool = True
+        self, is_time_threshold: bool = True, is_number_threshold: bool = True,
+        verbose: bool = False
     ) -> None:
+        self.verbose = verbose
         self.is_time_threshold = is_time_threshold
         self.is_number_threshold = is_number_threshold
         self.flags = []
