@@ -2,7 +2,9 @@
 FROM tensorflow/tensorflow:latest-gpu
 
 # Install git to clone the repository
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git && \
+    apt-get install -y libgl1-mesa-dev && \
+    apt-get install -y libglib2.0-0 && \
 
 # Change the working directory to the cloned repository
 WORKDIR /PMC

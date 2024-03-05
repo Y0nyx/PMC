@@ -2,4 +2,5 @@ Run these commands in a terminal running in this folder
 
 1. sudo docker build --no-cache -t unsupervised_image .
 
+You may need to change de --device flag to fit with your need
 2. sudo docker run --gpus all --device=/dev/video0:/dev/video0 -v $(pwd):/PMC -v $(pwd)../Datasets:/Datasets -it unsupervised_image bash

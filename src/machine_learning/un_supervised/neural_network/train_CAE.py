@@ -9,13 +9,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import os
-from keras.preprocessing import image
+from keras.preprocessing import image as keras_image
 from keras.layers import Input, Dense, Conv2D, MaxPooling2D, UpSampling2D, Conv2DTranspose
 from keras.models import Model
 from sklearn.model_selection import train_test_split
 import wandb
 from wandb.keras import WandbCallback
 import model as mod
+from Unsupervised_data_pipeline import data_pipeline
 
 
 #TODO: Faire un objet image pour standardiser notation
@@ -31,7 +32,7 @@ normalization_factor = 255
 #======================
 #Variables globales de dataset
 #======================
-dataset_path = "../../../../../Datasets/mathias_test_dataset"
+dataset_path = "../../../../../Datasets/grosse_piece_test"
 input_train_norm = []
 input_test_norm = []
 input_train_aug_norm = []
@@ -134,12 +135,27 @@ def load_data():
 
     images = []
 
+    print("loading images")
     #Data loading
     for filename in os.listdir(dataset_path):
         if filename.endswith(".png"):
-            img = image.load_img(os.path.join(dataset_path, filename), target_size=(128, 128))
-            images.append(image.img_to_array(img))
+            img = keras_image.load_img(os.path.join(dataset_path, filename), target_size=(128, 128))
+            images.append(keras_image.img_to_array(img))
     images = np.array(images)
+
+    print("init pipeline")
+    data_pipeline_obj = data_pipeline(image_height, original_image_width)
+    sub_image_list = []
+
+    for index, image in enumerate(images):
+        print("Subdividing images")
+        data_pipeline_obj.set_image(image)
+        sub_image_list.append(data_pipeline_obj.subdivise())
+
+        if index < 2:
+            img.save(os.path.join("data_validation_folder/", f"image_{index}.png"))
+
+    images = sub_image_list
 
     print("=====================================")
     print("Loaded image np.array of shape: ", images.shape)
