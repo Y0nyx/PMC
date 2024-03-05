@@ -16,6 +16,8 @@ class data_pipeline:
     def resize(self):
         closest_width = int(np.ceil(self._image.shape[1] / self.width ) * self.width )
         closest_height = int(np.ceil(self._image.shape[0] / self.height) * self.height)
+        print("selft widht", self.width)
+        print("widht closest", closest_width)
         self._image = cv2.resize(self._image, (closest_width, closest_height))
     
     def subdivise(self):
@@ -29,8 +31,10 @@ class data_pipeline:
         width, height, channels = self._image.shape
 
         # Calculate the number of sub-images in both dimensions
-        self._nb_x_sub = width // self._model.input_shape[1]
-        self._nb_y_sub = height // self._model.input_shape[2]
+        self._nb_x_sub = width // self.width
+        self._nb_y_sub = height // self.height
+        print("Sub x: ",self._nb_x_sub)
+        print("Sub y: ",self._nb_y_sub)
 
         # Iterate over the sub-images and save each one with overlap
         for i in range(self._nb_x_sub):

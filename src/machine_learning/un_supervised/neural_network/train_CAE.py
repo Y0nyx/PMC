@@ -16,7 +16,8 @@ from sklearn.model_selection import train_test_split
 import wandb
 from wandb.keras import WandbCallback
 import model as mod
-from Unsupervised_data_pipeline import data_pipeline
+from Unsupervised_data_pipeline.data_pipeline import data_pipeline
+import cv2
 
 
 #TODO: Faire un objet image pour standardiser notation
@@ -87,15 +88,15 @@ def train(model, input_train_norm, input_train_aug_norm, input_test_norm, input_
     print("Fit with train dataset in arrays of shape: ", input_train_norm.shape, " | ", input_train_aug_norm.shape)
     print("=====================================")
 
-    wandb_save_image_sample(input_train_norm[np.random.randint(0, 200 + 1)], "Train expected output")
-    wandb_save_image_sample(input_train_aug_norm[np.random.randint(0, 200 + 1)], "Train input (black square image)")
+    wandb_save_image_sample(input_train_norm[np.random.randint(0, 1)], "Train expected output")
+    wandb_save_image_sample(input_train_aug_norm[np.random.randint(0, 1)], "Train input (black square image)")
 
     print("=====================================")
     print("Fit with test dataset in arrays of shape: ", input_test_aug_norm.shape, " | ", input_test_norm.shape)
     print("=====================================")
 
-    wandb_save_image_sample(input_train_norm[np.random.randint(0, 200 + 1)], "Test expected output")
-    wandb_save_image_sample(input_train_aug_norm[np.random.randint(0, 200 + 1)], "Test input (black square image)")
+    wandb_save_image_sample(input_train_norm[np.random.randint(0,1)], "Test expected output")
+    wandb_save_image_sample(input_train_aug_norm[np.random.randint(0,1)], "Test input (black square image)")
 
     model.fit(
         x=input_train_aug_norm, 
@@ -139,7 +140,7 @@ def load_data():
     #Data loading
     for filename in os.listdir(dataset_path):
         if filename.endswith(".png"):
-            img = keras_image.load_img(os.path.join(dataset_path, filename), target_size=(128, 128))
+            img = keras_image.load_img(os.path.join(dataset_path, filename))
             images.append(keras_image.img_to_array(img))
     images = np.array(images)
 
@@ -150,12 +151,19 @@ def load_data():
     for index, image in enumerate(images):
         print("Subdividing images")
         data_pipeline_obj.set_image(image)
-        sub_image_list.append(data_pipeline_obj.subdivise())
+        sub_images = data_pipeline_obj.subdivise() # This returns a list of sub-images
+        sub_image_list.append(sub_images)
 
         if index < 2:
-            img.save(os.path.join("data_validation_folder/", f"image_{index}.png"))
+            # Save the first two sub-images for the first two images
+            for sub_index, sub_image in enumerate(sub_images[:10]): # Adjust the slice as needed
+            # Convert sub-image from BGR to RGB (OpenCV uses BGR by default)
+                sub_image_rgb = cv2.cvtColor(sub_image, cv2.COLOR_BGR2RGB)
+            # Save the sub-image
+                cv2.imwrite(os.path.join("validation_folder/", f"image_{index}_sub_{sub_index}.png"), sub_image_rgb)
 
-    images = sub_image_list
+    images = np.array(sub_image_list)
+    images = images.reshape(-1, 128, 128, 3)
 
     print("=====================================")
     print("Loaded image np.array of shape: ", images.shape)
