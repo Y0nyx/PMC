@@ -16,14 +16,16 @@ class Model:
 
 
 class YoloModel(Model):
+    results = None
     def __init__(self, model: str = "yolov8n.pt"):
         super().__init__(YOLO(model))
 
     def train(self, **kwargs):
-        self._model.train(**kwargs)
+        self.results = self._model.train(**kwargs)
 
     def predict(self, **kwargs):
         return self._model(**kwargs)
 
     def eval(self):
-        return self._model.val()
+        self.results = self._model.val()
+        return self.results

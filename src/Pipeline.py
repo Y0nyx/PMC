@@ -13,9 +13,8 @@ from pathlib import Path
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline:
-    def __init__(self, models: list = [], verbose: bool = True, training=False):
+    def __init__(self, models: list = [], verbose: bool = True, State: PipelineState= PipelineState.INIT):
         self.verbose = verbose
-        self.training = training
 
         self.print("=== Init Pipeline ===")
 
@@ -23,15 +22,15 @@ class Pipeline:
         for model in models:
             self.models.append(model)
 
-        self._state = PipelineState.INIT
-        if self.training:
+        self._state = State
+        if self._state == PipelineState.TRAINING:
             self._dataManager = Mock_DataManager(Path("./dataset/mock"))
         else:
             self._dataManager = DataManager(
                 "", "./src/cameras.yaml", self.verbose
             ).get_instance()
 
-        self._trainingManager = TrainingManager()
+        self._trainingManager = TrainingManager(is_time_threshold=False, verbose=self.verbose)
 
     def get_dataset(self) -> None:
         """Génère un dataset avec tout les caméras instancié lors du init du pipeline.
@@ -78,12 +77,12 @@ class Pipeline:
 
         self._state = PipelineState.INIT
 
-    def train(self, yaml_path: str, yolo_model: YoloModel, add_clearml: bool = True, **kargs):
+    def train(self, yaml_path: str, yolo_model: YoloModel, **kargs):
 
         model = YoloModel(f"{yolo_model}.pt")
         args = dict(data=yaml_path, **kargs)
 
-        if add_clearml:
+        if self._state == PipelineState.TRAINING:
             import clearml
             clearml.browser_login()
 
@@ -95,14 +94,14 @@ class Pipeline:
 
         return results
 
-    def detect(self, show: bool = False, save: bool = True, conf: float = 0.7):
+    def detect(self, show: bool = False, save: bool = False, conf: float = 0.7):
         while True:
             # TODO Utiliser l'API de Mathieu
             key = None
-            if not self.training:
+            if self._state != PipelineState.TRAINING:
                 key = input("Press 'q' to detect on cameras, 'e' to exit: ")
 
-            if key == "q" or self.training:
+            if key == "q" or self._state == PipelineState.TRAINING:
                 images = self._get_images()
                 for img in images:
                     imagesCollection = self._segmentation_image(img, show, save, conf)
@@ -115,9 +114,9 @@ class Pipeline:
                     imagesCollection.save(IMG_SAVE_FILE)
 
                     # Integrate training loop
-                    self._trainingManager.check_flags()
-
-                    # Integrate save
+                    if self._trainingManager.check_flags():
+                        self._trainingManager.separate_dataset()
+                        model = self._trainingManager.train_supervised()
 
                     # TODO Integrate Classification
 
@@ -151,11 +150,8 @@ class Pipeline:
 if __name__ == "__main__":
     models = []
     models.append(YoloModel(Path("./src/ia/segmentation/v1.pt")))
-    # models.append(YoloModel(Path('./src/ia/piece_detection_v1.pt')))
 
-    # welding_model = YoloModel('./src/ia/welding_detection_v1.pt')
-
-    pipeline = Pipeline(models=models, training=True)
+    pipeline = Pipeline(models=models, State=PipelineState.TRAINING)
     pipeline.detect()
 
     # data_path = "D:\dataset\dofa_3"
