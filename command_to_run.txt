@@ -1,5 +1,7 @@
 Run these commands in a terminal running in this folder
 
+0.5. Install cuda toolkit container: https://www.tensorflow.org/install/docker
+
 1. sudo docker build --no-cache -t unsupervised_image .
 
 You may need to change de --device flag to fit with your need
