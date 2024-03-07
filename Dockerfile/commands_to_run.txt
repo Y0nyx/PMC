@@ -1,3 +1,0 @@
-1. sudo docker build --build-arg SSH_PRIVATE_KEY="$(cat /home/dofa/.ssh/id_rsa)" -t pipeline_image .
-
-2. sudo docker run --gpus all -it pipeline_image bash
