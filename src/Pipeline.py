@@ -169,6 +169,8 @@ if __name__ == "__main__":
 
     # data_path = "D:\dataset\dofa_3"
 
+    #data_path = "D:\dataset\dofa_2\data.yaml"
+    
     # test_model = YoloModel()
     # test_model.train(epochs=3, data=data_path, batch=-1)
 
