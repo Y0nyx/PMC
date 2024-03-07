@@ -187,4 +187,4 @@ if __name__ == '__main__':
     else:
         history = train_model.train_normal(epochs, batch_size, learning_rate, path_results)
 
-    #print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
+    print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
