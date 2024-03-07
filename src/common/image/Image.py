@@ -116,3 +116,9 @@ class Image:
         cropped_image = image.crop(boxes.xyxy.tolist()[0])
 
         return Image(np.array(cropped_image))
+
+
+if __name__ == "__main__":
+    black_image = np.zeros((100, 100, 3), dtype=np.uint8)
+
+    img = Image(black_image)
