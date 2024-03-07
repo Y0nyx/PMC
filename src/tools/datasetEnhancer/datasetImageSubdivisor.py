@@ -24,6 +24,17 @@ def add_overlap( left, top, right, bottom, width, height, overlap_size):
         return left, top, right, bottom
 
 def create_sub_images(input_folder, output_folder, sub_image_size, overlap_size, transformation_type):
+    """
+    Create sub-images from images in the input folder with specified parameters.
+
+    Parameters:
+        input_folder (str): Path to the folder containing input images.
+        output_folder (str): Path to the folder where sub-images will be saved.
+        sub_image_size (int): Size of each sub-image (width and height).
+        overlap_size (int): Size of the overlap (in pixels) between sub-images.
+        transformation_type (str): Type of transformation to apply to sub-images.
+    """
+
     # Create the output folder if it doesn't exist
     os.makedirs(output_folder, exist_ok=True)
 
@@ -32,6 +43,7 @@ def create_sub_images(input_folder, output_folder, sub_image_size, overlap_size,
 
     for file in files:
         # Check if the file is an image (you can add more extensions if needed)
+        #TODO: Mettre dans constants
         if file.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp')):
             # Load the imagey
             image_path = os.path.join(input_folder, file)
@@ -104,21 +116,22 @@ def create_translated_sub_images(original_image, output_folder, sub_image_size, 
             output_path = os.path.join(output_folder, f"{os.path.splitext(file)[0]}_translated_{axis}_{i}_{j}_overlap.png")
             sub_image.save(output_path)
 
-# Provide the input and output folder paths
-input_folder_path = "/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/cropped_images" #"dataset_cropped_images"
-output_folder_path_overlap = "/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images" #"dataset_sub_images"
-output_folder_path_translated_horizontal = "/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images_horizontal_translation" #"dataset_sub_images_horizontal_translation"
-output_folder_path_translated_vertical = "/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images_vertical_translation" #"dataset_sub_images_vertical_translation"
-sub_image_size = 256  # Size of the sub-images
-overlap_size = 0  # Size of the overlap
+if __name__ == '__main__':
+    # Provide the input and output folder paths
+    input_folder_path = "dataset_cropped_images"
+    output_folder_path_overlap = "dataset_sub_images"
+    output_folder_path_translated_horizontal = "dataset_sub_images_horizontal_translation"
+    output_folder_path_translated_vertical = "dataset_sub_images_vertical_translation"
+    sub_image_size = 128  # Size of the sub-images
+    overlap_size = 64  # Size of the overlap
 
-# Create sub-images with overlap
-create_sub_images(input_folder_path, output_folder_path_overlap, sub_image_size, overlap_size, "untranslated")
+    # Create sub-images with overlap
+    create_sub_images(input_folder_path, output_folder_path_overlap, sub_image_size, overlap_size, "untranslated")
 
-# Create translated sub-images (horizontal)
-create_sub_images(input_folder_path, output_folder_path_translated_horizontal, sub_image_size, overlap_size, "translated_horizontal")
+    # Create translated sub-images (horizontal)
+    create_sub_images(input_folder_path, output_folder_path_translated_horizontal, sub_image_size, overlap_size, "translated_horizontal")
 
-# Create translated sub-images (vertical)
-create_sub_images(input_folder_path, output_folder_path_translated_vertical, sub_image_size, overlap_size, "translated_vertical")
+    # Create translated sub-images (vertical)
+    create_sub_images(input_folder_path, output_folder_path_translated_vertical, sub_image_size, overlap_size, "translated_vertical")
 
-print("All images have been subdivised with overlapping pixels")
+    print("All images have been subdivised with overlapping pixels")
