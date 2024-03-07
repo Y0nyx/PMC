@@ -23,14 +23,16 @@ from pathlib import Path
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline:
-    def __init__(self, models, unsupervised_model, verbose: bool = True, State: PipelineState= PipelineState.INIT):
+
+    def __init__(self, models, unsupervised_model , verbose: bool = True, State: PipelineState= PipelineState.INIT):
         self.verbose = verbose
 
-        print("=== Init Pipeline ===")  # Fixed this line
+        self.print("=== Init Pipeline ===")  # Fixed this line
 
         self.models = []
         for model in models:
             self.models.append(model)
+        
         self.unsupervised_model = unsupervised_model
 
         self._state = State
