@@ -2,6 +2,16 @@ from pipeline.models.Model import YoloModel
 from pipeline.data.DataManager import DataManager
 from common.enums.PipelineStates import PipelineState
 from common.image.Image import Image
+
+import os
+import cv2
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from PIL import Image as Img
+import numpy as np
+
+from ultralytics import YOLO
+#from clearml import Task
 from common.image.ImageCollection import ImageCollection
 from common.utils import DataManager as Mock_DataManager
 from common.Constants import *
@@ -13,14 +23,17 @@ from pathlib import Path
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline:
-    def __init__(self, models: list = [], verbose: bool = True, State: PipelineState= PipelineState.INIT):
+
+    def __init__(self, models, unsupervised_model , verbose: bool = True, State: PipelineState= PipelineState.INIT):
         self.verbose = verbose
 
-        self.print("=== Init Pipeline ===")
+        self.print("=== Init Pipeline ===")  # Fixed this line
 
         self.models = []
         for model in models:
             self.models.append(model)
+        
+        self.unsupervised_model = unsupervised_model
 
         self._state = State
         if self._state == PipelineState.TRAINING:
@@ -169,6 +182,9 @@ if __name__ == "__main__":
     # print(f'test fitness: {test_resultats.fitness}')
     # print(f'welding fitness: {welding_resultats.fitness}')
 
+    Pipeline = Pipeline(models, unsupervised_model, verbose=True)
+
+    #Pipeline.train(data_path, "yolov8m-cls", epochs=350, batch=15, workers=4)
     #Pipeline = Pipeline(models, training=True)
     #Pipeline.detect()
 
@@ -188,4 +204,4 @@ if __name__ == "__main__":
     # Model Training
     # Pipeline.train(data_path, 'yolov8s-seg', epochs=250, plots=False)
 
-    # Pipeline.detect("D:/APP/PMC/repos/runs/segment/train4/weights/best.pt")
+    Pipeline.detect()

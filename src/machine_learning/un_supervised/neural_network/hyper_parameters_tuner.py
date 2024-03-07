@@ -17,14 +17,16 @@ from wandb.keras import WandbCallback
 import model as mod
 
 class MyHyperModel(keras_tuner.HyperModel):  
-    def __init__(self, train_input, train_label, valid_input, valid_label, epochs, callbacks, MONITOR_METRIC): 
-            self.train_input = train_input,
-            self.train_label = train_label,
-            self.valid_input = valid_input,
-            self.valid_label = valid_label,
-            self.epochs = epochs, 
+    def __init__(self, train_input, train_label, valid_input, valid_label, epochs, callbacks, monitor_metric, monitor_loss, image_dimentions): 
+            self.train_input = train_input
+            self.train_label = train_label
+            self.valid_input = valid_input
+            self.valid_label = valid_label
+            self.epochs = epochs
             self.callbacks = [callbacks[1:]]
-            self.MONITOR_METRIC = MONITOR_METRIC
+            self.monitor_metric = monitor_metric
+            self.monitor_loss = monitor_loss
+            self.image_dimentions = image_dimentions
  
     def build(self, hp):
         """
@@ -33,7 +35,7 @@ class MyHyperModel(keras_tuner.HyperModel):
         lr = hp.Choice('lr', values=[0.00001, 0.0001, 0.001, 0.01])
         batch_size = hp.Int('batch_size', 2, 20, step=2, default=1)
 
-        model_to_build = mod.AeModels(learning_rate=lr)
+        model_to_build = mod.AeModels(lr, self.monitor_loss, self.monitor_metric, self.image_dimentions)
         model = model_to_build.aes_defect_detection()
 
         return model
@@ -51,7 +53,6 @@ class CustomBayesianTuner(BayesianOptimization):
 
         wandb.init(project='aes_defect_detection_BTest', entity='dofa_unsupervised', config=trial.hyperparameters.values, mode="online", dir='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised')
 
-
         callbacks = self.hypermodel.callbacks.copy() 
         kwargs.pop('callbacks', None)
         callbacks.append(WandbCallback(save_model=False))
@@ -64,20 +65,20 @@ class CustomBayesianTuner(BayesianOptimization):
             **kwargs
         )
 
-        best_metric = min(history.history[self.hypermodel.MONITOR_METRIC]) 
-        self.oracle.update_trial(trial.trial_id, {self.hypermodel.MONITOR_METRIC : best_metric}) 
+        best_metric = min(history.history[self.hypermodel.monitor_metric]) 
+        self.oracle.update_trial(trial.trial_id, {self.hypermodel.monitor_metric : best_metric}) 
         wandb.log({'best_metric': best_metric})
 
         wandb.finish()
 
-        # Nettoyage après chaque essai
-        del model  # Supprimer explicitement le modèle
-        K.clear_session()  # Nettoyer la session Keras
-        gc.collect()  # Forcer la collecte des déchets de Python
+        #Data cleaning after each try
+        del model  
+        K.clear_session()  
+        gc.collect()  
 
     
 class KerasTuner():
-    def __init__(self, input_train_norm, input_train_norm_label, input_valid_norm, input_valid_norm_label, epochs, num_trials, executions_per_trial, monitor, mode, verbose, callbacks, MONITOR_METRIC):
+    def __init__(self, input_train_norm, input_train_norm_label, input_valid_norm, input_valid_norm_label, epochs, num_trials, executions_per_trial, mode, verbose, callbacks, monitor_metric, monitor_loss, image_dimentions):
         self.train_input = input_train_norm
         self.train_label = input_train_norm_label
         self.valid_input = input_valid_norm
@@ -85,13 +86,14 @@ class KerasTuner():
         self.epochs = epochs
         self.num_trials = num_trials
         self.executions_per_trial = executions_per_trial
-        self.monitor = monitor
         self.mode = mode 
         self.verbose = verbose
         self.callbacks = callbacks
-        self.MONITOR_METRIC = MONITOR_METRIC
+        self.monitor_metric = monitor_metric
+        self.monitor_loss = monitor_loss
+        self.image_dimentions = image_dimentions
 
-    def tuner_initializer(self, HP_SEARCH, HP_NAME) -> BayesianOptimization:
+    def tuner_initializer(self, hp_search, hp_name) -> BayesianOptimization:
         """
         Initialization of a Bayesian optimization tuner for hyperparameter tuning. 
         """
@@ -102,17 +104,19 @@ class KerasTuner():
             valid_label = self.valid_label,
             epochs = self.epochs, 
             callbacks = [self.callbacks[1:]],
-            MONITOR_METRIC = self.MONITOR_METRIC
+            monitor_metric = self.monitor_metric,
+            monitor_loss = self.monitor_loss,
+            image_dimentions = self.image_dimentions
         )
 
         tuner = CustomBayesianTuner(  
             hypermodel=hypermodel,
-            objective=Objective(self.monitor, direction=self.mode),
+            objective=Objective(self.monitor_metric, direction=self.mode),
             max_trials=self.num_trials,
             executions_per_trial=self.executions_per_trial,
             overwrite=True,
-            directory=HP_SEARCH,
-            project_name=HP_NAME
+            directory=hp_search,
+            project_name=hp_name
         )
 
         return tuner
@@ -133,11 +137,11 @@ class KerasTuner():
 
         return tuner
     
-    def get_hp_search(self, HP_SEARCH, HP_NAME):
+    def get_hp_search(self, hp_search, hp_name):
         """
         Do the hp search and act as the main for hyper_parameters_tuners. 
         """
-        tuner = self.tuner_initializer(HP_SEARCH, HP_NAME)
+        tuner = self.tuner_initializer(hp_search, hp_name)
 
         self.tuner_search(tuner)
 

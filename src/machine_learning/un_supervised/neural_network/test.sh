@@ -9,11 +9,14 @@ readonly PATH_NN='/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning
 readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate'
 readonly SCRIPT_NAME='test.py'
 
-readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images' #same as test_AE.sh
-readonly MODEL='aes_defect_detection'     #same as test_AE.sh
-readonly TEST_NAME='B_First_HP_Search' #same as test_AE.sh
-readonly NBEST=1                     #same as test_AE.sh
+readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/images_cam_123/sub_images' #same as train.sh
+readonly MODEL='aes_defect_detection'                                                     #same as train.sh
+readonly TEST_NAME='B_First_HP_Search'                                                    #same as train.sh
+readonly NBEST=1                                                                          #same as train.sh
 readonly NUM_TRAIN_REGENERATE=20
+readonly MONITOR_LOSS='mean_absolute_error'
+readonly MONITOR_METRIC='mean_squared_error'
+MAX_PIXEL_VALUE=255
 
 #Never change this constants (Only adapt PATH_RESULTS to the computer you are using)
 readonly PATH_RESULTS="/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/${MODEL}/${TEST_NAME}"
@@ -31,4 +34,4 @@ fi
 
 #Run the script test_AE.py
 cd $PATH_NN
-./$SCRIPT_NAME --PATH_RESULTS $PATH_RESULTS --NBEST $NBEST --NUM_TRAIN_REGENERATE $NUM_TRAIN_REGENERATE --FILEPATH_WEIGHTS $FILEPATH_WEIGHTS --DATA_PATH $DATA_PATH
+./$SCRIPT_NAME --PATH_RESULTS $PATH_RESULTS --NBEST $NBEST --NUM_TRAIN_REGENERATE $NUM_TRAIN_REGENERATE --MONITOR_LOSS $MONITOR_LOSS --MONITOR_METRIC $MONITOR_METRIC --FILEPATH_WEIGHTS $FILEPATH_WEIGHTS --DATA_PATH $DATA_PATH --MAX_PIXEL_VALUE $MAX_PIXEL_VALUE

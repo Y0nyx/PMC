@@ -15,8 +15,11 @@ from keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, BatchNormalizati
 from keras.models import Model
 
 class AeModels():
-    def __init__(self, learning_rate: float=0.001):
+    def __init__(self, learning_rate: float=0.001, monitor_loss: str='mean_absolute_error', monitor_metric: str='mean_squared_error', image_dimentions: tuple=(256, 256, 3)):
         self.learning_rate = learning_rate
+        self.monitor_loss = monitor_loss
+        self.monitor_metric = monitor_metric
+        self.image_dimentions = image_dimentions
 
     def build_francois_chollet_autoencoder(self, input_shape: tuple=(784,), encoding_dim: int=32) -> Model:
         """
@@ -39,8 +42,8 @@ class AeModels():
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='binary_crossentropy',
-            metrics=['mean_absolute_error']
+            loss=self.monitor_loss,
+            metrics=[self.monitor_metric]
         )
 
         return model
@@ -50,7 +53,7 @@ class AeModels():
         Convolutional auto-encoder for denoising. architecture from this link:
         https://keras.io/examples/vision/autoencoder/ 
         """
-        input = Input(shape=(256, 256, 3))
+        input = Input(shape=self.image_dimentions)
 
         #Encoder 
         x = Conv2D(32, (3,3), activation='relu', padding='same')(input)
@@ -66,18 +69,18 @@ class AeModels():
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='binary_crossentropy',
-            metrics=['mean_absolute_error']
+            loss=self.monitor_loss,
+            metrics=[self.monitor_metric]
         )
 
         return model
     
-    def build_basic_cae(self, input_shape: tuple=(128, 128, 3)) -> Model:
+    def build_basic_cae(self) -> Model:
         """
         Model based on this kaggle notebook: https://www.kaggle.com/code/orion99/autoencoder-made-easy/notebook
         Tested using the subdivided dataset
         """
-        input_layer = Input(shape=input_shape, name="INPUT")
+        input_layer = Input(shape=self.image_dimentions, name="INPUT")
 
         x = Conv2D(16, (3, 3), activation='relu', padding='same')(input_layer)
         x = MaxPooling2D((2, 2))(x)
@@ -103,8 +106,8 @@ class AeModels():
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='binary_crossentropy',
-            metrics=['mean_absolute_error']
+            loss=self.monitor_loss,
+            metrics=[self.monitor_metric]
         )
 
         return model
@@ -114,7 +117,7 @@ class AeModels():
         Convolution auto-encoder for defect detection found in the literature
         https://arxiv.org/pdf/2008.12977.pdf 
         """
-        input_with_defect = Input(shape=(256, 256, 3))
+        input_with_defect = Input(shape=self.image_dimentions)
 
         #Encoder
         e1 = Conv2D(16, (5,5), strides=2, padding='same')(input_with_defect)
@@ -182,9 +185,8 @@ class AeModels():
         opt = tf.keras.optimizers.Adam(learning_rate=self.learning_rate)
         model.compile(
             optimizer=opt, 
-            loss='mean_absolute_error',
-            metrics=['mean_squared_error']
+            loss=self.monitor_loss,
+            metrics=[self.monitor_metric]
         )
 
         return model
-    

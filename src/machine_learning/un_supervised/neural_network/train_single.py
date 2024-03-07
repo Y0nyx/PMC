@@ -17,7 +17,7 @@ import wandb
 from wandb.keras import WandbCallback
 import model as mod
 
-
+#TODO: Ajouter dans fichier constantes
 #TODO: Faire un objet image pour standardiser notation
 #======================
 #Variables globales d'image
@@ -28,6 +28,7 @@ channels = 3
 normalization_factor = 255
 
 #TODO: Faire un objet
+#TODO: Faire un path dynamique
 #======================
 #Variables globales de dataset
 #======================
@@ -128,10 +129,11 @@ def load_data():
 
     images = []
 
+    #TODO: Utiliser le fichier constante pour les formats
     #Data loading
     for filename in os.listdir(dataset_path):
-        if filename.endswith(".png"):
-            img = image.load_img(dataset_path+filename, target_size=(128, 128))
+        if filename.endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+            img = image.load_img(dataset_path+filename, target_size=(image_height, original_image_width))
             images.append(image.img_to_array(img))
     images = np.array(images)
 
