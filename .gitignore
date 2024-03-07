@@ -4,6 +4,6 @@ runs/*
 idea/*
 wandb/*
 dataset/*
-
+datasets/*
 # yolo models
 yolo*pt

@@ -21,15 +21,15 @@ class CameraSensor(ABC):
         self.verbose = verbose
         try:
             self.print(f"\nInit camera : {self.camera_id}")
-            self.print(f' - resolution : {self.resolution}')
-            self.print(f' - fps : {self.fps}')
+            self.print(f" - resolution : {self.resolution}")
+            self.print(f" - fps : {self.fps}")
             if platform.system() == "Windows":
                 cv2.CAP_DSHOW
-                #sets the Windows cv2 backend to DSHOW (Direct Video Input Show)
+                # sets the Windows cv2 backend to DSHOW (Direct Video Input Show)
                 self.cap = cv2.VideoCapture(self.camera_id)
             elif platform.system() == "Linux":
-                cv2.CAP_GSTREAMER # set the Linux cv2 backend to GTREAMER
-                #cv2.CAP_V4L
+                cv2.CAP_GSTREAMER  # set the Linux cv2 backend to GTREAMER
+                # cv2.CAP_V4L
                 self.cap = cv2.VideoCapture(self.camera_id)
 
             # Set resolution

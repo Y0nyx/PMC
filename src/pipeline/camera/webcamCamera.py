@@ -16,7 +16,7 @@ class WebcamCamera(CameraSensor):
         if self.is_active:
             self.print("Capturing image")
             if self.cap.isOpened():
-                _ , frame = self.cap.read()
+                _, frame = self.cap.read()
                 image = Image(frame)
                 return image
         else:
