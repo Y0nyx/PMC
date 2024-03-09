@@ -25,9 +25,6 @@ class DataProcessing():
         self._nb_x_sub = 0
         self._nb_y_sub = 0
         self.debug = True
-    
-    def set_image(self, image):
-        self._image = image
 
     def split_data(self, data_path):
         """
