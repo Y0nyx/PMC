@@ -21,6 +21,8 @@ import model as mod
 import training_info as tr_info
 from tensorflow.keras.models import save_model
 
+debug = True
+
 def train(model, input_train, input_label, valid_input, valid_label, epochs, batch_size, callbacks):
     history = model.fit(
         x=input_train, 
@@ -146,16 +148,17 @@ class ModelTrainer:
         save_model(build_model, model_path)
         print(f"Model saved to {model_path}")
 
-        predictions = build_model.predict(self.input_valid_norm)
-
-        predictions*=max_pixel_value
-
-        output_dir = "./predictions"
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
-
-        for i in range(200):
-            cv2.imwrite(f"{output_dir}/output_{i}.png", predictions[i])
+        if debug:
+            predictions = build_model.predict(self.input_valid_norm)
+    
+            predictions*=max_pixel_value
+    
+            output_dir = "./predictions"
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+    
+            for i in range(200):
+                cv2.imwrite(f"{output_dir}/output_{i}.png", predictions[i])
     
 
 if __name__ == '__main__':
@@ -203,19 +206,20 @@ if __name__ == '__main__':
     data_processing = dp.DataProcessing(sub_width, sub_height)
     train_input, train_input_loss, valid_input, valid_input_loss, test_input = data_processing.get_data_processing_blackout(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
-    output_dir = "./output"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    for i in range(10):
-        cv2.imwrite(f"{output_dir}/train_input_{i}.png", (train_input[i]*max_pixel_value))
-    for i in range(10):
-        cv2.imwrite(f"{output_dir}/train_input_loss_{i}.png", train_input_loss[i]*max_pixel_value)
-    for i in range(10):
-        cv2.imwrite(f"{output_dir}/valid_input_{i}.png", valid_input[i]*max_pixel_value)
-    for i in range(10):
-        cv2.imwrite(f"{output_dir}/valid_input_loss_{i}.png", valid_input_loss[i]*max_pixel_value)
-    for i in range(10):
-        cv2.imwrite(f"{output_dir}/test_input_{i}.png", test_input[i]*max_pixel_value)
+    if debug:
+        output_dir = "./output"
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        for i in range(10):
+            cv2.imwrite(f"{output_dir}/train_input_{i}.png", (train_input[i]*max_pixel_value))
+        for i in range(10):
+            cv2.imwrite(f"{output_dir}/train_input_loss_{i}.png", train_input_loss[i]*max_pixel_value)
+        for i in range(10):
+            cv2.imwrite(f"{output_dir}/valid_input_{i}.png", valid_input[i]*max_pixel_value)
+        for i in range(10):
+            cv2.imwrite(f"{output_dir}/valid_input_loss_{i}.png", valid_input_loss[i]*max_pixel_value)
+        for i in range(10):
+            cv2.imwrite(f"{output_dir}/test_input_{i}.png", test_input[i]*max_pixel_value)
 
     _, row, column, channels = train_input.shape
     image_dimentions = (row, column, channels)

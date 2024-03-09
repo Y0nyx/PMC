@@ -25,6 +25,7 @@ class DataProcessing():
         self.width = width
         self._nb_x_sub = 0
         self._nb_y_sub = 0
+        self.debug = True
     
     def set_image(self, image):
         self._image = image
@@ -58,13 +59,14 @@ class DataProcessing():
 
         images = np.array(images)
         
-        # Ensure the output directory exists
-        output_dir = "./output"
-        if not os.path.exists(output_dir):
-            os.makedirs(output_dir)
-
-        for i in range(200):
-            cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
+        if self.debug:
+            # Ensure the output directory exists
+            output_dir = "./output"
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+    
+            for i in range(200):
+                cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
 
         print("=====================================")
         print("Loaded image np.array of shape: ", images.shape)
