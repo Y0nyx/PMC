@@ -18,6 +18,7 @@ import data_processing as dp
 import hyper_parameters_tuner as hp_tuner
 import model as mod
 import training_info as tr_info
+from tensorflow.keras.models import save_model
 
 def train(model, input_train, input_label, valid_input, valid_label, epochs, batch_size, callbacks):
     history = model.fit(
@@ -42,7 +43,7 @@ def argparser():
                          help='Number of inputs that are processed in a single forward and backward pass during the training of the neural network')
     parser.add_argument('--LEARNING_RATE', type=float, default=0.001, 
                         help='Learning rate used when training the Neural Network with default value.')
-    parser.add_argument('--PATH_RESULTS', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search', 
+    parser.add_argument('--PATH_RESULTS', type=str, default='../../../../Results/grosse_piece_seg_1', 
                         help='path where the results are going to be stored at.')
     parser.add_argument('--FILEPATH_WEIGHTS', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search/training_weights/',
                         help='Path where will be stored the weights.')
@@ -128,6 +129,7 @@ class ModelTrainer:
         """
         Here we are training the model with the default parameters given in the initial variables. 
         """
+        name = 'default_param'
         callback = cb.TrainingCallbacks(filepath_weights, self.monitor_metric, self.mode_metric, self.verbose)
         callbacks_list = callback.get_callbacks(name)
         
@@ -136,8 +138,12 @@ class ModelTrainer:
         history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, epochs, batch_size, callbacks_list)
 
         training_info = tr_info.TrainingInformation()
-        name = 'default_param'
         training_info.plot_graph(history, name, path_results, self.monitor_metric)
+
+        # Save the model
+        model_path = f"{path_results}/{name}_model.keras"
+        save_model(build_model, model_path)
+        print(f"Model saved to {model_path}")
     
 
 if __name__ == '__main__':
@@ -165,6 +171,12 @@ if __name__ == '__main__':
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
 
+    #Quick tests
+    do_hp_search = False
+    data_path = "../../../../../Datasets/grosse_piece_seg_1"
+    sub_width = 256
+    sub_height = 256
+
     if gpus:
         try:
             for gpu in gpus:
@@ -175,8 +187,8 @@ if __name__ == '__main__':
         except RuntimeError as e:
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
-    data_processing = dp.DataProcessing()
-    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+    data_processing = dp.DataProcessing(sub_width, sub_height)
+    train_input, train_input_loss, valid_input, valid_input_loss, test_input = data_processing.get_data_processing_blackout(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
     _, row, column, channels = train_input.shape
     image_dimentions = (row, column, channels)

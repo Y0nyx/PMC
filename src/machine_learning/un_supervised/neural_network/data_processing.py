@@ -11,7 +11,7 @@ import math
 import numpy as np
 import os
 
-from keras.preprocessing import image
+from keras.preprocessing import image as keras_image
 from random import randint, uniform
 from scipy.ndimage import gaussian_filter
 from skimage.draw import ellipse_perimeter
@@ -19,6 +19,16 @@ from skimage.util import random_noise
 from sklearn.model_selection import train_test_split
 
 class DataProcessing():
+
+    def __init__(self, height, width):
+        self.height = height
+        self.width = width
+        self._nb_x_sub = 0
+        self._nb_y_sub = 0
+    
+    def set_image(self, image):
+        self._image = image
+
     def split_data(self, data_path):
         """
         Split the data into three set. Training set(70-80%), Validation set (10-15%) and Test set (10-15%)
@@ -28,9 +38,33 @@ class DataProcessing():
         #Data loading
         for filename in os.listdir(data_path):
             if filename.endswith(".png"):
-                img = image.load_img(f'{data_path}/{filename}', target_size=(256, 256))
-                images.append(image.img_to_array(img))
+                img = keras_image.load_img(f'{data_path}/{filename}')
+                images.append(keras_image.img_to_array(img))
+        
+        rotated_images = []
+
+        for i, img in enumerate(images):
+            sub_images = (self.subdivise(img))
+
+            for sub_img in sub_images:
+                rotated_images.extend(self.rotate(sub_img))
+
+        images = rotated_images
+
+        del rotated_images
+
+        for i, image in enumerate(images):
+            images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
+
         images = np.array(images)
+        
+        # Ensure the output directory exists
+        output_dir = "./output"
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        for i in range(200):
+            cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
 
         print("=====================================")
         print("Loaded image np.array of shape: ", images.shape)
@@ -118,6 +152,12 @@ class DataProcessing():
         """
         return data.astype('float32') / float(max_pixel_value)
     
+    def normalize(self, data_1, data_2, data_3, max_pixel_value):
+        """
+        Data domain will be between 0 and 1. 
+        """
+        return data_1.astype('float32') / float(max_pixel_value), data_2.astype('float32') / float(max_pixel_value), data_3.astype('float32') / float(max_pixel_value)
+    
     def de_normalize(self, input_test, result_test, max_pixel_value):
         difference_abs = np.abs(input_test - result_test)
 
@@ -135,7 +175,7 @@ class DataProcessing():
 
         return input_test, result_test, difference_reshaped
         
-    def get_data_processing_blackout(self, data_path):
+    def get_data_processing_blackout(self, data_path, max_pixel_value):
         """
         Do the processing for the data set used by the team to work with. 
         Used to do the bench mark.
@@ -144,10 +184,10 @@ class DataProcessing():
 
         train_augmented, valid_augmented, test_augmented = self.get_random_blackout(input_train, input_valid, input_test)
 
-        input_train_norm, input_valid_norm, input_test_norm = self.normalize(input_train, input_valid, input_test)
-        input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = self.normalize(train_augmented, valid_augmented, test_augmented)
+        input_train_norm, input_valid_norm, input_test_norm = self.normalize(input_train, input_valid, input_test, max_pixel_value)
+        input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = self.normalize(train_augmented, valid_augmented, test_augmented, max_pixel_value)
 
-        return input_train_norm, input_valid_norm, input_test_norm, input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm
+        return input_train_aug_norm, input_train_norm, input_valid_aug_norm, input_valid_norm, input_test_norm
     
     def get_data_processing_stain(self, data_path, max_pixel_value):
         """
@@ -167,3 +207,47 @@ class DataProcessing():
 
         return train_input_norm, train_input_loss_norm, valid_input_norm, test_input_norm
     
+    def resize(self, image):
+        closest_width = int(np.ceil(image.shape[1] / self.width ) * self.width )
+        closest_height = int(np.ceil(image.shape[0] / self.height) * self.height)
+        print("width", self.width)
+        print("width closest", closest_width)
+        return cv2.resize(image, (closest_width, closest_height))
+    
+    def subdivise(self, image):
+        print("sub_func")
+        sub_images = []
+        # Get the dimensions of the original image
+
+        self.resize(image)
+        print("resized")
+
+        width, height, channels = image.shape
+
+        # Calculate the number of sub-images in both dimensions
+        self._nb_x_sub = width // self.width
+        self._nb_y_sub = height // self.height
+        print("Sub x: ",self._nb_x_sub)
+        print("Sub y: ",self._nb_y_sub)
+
+        # Iterate over the sub-images and save each one with overlap
+        for i in range(self._nb_x_sub):
+            for j in range(self._nb_y_sub):
+                left = i * self.width
+                top = j * self.height
+                right = left + self.width
+                bottom = top + self.height
+
+                # TODO: Add overlap code
+                # left, top, right, bottom = add_overlap(left, top, right, bottom, width, height, overlap_size)
+
+                # Crop the sub-image using NumPy array slicing
+                sub_images.append(image[left:right, top:bottom, :])
+        return sub_images
+    
+    def rotate(self, image):
+        rotated_images = [image]
+        for _ in range(3):
+            image = np.rot90(image)
+            rotated_images.append(image)
+        return rotated_images
