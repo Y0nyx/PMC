@@ -7,6 +7,10 @@ RUN apt-get update && apt-get install -y git && \
     apt-get install -y libglib2.0-0 && \
     rm -rf /var/lib/apt/lists/*
 
+# Security updates
+# https://security.snyk.io/vuln/SNYK-UBUNTU1804-OPENSSL-3314796
+RUN apt upgrade --no-install-recommends -y openssl tar
+
 # Set up SSH config to prevent "host key verification failed" errors
 RUN mkdir -p /root/.ssh && \
     echo "StrictHostKeyChecking no" >> /root/.ssh/config
@@ -20,12 +24,14 @@ RUN mkdir -p /root/.ssh && \
     chmod 600 /root/.ssh/id_rsa && \
     ssh-keyscan github.com >> /root/.ssh/known_hosts
 
-# Clone the repository using SSH
-RUN git clone -b Pipeline_dockerfile git@github.com:Y0nyx/PMC.git
-
 # Change the working directory to the cloned repository
-WORKDIR /workspace/PMC
+WORKDIR /PMC
 
-# Upgrade pip and install requirements
-RUN pip install --upgrade pip && \
-    pip install -r pipeline_requirements.txt
+# Copy source code from host machine to Docker image
+COPY src/ src/
+
+RUN pip install --upgrade pip ultralytics opencv-python tensorflow clearml -U 
+
+# Fix error: `np.bool` was a deprecated alias for the builtin `bool` segmentation error in Tests
+RUN pip install --no-cache numpy==1.23.5
+

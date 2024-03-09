@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipelines
+    environment:
+      - SSH_PRIVATE_KEY=${SSH_PRIVATE_KEY}
+      - MKL_THREADING_LAYER=GNU
+    volumes:
+      - ./dataset:/dataset
+    networks:
+      - app_network
+
+  unsupervised_learning:
+    build:
+      context: .
+      dockerfile: Dockerfile.unsupervised
+    volumes:
+      - ./dataset:/dataset
+    networks:
+      - app_network
+  
+  supervised_learning:
+    build:
+      context: .
+      dockerfile: Dockerfile.supervised
+    environment:
+      - MKL_THREADING_LAYER=GNU
+    volumes:
+      - ./dataset:/dataset
+    networks:
+      - app_network
+
+volumes:
+  dataset:
+
+networks:
+  app_network:
+    driver: bridge
