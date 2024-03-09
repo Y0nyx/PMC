@@ -1,6 +1,6 @@
 from pathlib import Path
 
-IMG_SAVE_FILE = Path("./dataset/img/")
+IMG_SAVE_FILE = Path("../../Datasets/grosse_piece_seg_1")
 
 # training loop
 NUMBER_IMG_THRESHOLD = 10
