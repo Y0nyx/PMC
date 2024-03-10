@@ -12,6 +12,7 @@ services:
       - ./dataset:/dataset
     networks:
       - app_network
+    command: tail -F /dev/null
 
   unsupervised_learning:
     build:
@@ -21,7 +22,7 @@ services:
       - ./dataset:/dataset
     networks:
       - app_network
-    command: nvidia-smi
+    command: bash -c "nvidia-smi && tail -F /dev/null"
     deploy:
       resources:
         reservations:
@@ -29,7 +30,8 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-  
+
+
   supervised_learning:
     build:
       context: .
@@ -40,6 +42,7 @@ services:
       - ./dataset:/dataset
     networks:
       - app_network
+    command: tail -F /dev/null
 
 volumes:
   dataset:
