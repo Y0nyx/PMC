@@ -1,13 +1,21 @@
 cameras:
   - camera_id: 0
-    resolution: (3840, 2160)
+    capture_resolution: (1920, 1080)
+    standby_resolution: (426, 240)
     fps: 30
-#  - camera_id: 2
-#    resolution: (3840, 2160)
-#    fps: 30
-#  - camera_id: 3
-#    resolution: (3840, 2160)
-#    fps: 30
-#  - camera_id: 4
-#    resolution: (3840, 2160)
-#    fps: 30
+  #- camera_id: 1
+  #  capture_resolution: (1920, 1080)
+  #  standby_resolution: (426, 240)
+  #  fps: 30
+  #- camera_id: 2
+  #  capture_resolution: (1920, 1080)
+  #  standby_resolution: (426, 240)
+  #  fps: 30
+  #  - camera_id: 3
+  #  capture_resolution: (1920, 1080)
+  #  standby_resolution: (426, 240)
+  #  fps: 30
+  #  - camera_id: 4
+  #  capture_resolution: (1920, 1080)
+  #  standby_resolution: (426, 240)
+  #  fps: 30

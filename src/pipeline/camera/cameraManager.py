@@ -91,13 +91,18 @@ class CameraManager:
                 camera_configs = yaml_data["cameras"]
                 with tqdm.tqdm(total=len(camera_configs), desc="cameras init") as pbar:
                     for config in camera_configs:
-                        resolution = (
-                            tuple(map(int, config["resolution"].strip("()").split(",")))
+                        capture_resolution = (
+                            tuple(map(int, config["capture_resolution"].strip("()").split(",")))
+                            or None
+                        )
+                        standby_resolution = (
+                            tuple(map(int, config["standby_resolution"].strip("()").split(",")))
                             or None
                         )
                         camera = WebcamCamera(
                             config.get("camera_id", None),
-                            resolution,
+                            standby_resolution,
+                            capture_resolution,
                             config.get("fps", None),
                             self.verbose,
                         )

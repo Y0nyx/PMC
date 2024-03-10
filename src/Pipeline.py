@@ -32,12 +32,6 @@ class Pipeline:
         self.models = []
         for model in models:
             self.models.append(model)
-        
-        
-        self.unsupervised_model = unsupervised_model
-
-
-        self.unsupervised_model = unsupervised_model
 
         self._state = State
         if self._state == PipelineState.TRAINING:
@@ -121,6 +115,8 @@ class Pipeline:
             if key == "q" or self._state == PipelineState.TRAINING:
                 images = self._get_images()
                 for img in images:
+                    cv2.imwrite("captured_image.png", img.value)
+                    print("Image saved successfully.")
                     imagesCollection = self._segmentation_image(img, show, save, conf)
 
                     # TODO Integrate non supervised model
