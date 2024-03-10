@@ -43,6 +43,13 @@ services:
     networks:
       - app_network
     command: tail -F /dev/null
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
 volumes:
   dataset:
