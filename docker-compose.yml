@@ -6,7 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile.pipelines
     environment:
-      - SSH_PRIVATE_KEY=${SSH_PRIVATE_KEY}
       - MKL_THREADING_LAYER=GNU
     volumes:
       - ./:/PMC
@@ -14,6 +13,9 @@ services:
     networks:
       - app_network
     command: tail -F /dev/null
+    devices: 
+      - "/dev/video0:/dev/video0"
+
 
   unsupervised_learning:
     build:
@@ -32,8 +34,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-    devices: 
-      - "/dev/video0:/dev/video0"
 
 
   supervised_learning:
