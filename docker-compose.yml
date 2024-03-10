@@ -21,6 +21,14 @@ services:
       - ./dataset:/dataset
     networks:
       - app_network
+    command: nvidia-smi
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
   
   supervised_learning:
     build:
