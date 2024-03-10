@@ -9,7 +9,8 @@ services:
       - SSH_PRIVATE_KEY=${SSH_PRIVATE_KEY}
       - MKL_THREADING_LAYER=GNU
     volumes:
-      - ./dataset:/dataset
+      - ./:/PMC
+      - ./../Datasets:/Datasets
     networks:
       - app_network
     command: tail -F /dev/null
@@ -19,7 +20,8 @@ services:
       context: .
       dockerfile: Dockerfile.unsupervised
     volumes:
-      - ./dataset:/dataset
+      - ./:/PMC
+      - ./../Datasets:/Datasets
     networks:
       - app_network
     command: bash -c "nvidia-smi && tail -F /dev/null"
@@ -30,6 +32,8 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+    devices: 
+      - "/dev/video0:/dev/video0"
 
 
   supervised_learning:
@@ -39,7 +43,8 @@ services:
     environment:
       - MKL_THREADING_LAYER=GNU
     volumes:
-      - ./dataset:/dataset
+      - ./:/PMC
+      - ./../Datasets:/Datasets
     networks:
       - app_network
     command: tail -F /dev/null
