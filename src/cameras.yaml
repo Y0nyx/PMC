@@ -1,13 +1,21 @@
 cameras:
   - camera_id: 0
-    resolution: (3840, 2160)
+    capture_resolution: (3840, 3104)
+    standby_resolution: (426, 240)
     fps: 30
-#  - camera_id: 2
-#    resolution: (3840, 2160)
-#    fps: 30
-#  - camera_id: 3
-#    resolution: (3840, 2160)
-#    fps: 30
-#  - camera_id: 4
-#    resolution: (3840, 2160)
-#    fps: 30
+  - camera_id: 2 #Bons de 2, car les chiffres impairs sont les id de /dev/video pour les metadonnées sous linux, pairs sont flux vidéo
+    capture_resolution: (3840, 3104)
+    standby_resolution: (426, 240)
+    fps: 30
+  - camera_id: 4
+    capture_resolution: (3840, 3104)
+    standby_resolution: (426, 240)
+    fps: 30
+  - camera_id: 6
+    capture_resolution: (3840, 3104)
+    standby_resolution: (426, 240)
+    fps: 30
+  #  - camera_id: 4
+  #  capture_resolution: (3840, 3104)
+  #  standby_resolution: (426, 240)
+  #  fps: 30
