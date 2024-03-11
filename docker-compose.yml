@@ -2,6 +2,7 @@ version: '3'
 
 services:
   pipeline:
+    privileged: true 
     build:
       context: .
       dockerfile: Dockerfile.pipelines
@@ -15,9 +16,13 @@ services:
     command: tail -F /dev/null
     devices: 
       - "/dev/video0:/dev/video0"
+      - "/dev/video2:/dev/video2"
+      - "/dev/video4:/dev/video4" # Additional camera
+      - "/dev/video6:/dev/video6" # Additional camera
 
 
   unsupervised_learning:
+    privileged: true
     build:
       context: .
       dockerfile: Dockerfile.unsupervised
@@ -37,6 +42,7 @@ services:
 
 
   supervised_learning:
+    privileged: true
     build:
       context: .
       dockerfile: Dockerfile.supervised

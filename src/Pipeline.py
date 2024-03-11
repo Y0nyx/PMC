@@ -114,8 +114,9 @@ class Pipeline:
 
             if key == "q" or self._state == PipelineState.TRAINING:
                 images = self._get_images()
-                for img in images:
-                    cv2.imwrite("captured_image.png", img.value)
+                for i, img in enumerate(images):
+                    filename = f"captured_image_cam{i}.png"
+                    cv2.imwrite(filename, img.value)
                     print("Image saved successfully.")
                     imagesCollection = self._segmentation_image(img, show, save, conf)
 
