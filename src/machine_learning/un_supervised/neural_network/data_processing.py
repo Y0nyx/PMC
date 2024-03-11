@@ -26,10 +26,7 @@ class DataProcessing():
         self._nb_y_sub = 0
         self.debug = True
 
-    def split_data(self, data_path):
-        """
-        Split the data into three set. Training set(70-80%), Validation set (10-15%) and Test set (10-15%)
-        """
+    def load_data(self, data_path, subdvisise=False, rotate=False):
         images = []
 
         #Data loading
@@ -39,16 +36,18 @@ class DataProcessing():
                 images.append(keras_image.img_to_array(img))
         
         rotated_images = []
+        sub_images = []
 
-        for i, img in enumerate(images):
-            sub_images = (self.subdivise(img))
+        if subdvisise:
+            for i, img in enumerate(images):
+                sub_images.extend(self.subdivise(img))
+            images = sub_images
+                
+        if rotate:
+            for i, image in enumerate(images):
+                rotated_images.extend(self.rotate(image))
 
-            for sub_img in sub_images:
-                rotated_images.extend(self.rotate(sub_img))
-
-        images = rotated_images
-
-        del rotated_images
+            images = rotated_images
 
         for i, image in enumerate(images):
             images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
@@ -63,6 +62,13 @@ class DataProcessing():
     
             for i in range(200):
                 cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
+        
+        return self.split_data(images)
+
+    def split_data(self, images):
+        """
+        Split the data into three set. Training set(70-80%), Validation set (10-15%) and Test set (10-15%)
+        """
 
         print("=====================================")
         print("Loaded image np.array of shape: ", images.shape)
@@ -178,7 +184,7 @@ class DataProcessing():
         Do the processing for the data set used by the team to work with. 
         Used to do the bench mark.
         """
-        input_train, input_valid, input_test = self.split_data(data_path)
+        input_train, input_valid, input_test = self.load_data(data_path, True)
 
         train_augmented, valid_augmented, test_augmented = self.get_random_blackout(input_train, input_valid, input_test)
 
