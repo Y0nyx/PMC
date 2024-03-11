@@ -156,11 +156,11 @@ class DataProcessing():
         """
         return data.astype('float32') / float(max_pixel_value)
     
-    def normalize(self, data_1, data_2, data_3, max_pixel_value):
+    def normalize(self, data, max_pixel_value):
         """
         Data domain will be between 0 and 1. 
         """
-        return data_1.astype('float32') / float(max_pixel_value), data_2.astype('float32') / float(max_pixel_value), data_3.astype('float32') / float(max_pixel_value)
+        return data.astype('float32') / float(max_pixel_value)
     
     def de_normalize(self, input_test, result_test, max_pixel_value):
         difference_abs = np.abs(input_test - result_test)
@@ -188,6 +188,7 @@ class DataProcessing():
 
         train_augmented, valid_augmented, test_augmented = self.get_random_blackout(input_train, input_valid, input_test)
 
+        #TODO loop if you want to normalise multipes values
         input_train_norm, input_valid_norm, input_test_norm = self.normalize(input_train, input_valid, input_test, max_pixel_value)
         input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = self.normalize(train_augmented, valid_augmented, test_augmented, max_pixel_value)
 
@@ -197,7 +198,7 @@ class DataProcessing():
         """
         Do the data processing with Stain noise used to try to beat the bench mark
         """
-        input_train, input_valid, input_test = self.split_data(data_path)
+        input_train, input_valid, input_test = self.load_data(data_path, True)
 
         images_stain = []
         for img in input_train:

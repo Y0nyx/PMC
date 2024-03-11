@@ -21,7 +21,8 @@ import model as mod
 import training_info as tr_info
 from tensorflow.keras.models import save_model
 
-debug = True
+debug = False
+visualise = True
 
 def train(model, input_train, input_label, valid_input, valid_label, epochs, batch_size, callbacks):
     history = model.fit(
@@ -78,6 +79,10 @@ def argparser():
                         help='Path where are located the data.')
     parser.add_argument('--MAX_PIXEL_VALUE', type=int, default=255,
                         help='Maximum pixel value for the analysed original image.')
+    parser.add_argument('--SUB_WIDTH', type=int, default=256,
+                        help='Width of the image after the subtitution of the images')
+    parser.add_argument('--SUB_HEIGHT', type=int, default=256,
+                        help='Width of the image after the subtitution of the images')
 
     return parser.parse_args()
     
@@ -183,15 +188,18 @@ if __name__ == '__main__':
     nbest = args.NBEST
     data_path = args.DATA_PATH
     max_pixel_value = args.MAX_PIXEL_VALUE
+    sub_width = args.SUB_WIDTH
+    sub_height = args.SUB_HEIGHT
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
 
-    #Quick tests
-    do_hp_search = False
-    data_path = "../../../../../Datasets/grosse_piece_seg_1"
-    sub_width = 256
-    sub_height = 256
-    max_pixel_value = 255
+    if debug:
+        #Quick tests
+        do_hp_search = False
+        data_path = "../../../../../Datasets/grosse_piece_seg_1"
+        sub_width = 256
+        sub_height = 256
+        max_pixel_value = 255
 
     if gpus:
         try:
@@ -204,9 +212,9 @@ if __name__ == '__main__':
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
     data_processing = dp.DataProcessing(sub_width, sub_height)
-    train_input, train_input_loss, valid_input, valid_input_loss, test_input = data_processing.get_data_processing_blackout(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
-    if debug:
+    if visualise:
         output_dir = "./output"
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
@@ -216,11 +224,12 @@ if __name__ == '__main__':
             cv2.imwrite(f"{output_dir}/train_input_loss_{i}.png", train_input_loss[i]*max_pixel_value)
         for i in range(10):
             cv2.imwrite(f"{output_dir}/valid_input_{i}.png", valid_input[i]*max_pixel_value)
-        for i in range(10):
-            cv2.imwrite(f"{output_dir}/valid_input_loss_{i}.png", valid_input_loss[i]*max_pixel_value)
+        # for i in range(10):
+        #     cv2.imwrite(f"{output_dir}/valid_input_loss_{i}.png", valid_input_loss[i]*max_pixel_value)
         for i in range(10):
             cv2.imwrite(f"{output_dir}/test_input_{i}.png", test_input[i]*max_pixel_value)
 
+    #DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
     _, row, column, channels = train_input.shape
     image_dimentions = (row, column, channels)
 
