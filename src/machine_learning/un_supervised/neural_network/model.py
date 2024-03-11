@@ -7,12 +7,10 @@ Description: Contain the list of GAN model that will be used to train the GAN wi
              and a discriminator. It is easy to change for one architecture or another thanks to this code. 
 """
 
-import keras
 import tensorflow as tf
+from tensorflow.keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, BatchNormalization, LeakyReLU, Add, UpSampling2D, Activation, Dense, Input
+from tensorflow.keras.models import Model
 
-from keras.layers import Conv2D, Conv2DTranspose, MaxPooling2D, BatchNormalization, LeakyReLU, Add, UpSampling2D, Activation, Dense, Input
-
-from keras.models import Model
 
 class AeModels():
     def __init__(self, learning_rate: float=0.001, monitor_loss: str='mean_absolute_error', monitor_metric: str='mean_squared_error', image_dimentions: tuple=(256, 256, 3)):
