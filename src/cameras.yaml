@@ -1,13 +1,13 @@
 cameras:
-  - camera_id: 1
+  - camera_id: 0
     resolution: (3840, 2160)
     fps: 30
-  - camera_id: 2
-    resolution: (3840, 2160)
-    fps: 30
-  - camera_id: 3
-    resolution: (3840, 2160)
-    fps: 30
-  - camera_id: 4
-    resolution: (3840, 2160)
-    fps: 30
+#  - camera_id: 2
+#    resolution: (3840, 2160)
+#    fps: 30
+#  - camera_id: 3
+#    resolution: (3840, 2160)
+#    fps: 30
+#  - camera_id: 4
+#    resolution: (3840, 2160)
+#    fps: 30

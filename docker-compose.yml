@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipelines
+    environment:
+      - MKL_THREADING_LAYER=GNU
+    volumes:
+      - ./:/PMC
+      - ./../Datasets:/Datasets
+    networks:
+      - app_network
+    command: tail -F /dev/null
+    devices: 
+      - "/dev/video0:/dev/video0"
+
+
+  unsupervised_learning:
+    build:
+      context: .
+      dockerfile: Dockerfile.unsupervised
+    volumes:
+      - ./:/PMC
+      - ./../Datasets:/Datasets
+    networks:
+      - app_network
+    command: bash -c "nvidia-smi && tail -F /dev/null"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+
+  supervised_learning:
+    build:
+      context: .
+      dockerfile: Dockerfile.supervised
+    environment:
+      - MKL_THREADING_LAYER=GNU
+    volumes:
+      - ./:/PMC
+      - ./../Datasets:/Datasets
+    networks:
+      - app_network
+    command: tail -F /dev/null
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  dataset:
+
+networks:
+  app_network:
+    driver: bridge

@@ -24,7 +24,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline:
 
-    def __init__(self, models, unsupervised_model , verbose: bool = True, State: PipelineState= PipelineState.INIT):
+    def __init__(self, models, verbose: bool = True, State: PipelineState= PipelineState.INIT):
         self.verbose = verbose
 
         self.print("=== Init Pipeline ===")  # Fixed this line
@@ -33,6 +33,10 @@ class Pipeline:
         for model in models:
             self.models.append(model)
         
+        
+        self.unsupervised_model = unsupervised_model
+
+
         self.unsupervised_model = unsupervised_model
 
         self._state = State
@@ -40,7 +44,7 @@ class Pipeline:
             self._dataManager = Mock_DataManager(Path("./dataset/mock"))
         else:
             self._dataManager = DataManager(
-                "", "./src/cameras.yaml", self.verbose
+                "", "./cameras.yaml", self.verbose
             ).get_instance()
 
         self._trainingManager = TrainingManager(is_time_threshold=False, verbose=self.verbose)
@@ -162,9 +166,9 @@ class Pipeline:
 
 if __name__ == "__main__":
     models = []
-    models.append(YoloModel(Path("./src/ia/segmentation/v1.pt")))
+    models.append(YoloModel(Path("./ia/segmentation/v1.pt")))
 
-    pipeline = Pipeline(models=models, State=PipelineState.TRAINING)
+    pipeline = Pipeline(models=models)
     pipeline.detect()
 
     # data_path = "D:\dataset\dofa_3"
@@ -184,7 +188,7 @@ if __name__ == "__main__":
     # print(f'test fitness: {test_resultats.fitness}')
     # print(f'welding fitness: {welding_resultats.fitness}')
 
-    Pipeline = Pipeline(models, unsupervised_model, verbose=True)
+    #Pipeline = Pipeline(models, verbose=True)
 
     #Pipeline.train(data_path, "yolov8m-cls", epochs=350, batch=15, workers=4)
     #Pipeline = Pipeline(models, training=True)
@@ -206,4 +210,4 @@ if __name__ == "__main__":
     # Model Training
     # Pipeline.train(data_path, 'yolov8s-seg', epochs=250, plots=False)
 
-    Pipeline.detect()
+    #Pipeline.detect()

@@ -1,5 +1,0 @@
-numpy
-PyYAML
-ultralytics
-opencv-python
-tensorflow
