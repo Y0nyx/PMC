@@ -16,7 +16,7 @@ readonly NBEST=1                                                                
 readonly NUM_TRAIN_REGENERATE=20
 readonly MONITOR_LOSS='mean_absolute_error'
 readonly MONITOR_METRIC='mean_squared_error'
-MAX_PIXEL_VALUE=255
+readonly MAX_PIXEL_VALUE=255
 
 #Never change this constants (Only adapt PATH_RESULTS to the computer you are using)
 readonly PATH_RESULTS="/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/${MODEL}/${TEST_NAME}"

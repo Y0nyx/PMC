@@ -22,10 +22,10 @@ readonly MODE_METRIC='min'
 readonly VERBOSE=TRUE #If false remove --VERBOSE from line 40
 #Variable for HP search 
 readonly DO_HP_SEARCH=True #If false remove --DO_HP_SEARCH from line 40
-readonly EPOCHS_HP=20
-readonly NUM_TRIALS_HP=2
+readonly EPOCHS_HP=200
+readonly NUM_TRIALS_HP=200
 readonly EXECUTION_PER_TRIAL_HP=2
-readonly NBEST=1
+readonly NBEST=10
 #Variable for default training
 readonly EPOCHS=5
 readonly BATCH_SIZE=256
