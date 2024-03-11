@@ -105,7 +105,7 @@ class Pipeline:
 
         return results
 
-    def detect(self, show: bool = False, save: bool = False, conf: float = 0.7):
+    def detect(self, show: bool = False, save: bool = False, conf: float = 0.7, cam_debug=False):
         while True:
             # TODO Utiliser l'API de Mathieu
             key = None
@@ -114,10 +114,12 @@ class Pipeline:
 
             if key == "q" or self._state == PipelineState.TRAINING:
                 images = self._get_images()
-                for i, img in enumerate(images):
-                    filename = f"captured_image_cam{i}.png"
-                    cv2.imwrite(filename, img.value)
-                    print("Image saved successfully.")
+
+                if cam_debug:
+                    for i, img in enumerate(images):
+                        filename = f"captured_image_cam{i}.png"
+                        cv2.imwrite(filename, img.value)
+                        print("Image saved successfully.")
                     imagesCollection = self._segmentation_image(img, show, save, conf)
 
                     # TODO Integrate non supervised model
@@ -166,7 +168,7 @@ if __name__ == "__main__":
     models.append(YoloModel(Path("./ia/segmentation/v1.pt")))
 
     pipeline = Pipeline(models=models)
-    pipeline.detect()
+    pipeline.detect(cam_debug=True)
 
     # data_path = "D:\dataset\dofa_3"
 

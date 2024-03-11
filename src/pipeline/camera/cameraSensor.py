@@ -35,8 +35,7 @@ class CameraSensor(ABC):
                 self.cap = cv2.VideoCapture(self.camera_id)
 
             # Set resolution
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.standby_resolution[0])
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.standby_resolution[1])
+            self.set_standby_resolution()
 
             # Set frames per second (fps)
             self.cap.set(cv2.CAP_PROP_FPS, self.fps)
