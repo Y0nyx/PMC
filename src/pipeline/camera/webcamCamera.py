@@ -20,11 +20,11 @@ class WebcamCamera(CameraSensor):
             if self.cap.isOpened():
                 _, frame = self.cap.read()
                 image = Image(frame)
-                self.print("Setting standby resolution")
+                self.print("Camera back in standby mode")
                 self.set_standby_resolution()
                 return image
         else:
-            self.print("Setting standby resolution")
+            self.print("Camera back in standby mode")
             return None
 
     def get_state(self) -> SensorState:
