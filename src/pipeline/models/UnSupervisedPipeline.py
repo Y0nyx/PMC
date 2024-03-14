@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from skimage.metrics import structural_similarity as ssim
+#from skimage.metrics import structural_similarity as ssim
 import matplotlib.pyplot as plt
 
 class UnSupervisedPipeline:
@@ -18,9 +18,9 @@ class UnSupervisedPipeline:
         self._image = image
 
     def resize(self):
-        closest_width = int(np.ceil(image.value.shape[1] / unsupervised_model.input_shape[1]) * unsupervised_model.input_shape[1])
-        closest_height = int(np.ceil(image.value.shape[0] / unsupervised_model.input_shape[2]) * unsupervised_model.input_shape[2])
-        image.value = cv2.resize(image.value, (closest_width, closest_height))
+        closest_width = int(np.ceil(self._image.value.shape[1] / self._model_shape[1]) * self._model_shape[1])
+        closest_height = int(np.ceil(self._image.value.shape[0] / self._model_shape[2]) * self._model_shape[2])
+        self._image.value = cv2.resize(self._image.value, (closest_width, closest_height))
     
     def mask(self, sub_image, x, y):
         # Create a copy of the original image
@@ -36,7 +36,7 @@ class UnSupervisedPipeline:
         return current_image
 
     def debug(self):
-        for image in cropped_imgs:
+        for image in self._subdivisions:
             if True: #C'est un if le model non supervise prend des images subdivises
                 # Calculate the closest multiples for both dimensions
                 sub_images = image.subdivise(128, 0, "untranslated")
@@ -63,19 +63,6 @@ class UnSupervisedPipeline:
                         axes[2].axis('off')
                         # Show the combined plot
                         plt.show
-    
-    def ssim(self, img1, img2):
-        ig1, ig2, channels = img1.shape
-        for channel in range(channels):
-            img1_channel = img1[:,:, channel]
-
-            img2_channel = img2[:,:, channel]
-
-            ssim_index, _ = ssim(img1_channel, img2_channel, full=True, data_range=1)
-
-            return ssim_index
-
-
 
     def brightness(self, img1, img2):
         ig1, ig2, channels = img1.shape
