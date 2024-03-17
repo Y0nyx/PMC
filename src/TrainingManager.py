@@ -1,5 +1,5 @@
 import os
-import yaml
+import socket
 from datetime import datetime
 from shutil import move
 from common.Constants import *
@@ -80,45 +80,19 @@ class TrainingManager:
                 os.path.join(VALID_FILE, img_file),
             )
 
-    def train_supervised(self) -> YoloModel:
-        """
-        Train the model using supervised learning.
-        
-        Returns:
-        - bool: True if training is successful, False otherwise.
-        """
-        self.generate_yaml()
+    def train_supervised(self) -> bool:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            self.print(f"Envoi du signal 'OK' à {SUPERVISED_SERVICE}:{SUPERVISED_PORT}...")
+            s.connect((SUPERVISED_SERVICE, SUPERVISED_PORT))
+            s.sendall(b'OK')
 
-        model = YoloModel()
-        try:
-            model.train(data=YAML_FILE, epochs=EPOCHS, batch=BATCH)
-        except Exception as e:
-            print(e)
-            return None
-        
-        return model
-    
-    def generate_yaml(self) -> bool:
-        """
-        Generate YAML file for training configuration.
-        
-        Returns:
-        - bool: True if YAML generation is successful, False otherwise.
-        """
-        data = {
-            'train': str(TRAIN_FILE.absolute()),
-            'val': str(VALID_FILE.absolute()),
-            'nc': NC,
-            'names': CLASSES
-        }
-
-        try:
-            with open(YAML_FILE, 'w') as file:
-                yaml.dump(data, file)
-        except Exception as e:
-            print(e)
-            return False
-        return True
+            # Attendre la réponse
+            data = s.recv(1024)
+            if data.decode() == 'OK':
+                print("Signal de retour 'OK' reçu, entraînement supervisé fini")
+                return True
+            else:
+                return False
     
     def print(self, string):
         """
@@ -129,6 +103,7 @@ class TrainingManager:
         """
         if self.verbose:
             print(string)
+
 
 if __name__ == '__main__':
     tm = TrainingManager()

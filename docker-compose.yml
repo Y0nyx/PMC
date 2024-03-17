@@ -14,12 +14,13 @@ services:
     networks:
       - app_network
     command: tail -F /dev/null
+    ports:
+      - "8080:8080" # Port pour la communication
     devices: 
       - "/dev/video0:/dev/video0"
-      - "/dev/video2:/dev/video2"
-      - "/dev/video4:/dev/video4" # Additional camera
-      - "/dev/video6:/dev/video6" # Additional camera
-
+      # - "/dev/video2:/dev/video2"
+      # - "/dev/video4:/dev/video4" # Additional camera
+      # - "/dev/video6:/dev/video6" # Additional camera
 
   unsupervised_learning:
     privileged: true
@@ -31,6 +32,8 @@ services:
       - ./../Datasets:/Datasets
     networks:
       - app_network
+    ports:
+      - "8081:8081" # Port pour la communication
     command: bash -c "nvidia-smi && tail -F /dev/null"
     deploy:
       resources:
@@ -39,7 +42,6 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
-
 
   supervised_learning:
     privileged: true
@@ -53,6 +55,8 @@ services:
       - ./../Datasets:/Datasets
     networks:
       - app_network
+    ports:
+      - "8082:8082" # Port pour la communication
     command: tail -F /dev/null
     deploy:
       resources:

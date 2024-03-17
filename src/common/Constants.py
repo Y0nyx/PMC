@@ -15,3 +15,12 @@ EPOCHS = 3
 BATCH = -1
 NC = 1
 CLASSES = ['default']
+
+# communication
+PIPELINE_PORT = 8080
+UNSUPERVISED_PORT = 8081
+SUPERVISED_PORT = 8082
+
+PIPELINE_SERVICE = 'pipeline'
+UNSUPERVISED_SERVICE = 'unsupervised_learning'
+SUPERVISED_SERVICE = 'supervised_learning'

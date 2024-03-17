@@ -5,12 +5,11 @@ from common.image.Image import Image
 
 import os
 import cv2
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from PIL import Image as Img
-import numpy as np
+# import matplotlib.pyplot as plt
+# import tensorflow as tf
+# from PIL import Image as Img
+# import numpy as np
 
-from ultralytics import YOLO
 #from clearml import Task
 from common.image.ImageCollection import ImageCollection
 from common.utils import DataManager as Mock_DataManager
@@ -132,7 +131,10 @@ class Pipeline:
                     # Integrate training loop
                     if self._trainingManager.check_flags():
                         self._trainingManager.separate_dataset()
-                        model = self._trainingManager.train_supervised()
+                        if self._trainingManager.train_supervised():
+                            # TODO compare new models
+                            # TODO replace model
+                            pass
 
                     # TODO Integrate Classification
 
@@ -165,10 +167,10 @@ class Pipeline:
 
 if __name__ == "__main__":
     models = []
-    models.append(YoloModel(Path("./ia/segmentation/v1.pt")))
+    models.append(YoloModel(Path("./ia/segmentation/v2.pt")))
 
-    pipeline = Pipeline(models=models)
-    pipeline.detect(cam_debug=True)
+    pipeline = Pipeline(models=models, state=PipelineState.TRAINING)
+    pipeline.detect()
 
     # data_path = "D:\dataset\dofa_3"
 

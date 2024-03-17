@@ -29,4 +29,9 @@ RUN pip install torch torchvision torchaudio \
 WORKDIR /PMC
 
 # Copy source code from host machine to Docker image
-COPY src/ src/
+COPY src/common common/ 
+COPY src/pipeline/models/Model.py ./
+COPY src/pipeline/models/SupervisedPipeline.py ./
+
+# Use ENTRYPOINT to ensure the command is not overridden
+# ENTRYPOINT ["python", "SupervisedPipeline.py"]

@@ -22,3 +22,5 @@ RUN pip install --upgrade pip ultralytics opencv-python tensorflow clearml -U
 # Fix error: `np.bool` was a deprecated alias for the builtin `bool` segmentation error in Tests
 RUN pip install --no-cache numpy==1.23.5
 
+# Use ENTRYPOINT to ensure the command is not overridden
+# ENTRYPOINT ["python", "src/Pipeline.py"]

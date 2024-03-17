@@ -1,5 +1,6 @@
+import yaml
 from ultralytics import YOLO
-
+from common.Constants import *
 
 class Model:
     def __init__(self, model):
@@ -29,3 +30,26 @@ class YoloModel(Model):
     def eval(self):
         self.results = self._model.val()
         return self.results
+    
+    def generate_yaml(self) -> bool:
+        """
+        Generate YAML file for training configuration.
+        
+        Returns:
+        - bool: True if YAML generation is successful, False otherwise.
+        """
+        data = {
+            'train': str(TRAIN_FILE.absolute()),
+            'val': str(VALID_FILE.absolute()),
+            'nc': NC,
+            'names': CLASSES
+        }
+
+        try:
+            with open(YAML_FILE, 'w') as file:
+                yaml.dump(data, file)
+        except Exception as e:
+            print(e)
+            return False
+        return True
+
