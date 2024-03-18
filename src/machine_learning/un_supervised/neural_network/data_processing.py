@@ -52,7 +52,7 @@ class DataProcessing():
         return input_train, input_valid, input_test
     
     def add_stain(self, image, max_pixel_value):
-        elipse_size = "5-10"
+        elipse_size = "5-5"
         blur = 0
         pourcentage_scale_factor = 100.
 

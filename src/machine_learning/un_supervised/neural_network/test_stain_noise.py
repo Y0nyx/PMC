@@ -32,14 +32,14 @@ images = np.array(images)
 data_process = dp.DataProcessing()
 images_stain = []
 for img in images:
-    images_stain.append(data_process.add_stain(img))
+    images_stain.append(data_process.add_stain(img, 255))
 
 for i, (img, img_stain) in enumerate(zip(images, images_stain)):
     print(f'The original data is of type: {img.dtype}')
-    if i < 3:
+    if i < 5:
         #Denormalize data
-        img_stain = (img_stain * de_norm_value).astype('uint8')
-        img = (img * de_norm_value).astype('uint8')
+        img_stain = (img_stain).astype('uint8') #* de_norm_value
+        img = (img).astype('uint8') #* de_norm_value
         print(f'The modified data is of type: {img_stain.dtype}')
 
         fig, axes = plt.subplots(1,2)
