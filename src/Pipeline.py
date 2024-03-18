@@ -120,6 +120,7 @@ class Pipeline:
                         filename = f"captured_image_cam{i}.png"
                         cv2.imwrite(filename, img.value)
                         print("Image saved successfully.")
+                for img in images:
                     imagesCollection = self._segmentation_image(img, show, save, conf)
 
                     # TODO Integrate non supervised model
