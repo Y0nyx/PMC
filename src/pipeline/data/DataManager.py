@@ -3,29 +3,49 @@ import numpy as np
 import yaml
 import cv2
 from common.image.Image import Image
-from ..camera.cameraManager import CameraManager #May have to be modified depending on implementation
+from ..camera.cameraManager import (
+    CameraManager,
+)  # May have to be modified depending on implementation
 from ..camera.webcamCamera import WebcamCamera
 from ..camera.sensorState import SensorState
 
+
 class DataManager:
+    """
+    Classe permettant de gérer la transformation du data entre la caméra et les réseaux de neurone
+    Returns:
+        _type_: _description_
+    """
     instance = None
 
-    def __init__(self, yaml_path: Path = "") -> None:
+    def __init__(
+        self,
+        yaml_path_data: Path = "",
+        yaml_path_cameras: Path = "",
+        verbose: bool = False,
+    ) -> None:
         """
         Initializes the DataManager.
         """
-        self._yaml_path = yaml_path
+        self.verbose = verbose
+
+        self.print("=== Init DataManager ===")
+
+        self._yaml_path = yaml_path_data
         self._param = self._read_yaml()
-        self._camera_manager = CameraManager.get_instance("")
-        webcamCamera = WebcamCamera(0, SensorState.INIT)
-        self._camera_manager.add_camera(webcamCamera)
+        self._camera_manager = CameraManager.get_instance(yaml_path_cameras, verbose)
 
     @staticmethod
     def get_instance():
         if DataManager.instance is None:
             DataManager.instance = DataManager()
-        print("Hello get_instance")
         return DataManager.instance
+
+    def get_img(self, index_camera: int = 0) -> Image:
+        return self._apply_preprocessing(self._camera_manager.get_img(index_camera))
+
+    def get_all_img(self) -> [Image]: 
+        return self._apply_preprocessing(self._camera_manager.get_all_img())
 
     def concate_img(self) -> [Image]:
         """
@@ -34,30 +54,32 @@ class DataManager:
         :Returns:
             Image: Image object containing the value attribute of all images concatenated as a one dimension NumPy array.
         """
-        #Get all the images from the CameraManager and preprocess them
+        # Get all the images from the CameraManager and preprocess them
         images = self._apply_preprocessing(self._camera_manager.get_all_img())
 
-        #Show images after preprocessing
-        for image in images:
-            cv2.imshow('Captured Image', image.value)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+        # Show images after preprocessing
+        # for image in images:
+        # cv2.imshow('Captured Image', image.value)
+        # cv2.waitKey(0)
+        # cv2.destroyAllWindows()
 
-        #Create a null ndArray that will contain all the image values to be concatenated
+        # Create a null ndArray that will contain all the image values to be concatenated
         concatenated_image_values = np.empty(0)
 
         # TODO: Implement different concatenating algorithms to fit the self._param attribute
 
         # Iterate over the list of images
         for img in images:
-            concatenated_image_values = np.concatenate((concatenated_image_values, img.value.flatten()), axis=0)
+            concatenated_image_values = np.concatenate(
+                (concatenated_image_values, img.value.flatten()), axis=0
+            )
 
-        #Create the Image object containing the concatenated values
+        # Create the Image object containing the concatenated values
         concatenated_images = Image(concatenated_image_values)
 
         return images
 
-    def _apply_preprocessing(self, images: [Image])->[Image]:
+    def _apply_preprocessing(self, images: [Image]) -> [Image]:
         """
         Apply preprocessing algorithms as specified in the yaml params
         :params:
@@ -66,21 +88,21 @@ class DataManager:
         :Returns:
             images: Preprocessed images
         """
-        #if(condition):
-        #    images = _grayscale_conversion(images)
-        #if(condition):
+        # if(condition):
+        # images = self._grayscale_conversion(images)
+        # if(condition):
         #    images = _normalization_conversion(images)
-        #if(condition):
+        # if(condition):
         #    images = _equalized_conversion(images)
-        #if(condition):
+        # if(condition):
         #    images = _gaussian_blur_conversion(images)
-        #if(condition):
+        # if(condition):
         #    images = _threshold_conversion(images)
-        #if(condition):
+        # if(condition):
         #    images = _edge_detection_conversion(images)
         return images
 
-    def _grayscale_conversion(self, images: [Image])->[Image]:
+    def _grayscale_conversion(self, images: [Image]) -> [Image]:
         """
         Apply grayscale conversion
         :params:
@@ -90,7 +112,7 @@ class DataManager:
             images: Converted images
         """
         for image in images:
-            image.value = cv2.cvtColor(image.value, cv2.COLOR_BGR2GRAY)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         return images
 
@@ -155,11 +177,10 @@ class DataManager:
 
         return images
 
-
     def _read_yaml(self) -> None:
         """
         Function to read yaml
-        :param self: 
+        :param self:
         :return: None
         """
 
@@ -168,5 +189,7 @@ class DataManager:
         #         self.param = yaml.safe_load(file)
         #     except yaml.YAMLError as exc:
         #         print(exc)
-        
 
+    def print(self, string):
+        if self.verbose:
+            print(string)

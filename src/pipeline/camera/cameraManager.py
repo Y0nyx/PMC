@@ -1,6 +1,10 @@
 from common.image.Image import Image
+from .webcamCamera import WebcamCamera
 from .cameraSensor import CameraSensor
 from .sensorState import SensorState
+
+import tqdm
+import yaml
 from typing import List
 from warnings import warn
 
@@ -8,26 +12,31 @@ from warnings import warn
 class CameraManager:
     _instance = None
 
-    def __init__(self, yaml_file) -> None:
+    def __init__(self, yaml_file, verbose) -> None:
+        self.verbose = verbose
+
+        self.print("=== Init CameraManager ===")
+
         self.yaml_file = yaml_file
-        self.nbr_camera = 1
         self.cameras = []
         self.read_yaml(yaml_file)
         self.state = SensorState.INIT
 
     @staticmethod
-    def get_instance(yaml_file):
+    def get_instance(yaml_file, verbose: bool = False):
         if CameraManager._instance is None:
-            CameraManager._instance = CameraManager(yaml_file)
+            CameraManager._instance = CameraManager(yaml_file, verbose)
         return CameraManager._instance
 
     def add_camera(self, *cameras):
         for camera in cameras:
-            if isinstance(camera, CameraSensor):
+            if isinstance(camera, CameraSensor) and camera is not None:
                 self.cameras.append(camera)
                 return True
             else:
-                warn("Erreur : L'objet {camera} n'est pas une instance de CameraSensor.")
+                warn(
+                    "Erreur : L'objet {camera} n'est pas une instance de CameraSensor."
+                )
                 return False
 
     def remove_camera(self, index_camera):
@@ -46,16 +55,21 @@ class CameraManager:
         images = []
         for camera in self.cameras:
             image = camera.get_img()
-            images.append(image)
-            return images
+            if image.value is not None:
+                images.append(image)
+            else:
+                self.print(
+                    f"camera {camera.camera_id} was not able to capture an Image"
+                )
+        return images
 
     def get_img(self, index_camera) -> Image:
         """
         function to gat the image of a camera
         :return: image
         """
-        if 0 <= index_camera < len(self):
-            camera = self[index_camera]
+        if 0 <= index_camera < len(self.cameras):
+            camera = self.cameras[index_camera]
             return camera.get_img()
         else:
             warn("Erreur : Index de caméra invalide.")
@@ -70,15 +84,38 @@ class CameraManager:
             self.state = SensorState.READY
         return self.state
 
-    def read_yaml(self, yaml):
-        print("Todo: avoir un vrai yaml")
-        # with open(self.yaml_file, 'r') as file:
-        #     try:
-        #         yaml_data = yaml.safe_load(file)
-        #         camera_configs = yaml_data['cameras']
-        #         for config in camera_configs:
-        #             camera_id = config['camera_id']
-        #             camera = CameraSensor(camera_id)
-        #             self.add_camera(camera)
-        #     except yaml.YAMLError as e:
-        #         warn("Erreur lors de la lecture du fichier YAML : {e}")
+    def read_yaml(self, yaml_path):
+        with open(yaml_path, "r") as file:
+            try:
+                yaml_data = yaml.safe_load(file)
+                camera_configs = yaml_data["cameras"]
+                with tqdm.tqdm(total=len(camera_configs), desc="cameras init") as pbar:
+                    for config in camera_configs:
+                        capture_resolution = (
+                            tuple(map(int, config["capture_resolution"].strip("()").split(",")))
+                            or None
+                        )
+                        standby_resolution = (
+                            tuple(map(int, config["standby_resolution"].strip("()").split(",")))
+                            or None
+                        )
+                        camera = WebcamCamera(
+                            config.get("camera_id", None),
+                            standby_resolution,
+                            capture_resolution,
+                            config.get("fps", None),
+                            self.verbose,
+                        )
+                        if camera is not None:
+                            self.add_camera(camera)
+                        else:
+                            self.print(
+                                f'Camera {config.get("camera_id", None)} was not initialize'
+                            )
+                        pbar.update(1)
+            except yaml.YAMLError as e:
+                warn("Erreur lors de la lecture du fichier YAML : {e}")
+
+    def print(self, string):
+        if self.verbose:
+            print(string)

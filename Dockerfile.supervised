@@ -1,0 +1,32 @@
+# Set image name as a variable
+FROM ultralytics/ultralytics:latest
+
+# Install git to clone the repository
+RUN apt-get update && apt-get install -y git && \
+    apt-get install -y libgl1-mesa-dev && \
+    apt-get install -y libglib2.0-0
+
+# Security updates
+# https://security.snyk.io/vuln/SNYK-UBUNTU1804-OPENSSL-3314796
+RUN apt upgrade --no-install-recommends -y openssl tar
+
+# Run exports to AutoInstall packages
+# Edge TPU export fails the first time so is run twice here
+RUN yolo export model=tmp/yolov8n.pt format=edgetpu imgsz=32 || yolo export model=tmp/yolov8n.pt format=edgetpu imgsz=32
+RUN yolo export model=tmp/yolov8n.pt format=ncnn imgsz=32
+# Requires <= Python 3.10, bug with paddlepaddle==2.5.0 https://github.com/PaddlePaddle/X2Paddle/issues/991
+RUN pip install --no-cache paddlepaddle>=2.6.0 x2paddle
+# Fix error: `np.bool` was a deprecated alias for the builtin `bool` segmentation error in Tests
+RUN pip install --no-cache numpy==1.23.5
+# Remove exported models
+RUN rm -rf tmp
+
+# Get right version of pytorch (GPU)
+RUN pip install torch torchvision torchaudio \
+ --index-url https://download.pytorch.org/whl/cu118 -U
+    
+# Change the working directory to the cloned repository
+WORKDIR /PMC
+
+# Copy source code from host machine to Docker image
+COPY src/ src/

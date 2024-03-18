@@ -1,13 +1,12 @@
 from common.image.Image import Image
 from pipeline.camera.cameraSensor import CameraSensor
 from .sensorState import SensorState
-import cv2
 import warnings
 
 
 class WebcamCamera(CameraSensor):
-    def __init__(self, camera_id, state) -> None:
-        super().__init__(camera_id, state)
+    def __init__(self, camera_id, standby_resolution, capture_resolution, fps, verbose: bool = False) -> None:
+        super().__init__(camera_id, standby_resolution, capture_resolution, fps, verbose)
 
     def get_img(self) -> Image:
         """
@@ -15,20 +14,17 @@ class WebcamCamera(CameraSensor):
         :return: Image
         """
         if self.is_active:
-            print("Capturing image")
-            cap = cv2.VideoCapture(self.camera_id)
-            ret, frame = cap.read()
-            cap.release()
-            image = Image(frame)
-            #------------------------------------------------
-            #To be removed, mais je veux voir ma sale tete quand je debug
-            # cv2.imshow('Captured Image', frame)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
-            #------------------------------------------------
-            return image
+            self.print("Setting capture resolution")
+            self.set_capture_resolution()
+            self.print("Capturing image")
+            if self.cap.isOpened():
+                _, frame = self.cap.read()
+                image = Image(frame)
+                self.print("Camera back in standby mode")
+                self.set_standby_resolution()
+                return image
         else:
-            warnings.warn("Erreur : La caméra n'est pas activée.")
+            self.print("Camera back in standby mode")
             return None
 
     def get_state(self) -> SensorState:
@@ -36,4 +32,4 @@ class WebcamCamera(CameraSensor):
         function to get the state of the sensor
         :return: SensorState
         """
-        return self.state.value
+        return self.state
