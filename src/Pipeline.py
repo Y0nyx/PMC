@@ -1,18 +1,16 @@
 from pipeline.models.Model import YoloModel
 from pipeline.data.DataManager import DataManager
+from NetworkManager import NetworkManager
 from common.enums.PipelineStates import PipelineState
 from common.image.Image import Image
 
-import os
-import cv2
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.keras.models import load_model
+#from tensorflow.keras.models import load_model
 from PIL import Image as Img
 import numpy as np
 import asyncio
 
-from ultralytics import YOLO
 #from clearml import Task
 from common.image.ImageCollection import ImageCollection
 from common.utils import DataManager as Mock_DataManager
@@ -21,17 +19,21 @@ from TrainingManager import TrainingManager
 from pipeline.models.UnSupervisedPipeline import UnSupervisedPipeline
 
 import os
+import threading
 from pathlib import Path
 import socket
 import json
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
-class Pipeline:
+class Pipeline(threading.Thread):
 
     def __init__(self, supervised_models, unsupervised_models, verbose: bool = True, State: PipelineState= PipelineState.INIT):
+        super().__init__()
+        self.stop_event = threading.Event()
+
         self.verbose = verbose
-        self.loop = asyncio.get_event_loop() 
+        self.network_manager = NetworkManager(HOST, PORT, self.verbose)
 
         self.print("=== Init Pipeline ===")  # Fixed this line
 
@@ -48,50 +50,18 @@ class Pipeline:
             self._dataManager = Mock_DataManager(Path("./dataset/mock"))
         else:
             self._dataManager = DataManager(
-                "", "./cameras.yaml", self.verbose
+                "", "./src/cameras.yaml", self.verbose
             ).get_instance()
 
         self._trainingManager = TrainingManager(is_time_threshold=False, verbose=self.verbose)
 
-    async def start_detection(self):
-        while True:
-            data = await self.receive_message()
-            received_json = json.loads(data.decode())
-            if received_json['code'] == "start":
-                print("Received start signal")
-                await self.detect(cam_debug=True)  # Await the detect method
+    def run(self):
+        self.print('START SET')
+        self.detect(cam_debug=True)
 
-
-    async def receive_message(self):
-        data = await self.loop.sock_recv(self.s, 1024)
-        print('Received:', data.decode())
-        return data
-
-    async def send_message(self, data):
-        serialized_data = json.dumps(data).encode()
-        await self.loop.sock_sendall(self.s, serialized_data)
-        print("Sent message")
-    
-    async def check_stop_signal(self):
-        # Check if there's data available
-        await asyncio.sleep(0)
-        if self.s.recv(1024, socket.MSG_PEEK) == b'':
-            return False
-        else:
-            # Receive the data to consume it from the buffer
-            await self.receive_message()
-            return True
-
-    async def run_pipeline(self, HOST, PORT):
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.setblocking(False)
-        await self.loop.sock_connect(self.s, (HOST, PORT))
-        print("Successfully connected to Electron")
-
-        await self.send_message({'code': 'stop', 'data': 'object data'})
-        await self.start_detection()
-
-        self.s.close()
+    def stop(self):
+        self.print('STOP SET')
+        self.stop_event.set()
 
     def get_dataset(self) -> None:
         """Génère un dataset avec tout les caméras instancié lors du init du pipeline.
@@ -155,48 +125,52 @@ class Pipeline:
 
         return results
 
-    def save_images(self, images, folder_path):
-        # Get the number of images already present in the folder
-        existing_images = [file for file in os.listdir(folder_path) if file.startswith("captured_image_cam")]
-        num_existing_images = len(existing_images)
-
-        # Iterate over the images and save them with the appropriate index
-        for i, img in enumerate(images):
-            index = num_existing_images//5 + 1  # Adjust index based on existing images
-            filename = os.path.join(folder_path, f"captured_image_cam_{i}_{index}.png")
-            cv2.imwrite(filename, img.value)
-            print(f"Capture saved as {filename}")
-
-    async def detect(self, show: bool = False, save: bool = False, conf: float = 0.7, cam_debug=False):
+    def detect(self, show: bool = False, save: bool = False, conf: float = 0.7, cam_debug=False):
         if self._state != PipelineState.TRAINING:
             self._state = PipelineState.TRAINING
 
         images = self._get_images()
+        if images.img_count > 0:
+            images.save(IMG_CAPTURE_FILE)
 
-        self.save_images(images, "../../Datasets/Pipeline_captures/")
+            for img in images:
+                imagesCollection = self._segmentation_image(img, show, save, conf)
+                # TODO Integrate non supervised model
 
-        for img in images:
-            imagesCollection = self._segmentation_image(img, show, save, conf)
-            # Your existing code...
+                # TODO Integrate supervised model
 
-            # Check if a stop signal has been received
-            if await self.check_stop_signal():
-                print("Stop signal received, stopping detection")
-                return
-            
-        result_data = {
-            "resultat": True,  # or False based on your condition
-            "url": "/imageSoudure....",
-            "erreurSoudure": "pepe"
-        }
+                # Integrate save
+                imagesCollection.save(IMG_SAVE_FILE)
 
-        # Convert the dictionary to JSON format
-        result_json = json.dumps(result_data)
+                # Integrate training loop
+                if self._trainingManager.check_flags():
+                    self._trainingManager.separate_dataset()
+                    model = self._trainingManager.train_supervised()
 
-        # Send the JSON data
-        await self.send_message(result_json)
+                # TODO Integrate Classification
 
-        self._state = PipelineState.INIT
+                # TODO send to interface
+
+                # Check if a stop signal has been received
+                #if await self.check_stop_signal():
+                #    print("Stop signal received, stopping detection")
+                #    return
+                
+            result_data = {
+                "resultat": True,  # or False based on your condition
+                "url": "/imageSoudure....",
+                "erreurSoudure": "pepe"
+            }
+
+            # Convert the dictionary to JSON format
+            result_json = json.dumps(result_data)
+
+            # Send the JSON data
+            # await self.send_message(result_json)
+
+            self._state = PipelineState.INIT
+        else:
+            self.print("No image found")
 
     def _get_images(self):
         return self._dataManager.get_all_img()
@@ -219,15 +193,11 @@ class Pipeline:
 
 
 if __name__ == "__main__":
-    HOST = '127.0.0.1'
-    PORT = 8002
 
-    supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
+    supervised_models = [YoloModel(Path("./src/ia/segmentation/v1.pt"))]
     pipeline = Pipeline(supervised_models=supervised_models, unsupervised_models=[])
 
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(pipeline.run_pipeline(HOST, PORT))
-    
+    pipeline.detect()
         # data_path = "D:\dataset\dofa_3"
     
         #data_path = "D:\dataset\dofa_2\data.yaml"

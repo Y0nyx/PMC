@@ -12,8 +12,8 @@ services:
       - ./:/PMC
       - ./../Datasets:/Datasets
     network_mode: "host"
-    networks:
-      - app_network
+    #networks:
+      #- app_network
     command: tail -F /dev/null
     devices: 
       - "/dev/video0:/dev/video0"

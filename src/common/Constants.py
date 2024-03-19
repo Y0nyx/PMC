@@ -1,6 +1,7 @@
 from pathlib import Path
 
-IMG_SAVE_FILE = Path("../../../../Datasets/Pipeline_seg_captures/")
+IMG_SAVE_FILE = Path("./dataset/img/")
+IMG_CAPTURE_FILE = Path("./dataset/capture/")
 
 # training loop
 NUMBER_IMG_THRESHOLD = 10
@@ -15,3 +16,7 @@ EPOCHS = 3
 BATCH = -1
 NC = 1
 CLASSES = ['default']
+
+# Connection Electron
+PORT = 8002
+HOST = 'host.docker.internal'

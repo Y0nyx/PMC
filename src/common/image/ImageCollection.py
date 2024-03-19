@@ -28,7 +28,22 @@ class ImageCollection:
         Renvoie :
         - list: Liste de tuples contenant la taille de chaque image.
         """
-        return [img.shape() for img in self._img_list]
+
+        if len(self._img_list) > 0:
+            return [img.shape() for img in self._img_list]
+        else:
+            return None
+        
+    @property
+    def img_count(self) -> int:
+        """
+        Récupère le nombre d'image dans la collection.
+
+        Renvoie :
+        - list: Liste de tuples contenant la taille de chaque image.
+        """
+
+        return len(self._img_list)
 
     def resize(self, width, height) -> bool:
         """

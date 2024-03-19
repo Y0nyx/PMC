@@ -3,6 +3,7 @@ import numpy as np
 import yaml
 import cv2
 from common.image.Image import Image
+from common.image.ImageCollection import ImageCollection
 from ..camera.cameraManager import (
     CameraManager,
 )  # May have to be modified depending on implementation
@@ -44,10 +45,10 @@ class DataManager:
     def get_img(self, index_camera: int = 0) -> Image:
         return self._apply_preprocessing(self._camera_manager.get_img(index_camera))
 
-    def get_all_img(self) -> [Image]: 
+    def get_all_img(self) -> ImageCollection: 
         return self._apply_preprocessing(self._camera_manager.get_all_img())
 
-    def concate_img(self) -> [Image]:
+    def concate_img(self) -> ImageCollection:
         """
         Concatenates the images from the CameraManager into one Image object.
         :param self:
@@ -79,7 +80,7 @@ class DataManager:
 
         return images
 
-    def _apply_preprocessing(self, images: [Image]) -> [Image]:
+    def _apply_preprocessing(self, images: ImageCollection) -> ImageCollection:
         """
         Apply preprocessing algorithms as specified in the yaml params
         :params:
@@ -102,7 +103,7 @@ class DataManager:
         #    images = _edge_detection_conversion(images)
         return images
 
-    def _grayscale_conversion(self, images: [Image]) -> [Image]:
+    def _grayscale_conversion(self, images: ImageCollection) -> ImageCollection:
         """
         Apply grayscale conversion
         :params:
@@ -116,7 +117,7 @@ class DataManager:
 
         return images
 
-    def _normalization_conversion(self, images: [Image]) -> [Image]:
+    def _normalization_conversion(self, images: ImageCollection) -> ImageCollection:
         """
         Apply normalization to images.
         :param self:
@@ -128,7 +129,7 @@ class DataManager:
 
         return images
 
-    def _equalized_conversion(self, images: [Image]) -> [Image]:
+    def _equalized_conversion(self, images: ImageCollection) -> ImageCollection:
         """
         Apply histogram equalization to images after converting them to grayscale.
         :param self:
@@ -141,7 +142,7 @@ class DataManager:
 
         return images
 
-    def _gaussian_blur_conversion(self, images: [Image]) -> [Image]:
+    def _gaussian_blur_conversion(self, images: ImageCollection) -> ImageCollection:
         """
         Apply Gaussian blur to images.
         :param self:
@@ -153,7 +154,7 @@ class DataManager:
 
         return images
 
-    def _threshold_conversion(self, images: [Image]) -> [Image]:
+    def _threshold_conversion(self, images: ImageCollection) -> ImageCollection:
         """
         Apply thresholding to images.
         :param self:
@@ -165,7 +166,7 @@ class DataManager:
 
         return images
 
-    def _edge_detection_conversion(self, images: [Image]) -> [Image]:
+    def _edge_detection_conversion(self, images: ImageCollection) -> ImageCollection:
         """
         Apply edge detection to images.
         :param self:

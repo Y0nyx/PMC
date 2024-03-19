@@ -1,3 +1,4 @@
+from common.image.ImageCollection import ImageCollection
 from common.image.Image import Image
 from .webcamCamera import WebcamCamera
 from .cameraSensor import CameraSensor
@@ -47,16 +48,16 @@ class CameraManager:
             warn("Erreur : Index de caméra invalide.")
             return False
 
-    def get_all_img(self) -> List[Image]:
+    def get_all_img(self) -> ImageCollection:
         """
         function to get all the image of all camera
         :return: image
         """
-        images = []
+        images = ImageCollection()
         for camera in self.cameras:
             image = camera.get_img()
-            if image.value is not None:
-                images.append(image)
+            if image is not None:
+                images.add(image)
             else:
                 self.print(
                     f"camera {camera.camera_id} was not able to capture an Image"
@@ -89,30 +90,31 @@ class CameraManager:
             try:
                 yaml_data = yaml.safe_load(file)
                 camera_configs = yaml_data["cameras"]
-                with tqdm.tqdm(total=len(camera_configs), desc="cameras init") as pbar:
-                    for config in camera_configs:
-                        capture_resolution = (
-                            tuple(map(int, config["capture_resolution"].strip("()").split(",")))
-                            or None
-                        )
-                        standby_resolution = (
-                            tuple(map(int, config["standby_resolution"].strip("()").split(",")))
-                            or None
-                        )
-                        camera = WebcamCamera(
-                            config.get("camera_id", None),
-                            standby_resolution,
-                            capture_resolution,
-                            config.get("fps", None),
-                            self.verbose,
-                        )
-                        if camera is not None:
-                            self.add_camera(camera)
-                        else:
-                            self.print(
-                                f'Camera {config.get("camera_id", None)} was not initialize'
+                if camera_configs is not None:
+                    with tqdm.tqdm(total=len(camera_configs), desc="cameras init") as pbar:
+                        for config in camera_configs:
+                            capture_resolution = (
+                                tuple(map(int, config["capture_resolution"].strip("()").split(",")))
+                                or None
                             )
-                        pbar.update(1)
+                            standby_resolution = (
+                                tuple(map(int, config["standby_resolution"].strip("()").split(",")))
+                                or None
+                            )
+                            camera = WebcamCamera(
+                                config.get("camera_id", None),
+                                standby_resolution,
+                                capture_resolution,
+                                config.get("fps", None),
+                                self.verbose,
+                            )
+                            if camera is not None:
+                                self.add_camera(camera)
+                            else:
+                                self.print(
+                                    f'Camera {config.get("camera_id", None)} was not initialize'
+                                )
+                            pbar.update(1)
             except yaml.YAMLError as e:
                 warn("Erreur lors de la lecture du fichier YAML : {e}")
 
