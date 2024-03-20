@@ -21,16 +21,13 @@ from pipeline.models.UnSupervisedPipeline import UnSupervisedPipeline
 import os
 import threading
 from pathlib import Path
-import socket
 import json
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
-class Pipeline(threading.Thread):
-
+class Pipeline():
     def __init__(self, supervised_models, unsupervised_models, verbose: bool = True, State: PipelineState= PipelineState.INIT):
-        super().__init__()
-        self.stop_event = threading.Event()
+        self.stop_flag = threading.Event()
 
         self.verbose = verbose
         self.network_manager = NetworkManager(HOST, PORT, self.verbose)
@@ -50,18 +47,19 @@ class Pipeline(threading.Thread):
             self._dataManager = Mock_DataManager(Path("./dataset/mock"))
         else:
             self._dataManager = DataManager(
-                "", "./src/cameras.yaml", self.verbose
+                "", "./cameras.yaml", self.verbose
             ).get_instance()
 
         self._trainingManager = TrainingManager(is_time_threshold=False, verbose=self.verbose)
 
-    def run(self):
+    def start(self):
         self.print('START SET')
-        self.detect(cam_debug=True)
+        self.stop_flag.clear()
+        return self.detect(cam_debug=True)
 
     def stop(self):
         self.print('STOP SET')
-        self.stop_event.set()
+        self.stop_flag.set()
 
     def get_dataset(self) -> None:
         """Génère un dataset avec tout les caméras instancié lors du init du pipeline.
@@ -134,43 +132,51 @@ class Pipeline(threading.Thread):
             images.save(IMG_CAPTURE_FILE)
 
             for img in images:
-                imagesCollection = self._segmentation_image(img, show, save, conf)
-                # TODO Integrate non supervised model
+                if not self.stop_flag.is_set():
+                    imagesCollection = self._segmentation_image(img, show, save, conf)
+                    # TODO Integrate non supervised model
 
-                # TODO Integrate supervised model
+                    # TODO Integrate supervised model
 
-                # Integrate save
-                imagesCollection.save(IMG_SAVE_FILE)
+                    # Integrate save
+                    imagesCollection.save(IMG_SAVE_FILE)
 
-                # Integrate training loop
-                if self._trainingManager.check_flags():
-                    self._trainingManager.separate_dataset()
-                    model = self._trainingManager.train_supervised()
+                    # Integrate training loop
+                    if self._trainingManager.check_flags():
+                        self._trainingManager.separate_dataset()
+                        model = self._trainingManager.train_supervised()
 
-                # TODO Integrate Classification
+                    # TODO Integrate Classification
 
-                # TODO send to interface
+                    # TODO send to interface
 
-                # Check if a stop signal has been received
-                #if await self.check_stop_signal():
-                #    print("Stop signal received, stopping detection")
-                #    return
-                
-            result_data = {
-                "resultat": True,  # or False based on your condition
+                    # Check if a stop signal has been received
+                    #if await self.check_stop_signal():
+                    #    print("Stop signal received, stopping detection")
+                    #    return
+                    
+                result_data = {
+                    "resultat": True,  # or False based on your condition
+                    "url": "/imageSoudure....",
+                    "erreurSoudure": "pepe"
+                }
+
+                # Convert the dictionary to JSON format
+                result_json = json.dumps(result_data)
+
+                self._state = PipelineState.INIT
+
+                # Send the JSON data
+                return result_json
+            else:
+                return
+        else:
+            self.print("No image found")
+            return {
+                "resultat": None,  # or False based on your condition
                 "url": "/imageSoudure....",
                 "erreurSoudure": "pepe"
             }
-
-            # Convert the dictionary to JSON format
-            result_json = json.dumps(result_data)
-
-            # Send the JSON data
-            # await self.send_message(result_json)
-
-            self._state = PipelineState.INIT
-        else:
-            self.print("No image found")
 
     def _get_images(self):
         return self._dataManager.get_all_img()
@@ -194,7 +200,7 @@ class Pipeline(threading.Thread):
 
 if __name__ == "__main__":
 
-    supervised_models = [YoloModel(Path("./src/ia/segmentation/v1.pt"))]
+    supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
     pipeline = Pipeline(supervised_models=supervised_models, unsupervised_models=[])
 
     pipeline.detect()

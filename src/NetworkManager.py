@@ -2,6 +2,7 @@ import json
 import socket
 import asyncio
 import threading
+from  concurrent.futures import ThreadPoolExecutor
 
 class NetworkManager():
     def __init__(self, worker: threading.Thread, host: str, port: str, verbose: bool = False):
@@ -15,15 +16,14 @@ class NetworkManager():
         self.port = port
 
         self.worker = worker
+        self.executor = ThreadPoolExecutor()
+        self.future = None
 
     def start(self):
         self.loop.run_until_complete(self.run())
     
     async def run(self):
         await self.socket_connect()
-
-        await self.send_message({'code': 'stop', 'data': 'object data'})
-
         await self.receive_message()
 
         await self.close_socket()
@@ -35,10 +35,19 @@ class NetworkManager():
             code = received_json['code']['code']
             self.print(f'Received code: {code}')
 
+
+            if self.future is not None and self.future.done():
+                self.print("NetworkManager : Finish Pipeline")
+                await self.send_message(self.future.result())
+                self.future = None
+
             if code == "start":
-                self.worker.start()
+                self.print("NetworkManager : Start Pipeline")
+                self.future = self.executor.submit(self.worker.start)
             elif code ==  "stop":
+                self.print("NetworkManager : Stop Pipeline")
                 self.worker.stop()
+                await self.send_message('Stop')
 
     async def send_message(self, data) -> None:
         serialized_data = json.dumps(data).encode()
