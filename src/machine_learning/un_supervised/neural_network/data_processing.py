@@ -16,15 +16,22 @@ from scipy.ndimage import gaussian_filter
 from skimage.draw import ellipse_perimeter
 from skimage.util import random_noise
 from sklearn.model_selection import train_test_split
+from ultralytics import YOLO
+import tensorflow as tf
+from PIL import Image as Img
+
+import os
+from pathlib import Path
 
 class DataProcessing():
 
-    def __init__(self, height, width):
+    def __init__(self, height, width, seg_model_path: str ="../../../../src/ia/segmentation/v2.pt"):
         self.height = height
         self.width = width
         self._nb_x_sub = 0
         self._nb_y_sub = 0
         self.debug = True
+        self._segmentation_model = YOLO(Path(seg_model_path))
 
     def load_data(self, data_path, subdvisise=False, rotate=False):
         images = []
@@ -256,3 +263,21 @@ class DataProcessing():
             image = np.rot90(image)
             rotated_images.append(image)
         return rotated_images
+    
+    def segment(self, images):
+        imgCollection = []
+        for model in self.models:
+            results = model.predict(source=images, show=False, conf=False, save=0.7)
+
+            # crop images with bounding box
+            for result in results:
+                for boxes in result.boxes:
+                    imgCollection.add(self.crop(boxes))
+
+        return imgCollection
+    
+    def crop(self, boxes):
+        image = Img.fromarray(self._img)
+        cropped_image = image.crop(boxes.xyxy.tolist()[0])
+
+        return np.array(cropped_image)
