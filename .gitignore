@@ -7,3 +7,4 @@ dataset/*
 datasets/*
 # yolo models
 yolo*pt
+src/ia/segmentation/v2.pt
