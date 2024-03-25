@@ -38,12 +38,34 @@ class DataProcessing():
 
         #Data loading
         for filename in os.listdir(data_path):
-            if filename.endswith(".png"):
-                img = keras_image.load_img(f'{data_path}/{filename}')
-                images.append(keras_image.img_to_array(img))
+            if filename.endswith(".jpg"):
+                images.append(cv2.imread(f'{data_path}/{filename}'))
+                #images.append(keras_image.img_to_array(img))
         
         rotated_images = []
         sub_images = []
+        seg_images = []
+
+        for i, image in enumerate(images):
+            images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
+
+                    # Ensure the output directory exist
+
+        #print(images.shape)
+        for i, image in enumerate(images):
+            seg_images.extend(self.segment(image))
+
+        images = seg_images
+
+        self.debug = True
+        if self.debug:
+            # Ensure the output directory exists
+            output_dir = "./output"
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir)
+    
+            for i in range(200):
+                cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
 
         if subdvisise:
             for i, img in enumerate(images):
@@ -60,15 +82,6 @@ class DataProcessing():
             images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
 
         images = np.array(images)
-        
-        if self.debug:
-            # Ensure the output directory exists
-            output_dir = "./output"
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-    
-            for i in range(200):
-                cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
         
         return self.split_data(images)
 
@@ -157,12 +170,6 @@ class DataProcessing():
 
         return train_augmented, valid_augmented, test_augmented
 
-    def normalize(self, data, max_pixel_value):
-        """
-        Data domain will be between 0 and 1. 
-        """
-        return data.astype('float32') / float(max_pixel_value)
-    
     def normalize(self, data, max_pixel_value):
         """
         Data domain will be between 0 and 1. 
@@ -264,20 +271,19 @@ class DataProcessing():
             rotated_images.append(image)
         return rotated_images
     
-    def segment(self, images):
+    def segment(self, image):
         imgCollection = []
-        for model in self.models:
-            results = model.predict(source=images, show=False, conf=False, save=0.7)
-
-            # crop images with bounding box
-            for result in results:
-                for boxes in result.boxes:
-                    imgCollection.add(self.crop(boxes))
+        
+        results = self._segmentation_model.predict(source=image, show=False, conf=0.7, save=False)
+        # crop images with bounding box
+        for result in results:
+            for boxes in result.boxes:
+                imgCollection.append(self.crop(boxes, image))
 
         return imgCollection
     
-    def crop(self, boxes):
-        image = Img.fromarray(self._img)
+    def crop(self, boxes, image):
+        image = Img.fromarray(image, 'RGB')
         cropped_image = image.crop(boxes.xyxy.tolist()[0])
-
-        return np.array(cropped_image)
+        cropped_image = np.array(cropped_image)
+        return cropped_image
