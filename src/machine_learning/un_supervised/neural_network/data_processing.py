@@ -16,7 +16,7 @@ from scipy.ndimage import gaussian_filter
 from skimage.draw import ellipse_perimeter
 from skimage.util import random_noise
 from sklearn.model_selection import train_test_split
-from ultralytics import YOLO
+#from ultralytics import YOLO
 import tensorflow as tf
 from PIL import Image as Img
 
@@ -31,14 +31,14 @@ class DataProcessing():
         self._nb_x_sub = 0
         self._nb_y_sub = 0
         self.debug = True
-        self._segmentation_model = YOLO(Path(seg_model_path))
+        #self._segmentation_model = YOLO(Path(seg_model_path))
 
     def load_data(self, data_path, subdvisise=False, rotate=False):
         images = []
 
         #Data loading
         for filename in os.listdir(data_path):
-            if filename.endswith(".jpg"):
+            if filename.endswith(".png"):
                 images.append(cv2.imread(f'{data_path}/{filename}'))
                 #images.append(keras_image.img_to_array(img))
         
@@ -50,22 +50,18 @@ class DataProcessing():
             images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
 
                     # Ensure the output directory exist
+        
+        segment = False
+        if segment:
+            #print(images.shape)
+            for i, image in enumerate(images):
+                seg_images.extend(self.segment(image))
 
-        #print(images.shape)
-        for i, image in enumerate(images):
-            seg_images.extend(self.segment(image))
+            images = seg_images
 
-        images = seg_images
-
-        self.debug = True
-        if self.debug:
-            # Ensure the output directory exists
-            output_dir = "./output"
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-    
-            for i in range(200):
-                cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
+            self.debug = True
+            if self.debug:
+                self.save_images(len(images), images, "./output_segmentation")
 
         if subdvisise:
             for i, img in enumerate(images):
@@ -168,7 +164,18 @@ class DataProcessing():
         print("Augmented splitted dataset in arrays of shape: ", train_augmented.shape, " | ",valid_augmented.shape, " | ", test_augmented.shape)
         print("=====================================")
 
+
+
         return train_augmented, valid_augmented, test_augmented
+
+    def save_images(self, nb_images, images, folder: str = "./output_"):
+        output_dir = folder
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+
+        for i in range(nb_images):
+         cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
+        
 
     def normalize(self, data, max_pixel_value):
         """
@@ -191,7 +198,10 @@ class DataProcessing():
         input_test = (input_test * max_pixel_value).astype('uint8')
         result_test = (result_test * max_pixel_value).astype('uint8')
 
-        return input_test, result_test, difference_reshaped
+    def de_normalize(self, image, max_pixel_value):
+        image = (image * max_pixel_value).astype('uint8')
+
+        return image
         
     def get_data_processing_blackout(self, data_path, max_pixel_value):
         """
@@ -203,10 +213,22 @@ class DataProcessing():
         train_augmented, valid_augmented, test_augmented = self.get_random_blackout(input_train, input_valid, input_test)
 
         #TODO loop if you want to normalise multipes values
-        input_train_norm, input_valid_norm, input_test_norm = self.normalize(input_train, input_valid, input_test, max_pixel_value)
-        input_train_aug_norm, input_valid_aug_norm, input_test_aug_norm = self.normalize(train_augmented, valid_augmented, test_augmented, max_pixel_value)
+        input_train_aug_norm = self.normalize(train_augmented, max_pixel_value)
+        input_train_norm = self.normalize(input_train, max_pixel_value)
+        input_test_aug_norm = self.normalize(test_augmented, max_pixel_value)
+        input_test_norm = self.normalize(input_test, max_pixel_value)
+        input_valid_norm = self.normalize(input_valid, max_pixel_value)
+        input_valid_aug_norm = self.normalize(valid_augmented, max_pixel_value)
 
-        return input_train_aug_norm, input_train_norm, input_valid_aug_norm, input_valid_norm, input_test_norm
+        if self.debug:
+            self.save_images(15, self.de_normalize(input_train_aug_norm, max_pixel_value), "input_train_aug_norm")
+            self.save_images(15, self.de_normalize(input_train_norm, max_pixel_value), "input_train_norm")
+            self.save_images(15, self.de_normalize(input_test_aug_norm, max_pixel_value), "input_test_aug_norm")
+            self.save_images(15, self.de_normalize(input_test_norm, max_pixel_value), "input_test_norm")
+            self.save_images(15, self.de_normalize(input_valid_norm, max_pixel_value), "input_valid_norm")
+            self.save_images(15, self.de_normalize(input_valid_aug_norm, max_pixel_value), "input_valid_aug_norm")
+
+        return input_train_aug_norm, input_train_norm, input_test_aug_norm, input_test_norm, input_valid_aug_norm, input_valid_norm
     
     def get_data_processing_stain(self, data_path, max_pixel_value):
         """
