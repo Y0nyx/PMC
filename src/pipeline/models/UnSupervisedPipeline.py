@@ -1,12 +1,12 @@
 import cv2
 import numpy as np
 #from skimage.metrics import structural_similarity as ssim
-import matplotlib.pyplot as plt
-import os
+from common.image.ImageCollection import ImageCollection
+from common.image.Image import Image
 
 class UnSupervisedPipeline:
 
-    def __init__(self, model, image):
+    def __init__(self, model, image, debug: bool=False):
         self._model = model
         self._image = image
         self._subdivisions = []
@@ -14,6 +14,7 @@ class UnSupervisedPipeline:
         self._nb_y_sub = 0
         self._model_shape = model.input_shape
         self._square_size = 32
+        self.debug = debug
     
     def set_image(self, image):
         self._image = image
@@ -35,35 +36,6 @@ class UnSupervisedPipeline:
             current_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel] = 0
         
         return current_image
-
-    def debug(self):
-        for image in self._subdivisions:
-            if True: #C'est un if le model non supervise prend des images subdivises
-                # Calculate the closest multiples for both dimensions
-                sub_images = image.subdivise(128, 0, "untranslated")
-
-                for i, sub_image in enumerate(sub_images):
-                    cv2.imshow('Sub image', sub_image.value)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows
-                    worst_ssim, worst_ssim_position, worst_ssim_square, worst_ssim_prediction = self.detect_default(sub_image.value, 32, i)
-                    if True:
-                    
-                        fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-                        # Plot the first RGB image
-                        axes[0].imshow(sub_image.value)
-                        axes[0].set_title(f"Error in image {i}")
-                        axes[0].axis('off')
-                        # Plot the second grayscale image
-                        axes[1].imshow(worst_ssim_square)
-                        axes[1].set_title(f"At position x={worst_ssim_position[0]} y={worst_ssim_position[1]}")
-                        axes[1].axis('off')
-                        # Plot the third grayscale image
-                        axes[2].imshow(worst_ssim_prediction)
-                        axes[2].set_title(f"Prediction made")
-                        axes[2].axis('off')
-                        # Show the combined plot
-                        plt.show
 
     def brightness(self, img1, img2):
         ig1, ig2, channels = img1.shape
@@ -102,71 +74,60 @@ class UnSupervisedPipeline:
 
                 # Crop the sub-image using NumPy array slicing
                 sub_images.append(self._image.value[left:right, top:bottom, :])
-        print("what the hell")
-        self._subdivisions = sub_images
+        return sub_images
     
     def decision(self, sub_image, prediction):
         comparision = self.comparision(sub_image, prediction)
         return False
 
     def mask_and_predict(self, sub_image):
-        print("bro")
+
+        imgCollection = ImageCollection([])
+
         width, height, channels = sub_image.shape
         nb_x_mask = width//self._square_size
         nb_y_mask = height//self._square_size
 
-        counter = 0
-
         for x in range(nb_x_mask):
             for y in range(nb_y_mask):
                 masked_sub_image = self.mask(sub_image, x, y)
-                #cv2.imshow("Image", masked_sub_image)
-                # Wait for a key press and then close the window
-                #cv2.waitKey(0)
-                #cv2.destroyAllWindows()
-                masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_BGR2GRAY)
-                masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_GRAY2RGB)
-                masked_sub_image = masked_sub_image.reshape(1, 256, 256, 3)
+                masked_sub_image = self.masked_sub_image_preprocessing(masked_sub_image)
+
+                prediction = self._model.predict(masked_sub_image, verbose=0)
+                predicted_image = self.predicted_image_postprocessing(prediction)
                 
-                masked_sub_image = masked_sub_image/255.0
-                prediction = self._model.predict(masked_sub_image)
-                # Remove singleton dimension and convert prediction to uint8 image format
-                prediction_image = np.squeeze(prediction) * 255
-                prediction_image = prediction_image.astype(np.uint8)
-                #cv2.imshow("Image", prediction_image)
-                # Wait for a key press and then close the window
-                #cv2.waitKey(0)
-                #cv2.destroyAllWindows()
-                #error = self.decision(sub_image, prediction_image)
+                predicted_image = Image(predicted_image)
+                imgCollection.add(predicted_image)
+        
+        return imgCollection
 
-                folder_path = './prediction_results'
+    def masked_sub_image_preprocessing(self, masked_sub_image):
+        #TODO: Subdivide in separate functions and add bool for grayscale conversion
+        masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_BGR2GRAY)
+        masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_GRAY2RGB)
+        masked_sub_image = masked_sub_image.reshape(1, self._model.input_shape[1], self._model.input_shape[2], self._model.input_shape[3])
+        
+        masked_sub_image = masked_sub_image/255.0
 
-                # Ensure the folder exists; create it if it doesn't
-                if not os.path.exists(folder_path):
-                    os.makedirs(folder_path)
+        return masked_sub_image
 
-                # Get the latest image index in the folder
-                #existing_images = [f for f in os.listdir(folder_path) if f.endswith('.png')]
-                #print(len(existing_images))
-                #if len(existing_images) != 1:
-                #    latest_index = max([int(img.split('_')[1].split('.')[0]) for img in existing_images], default=0)
-                #else:
-                #    latest_index = -1
-                # Construct the filename with an incremented index
-                filename = f'predicted_image_{counter}.png'
-                #filename = f'predicted_image.png'
+    def predicted_image_postprocessing(self, prediction):
+        #TODO: Subdivied in separate functions
+        predicted_image = np.squeeze(prediction) * 255
+        predicted_image = predicted_image.astype(np.uint8)
 
-                # Save the image with the incremented filename to the specified folder
-                cv2.imwrite(os.path.join(folder_path, filename), prediction_image)
-                counter +=1
-
+        return predicted_image
 
         
-    def detect_default(self, debug=False):
+    def detect_default(self):
 
-        self.subdivise()
-        print("yo")
+        sub_images = self.subdivise()
+        predicted_collection = []
         # Iterate through each subdivision
         for x in range(self._nb_x_sub):
             for y in range(self._nb_y_sub):
-                self.mask_and_predict(self._subdivisions[x*y])
+                # Correctly index into the subdivisions list
+                subdivision_index = x * self._nb_y_sub + y
+                predicted_collection.append(self.mask_and_predict(sub_images[subdivision_index]))
+
+        return predicted_collection

@@ -78,5 +78,4 @@ class ImageCollection:
         Paramètres :
         - img: Objet image à ajouter.
         """
-        print("another one")
         self._img_list.append(img)

@@ -26,7 +26,7 @@ import json
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
-    def __init__(self, supervised_models, unsupervised_models, verbose: bool = True, State: PipelineState= PipelineState.INIT):
+    def __init__(self, supervised_models, unsupervised_model, verbose: bool = True, State: PipelineState= PipelineState.INIT):
         self.stop_flag = threading.Event()
 
         self.verbose = verbose
@@ -38,9 +38,7 @@ class Pipeline():
         for model in supervised_models:
             self.supervised_models.append(model)
 
-        self.unsupervised_models = []
-        for model in unsupervised_models:
-            self.unsupervised_models.append(model)
+        self.unsupervised_model = unsupervised_model
 
         self._state = State
         if self._state == PipelineState.TRAINING:
@@ -127,23 +125,35 @@ class Pipeline():
         if self._state != PipelineState.TRAINING:
             self._state = PipelineState.TRAINING
 
-        images = self._get_images()
-        if images.img_count > 0:
-            images.save(IMG_CAPTURE_FILE)
+        captured_image_collection = self._get_images()
+        if captured_image_collection.img_count > 0:
+            
+            #TODO: Ajouter une condition debug pour choisir si on save ou pas
+            #Save the captured images
+            captured_image_collection.save(SEGMENTED_IMG_SAVE_PATH)
 
-            for img in images:
+            for i, captured_image in enumerate(captured_image_collection):
+
+                #Check if stopped was received
                 if not self.stop_flag.is_set():
-                    imagesCollection = self._segmentation_image(img, show, save, conf)
-                    # TODO Integrate non supervised model
-                    print(len(self.unsupervised_models))
-                    print(len(imagesCollection._img_list))
 
-                    unsupervied_pipeline = UnSupervisedPipeline(self.unsupervised_models[0], imagesCollection._img_list[0])
-                    unsupervied_pipeline.detect_default()
+                    #Find the welds in the capture image
+                    segmented_image_collection = self._segmentation_image(captured_image, show, save, conf)
+                    segmented_image_collection.save(CAPTURED_IMG_SAVE_PATH)
+
+                    #Analyse the welds with the unsupervised model to find potential defaults
+                    unsupervised_result_collections = []
+
+                    for segmentation in segmented_image_collection:
+                        unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model, segmentation)
+                        unsupervised_result_collections.append(unsupervised_pipeline.detect_default())
+                    
+                    for y, unsupervised_result_collection in enumerate(unsupervised_result_collections):
+                        for z, unsupervised_results in enumerate(unsupervised_result_collection):
+                            unsupervised_results.save(f"{UNSUPERVISED_PREDICTED_SAVE_PATH}_{i}{UNSUPERVISED_PREDICTED_SAVE_PATH_SEGMENTATION}_{y}{UNSUPERVISED_PREDICTED_SAVE_PATH_SUBDIVISION}_{z}")
+
                     # TODO Integrate supervised model
-
-                    # Integrate save
-                    imagesCollection.save(IMG_SAVE_FILE)
+                    
 
                     # Integrate training loop
                     #if self._trainingManager.check_flags():
@@ -205,8 +215,8 @@ class Pipeline():
 if __name__ == "__main__":
 
     supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
-    unsupervised_models = [tf.keras.models.load_model('../../default_param_model.keras')]
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_models=unsupervised_models)
+    unsupervised_model = tf.keras.models.load_model('../../default_param_model.keras')
+    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model)
 
     pipeline.detect()
         # data_path = "D:\dataset\dofa_3"
