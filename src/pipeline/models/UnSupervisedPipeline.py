@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 #from skimage.metrics import structural_similarity as ssim
 import matplotlib.pyplot as plt
+import os
 
 class UnSupervisedPipeline:
 
@@ -100,8 +101,8 @@ class UnSupervisedPipeline:
                 # left, top, right, bottom = add_overlap(left, top, right, bottom, width, height, overlap_size)
 
                 # Crop the sub-image using NumPy array slicing
-                sub_images.append(self._image[left:right, top:bottom, :])
-
+                sub_images.append(self._image.value[left:right, top:bottom, :])
+        print("what the hell")
         self._subdivisions = sub_images
     
     def decision(self, sub_image, prediction):
@@ -109,36 +110,62 @@ class UnSupervisedPipeline:
         return False
 
     def mask_and_predict(self, sub_image):
-
+        print("bro")
         width, height, channels = sub_image.shape
         nb_x_mask = width//self._square_size
         nb_y_mask = height//self._square_size
 
+        counter = 0
+
         for x in range(nb_x_mask):
             for y in range(nb_y_mask):
                 masked_sub_image = self.mask(sub_image, x, y)
-                cv2.imshow("Image", masked_sub_image)
+                #cv2.imshow("Image", masked_sub_image)
                 # Wait for a key press and then close the window
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
-                masked_sub_image = masked_sub_image.reshape(1, 128, 128, 3)
-                #masked_sub_image = masked_sub_image/255.0
+                #cv2.waitKey(0)
+                #cv2.destroyAllWindows()
+                masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_BGR2GRAY)
+                masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_GRAY2RGB)
+                masked_sub_image = masked_sub_image.reshape(1, 256, 256, 3)
+                
+                masked_sub_image = masked_sub_image/255.0
                 prediction = self._model.predict(masked_sub_image)
                 # Remove singleton dimension and convert prediction to uint8 image format
                 prediction_image = np.squeeze(prediction) * 255
                 prediction_image = prediction_image.astype(np.uint8)
-                cv2.imshow("Image", prediction_image)
+                #cv2.imshow("Image", prediction_image)
                 # Wait for a key press and then close the window
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
-                error = self.decision(sub_image, prediction_image)
+                #cv2.waitKey(0)
+                #cv2.destroyAllWindows()
+                #error = self.decision(sub_image, prediction_image)
+
+                folder_path = './prediction_results'
+
+                # Ensure the folder exists; create it if it doesn't
+                if not os.path.exists(folder_path):
+                    os.makedirs(folder_path)
+
+                # Get the latest image index in the folder
+                #existing_images = [f for f in os.listdir(folder_path) if f.endswith('.png')]
+                #print(len(existing_images))
+                #if len(existing_images) != 1:
+                #    latest_index = max([int(img.split('_')[1].split('.')[0]) for img in existing_images], default=0)
+                #else:
+                #    latest_index = -1
+                # Construct the filename with an incremented index
+                filename = f'predicted_image_{counter}.png'
+                #filename = f'predicted_image.png'
+
+                # Save the image with the incremented filename to the specified folder
+                cv2.imwrite(os.path.join(folder_path, filename), prediction_image)
+                counter +=1
 
 
         
     def detect_default(self, debug=False):
 
         self.subdivise()
-
+        print("yo")
         # Iterate through each subdivision
         for x in range(self._nb_x_sub):
             for y in range(self._nb_y_sub):

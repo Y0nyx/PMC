@@ -135,16 +135,20 @@ class Pipeline():
                 if not self.stop_flag.is_set():
                     imagesCollection = self._segmentation_image(img, show, save, conf)
                     # TODO Integrate non supervised model
+                    print(len(self.unsupervised_models))
+                    print(len(imagesCollection._img_list))
 
+                    unsupervied_pipeline = UnSupervisedPipeline(self.unsupervised_models[0], imagesCollection._img_list[0])
+                    unsupervied_pipeline.detect_default()
                     # TODO Integrate supervised model
 
                     # Integrate save
                     imagesCollection.save(IMG_SAVE_FILE)
 
                     # Integrate training loop
-                    if self._trainingManager.check_flags():
-                        self._trainingManager.separate_dataset()
-                        model = self._trainingManager.train_supervised()
+                    #if self._trainingManager.check_flags():
+                    #    self._trainingManager.separate_dataset()
+                    #    model = self._trainingManager.train_supervised()
 
                     # TODO Integrate Classification
 
@@ -167,7 +171,7 @@ class Pipeline():
                 self._state = PipelineState.INIT
 
                 # Send the JSON data
-                return result_json
+                #return result_json
             else:
                 return
         else:
@@ -201,7 +205,8 @@ class Pipeline():
 if __name__ == "__main__":
 
     supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_models=[])
+    unsupervised_models = [tf.keras.models.load_model('../../default_param_model.keras')]
+    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_models=unsupervised_models)
 
     pipeline.detect()
         # data_path = "D:\dataset\dofa_3"
