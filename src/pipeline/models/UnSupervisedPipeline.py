@@ -3,6 +3,7 @@ import numpy as np
 #from skimage.metrics import structural_similarity as ssim
 from common.image.ImageCollection import ImageCollection
 from common.image.Image import Image
+from skimage.metrics import structural_similarity as ssim
 
 class UnSupervisedPipeline:
 
@@ -83,6 +84,7 @@ class UnSupervisedPipeline:
     def mask_and_predict(self, sub_image):
 
         imgCollection = ImageCollection([])
+        threshold_results = []
 
         width, height, channels = sub_image.shape
         nb_x_mask = width//self._square_size
@@ -95,11 +97,16 @@ class UnSupervisedPipeline:
 
                 prediction = self._model.predict(masked_sub_image, verbose=0)
                 predicted_image = self.predicted_image_postprocessing(prediction)
+                mse, ssim_value, psnr_value, decision  = self.threshold_comparison(sub_image, predicted_image)
+                bb = ""
+                if decision: bb = self.calculate_bounding_box(x, y)
+                #print(bb)
+                threshold_results.append([mse, ssim_value, psnr_value, decision, bb])
                 
                 predicted_image = Image(predicted_image)
                 imgCollection.add(predicted_image)
         
-        return imgCollection
+        return [imgCollection, threshold_results]
 
     def masked_sub_image_preprocessing(self, masked_sub_image):
         #TODO: Subdivide in separate functions and add bool for grayscale conversion
@@ -117,12 +124,33 @@ class UnSupervisedPipeline:
         predicted_image = predicted_image.astype(np.uint8)
 
         return predicted_image
+    
+    def threshold_comparison(self, original_image, prediction):
+        # Mean Squared Error
+        mse = np.mean((original_image - prediction) ** 2)
 
+        # Structural Similarity Index
+        ssim_value = ssim(original_image, prediction, multichannel=True, win_size=3)
+
+        # Peak Signal-to-Noise Ratio
+        max_pixel_value = 255.0 # Assuming 8-bit images
+        mse_value = mse
+        psnr_value = 20 * np.log10(max_pixel_value / np.sqrt(mse_value))
+
+        #print(f"MSE: {mse}, SSIM: {ssim_value}, PSNR: {psnr_value}")
+        decision = False
+        if mse > 0 and ssim_value > 0 and psnr_value > 0: decision = True
+
+        return mse, ssim_value, psnr_value, decision
+    
+    def calculate_bounding_box(self, x, y):
+        return f"{x}:{y} - subdivision position"
         
     def detect_default(self):
 
         sub_images = self.subdivise()
         predicted_collection = []
+
         # Iterate through each subdivision
         for x in range(self._nb_x_sub):
             for y in range(self._nb_y_sub):

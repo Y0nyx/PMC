@@ -26,7 +26,7 @@ import json
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
-    def __init__(self, supervised_models, unsupervised_model, verbose: bool = True, State: PipelineState= PipelineState.INIT):
+    def __init__(self, supervised_models, unsupervised_model, verbose: bool = True, State: PipelineState= PipelineState.INIT, current_iteration_save_folder = ""):
         self.stop_flag = threading.Event()
 
         self.verbose = verbose
@@ -49,6 +49,7 @@ class Pipeline():
             ).get_instance()
 
         self._trainingManager = TrainingManager(is_time_threshold=False, verbose=self.verbose)
+        self._current_iteration_save_folder = current_iteration_save_folder
 
     def start(self):
         self.print('START SET')
@@ -130,7 +131,7 @@ class Pipeline():
             
             #TODO: Ajouter une condition debug pour choisir si on save ou pas
             #Save the captured images
-            captured_image_collection.save(SEGMENTED_IMG_SAVE_PATH)
+            captured_image_collection.save(f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_CAPTURE}")
 
             for i, captured_image in enumerate(captured_image_collection):
 
@@ -139,7 +140,7 @@ class Pipeline():
 
                     #Find the welds in the capture image
                     segmented_image_collection = self._segmentation_image(captured_image, show, save, conf)
-                    segmented_image_collection.save(CAPTURED_IMG_SAVE_PATH)
+                    segmented_image_collection.save(f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_SEGMENTATION}")
 
                     #Analyse the welds with the unsupervised model to find potential defaults
                     unsupervised_result_collections = []
@@ -150,7 +151,7 @@ class Pipeline():
                     
                     for y, unsupervised_result_collection in enumerate(unsupervised_result_collections):
                         for z, unsupervised_results in enumerate(unsupervised_result_collection):
-                            unsupervised_results.save(f"{UNSUPERVISED_PREDICTED_SAVE_PATH}_{i}{UNSUPERVISED_PREDICTED_SAVE_PATH_SEGMENTATION}_{y}{UNSUPERVISED_PREDICTED_SAVE_PATH_SUBDIVISION}_{z}")
+                            unsupervised_results[0].save(f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_UNSUPERVISED_PREDICTION}_{i}{SAVE_PATH_SEGMENTATION}_{y}{SAVE_PATH_SUBDIVISION}_{z}")
 
                     # TODO Integrate supervised model
                     
@@ -211,12 +212,26 @@ class Pipeline():
         if self.verbose:
             print(string)
 
+def count_folders_starting_with(start_string, path):
+    count = 0
+    for root, dirs, files in os.walk(path):
+        for dir in dirs:
+            if dir.startswith(start_string):
+                count += 1
+    return count
 
 if __name__ == "__main__":
 
     supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
-    unsupervised_model = tf.keras.models.load_model('../../default_param_model.keras')
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model)
+
+    unsupervised_model_name = "default_param_model"
+    unsupervised_model_higher_path = "../../"
+    unsupervised_model_path = f'{unsupervised_model_higher_path}{unsupervised_model_name}.keras'
+    unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
+    folder_count = count_folders_starting_with(f"{unsupervised_model_name}", unsupervised_model_higher_path)
+    current_iteration_save_folder = f'/{unsupervised_model_name}_{folder_count}'
+
+    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_save_folder=current_iteration_save_folder)
 
     pipeline.detect()
         # data_path = "D:\dataset\dofa_3"

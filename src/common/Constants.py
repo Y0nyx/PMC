@@ -1,10 +1,10 @@
 from pathlib import Path
 
-CAPTURED_IMG_SAVE_PATH = Path("./pipeline_results/img/")
-SEGMENTED_IMG_SAVE_PATH = Path("./pipeline_results/capture/")
-UNSUPERVISED_PREDICTED_SAVE_PATH = Path("./pipeline_results/unsupervised_prediction")
-UNSUPERVISED_PREDICTED_SAVE_PATH_SEGMENTATION = Path("/segmentation")
-UNSUPERVISED_PREDICTED_SAVE_PATH_SUBDIVISION = Path("/subidivision")
+SAVE_PATH = Path("../../pipeline_results")
+SAVE_PATH_UNSUPERVISED_PREDICTION = Path("/unsupervised_prediction")
+SAVE_PATH_SEGMENTATION = Path("/segmentation")
+SAVE_PATH_SUBDIVISION = Path("/subidivision")
+SAVE_PATH_CAPTURE = Path("/capture")
 
 # training loop
 NUMBER_IMG_THRESHOLD = 10
