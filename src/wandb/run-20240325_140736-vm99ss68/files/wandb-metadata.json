@@ -1,0 +1,128 @@
+{
+    "os": "Linux-6.5.0-25-generic-x86_64-with-glibc2.35",
+    "python": "3.11.5",
+    "heartbeatAt": "2024-03-25T18:07:36.655531",
+    "startedAt": "2024-03-25T18:07:36.215933",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "/home/dofa/Desktop/code/PMC/src/Pipeline.py",
+    "codePathLocal": "Pipeline.py",
+    "codePath": "src/Pipeline.py",
+    "git": {
+        "remote": "git@github.com:Y0nyx/PMC.git",
+        "commit": "93fc4e326a53c3a1abf835a074f4f2cfa4bea598"
+    },
+    "email": "\u201cdofapromo@gmail.com\u201d",
+    "root": "/home/dofa/Desktop/code/PMC",
+    "host": "dofa-MS-7E27",
+    "username": "dofa",
+    "executable": "/home/dofa/miniconda3/bin/python",
+    "cpu_count": 8,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 3933.5421875,
+        "min": 400.0,
+        "max": 5573.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 5255.616,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 3650.22,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 4026.473,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 4385.008,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 4512.721,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 3757.795,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 4397.288,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 3344.823,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 4370.113,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 4385.031,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 4014.241,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 3275.343,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 3550.793,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 3280.862,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 3300.355,
+            "min": 400.0,
+            "max": 5573.0
+        },
+        {
+            "current": 3429.993,
+            "min": 400.0,
+            "max": 5573.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 915.3232879638672,
+            "used": 255.29344940185547
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+            "memory_total": 17171480576
+        }
+    ],
+    "memory": {
+        "total": 61.95333480834961
+    }
+}

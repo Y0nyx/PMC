@@ -35,12 +35,16 @@ class DataProcessing():
 
     def load_data(self, data_path, subdvisise=False, rotate=False):
         images = []
+        counter = 0
 
         #Data loading
         for filename in os.listdir(data_path):
             if filename.endswith(".png"):
                 images.append(cv2.imread(f'{data_path}/{filename}'))
+                counter += 1
                 #images.append(keras_image.img_to_array(img))
+                if counter >= 800: # Stop loading after 500,000 images
+                    break
         
         rotated_images = []
         sub_images = []
@@ -48,8 +52,6 @@ class DataProcessing():
 
         for i, image in enumerate(images):
             images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
-
-                    # Ensure the output directory exist
         
         segment = False
         if segment:
@@ -60,6 +62,13 @@ class DataProcessing():
             images = seg_images
 
             self.debug = True
+
+            greyscale = True
+            if greyscale:    
+                for i, image in enumerate(images):
+                    images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2GRAY)
+                    images[i] = cv2.cvtColor(images[i], cv2.COLOR_GRAY2BGR)
+
             if self.debug:
                 self.save_images(len(images), images, "./output_segmentation")
 
@@ -309,3 +318,7 @@ class DataProcessing():
         cropped_image = image.crop(boxes.xyxy.tolist()[0])
         cropped_image = np.array(cropped_image)
         return cropped_image
+    
+    def to_greyscale(images):
+        images = cv2.cvtColor(images, cv2.COLOR_BGR2GRAY)
+        return images

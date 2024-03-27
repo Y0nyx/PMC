@@ -37,7 +37,8 @@ class Pipeline:
 
         self._state = State
         if self._state == PipelineState.TRAINING:
-            self._dataManager = Mock_DataManager(Path("./dataset/mock"))
+            #self._dataManager = Mock_DataManager(Path("./dataset/mock"))
+            pass
         else:
             self._dataManager = DataManager(
                 "", "./src/cameras.yaml", self.verbose
@@ -90,7 +91,7 @@ class Pipeline:
 
         self._state = PipelineState.INIT
 
-    def train(self, yaml_path: str, yolo_model: YoloModel, **kargs):
+    def train(self, yaml_path: str, yolo_model: str, **kargs):
 
         model = YoloModel(f"{yolo_model}.pt")
         args = dict(data=yaml_path, **kargs)
@@ -161,11 +162,11 @@ class Pipeline:
 
 
 if __name__ == "__main__":
-    models = []
-    models.append(YoloModel(Path("./src/ia/segmentation/v1.pt")))
+    data_path = './datasets/v8i.yolov8/data.yaml'
+    
+    pipeline = Pipeline(models=[], unsupervised_model=None, State=PipelineState.TRAINING)
 
-    pipeline = Pipeline(models=models, State=PipelineState.TRAINING)
-    pipeline.detect()
+    pipeline.train(yaml_path=data_path, yolo_model="yolov8m-seg", epochs=350, batch=-1, workers=4)
 
     # data_path = "D:\dataset\dofa_3"
 
@@ -183,8 +184,6 @@ if __name__ == "__main__":
 
     # print(f'test fitness: {test_resultats.fitness}')
     # print(f'welding fitness: {welding_resultats.fitness}')
-
-    Pipeline = Pipeline(models, unsupervised_model, verbose=True)
 
     #Pipeline.train(data_path, "yolov8m-cls", epochs=350, batch=15, workers=4)
     #Pipeline = Pipeline(models, training=True)

@@ -43,11 +43,11 @@ def argparser():
 
     parser.add_argument('--EPOCHS', type=int, default=100, 
                         help='Number of epoch used for the training of the model')
-    parser.add_argument('--BATCH_SIZE', type=int, default=20,
+    parser.add_argument('--BATCH_SIZE', type=int, default=16,
                          help='Number of inputs that are processed in a single forward and backward pass during the training of the neural network')
     parser.add_argument('--LEARNING_RATE', type=float, default=0.001, 
                         help='Learning rate used when training the Neural Network with default value.')
-    parser.add_argument('--PATH_RESULTS', type=str, default='../../../../Results/grosse_piece_seg_1', 
+    parser.add_argument('--PATH_RESULTS', type=str, default='./saved_model', 
                         help='path where the results are going to be stored at.')
     parser.add_argument('--FILEPATH_WEIGHTS', type=str, default='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/B_First_HP_Search/training_weights/',
                         help='Path where will be stored the weights.')
@@ -120,7 +120,7 @@ class ModelTrainer:
         for j, trial in enumerate(best_hp, start=1):
             hp = trial.hyperparameters
             model = mod.AeModels(hp.get('lr'), self.monitor_loss, self.monitor_metric, self.image_dimentions)
-            build_model = model.aes_defect_detection()
+            build_model = model.build_basic_cae()
 
             name = f'model{j}'
             callback = cb.TrainingCallbacks(filepath_weights, self.monitor_metric, self.mode_metric, self.verbose)
@@ -193,10 +193,12 @@ if __name__ == '__main__':
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
     debug = True
+    processing_type = "blackout"
     if debug:
         #Quick tests
         do_hp_search = False
-        data_path = "../../../../../Datasets/to_segment"
+        #data_path = "../../../../../Datasets/4k_dataset/merged_images"
+        data_path = "./output_segmentation"
         sub_width = 256
         sub_height = 256
         max_pixel_value = 255
@@ -210,9 +212,22 @@ if __name__ == '__main__':
 
         except RuntimeError as e:
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
+    if processing_type == "stain":
+        data_processing = dp.DataProcessing(sub_width, sub_height)
+        train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
-    data_processing = dp.DataProcessing(sub_width, sub_height)
-    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+    if processing_type == "blackout":
+        data_processing = dp.DataProcessing(sub_width, sub_height)
+        input_train_aug_norm, input_train_norm, input_test_aug_norm, input_test_norm, input_valid_aug_norm, input_valid_norm  = data_processing.get_data_processing_blackout(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+
+        _, row, column, channels = input_train_norm.shape
+        image_dimentions = (row, column, channels)
+#   
+        train_model = ModelTrainer(input_train_aug_norm, input_train_norm, input_valid_aug_norm, input_valid_norm, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
+        if do_hp_search:
+            history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search)
+        else:
+            history = train_model.train_normal(epochs, batch_size, learning_rate, path_results)
 
     #if visualise:
     #    output_dir = "./output"
