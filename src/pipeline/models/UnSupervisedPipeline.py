@@ -7,7 +7,7 @@ from skimage.metrics import structural_similarity as ssim
 
 class UnSupervisedPipeline:
 
-    def __init__(self, model, image, debug: bool=False):
+    def __init__(self, model, image, csv_row, debug: bool=False):
         self._model = model
         self._image = image
         self._subdivisions = []
@@ -16,6 +16,9 @@ class UnSupervisedPipeline:
         self._model_shape = model.input_shape
         self._square_size = 32
         self.debug = debug
+        self._csv_row = csv_row
+        self.threshold = 0
+        self.threshold_algo = "mse, ssim, psnr"
     
     def set_image(self, image):
         self._image = image
@@ -97,11 +100,17 @@ class UnSupervisedPipeline:
 
                 prediction = self._model.predict(masked_sub_image, verbose=0)
                 predicted_image = self.predicted_image_postprocessing(prediction)
+
                 mse, ssim_value, psnr_value, decision  = self.threshold_comparison(sub_image, predicted_image)
                 bb = ""
                 if decision: bb = self.calculate_bounding_box(x, y)
                 #print(bb)
                 threshold_results.append([mse, ssim_value, psnr_value, decision, bb])
+
+                self._csv_row.unsup_defect_threshold = self.threshold
+                self._csv_row.unsup_threshold_algo = self.threshold_algo
+                self._csv_row.unsup_defect_res = decision
+                self._csv_row.unsup_defect_bb = bb
                 
                 predicted_image = Image(predicted_image)
                 imgCollection.add(predicted_image)
@@ -126,6 +135,7 @@ class UnSupervisedPipeline:
         return predicted_image
     
     def threshold_comparison(self, original_image, prediction):
+        decision = False
         # Mean Squared Error
         mse = np.mean((original_image - prediction) ** 2)
 
@@ -138,7 +148,8 @@ class UnSupervisedPipeline:
         psnr_value = 20 * np.log10(max_pixel_value / np.sqrt(mse_value))
 
         #print(f"MSE: {mse}, SSIM: {ssim_value}, PSNR: {psnr_value}")
-        decision = False
+
+        #Set threshold here
         if mse > 0 and ssim_value > 0 and psnr_value > 0: decision = True
 
         return mse, ssim_value, psnr_value, decision
@@ -146,8 +157,7 @@ class UnSupervisedPipeline:
     def calculate_bounding_box(self, x, y):
         return f"{x}:{y} - subdivision position"
         
-    def detect_default(self):
-
+    def detect_defect(self):
         sub_images = self.subdivise()
         predicted_collection = []
 
@@ -158,4 +168,4 @@ class UnSupervisedPipeline:
                 subdivision_index = x * self._nb_y_sub + y
                 predicted_collection.append(self.mask_and_predict(sub_images[subdivision_index]))
 
-        return predicted_collection
+        return self._csv_row, predicted_collection

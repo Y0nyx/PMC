@@ -15,4 +15,4 @@ print("Hello world")
 
 unsupervised_model = tf.keras.models.load_model('./Code/src/ia/wandb_fev12_demo.h5')
 un_supervised_pipeline = UnSupervisedPipeline(unsupervised_model, image)
-un_supervised_pipeline.detect_default()
+un_supervised_pipeline.detect_defect()

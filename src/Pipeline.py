@@ -3,6 +3,9 @@ from pipeline.data.DataManager import DataManager
 from NetworkManager import NetworkManager
 from common.enums.PipelineStates import PipelineState
 from common.image.Image import Image
+from pipeline.CsvManager import CsvManager
+from pipeline.CsvResultRow import CsvResultRow
+from datetime import datetime
 
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -50,6 +53,13 @@ class Pipeline():
 
         self._trainingManager = TrainingManager(is_time_threshold=False, verbose=self.verbose)
         self._current_iteration_save_folder = current_iteration_save_folder
+
+        self.csv_manager = CsvManager()
+        self._csv_result_row = CsvResultRow()
+
+        self._csv_result_row.un_sup_model_ref = UNSUPERVISED_MODEL_REF
+        self._csv_result_row.seg_model_ref = SEGMENTATION_MODEL_REF
+        self._csv_result_row.sup_model_ref = SUPERVISED_MODEL_REF
 
     def start(self):
         self.print('START SET')
@@ -131,7 +141,10 @@ class Pipeline():
             
             #TODO: Ajouter une condition debug pour choisir si on save ou pas
             #Save the captured images
-            captured_image_collection.save(f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_CAPTURE}")
+            #TODO: Mettre les save dans les fonctions qui génèrent les images
+            captured_image_path = f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_CAPTURE}"
+            captured_image_collection.save(captured_image_path)
+            self._csv_result_row.capture_img_path = captured_image_path
 
             for i, captured_image in enumerate(captured_image_collection):
 
@@ -140,18 +153,33 @@ class Pipeline():
 
                     #Find the welds in the capture image
                     segmented_image_collection = self._segmentation_image(captured_image, show, save, conf)
-                    segmented_image_collection.save(f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_SEGMENTATION}")
+                    segmented_image_collection_path = f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_SEGMENTATION}"
+                    segmented_image_collection.save(segmented_image_collection_path)
+                    self._csv_result_row.seg_img_path = segmented_image_collection_path
+                    self._csv_result_row.seg_results = segmented_image_collection.img_count
+                    self._csv_result_row.seg_threshold = conf
 
                     #Analyse the welds with the unsupervised model to find potential defaults
                     unsupervised_result_collections = []
 
                     for segmentation in segmented_image_collection:
-                        unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model, segmentation)
-                        unsupervised_result_collections.append(unsupervised_pipeline.detect_default())
+                        unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model, segmentation, self._csv_result_row)
+                        self._csv_result_row, unsupervised_result_collection = unsupervised_pipeline.detect_defect()
+                        unsupervised_result_collections.append(unsupervised_result_collection)
                     
                     for y, unsupervised_result_collection in enumerate(unsupervised_result_collections):
                         for z, unsupervised_results in enumerate(unsupervised_result_collection):
-                            unsupervised_results[0].save(f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_UNSUPERVISED_PREDICTION}_{i}{SAVE_PATH_SEGMENTATION}_{y}{SAVE_PATH_SUBDIVISION}_{z}")
+                            unsupervised_results_path = f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_UNSUPERVISED_PREDICTION}_{i}{SAVE_PATH_SEGMENTATION}_{y}{SAVE_PATH_SUBDIVISION}_{z}"
+                            unsupervised_results[0].save(unsupervised_results_path)
+
+                            self._csv_result_row.unsup_pred_img_path = unsupervised_results_path
+                            self._csv_result_row.sup_defect_res = ""
+                            self._csv_result_row.sup_defect_threshold = ""
+                            self._csv_result_row.sup_defect_bb = ""
+                            self._csv_result_row.manual_verification_result = ""
+                            self._csv_result_row.date = datetime.now()
+                            self.csv_manager.add_new_row(self._csv_result_row)
+
 
                     # TODO Integrate supervised model
                     
@@ -222,14 +250,13 @@ def count_folders_starting_with(start_string, path):
 
 if __name__ == "__main__":
 
-    supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
+    supervised_models = [YoloModel(Path(f"./ia/segmentation/{SEGMENTATION_MODEL_REF}.pt"))]
 
-    unsupervised_model_name = "default_param_model"
     unsupervised_model_higher_path = "../../"
-    unsupervised_model_path = f'{unsupervised_model_higher_path}{unsupervised_model_name}.keras'
+    unsupervised_model_path = f'{unsupervised_model_higher_path}{UNSUPERVISED_MODEL_REF}.keras'
     unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
-    folder_count = count_folders_starting_with(f"{unsupervised_model_name}", unsupervised_model_higher_path)
-    current_iteration_save_folder = f'/{unsupervised_model_name}_{folder_count}'
+    folder_count = count_folders_starting_with(f"{UNSUPERVISED_MODEL_REF}", unsupervised_model_higher_path)
+    current_iteration_save_folder = f'/{UNSUPERVISED_MODEL_REF}_{folder_count}'
 
     pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_save_folder=current_iteration_save_folder)
 
