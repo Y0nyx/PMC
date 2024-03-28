@@ -161,10 +161,10 @@ class Pipeline():
 
                     #Analyse the welds with the unsupervised model to find potential defaults
                     unsupervised_result_collections = []
-
+                    csv_result_rows = []
                     for segmentation in segmented_image_collection:
                         unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model, segmentation, self._csv_result_row)
-                        self._csv_result_row, unsupervised_result_collection = unsupervised_pipeline.detect_defect()
+                        csv_result_rows, unsupervised_result_collection = unsupervised_pipeline.detect_defect()
                         unsupervised_result_collections.append(unsupervised_result_collection)
                     
                     for y, unsupervised_result_collection in enumerate(unsupervised_result_collections):
@@ -172,13 +172,9 @@ class Pipeline():
                             unsupervised_results_path = f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_UNSUPERVISED_PREDICTION}_{i}{SAVE_PATH_SEGMENTATION}_{y}{SAVE_PATH_SUBDIVISION}_{z}"
                             unsupervised_results[0].save(unsupervised_results_path)
 
-                            self._csv_result_row.unsup_pred_img_path = unsupervised_results_path
-                            self._csv_result_row.sup_defect_res = ""
-                            self._csv_result_row.sup_defect_threshold = ""
-                            self._csv_result_row.sup_defect_bb = ""
-                            self._csv_result_row.manual_verification_result = ""
-                            self._csv_result_row.date = datetime.now()
-                            self.csv_manager.add_new_row(self._csv_result_row)
+                            self.write_csv_rows(csv_result_rows, unsupervised_results_path)
+
+
 
 
                     # TODO Integrate supervised model
@@ -239,6 +235,16 @@ class Pipeline():
     def print(self, string):
         if self.verbose:
             print(string)
+
+    def write_csv_rows(self, csv_rows, unsupervised_results_path):
+        for i, csv_row in enumerate(csv_rows):
+            csv_row.unsup_pred_img_path = unsupervised_results_path + "_img_" +str(i)
+            csv_row.sup_defect_res = ""
+            csv_row.sup_defect_threshold = ""
+            csv_row.sup_defect_bb = ""
+            csv_row.manual_verification_result = ""
+            csv_row.date = datetime.now()
+            self.csv_manager.add_new_row(self._csv_result_row)
 
 def count_folders_starting_with(start_string, path):
     count = 0

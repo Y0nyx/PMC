@@ -88,6 +88,7 @@ class UnSupervisedPipeline:
 
         imgCollection = ImageCollection([])
         threshold_results = []
+        csv_rows = []
 
         width, height, channels = sub_image.shape
         nb_x_mask = width//self._square_size
@@ -106,16 +107,15 @@ class UnSupervisedPipeline:
                 if decision: bb = self.calculate_bounding_box(x, y)
                 #print(bb)
                 threshold_results.append([mse, ssim_value, psnr_value, decision, bb])
-
                 self._csv_row.unsup_defect_threshold = self.threshold
                 self._csv_row.unsup_threshold_algo = self.threshold_algo
                 self._csv_row.unsup_defect_res = decision
                 self._csv_row.unsup_defect_bb = bb
-                
+                csv_rows.append(self._csv_row)
                 predicted_image = Image(predicted_image)
                 imgCollection.add(predicted_image)
-        
-        return [imgCollection, threshold_results]
+
+        return csv_rows, [imgCollection, threshold_results]
 
     def masked_sub_image_preprocessing(self, masked_sub_image):
         #TODO: Subdivide in separate functions and add bool for grayscale conversion
@@ -160,12 +160,15 @@ class UnSupervisedPipeline:
     def detect_defect(self):
         sub_images = self.subdivise()
         predicted_collection = []
+        csv_rows_collection = []
 
         # Iterate through each subdivision
         for x in range(self._nb_x_sub):
             for y in range(self._nb_y_sub):
                 # Correctly index into the subdivisions list
                 subdivision_index = x * self._nb_y_sub + y
-                predicted_collection.append(self.mask_and_predict(sub_images[subdivision_index]))
+                csv_rows, predictions = self.mask_and_predict(sub_images[subdivision_index])
+                predicted_collection.append(predictions)
+                csv_rows_collection.extend(csv_rows)
 
-        return self._csv_row, predicted_collection
+        return csv_rows_collection, predicted_collection
