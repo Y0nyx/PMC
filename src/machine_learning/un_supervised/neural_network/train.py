@@ -192,7 +192,7 @@ if __name__ == '__main__':
     sub_height = args.SUB_HEIGHT
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
-    debug = True
+
     if debug:
         #Quick tests
         do_hp_search = False
@@ -212,7 +212,7 @@ if __name__ == '__main__':
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
     data_processing = dp.DataProcessing(sub_width, sub_height)
-    train_input, train_input_loss, valid_input, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+    train_input, train_input_loss, valid_input, valid_input_loss, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
     #if visualise:
     #    output_dir = "./output"
@@ -228,15 +228,15 @@ if __name__ == '__main__':
     #    #     cv2.imwrite(f"{output_dir}/valid_input_loss_{i}.png", valid_input_loss[i]*max_pixel_value)
     #    for i in range(10):
     #        cv2.imwrite(f"{output_dir}/test_input_{i}.png", test_input[i]*max_pixel_value)
-#
-    ##DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
-    #_, row, column, channels = train_input.shape
-    #image_dimentions = (row, column, channels)
-#
-    #train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
-    #if do_hp_search:
-    #    history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search)
-    #else:
-    #    history = train_model.train_normal(epochs, batch_size, learning_rate, path_results)
-#
-    #print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
+
+    #DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
+    _, row, column, channels = train_input.shape
+    image_dimentions = (row, column, channels)
+
+    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input_loss, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
+    if do_hp_search:
+       history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search)
+    else:
+       history = train_model.train_normal(epochs, batch_size, learning_rate, path_results)
+
+    print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')

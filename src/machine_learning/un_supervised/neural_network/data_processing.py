@@ -16,7 +16,7 @@ from scipy.ndimage import gaussian_filter
 from skimage.draw import ellipse_perimeter
 from skimage.util import random_noise
 from sklearn.model_selection import train_test_split
-#from ultralytics import YOLO
+from ultralytics import YOLO
 import tensorflow as tf
 from PIL import Image as Img
 
@@ -25,20 +25,20 @@ from pathlib import Path
 
 class DataProcessing():
 
-    def __init__(self, height, width, seg_model_path: str ="../../../../src/ia/segmentation/v2.pt"):
+    def __init__(self, height, width, seg_model_path: str ="/home/jean-sebastien/Documents/s7/PMC/PMC/src/ia/segmentation/v2.pt"):  #"../../../../src/ia/segmentation/v2.pt" #TODO Convert for docker
         self.height = height
         self.width = width
         self._nb_x_sub = 0
         self._nb_y_sub = 0
         self.debug = True
-        #self._segmentation_model = YOLO(Path(seg_model_path))
+        self._segmentation_model = YOLO(Path(seg_model_path))
 
     def load_data(self, data_path, subdvisise=False, rotate=False):
         images = []
 
         #Data loading
         for filename in os.listdir(data_path):
-            if filename.endswith(".png"):
+            if filename.endswith(".jpg"):
                 images.append(cv2.imread(f'{data_path}/{filename}'))
                 #images.append(keras_image.img_to_array(img))
         
@@ -46,22 +46,21 @@ class DataProcessing():
         sub_images = []
         seg_images = []
 
-        for i, image in enumerate(images):
-            images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
+        # for i, image in enumerate(images):
+        #     images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
 
-                    # Ensure the output directory exist
+        #             # Ensure the output directory exist
         
-        segment = False
+        segment = True
         if segment:
-            #print(images.shape)
             for i, image in enumerate(images):
                 seg_images.extend(self.segment(image))
 
-            images = seg_images
+            images = seg_images 
 
             self.debug = True
             if self.debug:
-                self.save_images(len(images), images, "./output_segmentation")
+                self.save_images(len(images), images, "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/output_segmentation") #"./output_segmentation" TODO Convert for docker
 
         if subdvisise:
             for i, img in enumerate(images):
@@ -176,7 +175,6 @@ class DataProcessing():
         for i in range(nb_images):
          cv2.imwrite(f"{output_dir}/output_{i}.png", images[i])
         
-
     def normalize(self, data, max_pixel_value):
         """
         Data domain will be between 0 and 1. 
@@ -198,10 +196,7 @@ class DataProcessing():
         input_test = (input_test * max_pixel_value).astype('uint8')
         result_test = (result_test * max_pixel_value).astype('uint8')
 
-    def de_normalize(self, image, max_pixel_value):
-        image = (image * max_pixel_value).astype('uint8')
-
-        return image
+        return difference_reshaped, input_test, result_test
         
     def get_data_processing_blackout(self, data_path, max_pixel_value):
         """
@@ -236,17 +231,21 @@ class DataProcessing():
         """
         input_train, input_valid, input_test = self.load_data(data_path, True)
 
-        images_stain = []
-        for img in input_train:
-            images_stain.append(self.add_stain(img, max_pixel_value)) 
-        images_stain = np.array(images_stain)
+        images_stain_train = []
+        images_stain_valid = []
+        for img1, img2 in zip(input_train, input_valid):
+            images_stain_train.append(self.add_stain(img1, max_pixel_value)) 
+            images_stain_valid.append(self.add_stain(img2, max_pixel_value))
+        images_stain_train = np.array(images_stain_train)
+        images_stain_valid = np.array(images_stain_valid)
 
-        train_input_norm = self.normalize(input_train, max_pixel_value)
-        train_input_loss_norm = self.normalize(images_stain, max_pixel_value)
-        valid_input_norm = self.normalize(input_valid, max_pixel_value)
+        train_input_norm = self.normalize(images_stain_train, max_pixel_value)    
+        train_input_loss_norm = self.normalize(input_train, max_pixel_value)
+        valid_input_norm = self.normalize(images_stain_valid, max_pixel_value) 
+        valid_input_loss_norm = self.normalize(input_valid, max_pixel_value)
         test_input_norm = self.normalize(input_test, max_pixel_value)
 
-        return train_input_norm, train_input_loss_norm, valid_input_norm, test_input_norm
+        return train_input_norm, train_input_loss_norm, valid_input_norm, valid_input_loss_norm, test_input_norm
     
     def resize(self, image):
         closest_width = int(np.ceil(image.shape[1] / self.width ) * self.width )
