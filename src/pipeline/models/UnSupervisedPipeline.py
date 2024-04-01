@@ -7,26 +7,23 @@ from skimage.metrics import structural_similarity as ssim
 
 class UnSupervisedPipeline:
 
-    def __init__(self, model, image, csv_row, debug: bool=False):
+    def __init__(self, model, debug: bool=False):
         self._model = model
-        self._image = image
         self._subdivisions = []
         self._nb_x_sub = 0
         self._nb_y_sub = 0
         self._model_shape = model.input_shape
         self._square_size = 32
         self.debug = debug
-        self._csv_row = csv_row
         self.threshold = 0
         self.threshold_algo = "mse, ssim, psnr"
-    
-    def set_image(self, image):
-        self._image = image
 
-    def resize(self):
-        closest_width = int(np.ceil(self._image.value.shape[1] / self._model_shape[1]) * self._model_shape[1])
-        closest_height = int(np.ceil(self._image.value.shape[0] / self._model_shape[2]) * self._model_shape[2])
-        self._image.value = cv2.resize(self._image.value, (closest_width, closest_height))
+    def resize(self, image):
+        closest_width = int(np.ceil(image.value.shape[1] / self._model_shape[1]) * self._model_shape[1])
+        closest_height = int(np.ceil(image.value.shape[0] / self._model_shape[2]) * self._model_shape[2])
+        image.value = cv2.resize(image.value, (closest_width, closest_height))
+
+        return image
     
     def mask(self, sub_image, x, y):
         # Create a copy of the original image
@@ -56,10 +53,11 @@ class UnSupervisedPipeline:
 
         return 10
     
-    def subdivise(self):
+    def subdivise(self, image):
+        image = self.resize(image)
         sub_images = []
         # Get the dimensions of the original image
-        width, height, channels = self._image.shape
+        width, height, channels = image.value.shape
 
         # Calculate the number of sub-images in both dimensions
         self._nb_x_sub = width // self._model.input_shape[1]
@@ -77,7 +75,7 @@ class UnSupervisedPipeline:
                 # left, top, right, bottom = add_overlap(left, top, right, bottom, width, height, overlap_size)
 
                 # Crop the sub-image using NumPy array slicing
-                sub_images.append(self._image.value[left:right, top:bottom, :])
+                sub_images.append(image.value[left:right, top:bottom, :])
         return sub_images
     
     def decision(self, sub_image, prediction):
@@ -157,8 +155,11 @@ class UnSupervisedPipeline:
     def calculate_bounding_box(self, x, y):
         return f"{x}:{y} - subdivision position"
         
-    def detect_defect(self):
-        sub_images = self.subdivise()
+    def detect_defect(self, image, csv_row):
+
+        self._csv_row = csv_row
+
+        sub_images = self.subdivise(image)
         predicted_collection = []
         csv_rows_collection = []
 

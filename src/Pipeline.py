@@ -29,20 +29,28 @@ import json
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
-    def __init__(self, supervised_models, unsupervised_model, verbose: bool = True, State: PipelineState= PipelineState.INIT, current_iteration_save_folder = ""):
+    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = True):
+        self.verbose = verbose
+
         self.stop_flag = threading.Event()
 
-        self.verbose = verbose
+        #Init network manager
         self.network_manager = NetworkManager(HOST, PORT, self.verbose)
 
         self.print("=== Init Pipeline ===")  # Fixed this line
 
+        #Set supervised models
         self.supervised_models = []
         for model in supervised_models:
             self.supervised_models.append(model)
 
+        #Set unsupervised model
         self.unsupervised_model = unsupervised_model
 
+        #Init unsupervised pipeline
+        self._unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model)
+
+        #Set initial pipeline state
         self._state = State
         if self._state == PipelineState.TRAINING:
             self._dataManager = Mock_DataManager(Path("./dataset/mock"))
@@ -51,15 +59,20 @@ class Pipeline():
                 "", "./cameras.yaml", self.verbose
             ).get_instance()
 
+        #Init the training manager
         self._trainingManager = TrainingManager(is_time_threshold=False, verbose=self.verbose)
-        self._current_iteration_save_folder = current_iteration_save_folder
 
-        self.csv_manager = CsvManager()
-        self._csv_result_row = CsvResultRow()
+        self._csv_logging = csv_logging
+        if csv_logging:
+            # Init and set CSV logging tools
+            self._current_iteration_logging_path = current_iteration_logging_path
 
-        self._csv_result_row.un_sup_model_ref = UNSUPERVISED_MODEL_REF
-        self._csv_result_row.seg_model_ref = SEGMENTATION_MODEL_REF
-        self._csv_result_row.sup_model_ref = SUPERVISED_MODEL_REF
+            self.csv_manager = CsvManager()
+            self._csv_result_row = CsvResultRow()
+
+            self._csv_result_row.un_sup_model_ref = UNSUPERVISED_MODEL_REF
+            self._csv_result_row.seg_model_ref = SEGMENTATION_MODEL_REF
+            self._csv_result_row.sup_model_ref = SUPERVISED_MODEL_REF
 
     def start(self):
         self.print('START SET')
@@ -137,14 +150,8 @@ class Pipeline():
             self._state = PipelineState.TRAINING
 
         captured_image_collection = self._get_images()
+
         if captured_image_collection.img_count > 0:
-            
-            #TODO: Ajouter une condition debug pour choisir si on save ou pas
-            #Save the captured images
-            #TODO: Mettre les save dans les fonctions qui génèrent les images
-            captured_image_path = f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_CAPTURE}"
-            captured_image_collection.save(captured_image_path)
-            self._csv_result_row.capture_img_path = captured_image_path
 
             for i, captured_image in enumerate(captured_image_collection):
 
@@ -153,29 +160,9 @@ class Pipeline():
 
                     #Find the welds in the capture image
                     segmented_image_collection = self._segmentation_image(captured_image, show, save, conf)
-                    segmented_image_collection_path = f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_SEGMENTATION}"
-                    segmented_image_collection.save(segmented_image_collection_path)
-                    self._csv_result_row.seg_img_path = segmented_image_collection_path
-                    self._csv_result_row.seg_results = segmented_image_collection.img_count
-                    self._csv_result_row.seg_threshold = conf
 
                     #Analyse the welds with the unsupervised model to find potential defaults
-                    unsupervised_result_collections = []
-                    csv_result_rows = []
-                    for segmentation in segmented_image_collection:
-                        unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model, segmentation, self._csv_result_row)
-                        csv_result_rows, unsupervised_result_collection = unsupervised_pipeline.detect_defect()
-                        unsupervised_result_collections.append(unsupervised_result_collection)
-                    
-                    for y, unsupervised_result_collection in enumerate(unsupervised_result_collections):
-                        for z, unsupervised_results in enumerate(unsupervised_result_collection):
-                            unsupervised_results_path = f"{SAVE_PATH}{self._current_iteration_save_folder}{SAVE_PATH_UNSUPERVISED_PREDICTION}_{i}{SAVE_PATH_SEGMENTATION}_{y}{SAVE_PATH_SUBDIVISION}_{z}"
-                            unsupervised_results[0].save(unsupervised_results_path)
-
-                            self.write_csv_rows(csv_result_rows, unsupervised_results_path)
-
-
-
+                    self._unsupervised_defect_detection(i, segmented_image_collection)
 
                     # TODO Integrate supervised model
                     
@@ -217,8 +204,31 @@ class Pipeline():
                 "erreurSoudure": "pepe"
             }
 
+    def _unsupervised_defect_detection(self, i, segmented_image_collection):
+        unsupervised_result_collections = []
+        csv_result_rows = []
+
+        for segmentation in segmented_image_collection:
+            csv_result_rows, unsupervised_result_collection = self._unsupervised_pipeline.detect_defect(segmentation, self._csv_result_row)
+            
+            unsupervised_result_collections.append(unsupervised_result_collection)
+        if self._csv_logging:            
+            for y, unsupervised_result_collection in enumerate(unsupervised_result_collections):
+                for z, unsupervised_results in enumerate(unsupervised_result_collection):
+                    unsupervised_results_path = f"{SAVE_PATH}{self._current_iteration_logging_path}{SAVE_PATH_UNSUPERVISED_PREDICTION}_{i}{SAVE_PATH_SEGMENTATION}_{y}{SAVE_PATH_SUBDIVISION}_{z}"
+                    unsupervised_results[0].save(unsupervised_results_path)
+
+                    self.write_csv_rows(csv_result_rows, unsupervised_results_path)
+
     def _get_images(self):
-        return self._dataManager.get_all_img()
+        images = self._dataManager.get_all_img()
+        
+        if self._csv_logging and images.img_count > 0:
+            captured_image_path = f"{SAVE_PATH}{self._current_iteration_logging_path}{SAVE_PATH_CAPTURE}"
+            images.save(captured_image_path)
+            self._csv_result_row.capture_img_path = captured_image_path
+
+        return images
 
     def _segmentation_image(self, img: Image, save: bool, show: bool, conf: float):
         imgCollection = ImageCollection([])
@@ -229,6 +239,14 @@ class Pipeline():
             for result in results:
                 for boxes in result.boxes:
                     imgCollection.add(img.crop(boxes))
+
+        if self._csv_logging:
+            segmented_image_collection_path = f"{SAVE_PATH}{self._current_iteration_logging_path}{SAVE_PATH_SEGMENTATION}"
+            imgCollection.save(segmented_image_collection_path)
+
+            self._csv_result_row.seg_img_path = segmented_image_collection_path
+            self._csv_result_row.seg_results = imgCollection.img_count
+            self._csv_result_row.seg_threshold = conf
 
         return imgCollection
 
@@ -254,17 +272,31 @@ def count_folders_starting_with(start_string, path):
                 count += 1
     return count
 
-if __name__ == "__main__":
+def path_initialization():
 
-    supervised_models = [YoloModel(Path(f"./ia/segmentation/{SEGMENTATION_MODEL_REF}.pt"))]
+    #Init path to segmentation model
+    segmentation_model_path = f"{SEGMENTATION_MODEL_PATH}{SEGMENTATION_MODEL_REF}.pt"
 
+    #Init path to unsupervised detection model
     unsupervised_model_higher_path = "../../"
     unsupervised_model_path = f'{unsupervised_model_higher_path}{UNSUPERVISED_MODEL_REF}.keras'
-    unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
-    folder_count = count_folders_starting_with(f"{UNSUPERVISED_MODEL_REF}", unsupervised_model_higher_path)
-    current_iteration_save_folder = f'/{UNSUPERVISED_MODEL_REF}_{folder_count}'
 
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_save_folder=current_iteration_save_folder)
+    #Init path to current model iteration for logging purposes
+    current_iteration_latest_version_id = count_folders_starting_with(f"{UNSUPERVISED_MODEL_REF}", unsupervised_model_higher_path)
+    current_iteration_logging_path = f'/{UNSUPERVISED_MODEL_REF}_{current_iteration_latest_version_id}'
+
+    return segmentation_model_path, unsupervised_model_path, current_iteration_logging_path
+
+
+
+if __name__ == "__main__":
+
+    segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
+
+    supervised_models = [YoloModel(Path(segmentation_model_path))]
+    unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
+
+    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path)
 
     pipeline.detect()
         # data_path = "D:\dataset\dofa_3"
