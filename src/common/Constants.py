@@ -23,7 +23,7 @@ CLASSES = ['default']
 
 # Connection Electron
 PORT = 8002
-HOST = 'host.docker.internal'
+HOST = '127.0.0.1'
 
 #TODO: Ajouter les constantes pour le CSV
 CSV_FIELDS = ['id', 'un_sup_model_ref', 'seg_model_ref', 'sup_model_ref',

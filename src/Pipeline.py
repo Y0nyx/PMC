@@ -77,7 +77,9 @@ class Pipeline():
     def start(self):
         self.print('START SET')
         self.stop_flag.clear()
-        return self.detect(cam_debug=True)
+        results = self.detect(cam_debug=True)
+        self.print('DONE DETECTING')
+        return results
 
     def stop(self):
         self.print('STOP SET')
@@ -180,22 +182,21 @@ class Pipeline():
                     #if await self.check_stop_signal():
                     #    print("Stop signal received, stopping detection")
                     #    return
+                else:
+                    return
                     
-                result_data = {
-                    "resultat": True,  # or False based on your condition
-                    "url": "/imageSoudure....",
-                    "erreurSoudure": "pepe"
-                }
-
-                # Convert the dictionary to JSON format
-                result_json = json.dumps(result_data)
-
-                self._state = PipelineState.INIT
-
-                # Send the JSON data
-                #return result_json
-            else:
-                return
+            result_data = {
+                "resultat": True,  # or False based on your condition
+                "url": f'{SAVE_PATH}{SAVE_PATH_CAPTURE}',
+                "erreurSoudure": "pepe"
+            }
+            # Convert the dictionary to JSON format
+            result_json = json.dumps(result_data)
+            self._state = PipelineState.INIT
+            # Send the JSON data
+            self.print("Finished detection")
+            return result_data
+                
         else:
             self.print("No image found")
             return {
