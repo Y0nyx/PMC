@@ -44,7 +44,8 @@ class Pipeline():
 
         self._state = State
         if self._state == PipelineState.TRAINING:
-            self._dataManager = Mock_DataManager(Path("./dataset/mock"))
+            #self._dataManager = Mock_DataManager(Path("./dataset/mock"))
+            pass
         else:
             self._dataManager = DataManager(
                 "", "./cameras.yaml", self.verbose
@@ -199,12 +200,12 @@ class Pipeline():
 
 
 if __name__ == "__main__":
-    data_path = "D:\dataset\dofa_2\data.yaml"
+    data_path = "D:\dataset\dataset_without_equalize\data.yaml"
     
     #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
-    pipeline = Pipeline(supervised_models=[], State=PipelineState.TRAINING)
+    pipeline = Pipeline(supervised_models=[], unsupervised_models=[], State=PipelineState.TRAINING)
 
-    Pipeline.train(data_path, "yolov8m-seg", epochs=350, batch=-1, workers=4)
+    pipeline.train(data_path, "yolov8m-seg", epochs=350, batch=-1, workers=4)
 
         # data_path = "D:\dataset\dofa_3"
     

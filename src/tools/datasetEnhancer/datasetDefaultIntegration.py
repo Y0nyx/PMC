@@ -99,7 +99,7 @@ def add_defect(image, segmentation, defect_image, points, show):
     # Remplacer la région d'intérêt de l'image principale par l'image de défaut redimensionnée
     image[y:y+defect_resized.shape[0], x:x+defect_resized.shape[1]] = final_roi
 
-    #image = cv2.equalizeHist(image)
+    image = cv2.equalizeHist(image)
 
     # Calculer les coordonnées de la bounding box
     x_center = (x + (x + defect_resized.shape[1])) / 2 / image.shape[1]
