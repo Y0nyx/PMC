@@ -48,16 +48,20 @@ class NetworkManager():
 
             if code == "start":
                 self.print("NetworkManager : Start Pipeline")
+                await self.send_message('start')
                 self.future = self.loop.run_in_executor(self.executor, self.worker.start)
+
             elif code ==  "stop":
                 self.print("NetworkManager : Stop Pipeline")
                 self.worker.stop()
-                await self.send_message('Stop')
+                await self.send_message('stop')
+
+            else:
+                await self.send_message('error')
 
     async def send_message(self, data) -> None:
         serialized_data = json.dumps(data).encode()
         await self.loop.sock_sendall(self.s, serialized_data)
-        self.print("Sent message")
         
     async def socket_connect(self) -> None:
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

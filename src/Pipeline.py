@@ -106,7 +106,7 @@ class Pipeline():
 
         self._state = PipelineState.INIT
 
-    def train(self, yaml_path: str, yolo_model: YoloModel, **kargs):
+    def train(self, yaml_path: str, yolo_model: str, **kargs):
 
         model = YoloModel(f"{yolo_model}.pt")
         args = dict(data=yaml_path, **kargs)
@@ -199,17 +199,17 @@ class Pipeline():
 
 
 if __name__ == "__main__":
+    data_path = "D:\dataset\dofa_2\data.yaml"
+    
+    #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
+    pipeline = Pipeline(supervised_models=[], State=PipelineState.TRAINING)
 
-    supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_models=[])
+    Pipeline.train(data_path, "yolov8m-seg", epochs=350, batch=-1, workers=4)
 
-    pipeline.detect()
         # data_path = "D:\dataset\dofa_3"
     
         #data_path = "D:\dataset\dofa_2\data.yaml"
         
-        # test_model = YoloModel()
-        # test_model.train(epochs=3, data=data_path, batch=-1)
     
         # test_resultats = test_model.eval()
     
