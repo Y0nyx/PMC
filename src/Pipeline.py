@@ -200,7 +200,7 @@ class Pipeline():
 
 
 if __name__ == "__main__":
-    dataset = '/home/dofa/Desktop/code/Datasets'
+    dataset = '../../usr/src/datasets'
     folders = ['dataset_with_equalize', 'dataset_without_equalize']
     
     #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
