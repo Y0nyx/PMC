@@ -280,7 +280,7 @@ def path_initialization():
 
     #Init path to unsupervised detection model
     unsupervised_model_higher_path = "../../"
-    unsupervised_model_path = f'{unsupervised_model_higher_path}{UNSUPERVISED_MODEL_REF}.keras'
+    unsupervised_model_path = f'{unsupervised_model_higher_path}Models/{UNSUPERVISED_MODEL_REF}.keras'
 
     #Init path to current model iteration for logging purposes
     current_iteration_latest_version_id = count_folders_starting_with(f"{UNSUPERVISED_MODEL_REF}", unsupervised_model_higher_path)
