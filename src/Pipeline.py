@@ -5,7 +5,7 @@ from common.enums.PipelineStates import PipelineState
 from common.image.Image import Image
 
 import matplotlib.pyplot as plt
-import tensorflow as tf
+#import tensorflow as tf
 #from tensorflow.keras.models import load_model
 from PIL import Image as Img
 import numpy as np
@@ -200,12 +200,15 @@ class Pipeline():
 
 
 if __name__ == "__main__":
-    data_path = "D:\dataset\dataset_without_equalize\data.yaml"
+    dataset = '/home/dofa/Desktop/code/Datasets'
+    folders = ['dataset_with_equalize', 'dataset_without_equalize']
     
     #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
     pipeline = Pipeline(supervised_models=[], unsupervised_models=[], State=PipelineState.TRAINING)
 
-    pipeline.train(data_path, "yolov8m-seg", epochs=350, batch=-1, workers=4)
+    for folder in folders:
+        data_path = os.path.join(dataset, folder, 'data.yaml')
+        pipeline.train(data_path, "yolov8m", epochs=350, batch=-1, workers=4)
 
         # data_path = "D:\dataset\dofa_3"
     
