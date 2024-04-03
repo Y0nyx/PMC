@@ -297,7 +297,7 @@ if __name__ == "__main__":
     supervised_models = [YoloModel(Path(segmentation_model_path))]
     unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
 
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path)
+    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
 
     pipeline.detect()
         # data_path = "D:\dataset\dofa_3"
