@@ -24,7 +24,7 @@ import cv2
 #======================
 #Variables globales d'image
 #======================
-image_height = 128
+image_height = 256
 original_image_width = 128
 channels = 3
 normalization_factor = 255
@@ -118,7 +118,7 @@ def wandb_save_image_sample(image, name):
     # Log the plot
     wandb.log({name: plt})
 
-def apply_random_blackout(images, blackout_size=(32, 32)):
+def apply_random_blackout(images, blackout_size=(80, 80)):
     augmented_images = images.copy()
 
     for i in range(images.shape[0]):

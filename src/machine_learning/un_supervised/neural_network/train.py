@@ -41,9 +41,9 @@ def train(model, input_train, input_label, valid_input, valid_label, epochs, bat
 def argparser():
     parser = argparse.ArgumentParser(description='Argument used in the code passed by the bash file.')
 
-    parser.add_argument('--EPOCHS', type=int, default=100, 
+    parser.add_argument('--EPOCHS', type=int, default=30, 
                         help='Number of epoch used for the training of the model')
-    parser.add_argument('--BATCH_SIZE', type=int, default=16,
+    parser.add_argument('--BATCH_SIZE', type=int, default=32,
                          help='Number of inputs that are processed in a single forward and backward pass during the training of the neural network')
     parser.add_argument('--LEARNING_RATE', type=float, default=0.001, 
                         help='Learning rate used when training the Neural Network with default value.')
@@ -142,7 +142,7 @@ class ModelTrainer:
         callbacks_list = callback.get_callbacks(name)
         
         model = mod.AeModels(learning_rate, self.monitor_loss, self.monitor_metric, self.image_dimentions)
-        build_model = model.aes_defect_detection()
+        build_model = model.build_basic_cae()
         history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, epochs, batch_size, callbacks_list)
 
         training_info = tr_info.TrainingInformation()

@@ -33,10 +33,10 @@ class MyHyperModel(keras_tuner.HyperModel):
         Build the model with the HP to test. 
         """
         lr = hp.Choice('lr', values=[ 0.001, 0.01])
-        batch_size = hp.Int('batch_size', 50, 100, step=10, default=1)
+        batch_size = hp.Int('batch_size', 16, 128, step=16, default=1)
 
         model_to_build = mod.AeModels(lr, self.monitor_loss, self.monitor_metric, self.image_dimentions)
-        model = model_to_build.aes_defect_detection()
+        model = model_to_build.build_basic_cae()
 
         return model
     
@@ -51,7 +51,7 @@ class CustomBayesianTuner(BayesianOptimization):
         
         model = self.hypermodel.build(hp)
 
-        wandb.init(project='greyscale_defect_detection', entity='dofa_unsupervised', config=trial.hyperparameters.values, mode="online", dir='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised')
+        wandb.init(project='greyscale_defect_detection_basic_CAE', entity='dofa_unsupervised', config=trial.hyperparameters.values, mode="online", dir='/home/jean-sebastien/Documents/s7/PMC/results_un_supervised')
 
         callbacks = self.hypermodel.callbacks.copy() 
         kwargs.pop('callbacks', None)
