@@ -144,7 +144,7 @@ class DataProcessing():
 
         return image_stain
 
-    def apply_random_blackout(self, images, blackout_size=(32, 32)):
+    def apply_random_blackout(self, images, blackout_size=(40, 40)):
         """
         Apply random blackout to data for self supervised training. 
         """

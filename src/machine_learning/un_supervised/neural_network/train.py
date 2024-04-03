@@ -30,7 +30,6 @@ def train(model, input_train, input_label, valid_input, valid_label, epochs, bat
         y=input_label,
         batch_size=batch_size,
         epochs=epochs,
-        callbacks=callbacks,
         verbose=1,
         validation_data=(valid_input, valid_label),
         shuffle=True
@@ -41,7 +40,7 @@ def train(model, input_train, input_label, valid_input, valid_label, epochs, bat
 def argparser():
     parser = argparse.ArgumentParser(description='Argument used in the code passed by the bash file.')
 
-    parser.add_argument('--EPOCHS', type=int, default=30, 
+    parser.add_argument('--EPOCHS', type=int, default=50, 
                         help='Number of epoch used for the training of the model')
     parser.add_argument('--BATCH_SIZE', type=int, default=32,
                          help='Number of inputs that are processed in a single forward and backward pass during the training of the neural network')
@@ -137,7 +136,7 @@ class ModelTrainer:
         """
         Here we are training the model with the default parameters given in the initial variables. 
         """
-        name = 'default_param'
+        name = 'simple_cae_blackout'
         callback = cb.TrainingCallbacks(filepath_weights, self.monitor_metric, self.mode_metric, self.verbose)
         callbacks_list = callback.get_callbacks(name)
         
