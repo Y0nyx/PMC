@@ -32,8 +32,8 @@ def fit_square_inside_polygon(segmentation_polygon, square_polygon, scale_factor
         ax.fill(*segmentation_polygon.exterior.xy, color='red', alpha=0.5)
 
         # Définir les limites de l'axe
-        ax.set_xlim(-0.5, 2)
-        ax.set_ylim(-0.5, 2)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
 
         # Afficher la figure
         plt.show()
@@ -49,7 +49,11 @@ def get_polygon(nom_fichier):
     points = [(segmentation_coords[i], segmentation_coords[i+1]) for i in range(0, len(segmentation_coords), 2)]
     return Polygon(points)
 
-def get_points(polygon, nbr: int = 100):
+import numpy as np
+import matplotlib.pyplot as plt
+from shapely.geometry import Point
+
+def get_points(polygon, nbr: int = 100, show: bool = False):
     points = []
     while len(points) < nbr:
         # Generate a random point within the bounding box of the polygon
@@ -59,7 +63,24 @@ def get_points(polygon, nbr: int = 100):
         if random_point.intersects(polygon):
             points.append(random_point)
     
+    if show:
+        # Extract x and y coordinates of the points
+        x_coords = [point.x for point in points]
+        y_coords = [point.y for point in points]
+
+        # Plot polygon
+        x, y = polygon.exterior.xy
+        plt.plot(x, y, color='blue', alpha=0.7, linewidth=1, solid_capstyle='round', zorder=1)
+
+        # Plot points
+        plt.plot(x_coords, y_coords, 'ro', markersize=3, zorder=2)  # 'ro' for red circles, adjust markersize as needed
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        plt.title('Points Inside Polygon')
+        plt.show()
+    
     return points
+
 
 def add_defect(image, segmentation, defect_image, points, show):
     image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
@@ -166,7 +187,7 @@ def main(input_folder, output_folder, defect_folder, defect_percentage, show):
 
             # Ajouter le défaut à l'image de soudure
             segmentation = get_polygon(os.path.join(input_folder, 'labels', os.path.splitext(image_name)[0] + '.txt'))
-            points = get_points(segmentation)
+            points = get_points(segmentation, show=show)
             image_with_defect, bbox = add_defect(image, segmentation, defect_image, points, show)
 
             if bbox:
@@ -216,4 +237,4 @@ if __name__ == "__main__":
         defect_folder = os.path.join(args.defect_folder, folder + '\\images')
         show = args.show
 
-        main(input_folder, output_folder, defect_folder, args.defect_percentage, show)
+        main(input_folder, output_folder, defect_folder, args.defect_percentage, True)
