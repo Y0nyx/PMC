@@ -17,7 +17,9 @@ WORKDIR /PMC
 # Copy source code from host machine to Docker image
 COPY src/ src/
 
-RUN pip install --upgrade pip ultralytics opencv-python tensorflow clearml -U 
+RUN pip install ultralytics
+
+# RUN pip install tensorflow
 
 # Fix error: `np.bool` was a deprecated alias for the builtin `bool` segmentation error in Tests
 RUN pip install --no-cache numpy==1.23.5
