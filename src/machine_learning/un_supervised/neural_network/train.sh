@@ -15,17 +15,17 @@ readonly SCRIPT_NAME='train.py'
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc' #'../../../../../Datasets/grosse_piece_seg_1' #TODO convert for docker
 #Variable for Callbacks
 readonly MODEL='aes_defect_detection'
-readonly TEST_NAME='test_00_4k_images'
+readonly TEST_NAME='4k_images_stain'
 readonly MONITOR_LOSS='mean_absolute_error'
 readonly MONITOR_METRIC='mean_squared_error'
 readonly MODE_METRIC='min'
 readonly VERBOSE=TRUE #If false remove --VERBOSE from line 40
 #Variable for HP search 
 readonly DO_HP_SEARCH=True #If false remove --DO_HP_SEARCH from line 40
-readonly EPOCHS_HP=30
-readonly NUM_TRIALS_HP=2
-readonly EXECUTION_PER_TRIAL_HP=1
-readonly NBEST=1
+readonly EPOCHS_HP=40
+readonly NUM_TRIALS_HP=4
+readonly EXECUTION_PER_TRIAL_HP=2
+readonly NBEST=2
 #Variable for default training
 readonly EPOCHS=5
 readonly BATCH_SIZE=256

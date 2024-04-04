@@ -32,8 +32,8 @@ class MyHyperModel(keras_tuner.HyperModel):
         """
         Build the model with the HP to test. 
         """
-        lr = hp.Choice('lr', values=[0.00001, 0.0001, 0.001, 0.01])
-        batch_size = hp.Int('batch_size', 2, 20, step=2, default=1)
+        lr = hp.Choice('lr', values=[0.0001, 0.001])
+        batch_size = hp.Int('batch_size', 4, 20, step=6, default=1)
 
         model_to_build = mod.AeModels(lr, self.monitor_loss, self.monitor_metric, self.image_dimentions)
         model = model_to_build.aes_defect_detection()

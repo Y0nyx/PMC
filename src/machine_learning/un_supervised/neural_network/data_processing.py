@@ -9,15 +9,13 @@ import cv2
 import math
 import numpy as np
 import os
+import re
 
-from keras.preprocessing import image as keras_image
 from random import randint, uniform
 from scipy.ndimage import gaussian_filter
 from skimage.draw import ellipse_perimeter
-from skimage.util import random_noise
 from sklearn.model_selection import train_test_split
 from ultralytics import YOLO
-import tensorflow as tf
 from PIL import Image as Img
 
 import os
@@ -30,18 +28,38 @@ class DataProcessing():
         self.width = width
         self._nb_x_sub = 0
         self._nb_y_sub = 0
-        self.debug = True
+        self.debug = False
         self._segmentation_model = YOLO(Path(seg_model_path))
 
-    def load_data(self, data_path, subdvisise=False, rotate=False):
-        images = []
+    def load_data(self, data_path, subdvisise=False, segment=False, rotate=False, test=False):
 
-        #Data loading
-        for filename in os.listdir(data_path):
-            if filename.endswith(".jpg"):
-                images.append(cv2.imread(f'{data_path}/{filename}'))
-                #images.append(keras_image.img_to_array(img))
+        if not test:
+            images = []
+            sorted_filenames = sorted(os.listdir(data_path), key=self.custom_sort_key)
+            #Data loading
+            for filename in sorted_filenames:
+                if filename.endswith(".jpg"):
+                    images.append(cv2.imread(f'{data_path}/{filename}'))
         
+        else:
+            data_path = '/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_test_blanc' #TODO Convert for docker
+            images = []
+            sorted_filenames = sorted(os.listdir(data_path), key=self.custom_sort_key)
+            #Data loading
+            for filename in sorted_filenames:
+                if filename.endswith(".jpg"):
+                    images.append(cv2.imread(f'{data_path}/{filename}'))
+
+            data_path_test = "/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/avec_defauts_full_data_blanc" #TODO Convert for docker
+            defauts_images = []
+            sorted_filenames_defauts = sorted(os.listdir(data_path_test), key=self.custom_sort_key)
+            for filename in sorted_filenames_defauts:
+                if filename.endswith(".jpg"):
+                    defauts_images.append(cv2.imread(f'{data_path_test}/{filename}'))
+
+            print(f'there are {len(images)} without defect')
+            print(f'there are {len(defauts_images)} without defect')
+
         rotated_images = []
         sub_images = []
         seg_images = []
@@ -51,34 +69,66 @@ class DataProcessing():
 
         #             # Ensure the output directory exist
         
-        segment = True
         if segment:
+            print('Segmenting the image')
             for i, image in enumerate(images):
+                print(f'This is the variable type {type(image)}')
+                print(f'This is the shape of the image YOLO {image.shape}')
                 seg_images.extend(self.segment(image))
 
             images = seg_images 
 
-            self.debug = True
-            if self.debug:
-                self.save_images(len(images), images, "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/output_segmentation") #"./output_segmentation" TODO Convert for docker
+            if test:
+                seg_images_defauts = []
+
+                for i, image in enumerate(defauts_images):
+                    seg_images_defauts.extend(self.segment(image))
+
+                defauts_images = seg_images_defauts
+            
+            if self.debug and not test:
+                self.save_images(len(images), images, "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/output_segmentation_soudure") #"./output_segmentation" TODO Convert for docker
+            elif self.debug and test:
+                self.save_images(len(defauts_images), defauts_images, "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/output_segmentation_soudure_defauts") #"./output_segmentation" TODO Convert for docker
 
         if subdvisise:
+            print('Subdivising the image')
             for i, img in enumerate(images):
                 sub_images.extend(self.subdivise(img))
             images = sub_images
-                
+            print(f'The number of subdivised images is {len(images)}')
+
+            if test:
+                sub_images_default = []
+                for i, img in enumerate(defauts_images):
+                    sub_images_default.extend(self.subdivise(img))
+                defauts_images = sub_images_default
+                print(f'The number of subdivised images is {len(defauts_images)}')
+
+            if self.debug:
+                self.save_images(len(images), images, "/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/output_segmentation") #"./output_segmentation" TODO Convert for docker
+
         if rotate:
             for i, image in enumerate(images):
                 rotated_images.extend(self.rotate(image))
 
             images = rotated_images
 
-        for i, image in enumerate(images):
-            images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
+        if not test:
+            #Convert the image back to rgb
+            for i, image in enumerate(images):
+                images[i] = cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB)
+            images = np.array(images)
 
-        images = np.array(images)
-        
-        return self.split_data(images)
+            print('Data processing has been completed.')
+            return self.split_data(images)
+        else:
+            non_defauts_images = np.array(images)
+            defauts_images = np.array(defauts_images)
+            
+            print('Data processing has been completed.')
+            return non_defauts_images, defauts_images
+
 
     def split_data(self, images):
         """
@@ -152,20 +202,20 @@ class DataProcessing():
 
         return augmented_images
     
-    def get_random_blackout(self, input_train, input_valid, input_test):
+    def get_random_blackout(self, input_train, input_valid):
         """
         Call apply_random_blackout for every data that need to be data augmented. 
         """
         train_augmented = self.apply_random_blackout(input_train)
         valid_augmented = self.apply_random_blackout(input_valid)
-        test_augmented = self.apply_random_blackout(input_test)
+
         print("=====================================")
-        print("Augmented splitted dataset in arrays of shape: ", train_augmented.shape, " | ",valid_augmented.shape, " | ", test_augmented.shape)
+        print("Augmented splitted dataset in arrays of shape: ", train_augmented.shape, " | ",valid_augmented.shape)
         print("=====================================")
 
 
 
-        return train_augmented, valid_augmented, test_augmented
+        return train_augmented, valid_augmented
 
     def save_images(self, nb_images, images, folder: str = "./output_"):
         output_dir = folder
@@ -196,56 +246,100 @@ class DataProcessing():
         input_test = (input_test * max_pixel_value).astype('uint8')
         result_test = (result_test * max_pixel_value).astype('uint8')
 
-        return difference_reshaped, input_test, result_test
+        return input_test, result_test, difference_reshaped
+    
+    def get_data_processing_standard(self, data_path, max_pixel_value, test=False):
+        """
+        Do the data processing on the original data without any patch. 
+        Used for thes 1. 
+        """
+        print("You are currently doing test 1")
+        if not test:
+            input_train, input_valid, input_test = self.load_data(data_path, subdvisise=True, segment=True)
+
+            train_input_norm = self.normalize(input_train, max_pixel_value)
+            train_input_loss_norm = train_input_norm
+            valid_input_norm = self.normalize(input_valid, max_pixel_value)
+            valid_input_loss_norm = valid_input_norm
+            test_input_norm = self.normalize(input_test, max_pixel_value)
+
+            return train_input_norm, train_input_loss_norm, valid_input_norm, valid_input_loss_norm, test_input_norm
+        else:
+            non_defauts_images, defauts_images = self.load_data(data_path, subdvisise=False, segment=False, test=True)
+            
+            # test_input_norm = self.normalize(non_defauts_images, max_pixel_value)
+            # del non_defauts_images
+            # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
+            # del defauts_images
+
+            return non_defauts_images, defauts_images
         
-    def get_data_processing_blackout(self, data_path, max_pixel_value):
+    def get_data_processing_blackout(self, data_path, max_pixel_value, test=False):
         """
         Do the processing for the data set used by the team to work with. 
-        Used to do the bench mark.
+        Used for test 2.
         """
-        input_train, input_valid, input_test = self.load_data(data_path, True)
+        print("You are currently doing test 2")
+        if not test:
+            input_train, input_valid, input_test = self.load_data(data_path, subdvisise=True, segment=True)
 
-        train_augmented, valid_augmented, test_augmented = self.get_random_blackout(input_train, input_valid, input_test)
+            train_blackout, valid_blackout = self.get_random_blackout(input_train, input_valid)
 
-        #TODO loop if you want to normalise multipes values
-        input_train_aug_norm = self.normalize(train_augmented, max_pixel_value)
-        input_train_norm = self.normalize(input_train, max_pixel_value)
-        input_test_aug_norm = self.normalize(test_augmented, max_pixel_value)
-        input_test_norm = self.normalize(input_test, max_pixel_value)
-        input_valid_norm = self.normalize(input_valid, max_pixel_value)
-        input_valid_aug_norm = self.normalize(valid_augmented, max_pixel_value)
+            train_input_norm = self.normalize(train_blackout, max_pixel_value)
+            train_input_loss_norm = self.normalize(input_train, max_pixel_value)
+            valid_input_norm = self.normalize(valid_blackout, max_pixel_value) 
+            valid_input_loss_norm = self.normalize(input_valid, max_pixel_value)
+            test_input_norm = self.normalize(input_test, max_pixel_value)
 
-        if self.debug:
-            self.save_images(15, self.de_normalize(input_train_aug_norm, max_pixel_value), "input_train_aug_norm")
-            self.save_images(15, self.de_normalize(input_train_norm, max_pixel_value), "input_train_norm")
-            self.save_images(15, self.de_normalize(input_test_aug_norm, max_pixel_value), "input_test_aug_norm")
-            self.save_images(15, self.de_normalize(input_test_norm, max_pixel_value), "input_test_norm")
-            self.save_images(15, self.de_normalize(input_valid_norm, max_pixel_value), "input_valid_norm")
-            self.save_images(15, self.de_normalize(input_valid_aug_norm, max_pixel_value), "input_valid_aug_norm")
+            if self.debug:
+                self.save_images(15, self.de_normalize(train_input_norm, max_pixel_value), "train_input_norm")
+                self.save_images(15, self.de_normalize(train_input_loss_norm, max_pixel_value), "train_input_loss_norm")
+                self.save_images(15, self.de_normalize(valid_input_norm, max_pixel_value), "valid_input_norm")
+                self.save_images(15, self.de_normalize(valid_input_loss_norm, max_pixel_value), "valid_input_loss_norm")
+                self.save_images(15, self.de_normalize(test_input_norm, max_pixel_value), "test_input_norm")
 
-        return input_train_aug_norm, input_train_norm, input_test_aug_norm, input_test_norm, input_valid_aug_norm, input_valid_norm
+            return train_input_norm, train_input_loss_norm, valid_input_norm, valid_input_loss_norm, test_input_norm
+        else:
+            non_defauts_images, defauts_images = self.load_data(data_path, segment=False, test=True)
+
+            # test_input_norm = self.normalize(input_test, max_pixel_value)
+            # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
+
+            return non_defauts_images, defauts_images
     
-    def get_data_processing_stain(self, data_path, max_pixel_value):
+    def get_data_processing_stain(self, data_path, max_pixel_value, test=False):
         """
         Do the data processing with Stain noise used to try to beat the bench mark
+        Used for test 3.
         """
-        input_train, input_valid, input_test = self.load_data(data_path, True)
+        print("You are currently doing test 3")
+        if not test: 
+            input_train, input_valid, input_test = self.load_data(data_path, subdvisise=True, segment=True)
 
-        images_stain_train = []
-        images_stain_valid = []
-        for img1, img2 in zip(input_train, input_valid):
-            images_stain_train.append(self.add_stain(img1, max_pixel_value)) 
-            images_stain_valid.append(self.add_stain(img2, max_pixel_value))
-        images_stain_train = np.array(images_stain_train)
-        images_stain_valid = np.array(images_stain_valid)
+            images_stain_train = []
+            images_stain_valid = []
+            for img in input_train:
+                images_stain_train.append(self.add_stain(img, max_pixel_value)) 
+            for img in input_valid:
+                images_stain_valid.append(self.add_stain(img, max_pixel_value))
+            images_stain_train = np.array(images_stain_train)
+            images_stain_valid = np.array(images_stain_valid)
 
-        train_input_norm = self.normalize(images_stain_train, max_pixel_value)    
-        train_input_loss_norm = self.normalize(input_train, max_pixel_value)
-        valid_input_norm = self.normalize(images_stain_valid, max_pixel_value) 
-        valid_input_loss_norm = self.normalize(input_valid, max_pixel_value)
-        test_input_norm = self.normalize(input_test, max_pixel_value)
+            train_input_norm = self.normalize(images_stain_train, max_pixel_value)    
+            train_input_loss_norm = self.normalize(input_train, max_pixel_value)
+            valid_input_norm = self.normalize(images_stain_valid, max_pixel_value) 
+            valid_input_loss_norm = self.normalize(input_valid, max_pixel_value)
+            test_input_norm = self.normalize(input_test, max_pixel_value)
 
-        return train_input_norm, train_input_loss_norm, valid_input_norm, valid_input_loss_norm, test_input_norm
+            return train_input_norm, train_input_loss_norm, valid_input_norm, valid_input_loss_norm, test_input_norm
+        else:
+            non_defauts_images, defauts_images = self.load_data(data_path, segment=False, test=True) 
+
+            # test_input_norm = self.normalize(input_test, max_pixel_value)
+            # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
+
+            return non_defauts_images, defauts_images
+
     
     def resize(self, image):
         closest_width = int(np.ceil(image.shape[1] / self.width ) * self.width )
@@ -308,3 +402,12 @@ class DataProcessing():
         cropped_image = image.crop(boxes.xyxy.tolist()[0])
         cropped_image = np.array(cropped_image)
         return cropped_image
+    
+    def custom_sort_key(self, filename):
+        match = re.match(r'(\d+)([a-z]+)_.*', filename)
+        if match:
+            # Return a tuple with the numeric part as an integer and the prefix
+            return (int(match.group(1)), match.group(2))
+        else:
+            # If no match, return a tuple that puts the filename last
+            return (float('inf'), filename)  
