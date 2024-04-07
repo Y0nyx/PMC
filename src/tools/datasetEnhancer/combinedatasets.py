@@ -45,9 +45,9 @@ def copy_files(source_dir, destination_dir):
 # Fonction principale pour combiner les datasets
 def main():
 
-    dataset_paths = ["D:\dataset\output_2",
-                     "D:\dataset\dataset_with_equalize"]
-    output_path = "D:\dataset\dofa_syntethic_welding_v1"
+    dataset_paths = ["D:\dataset\Welding Defect Detection",
+                     "D:\dataset\default-detection-format-v2"]
+    output_path = "D:\dataset\default-detection-format-v3"
 
     # Combinaison des datasets
     if dataset_paths and output_path:

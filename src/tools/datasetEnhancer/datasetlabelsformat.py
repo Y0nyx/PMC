@@ -44,9 +44,12 @@ def filter_labels_in_directory(input_dir, output_dir):
             with open(input_path, 'r') as f_in:
                 # Lire les lignes du fichier
                 lines = f_in.readlines()
-                
-                # Filtrer les lignes commençant par "0"
-                filtered_lines = [line for line in lines if line.startswith("0")]
+                f_in.close()
+
+                filtered_lines = []
+                for line in lines:
+                    if line.startswith("1"):
+                        filtered_lines.append("0" + line[1:])
             
             # Écrire les lignes filtrées dans le fichier de sortie
             with open(output_path, 'w') as f_out:
@@ -54,8 +57,8 @@ def filter_labels_in_directory(input_dir, output_dir):
                 print(f"Filtrage terminé pour {file}")
 
 # Dossier d'entrée et de sortie
-dataset_path = 'D:\dataset\WeldingDefectDetection.v2i.yolov8'
-output_path = 'D:\dataset\output_2'
+dataset_path = 'D:\\dataset\\Welding Defect Detection.v2i.yolov8'
+output_path = 'D:\\dataset\\Welding Defect Detection'
 
 # Filtrer les fichiers dans les sous-dossiers train, valid et test
 filter_labels(dataset_path, output_path)

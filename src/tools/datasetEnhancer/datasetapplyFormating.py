@@ -58,8 +58,8 @@ def process_dataset(dataset_path, output_path):
     apply_processing(os.path.join(dataset_path, "test"), os.path.join(output_path, "test"))
 
 # Spécifier le chemin d'accès au dataset et au dossier de sortie
-dataset_path = 'D:\dataset\old_dataset'
-output_path = 'D:\dataset\old_dataset_2'
+dataset_path = 'D:\\dataset\\Welding Defect Detection.v2i.yolov8'
+output_path = 'D:\\dataset\\Welding Defect Detection'
 
 # Traiter le dataset
 process_dataset(dataset_path, output_path)

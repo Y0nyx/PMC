@@ -1,4 +1,5 @@
 from pipeline.models.Model import YoloModel
+from pipeline.models.Callbacks import on_fit_epoch_end, on_train_epoch_end
 from pipeline.data.DataManager import DataManager
 from NetworkManager import NetworkManager
 from common.enums.PipelineStates import PipelineState
@@ -110,6 +111,11 @@ class Pipeline():
     def train(self, yaml_path: str, yolo_model: str, **kargs):
 
         model = YoloModel(f"{yolo_model}.pt")
+
+        # add important callbacks
+        model._model.add_callback("on_fit_epoch_end", on_fit_epoch_end)
+        model._model.add_callback("on_train_epoch_end", on_train_epoch_end)
+
         args = dict(data=yaml_path, **kargs)
 
         if self._state == PipelineState.TRAINING:
@@ -200,15 +206,11 @@ class Pipeline():
 
 
 if __name__ == "__main__":
-    dataset = '../../usr/src/datasets'
-    folders = ['dataset_with_equalize', 'dataset_without_equalize']
-    
     #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
     pipeline = Pipeline(supervised_models=[], unsupervised_models=[], State=PipelineState.TRAINING)
 
-    for folder in folders:
-        data_path = os.path.join(dataset, folder, 'data.yaml')
-        pipeline.train(data_path, "yolov8m", epochs=350, batch=-1, workers=4)
+    data_path = "D:\dataset\default-detection-format-v2\\data.yaml"
+    pipeline.train(data_path, "yolov8m", epochs=350, batch=-1, workers=4)
 
         # data_path = "D:\dataset\dofa_3"
     
