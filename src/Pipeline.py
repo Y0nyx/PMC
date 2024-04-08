@@ -209,8 +209,8 @@ if __name__ == "__main__":
     #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
     pipeline = Pipeline(supervised_models=[], unsupervised_models=[], State=PipelineState.TRAINING)
 
-    data_path = "D:\dataset\default-detection-format-v2\\data.yaml"
-    pipeline.train(data_path, "yolov8m", epochs=350, batch=-1, workers=4)
+    data_path = "../../Datasets/default-detection-format-v3/data.yaml"
+    pipeline.train(data_path, "yolov8l", epochs=350, batch=-1, workers=0)
 
         # data_path = "D:\dataset\dofa_3"
     
