@@ -1,4 +1,5 @@
 from pipeline.models.Model import YoloModel
+from pipeline.models.Callbacks import on_fit_epoch_end, on_train_epoch_end
 from pipeline.data.DataManager import DataManager
 from NetworkManager import NetworkManager
 from common.enums.PipelineStates import PipelineState
@@ -8,7 +9,7 @@ from pipeline.CsvResultRow import CsvResultRow
 from datetime import datetime
 
 import matplotlib.pyplot as plt
-import tensorflow as tf
+#import tensorflow as tf
 #from tensorflow.keras.models import load_model
 from PIL import Image as Img
 import numpy as np
@@ -55,7 +56,8 @@ class Pipeline():
         #Set initial pipeline state
         self._state = State
         if self._state == PipelineState.TRAINING:
-            self._dataManager = Mock_DataManager(Path("./dataset/mock"))
+            #self._dataManager = Mock_DataManager(Path("./dataset/mock"))
+            pass
         else:
             self._dataManager = DataManager(
                 "", "./cameras.yaml", self.verbose
@@ -132,9 +134,14 @@ class Pipeline():
 
         self._state = PipelineState.INIT
 
-    def train(self, yaml_path: str, yolo_model: YoloModel, **kargs):
+    def train(self, yaml_path: str, yolo_model: str, **kargs):
 
         model = YoloModel(f"{yolo_model}.pt")
+
+        # add important callbacks
+        model._model.add_callback("on_fit_epoch_end", on_fit_epoch_end)
+        model._model.add_callback("on_train_epoch_end", on_train_epoch_end)
+
         args = dict(data=yaml_path, **kargs)
 
         if self._state == PipelineState.TRAINING:
@@ -349,53 +356,19 @@ def path_initialization():
 
 
 if __name__ == "__main__":
+    #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
+    # TRAINING
+    # pipeline = Pipeline(supervised_models=[], unsupervised_models=[], State=PipelineState.TRAINING)
 
-    segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
+
+    # data_path = "../../Datasets/default-detection-format-v3/data.yaml"
+    # pipeline.train(data_path, "yolov8l", epochs=350, batch=-1, workers=0)
+
+    # segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
 
     supervised_models = [YoloModel(Path(segmentation_model_path))]
     unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
 
     pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
 
-    pipeline.detect()
-        # data_path = "D:\dataset\dofa_3"
-    
-        #data_path = "D:\dataset\dofa_2\data.yaml"
-        
-        # test_model = YoloModel()
-        # test_model.train(epochs=3, data=data_path, batch=-1)
-    
-        # test_resultats = test_model.eval()
-    
-        # welding_resultats = welding_model.eval()
-    
-        # if test_resultats.fitness > welding_resultats.fitness:
-        #     print('wrong')
-    
-        # print(f'test fitness: {test_resultats.fitness}')
-        # print(f'welding fitness: {welding_resultats.fitness}')
-    
-        #Pipeline = Pipeline(models, verbose=True)
-    
-        #Pipeline.train(data_path, "yolov8m-cls", epochs=350, batch=15, workers=4)
-        #Pipeline = Pipeline(models, training=True)
-        #Pipeline.detect()
-    
-        # Pipeline.train(data_path, "yolov8n-seg", epochs=350, batch=15, workers=4)
-    
-        # Pipeline.get_dataset()
-    
-        # import torch
-    
-        # if torch.cuda.is_available():
-        # model.predict(source="C:\Users\Charles\Pictures\Camera Roll\WIN_20240206_12_40_26_Pro.mp4", show=True, save=True, conf=0.5, device='gpu')
-    
-        # Hyperparameter optimizer
-        # model = YOLO('yolov8n-seg.pt')
-        # model.tune(data=data_path, epochs=30, iterations=20, val=False, batch=-1)
-    
-        # Model Training
-        # Pipeline.train(data_path, 'yolov8s-seg', epochs=250, plots=False)
-    
-        #Pipeline.detect()
     
