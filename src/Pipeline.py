@@ -155,8 +155,8 @@ class Pipeline():
 
         captured_image_collection = self._get_images()
 
-        if captured_image_collection.img_count > 0:
 
+        if captured_image_collection.img_count > 0:
             for i, captured_image in enumerate(captured_image_collection):
 
                 #Check if stopped was received
