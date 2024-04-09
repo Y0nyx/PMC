@@ -26,6 +26,8 @@ import threading
 from pathlib import Path
 import json
 
+from RocPipeline import RocPipeline
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
@@ -233,6 +235,7 @@ class Pipeline():
 
     def _segmentation_image(self, img: Image, save: bool, show: bool, conf: float):
         imgCollection = ImageCollection([])
+        boxList = []
         for model in self.supervised_models:
             results = model.predict(source=img.value, show=show, conf=conf, save=save)
 
@@ -240,6 +243,7 @@ class Pipeline():
             for result in results:
                 for boxes in result.boxes:
                     imgCollection.add(img.crop(boxes))
+                    boxList.append(boxes.xyxy.tolist()[0])
 
         if self._csv_logging:
             segmented_image_collection_path = f"{SAVE_PATH}{self._current_iteration_logging_path}{SAVE_PATH_SEGMENTATION}"
@@ -249,7 +253,7 @@ class Pipeline():
             self._csv_result_row.seg_results = imgCollection.img_count
             self._csv_result_row.seg_threshold = conf
 
-        return imgCollection
+        return imgCollection, boxList
 
     def print(self, string):
         if self.verbose:
@@ -264,6 +268,60 @@ class Pipeline():
             csv_row.manual_verification_result = ""
             csv_row.date = datetime.now()
             self.csv_manager.add_new_row(self._csv_result_row)
+    
+    def model_test(self, show: bool = False, save: bool = False, conf: float = 0.7, cam_debug=False):
+        if self._state != PipelineState.TRAINING:
+            self._state = PipelineState.TRAINING
+        
+        #TODO: Change to use the provided test dataset
+        captured_image_collection = self._get_images()
+
+        if captured_image_collection.img_count > 0:
+
+            for i, captured_image in enumerate(captured_image_collection):
+                #TODO: get the bounding box x and y values and image information
+                masked_image = self.create_bounding_box_mask(x1, y1, x2, y2, image_width, image_height)
+
+                #Check if stopped was received
+                if not self.stop_flag.is_set():
+
+                    #Find the welds in the capture image
+                    segmented_image_collection, boxList = self._segmentation_image(captured_image, show, save, conf)
+                    segmented_mask_collection = self.crop_masked_images(masked_image, boxList)
+
+                    
+
+    def crop_masked_images(self, masks, boxList):
+        cropped_mask = []
+        for mask, box in zip(masks, boxList):
+            cropped_mask.append(mask[box.xyxy.tolist()[0]]) 
+
+        return cropped_mask
+    
+    def create_bounding_box_mask(x1, y1, x2, y2, image_width, image_height):
+        # Initialize an empty mask with the same dimensions as the image
+        mask = np.zeros((image_height, image_width))
+
+        # Convert normalized coordinates to pixel coordinates if necessary
+        # Assuming x1, y1, x2, y2 are already in pixel coordinates
+        # If they are normalized, you would need to convert them here
+
+        # Calculate the bounding box dimensions
+        bbox_width = x2 - x1
+        bbox_height = y2 - y1
+
+        # Ensure the bounding box coordinates are within the image dimensions
+        x1 = max(0, x1)
+        y1 = max(0, y1)
+        x2 = min(image_width, x2)
+        y2 = min(image_height, y2)
+
+        # Set the mask values within the bounding box to 1
+        mask[y1:y2, x1:x2] = 1
+
+        return mask
+
+
 
 def count_folders_starting_with(start_string, path):
     count = 0
