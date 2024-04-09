@@ -5,11 +5,13 @@ import numpy as np
 import cv2
 from skimage import measure
 from skimage.metrics import structural_similarity as ssim
-
+from pipeline.models.Model import YoloModel
 
 class RocPipeline:
 
-    def __init__(self, model, validation_dataset_path, curve_name):
+    def __init__(self, model, validation_dataset_path, curve_name: str):
+        if isinstance(model, YoloModel):
+            self.is_yolo = True
         self._model = model
         self._validation_dataset_path = validation_dataset_path
         self._curve_name = curve_name
@@ -19,9 +21,11 @@ class RocPipeline:
         y_true = []
         count_true = 0
         count_false = 0
-
+        files_path = sorted(os.listdir(annotation_dir))
+        filenames = []
         # Iterate over text annotation files
-        for txt_file in os.listdir(annotation_dir):
+        for txt_file in files_path:
+            filenames.append(txt_file.split('.txt')[0])
             if txt_file.endswith('.txt'):
                 with open(os.path.join(annotation_dir, txt_file), 'r') as file:
                     lines = file.readlines()
@@ -33,14 +37,14 @@ class RocPipeline:
                         y_true.append(0) # Class 0 otherwise
                         count_false += 1
 
-        return y_true, count_true, count_false
+        return y_true, filenames, count_true, count_false
 
     def load_images(self):
         data_path = self._validation_dataset_path + "/images"
         images = []
         for filename in os.listdir(data_path):
-            if filename.endswith(".png"):
-                img = cv2.imread(f'{data_path}/{filename}')
+            if filename.endswith(".jpg"):
+                img = cv2.imread(f'{data_path}/{filename}', cv2.COLOR_RGB2BGR)
                 images.append(img)
         
         return images
@@ -84,11 +88,25 @@ class RocPipeline:
         return ssim_values
 
     def generate_roc(self, save = True):
-        y_labels, count_true, count_false = self.parse_annotations()
+        y_labels, filenames, count_true, count_false = self.parse_annotations()
 
-        images = self.load_images()
+        if not self.is_yolo:
+            images = self.load_images()
+            y_scores = self.prediction_based_on_metric_threshold(images, 'psnr')
+        else:
+            y_scores = []
+            images_path = self._validation_dataset_path + "\\images"
+            for img in filenames:
+                results = self._model.predict(source=os.path.join(images_path, img + '.jpg'))
+                for result in results:
+                    if len(result.boxes) > 0:
+                        test = []
+                        for box in result.boxes:
+                            test.append(box.conf.cpu()[0])
+                        y_scores.append(max(test)) 
+                    else:
+                        y_scores.append(0)
 
-        y_scores = self.prediction_based_on_metric_threshold(images, 'psnr')
 
         # Calculate true positive rate (TPR) and false positive rate (FPR)
         fpr, tpr, thresholds = roc_curve(y_labels, y_scores)
@@ -96,9 +114,14 @@ class RocPipeline:
         # Calculate the area under the ROC curve (AUC)
         roc_auc = auc(fpr, tpr)
 
+        optimal_idx = np.argmax(tpr - fpr)
+        optimal_threshold = 1-thresholds[optimal_idx]
+
+        print("Optimal Threshold:", optimal_threshold)
+
         # Plot the ROC curve
         plt.figure()
-        plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (AUC = %0.2f)' % roc_auc)
+        plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f}), Optimal Threshold: {optimal_threshold:.2f}')
         plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
         plt.plot([0, 0], [1,0],[1,1], color='green', lw=2, linestyle='--')
         plt.xlim([0.0, 1.0])
@@ -108,6 +131,13 @@ class RocPipeline:
         plt.title('ROC Curve')
         plt.legend(loc="lower right")
         # Save the plot without displaying it
+        plt.show()
         plt.savefig('roc_' + self._curve_name + '.png')
         plt.close()
 
+if __name__ == "__main__":
+    model = YoloModel('default_detection.pt')
+
+    pip = RocPipeline(model=model, validation_dataset_path="D:\\dataset\\default-detection-format-v2\\valid", curve_name='supervisée')
+
+    pip.generate_roc()
