@@ -32,7 +32,7 @@ class TrainingManager:
         Check if the number of images exceeds the threshold.
         """
         if self.is_number_threshold:
-            number_files = len(os.listdir(IMG_SAVE_FILE))
+            number_files = len(os.listdir(CAPTURED_IMG_SAVE_PATH))
             self.print(f'Check Images Number : {number_files} / {NUMBER_IMG_THRESHOLD}')
             self.flags.append(number_files > NUMBER_IMG_THRESHOLD)
 
@@ -61,7 +61,7 @@ class TrainingManager:
         """
         Split the dataset into training and validation sets.
         """
-        image_files = os.listdir(IMG_SAVE_FILE)
+        image_files = os.listdir(CAPTURED_IMG_SAVE_PATH)
         num_images = len(image_files)
         num_train = int(num_images * TRAIN_SPLIT)
 
@@ -70,13 +70,13 @@ class TrainingManager:
 
         for img_file in image_files[:num_train]:
             move(
-                os.path.join(IMG_SAVE_FILE, img_file),
+                os.path.join(CAPTURED_IMG_SAVE_PATH, img_file),
                 os.path.join(TRAIN_FILE, img_file),
             )
 
         for img_file in image_files[num_train:]:
             move(
-                os.path.join(IMG_SAVE_FILE, img_file),
+                os.path.join(CAPTURED_IMG_SAVE_PATH, img_file),
                 os.path.join(VALID_FILE, img_file),
             )
 

@@ -1,26 +1,29 @@
 import cv2
 import numpy as np
 #from skimage.metrics import structural_similarity as ssim
-import matplotlib.pyplot as plt
+from common.image.ImageCollection import ImageCollection
+from common.image.Image import Image
+from skimage.metrics import structural_similarity as ssim
 
 class UnSupervisedPipeline:
 
-    def __init__(self, model, image):
+    def __init__(self, model, debug: bool=False):
         self._model = model
-        self._image = image
         self._subdivisions = []
         self._nb_x_sub = 0
         self._nb_y_sub = 0
         self._model_shape = model.input_shape
         self._square_size = 32
-    
-    def set_image(self, image):
-        self._image = image
+        self.debug = debug
+        self.threshold = 0
+        self.threshold_algo = "mse, ssim, psnr"
 
-    def resize(self):
-        closest_width = int(np.ceil(self._image.value.shape[1] / self._model_shape[1]) * self._model_shape[1])
-        closest_height = int(np.ceil(self._image.value.shape[0] / self._model_shape[2]) * self._model_shape[2])
-        self._image.value = cv2.resize(self._image.value, (closest_width, closest_height))
+    def resize(self, image):
+        closest_width = int(np.ceil(image.value.shape[1] / self._model_shape[1]) * self._model_shape[1])
+        closest_height = int(np.ceil(image.value.shape[0] / self._model_shape[2]) * self._model_shape[2])
+        image.value = cv2.resize(image.value, (closest_width, closest_height))
+
+        return image
     
     def mask(self, sub_image, x, y):
         # Create a copy of the original image
@@ -34,35 +37,6 @@ class UnSupervisedPipeline:
             current_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel] = 0
         
         return current_image
-
-    def debug(self):
-        for image in self._subdivisions:
-            if True: #C'est un if le model non supervise prend des images subdivises
-                # Calculate the closest multiples for both dimensions
-                sub_images = image.subdivise(128, 0, "untranslated")
-
-                for i, sub_image in enumerate(sub_images):
-                    cv2.imshow('Sub image', sub_image.value)
-                    cv2.waitKey(0)
-                    cv2.destroyAllWindows
-                    worst_ssim, worst_ssim_position, worst_ssim_square, worst_ssim_prediction = self.detect_default(sub_image.value, 32, i)
-                    if True:
-                    
-                        fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-                        # Plot the first RGB image
-                        axes[0].imshow(sub_image.value)
-                        axes[0].set_title(f"Error in image {i}")
-                        axes[0].axis('off')
-                        # Plot the second grayscale image
-                        axes[1].imshow(worst_ssim_square)
-                        axes[1].set_title(f"At position x={worst_ssim_position[0]} y={worst_ssim_position[1]}")
-                        axes[1].axis('off')
-                        # Plot the third grayscale image
-                        axes[2].imshow(worst_ssim_prediction)
-                        axes[2].set_title(f"Prediction made")
-                        axes[2].axis('off')
-                        # Show the combined plot
-                        plt.show
 
     def brightness(self, img1, img2):
         ig1, ig2, channels = img1.shape
@@ -79,10 +53,11 @@ class UnSupervisedPipeline:
 
         return 10
     
-    def subdivise(self):
+    def subdivise(self, image):
+        image = self.resize(image)
         sub_images = []
         # Get the dimensions of the original image
-        width, height, channels = self._image.shape
+        width, height, channels = image.value.shape
 
         # Calculate the number of sub-images in both dimensions
         self._nb_x_sub = width // self._model.input_shape[1]
@@ -100,15 +75,18 @@ class UnSupervisedPipeline:
                 # left, top, right, bottom = add_overlap(left, top, right, bottom, width, height, overlap_size)
 
                 # Crop the sub-image using NumPy array slicing
-                sub_images.append(self._image[left:right, top:bottom, :])
-
-        self._subdivisions = sub_images
+                sub_images.append(image.value[left:right, top:bottom, :])
+        return sub_images
     
     def decision(self, sub_image, prediction):
         comparision = self.comparision(sub_image, prediction)
         return False
 
     def mask_and_predict(self, sub_image):
+
+        imgCollection = ImageCollection([])
+        threshold_results = []
+        csv_rows = []
 
         width, height, channels = sub_image.shape
         nb_x_mask = width//self._square_size
@@ -117,29 +95,81 @@ class UnSupervisedPipeline:
         for x in range(nb_x_mask):
             for y in range(nb_y_mask):
                 masked_sub_image = self.mask(sub_image, x, y)
-                cv2.imshow("Image", masked_sub_image)
-                # Wait for a key press and then close the window
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
-                masked_sub_image = masked_sub_image.reshape(1, 128, 128, 3)
-                #masked_sub_image = masked_sub_image/255.0
-                prediction = self._model.predict(masked_sub_image)
-                # Remove singleton dimension and convert prediction to uint8 image format
-                prediction_image = np.squeeze(prediction) * 255
-                prediction_image = prediction_image.astype(np.uint8)
-                cv2.imshow("Image", prediction_image)
-                # Wait for a key press and then close the window
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
-                error = self.decision(sub_image, prediction_image)
+                masked_sub_image = self.masked_sub_image_preprocessing(masked_sub_image)
 
+                prediction = self._model.predict(masked_sub_image, verbose=0)
+                predicted_image = self.predicted_image_postprocessing(prediction)
 
+                mse, ssim_value, psnr_value, decision  = self.threshold_comparison(sub_image, predicted_image)
+                bb = ""
+                if decision: bb = self.calculate_bounding_box(x, y)
+                #print(bb)
+                threshold_results.append([mse, ssim_value, psnr_value, decision, bb])
+                self._csv_row.unsup_defect_threshold = self.threshold
+                self._csv_row.unsup_threshold_algo = self.threshold_algo
+                self._csv_row.unsup_defect_res = decision
+                self._csv_row.unsup_defect_bb = bb
+                csv_rows.append(self._csv_row)
+                predicted_image = Image(predicted_image)
+                imgCollection.add(predicted_image)
+
+        return csv_rows, [imgCollection, threshold_results]
+
+    def masked_sub_image_preprocessing(self, masked_sub_image):
+        #TODO: Subdivide in separate functions and add bool for grayscale conversion
+        masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_BGR2GRAY)
+        masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_GRAY2RGB)
+        masked_sub_image = masked_sub_image.reshape(1, self._model.input_shape[1], self._model.input_shape[2], self._model.input_shape[3])
         
-    def detect_default(self, debug=False):
+        masked_sub_image = masked_sub_image/255.0
 
-        self.subdivise()
+        return masked_sub_image
+
+    def predicted_image_postprocessing(self, prediction):
+        #TODO: Subdivied in separate functions
+        predicted_image = np.squeeze(prediction) * 255
+        predicted_image = predicted_image.astype(np.uint8)
+
+        return predicted_image
+    
+    def threshold_comparison(self, original_image, prediction):
+        decision = False
+        # Mean Squared Error
+        mse = np.mean((original_image - prediction) ** 2)
+
+        # Structural Similarity Index
+        ssim_value = ssim(original_image, prediction, multichannel=True, win_size=3)
+
+        # Peak Signal-to-Noise Ratio
+        max_pixel_value = 255.0 # Assuming 8-bit images
+        mse_value = mse
+        psnr_value = 20 * np.log10(max_pixel_value / np.sqrt(mse_value))
+
+        #print(f"MSE: {mse}, SSIM: {ssim_value}, PSNR: {psnr_value}")
+
+        #Set threshold here
+        if mse > 0 and ssim_value > 0 and psnr_value > 0: decision = True
+
+        return mse, ssim_value, psnr_value, decision
+    
+    def calculate_bounding_box(self, x, y):
+        return f"{x}:{y} - subdivision position"
+        
+    def detect_defect(self, image, csv_row):
+
+        self._csv_row = csv_row
+
+        sub_images = self.subdivise(image)
+        predicted_collection = []
+        csv_rows_collection = []
 
         # Iterate through each subdivision
         for x in range(self._nb_x_sub):
             for y in range(self._nb_y_sub):
-                self.mask_and_predict(self._subdivisions[x*y])
+                # Correctly index into the subdivisions list
+                subdivision_index = x * self._nb_y_sub + y
+                csv_rows, predictions = self.mask_and_predict(sub_images[subdivision_index])
+                predicted_collection.append(predictions)
+                csv_rows_collection.extend(csv_rows)
+
+        return csv_rows_collection, predicted_collection
