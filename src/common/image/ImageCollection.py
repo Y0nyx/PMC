@@ -28,7 +28,22 @@ class ImageCollection:
         Renvoie :
         - list: Liste de tuples contenant la taille de chaque image.
         """
-        return [img.shape() for img in self._img_list]
+
+        if len(self._img_list) > 0:
+            return [img.shape() for img in self._img_list]
+        else:
+            return None
+        
+    @property
+    def img_count(self) -> int:
+        """
+        Récupère le nombre d'image dans la collection.
+
+        Renvoie :
+        - list: Liste de tuples contenant la taille de chaque image.
+        """
+
+        return len(self._img_list)
 
     def resize(self, width, height) -> bool:
         """
@@ -53,7 +68,7 @@ class ImageCollection:
         os.makedirs(file_path, exist_ok=True)
         self._save_counter = len(os.listdir(file_path))
         for i, img in enumerate(self._img_list, start=self._save_counter):
-            img.save(file_path / f"img_{i}.png")
+            img.save(f"{file_path}/img_{i}.png")
         self._save_counter += len(self._img_list)
 
     def add(self, img):
