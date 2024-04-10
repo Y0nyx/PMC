@@ -2,6 +2,7 @@ from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 import os
 import numpy as np
+import random
 import cv2
 from skimage import measure
 from skimage.metrics import structural_similarity as ssim
@@ -90,13 +91,29 @@ class RocPipeline:
     def generate_roc(self, save = True):
         y_labels, filenames, count_true, count_false = self.parse_annotations()
 
+        # Trouver les indices des images avec et sans défaut
+        indices_true = [i for i, label in enumerate(y_labels) if label == True]
+        indices_false = [i for i, label in enumerate(y_labels) if label == False]
+
+        # Sélectionner un nombre égal d'indices aléatoires pour chaque classe
+        min_count = min(count_true, count_false)
+        selected_indices_true = random.sample(indices_true, min_count)
+        selected_indices_false = random.sample(indices_false, min_count)
+
+        # Concaténer les indices sélectionnés
+        selected_indices = selected_indices_true + selected_indices_false
+
+        # Utiliser les indices sélectionnés pour obtenir les nouveaux y_labels et filenames équilibrés
+        y_labels_balanced = [y_labels[i] for i in selected_indices]
+        filenames_balanced = [filenames[i] for i in selected_indices]
+
         if not self.is_yolo:
             images = self.load_images()
             y_scores = self.prediction_based_on_metric_threshold(images, 'psnr')
         else:
             y_scores = []
             images_path = self._validation_dataset_path + "\\images"
-            for img in filenames:
+            for img in filenames_balanced:
                 results = self._model.predict(source=os.path.join(images_path, img + '.jpg'))
                 for result in results:
                     if len(result.boxes) > 0:
@@ -109,7 +126,7 @@ class RocPipeline:
 
 
         # Calculate true positive rate (TPR) and false positive rate (FPR)
-        fpr, tpr, thresholds = roc_curve(y_labels, y_scores)
+        fpr, tpr, thresholds = roc_curve(y_labels_balanced, y_scores)
 
         # Calculate the area under the ROC curve (AUC)
         roc_auc = auc(fpr, tpr)
@@ -117,18 +134,18 @@ class RocPipeline:
         optimal_idx = np.argmax(tpr - fpr)
         optimal_threshold = 1-thresholds[optimal_idx]
 
-        print("Optimal Threshold:", optimal_threshold)
+        print("Seuil optimal:", optimal_threshold)
 
         # Plot the ROC curve
         plt.figure()
-        plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f}), Optimal Threshold: {optimal_threshold:.2f}')
+        plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'Courbe ROC (ASC = {roc_auc:.2f}), Seuil optimal: {optimal_threshold:.2f}')
         plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
         plt.plot([0, 0], [1,0],[1,1], color='green', lw=2, linestyle='--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
-        plt.xlabel('False Positive Rate')
-        plt.ylabel('True Positive Rate')
-        plt.title('ROC Curve')
+        plt.xlabel('Taux faux positifs')
+        plt.ylabel('Taux vrai positifs')
+        plt.title('Courbe ROC')
         plt.legend(loc="lower right")
         # Save the plot without displaying it
         plt.show()
