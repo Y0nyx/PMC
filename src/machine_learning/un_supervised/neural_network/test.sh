@@ -11,7 +11,7 @@ readonly SCRIPT_NAME='test.py'
 
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc' #'../../../../../Datasets/grosse_piece_seg_1'   #TODO convert for docker     #same as train.sh
 readonly MODEL='aes_defect_detection'                                                     #same as train.sh
-readonly TEST_NAME='4k_images_blackout'                                                   #same as train.sh
+readonly TEST_NAME='4k_images_stain'                                                   #same as train.sh
 readonly NBEST=2                                                                          #same as train.sh
 readonly NUM_TRAIN_REGENERATE=40
 readonly MONITOR_LOSS='mean_absolute_error'

@@ -13,8 +13,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
+import re
 
 from sklearn.metrics import mean_absolute_error
+from skimage.metrics import peak_signal_noise_ratio as psnr
+from skimage.metrics import structural_similarity as ssim
 
 import data_processing as dp
 import model as mod
@@ -62,9 +65,31 @@ def createPredImg(input_train, input_test, difference_reshaped, image, num, path
     plt.savefig(f'{dir}/{image+1}.png')
     plt.close()
 
-def write_error_csv(mae, mae_threshold, error, path_results, image_number, l, k):
-    print(f'The l value is: {l}')
-    fieldnames = ['image_number', 'welding_number', 'subdivise_number', 'error', 'MAE_value', 'MAE_threshold']
+def createPredImg2(input_train, input_test, difference_reshaped, path_results):
+    fig, axes = plt.subplots(1, 3, figsize=(24,8))
+    fig.suptitle('Input data vs Results')
+
+    axes[0].set_title('Donnee entree')
+    im0 = axes[0].imshow(input_train, cmap='gray')
+    axes[1].set_title('Resultats')
+    im1 = axes[1].imshow(input_test, cmap='gray')
+    axes[2].set_title('difference')
+    im2 = axes[2].imshow(difference_reshaped, cmap='jet')
+
+    fig.subplots_adjust(wspace=0.3, hspace=0.3)
+
+    fig.colorbar(im0, ax=axes[0], fraction=0.046, pad=0.04)
+    fig.colorbar(im1, ax=axes[1], fraction=0.046, pad=0.04)
+    fig.colorbar(im2, ax=axes[2], fraction=0.046, pad=0.04)
+
+    plt.savefig(path_results)
+    plt.close()
+
+def write_error_csv(test_loss, psnr_value, ssim_value, mae_threshold, error, path_results, image, view, weld_num, i):
+    """
+    Write the information to a csv file to know which piece has a welding error. 
+    """
+    fieldnames = ['image_number', 'view_number', 'segmented_number', 'sub_num', 'error', 'MAE_value', 'psnr_value', 'ssim_value', 'MAE_threshold']
     csv_path = f'{path_results}/prediction/prediction_results.csv'
 
     # Create the directory if it does not exist
@@ -81,11 +106,14 @@ def write_error_csv(mae, mae_threshold, error, path_results, image_number, l, k)
             writer.writeheader()
 
         row_dict = {
-            'image_number': image_number,
-            'welding_number': l + 1,
-            'subdivise_number': k + 1,
+            'image_number': image,
+            'view_number': view + 1,
+            'segmented_number': weld_num + 1,
+            'sub_num': i+1,
             'error': error,
-            'MAE_value': mae,
+            'MAE_value': test_loss,
+            'psnr_value': psnr_value,
+            'ssim_value': ssim_value,
             'MAE_threshold': mae_threshold,
         }
         writer.writerow(row_dict)
@@ -109,6 +137,100 @@ def mean_absolute_error_hand(image_normalize, result_norm):
     mae = sum_absolute_differences / total_elements
 
     return mae
+
+def get_segmented_images(test_images, path_results):
+    """
+    Segment the image to only keep the welding of each input images. 
+    """
+    segmented_images = []
+    image_view = 1
+    for i, img in enumerate(test_images):
+        image_number = (i // 4) + 1
+        welding_segmented = data_processing.segment(img)
+        
+        result_path = f'{path_results}/image/segmented/image{image_number}'
+        os.makedirs(result_path, exist_ok=True)
+
+        for j, welding in enumerate(welding_segmented):
+            cv2.imwrite(f'{result_path}/welding_segmented_{image_view}_segment_{j}_.jpg', welding)
+        
+        segmented_images.extend(welding_segmented)
+        
+        image_view += 1
+        if image_view == 5:
+            image_view = 1
+
+    return segmented_images
+
+def get_subdivise_images():
+    """
+    Subdivise the images in smaller images 
+    """
+    initial_data_path = '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/4k_images_blackout/image/segmented'
+    file_names = os.listdir(initial_data_path)
+
+    for name in file_names:
+        data_path = f'/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/4k_images_blackout/image/segmented/{name}'
+        images = []
+        sorted_filenames = sorted(os.listdir(data_path), key=custom_sort_key)
+        #Data loading
+        for filename in sorted_filenames:
+            if filename.endswith(".jpg"):
+                images.append(cv2.imread(f'{data_path}/{filename}'))
+
+        for i, img in enumerate(images):
+            parts = sorted_filenames[i].split('_')
+            result_path = f'{path_results}/image/subdivised/{name}/imageView_{parts[2]}/segment_{parts[4]}'
+            os.makedirs(result_path, exist_ok=True)
+
+            img_subdivise = data_processing.subdivise(img)
+            for i, small_img in enumerate(img_subdivise, start=1):
+                cv2.imwrite(f'{result_path}/welding_subdivised_{i}.jpg', small_img)
+
+def custom_sort_key(filename):
+    match = re.match(r'(\d+)([a-z]+)_.*', filename)
+    if match:
+        # Return a tuple with the numeric part as an integer and the prefix
+        return (int(match.group(1)), match.group(2))
+    else:
+        # If no match, return a tuple that puts the filename last
+        return (float('inf'), filename)  
+    
+def custom_sort_key2(filename):
+    match = re.search(r'_([0-9]+)\.jpg$', filename)
+    if match:
+        # Return the numeric part as an integer for sorting
+        return int(match.group(1))
+    else:
+        # If no match, return a large number to put the filename last
+        return float('inf')
+    
+def custom_sort_key3(filename):
+    match = re.search(r'image(\d+)', filename, re.IGNORECASE)
+    if match:
+        # Return the numeric part as an integer for sorting
+        return int(match.group(1))
+    else:
+        # If no match, return a large number to put the filename last
+        return float('inf')
+    
+def custom_sort_key4(filename):
+    match = re.search(r'imageView_(\d+)', filename, re.IGNORECASE)
+    if match:
+        # Return the numeric part as an integer for sorting
+        return int(match.group(1))
+    else:
+        # If no match, return a large number to put the filename last
+        return float('inf')
+
+def custom_sort_key5(filename):
+    match = re.search(r'segment_(\d+)', filename, re.IGNORECASE)
+    if match:
+        # Return the numeric part as an integer for sorting
+        return int(match.group(1))
+    else:
+        # If no match, return a large number to put the filename last
+        return float('inf')
 
 def argparser():
     parser = argparse.ArgumentParser(description='Argument used in the code passed by the bash file.')
@@ -185,11 +307,11 @@ if __name__ =='__main__':
     else:
         #Define a threshold
         mae_threshold = 0.10
+        direct = '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/4k_images_stain/image/subdivised'
 
         #Data processing and split the data into set (Train, test, valid).
         data_processing = dp.DataProcessing(sub_width, sub_height)
         test_input, defaut_images = data_processing.get_data_processing_blackout(data_path, max_pixel_value, test=True)
-        print('data processing done. ')
 
         #Concatenate defect with non defect test images. 
         test_images = np.concatenate((defaut_images, test_input), axis=0)
@@ -199,71 +321,139 @@ if __name__ =='__main__':
         del defaut_images
         del test_input
 
-        _, row, column, channels = test_images.shape
-        image_dimentions = (row, column, channels)
-
+        #Get the hp values
         data_frame = pd.read_csv(f'{path_results}/hp_search_results.csv')
         #List all the hp used during training. 
         learning_rate = data_frame['lr']
         #Selected model
         j = 1
 
-        image_dimentions = (256, 256, 3) #TODO eventually change the hardcoded value
         #Create the model that will be used
+        image_dimentions = (256, 256, 3) #TODO eventually change the hardcoded value
         model = mod.AeModels(float(learning_rate.iloc[j]), monitor_loss, monitor_metric, image_dimentions)
         build_model = model.aes_defect_detection()
         name = f"model{j+1}"
         build_model.load_weights(f'{filepath_weights}/search_{name}')
 
-        for i in range(test_images.shape[0]):
-            #Segmente the welding image
-            image_number = (i // 4) + 1
-            print(f'Currently analysing image number: {image_number}')
-            test_images[i] = cv2.cvtColor(test_images[i], cv2.COLOR_RGB2BGR) 
-            welding_segmented = data_processing.segment(test_images[i])
+        do_data_processing = True
+        if do_data_processing: 
+            #Get the segmented images.
+            segmented_images = get_segmented_images(test_images, path_results)
+            #Get the subdivised images. 
+            get_subdivise_images()
 
-            #Subdivise the segmented image (For the number of welding that where in the image).
-            for l, welding in enumerate(welding_segmented):
-                print(f'The length of the segmented welding is: {len(welding_segmented)}')
-                print(f'The new l value is: {l}')
-                divised_welding_segmented = data_processing.subdivise(welding)
-                #Do a prediction on every subdivised image
-                for k, image in enumerate(divised_welding_segmented):
-                    #Put the data into RGB format
-                    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) 
-                    #cv2.imwrite(f'/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/result_paths/image_{k}.jpg', image)
+        #Main loop to predict if there is a defect or not
+        sorted_folder = sorted(os.listdir(direct), key=custom_sort_key3)
 
-                    #Normalize the data
-                    image_normalize = data_processing.normalize(image, max_pixel_value)
-                    image_normalize_expand = np.expand_dims(image_normalize, axis=0)
+        for image, folder in enumerate(sorted_folder):
+            print(f'The folder is {folder}')
 
-                    #Predict with the network
-                    result_norm = prediction(build_model, image_normalize_expand)
-                    #Evaluate the model
-                    test_loss, test_metric = build_model.evaluate(image_normalize_expand, image_normalize_expand)
-                    print(f'The test_loss is {test_loss}')
+            camera_directory = f'{direct}/{folder}'
+            sorted_folder_cam = sorted(os.listdir(camera_directory), key=custom_sort_key4)
 
-                    #Save the predicted image
-                    #TODO save the predicted image, original image and error between the image. 
+            for view, camera_view in enumerate(sorted_folder_cam):
+                print(f'The camera_view is {camera_view}')
 
-                    #Calculate the mae between the input and the prediction
-                    result_norm = np.squeeze(result_norm)
-                    image_normalize_flattened = image_normalize.flatten()
-                    result_norm_flattened = result_norm.flatten()
-                    mae = mean_absolute_error_hand(image_normalize, result_norm)
-                    #mae = mean_absolute_error(image_normalize_flattened, result_norm_flattened)
-                    print(f'The mae value is {mae}')
+                welding_dir = f'{direct}/{folder}/{camera_view}'
+                sorted_folder_welding = sorted(os.listdir(welding_dir), key=custom_sort_key5)
 
-                    #Validate with the threshold
-                    if mae >= mae_threshold:
-                        error = 1
-                    else:
-                        error = 0
+                for weld_num, welding in enumerate(sorted_folder_welding):
+                    print(f'The camera_view is {welding}')
 
-                    #Write to a csv file if there is a welding error. 
-                    print('Writting info to csv...')
-                    write_error_csv(mae, mae_threshold, error, path_results, image_number, l, k)
+                    final_path = f'{direct}/{folder}/{camera_view}/{welding}'
+                    sorted_filenames = sorted(os.listdir(final_path), key=custom_sort_key2)
+            
+                    #Data loading
+                    images = []
 
+                    for filename in sorted_filenames:
+                        if filename.endswith(".jpg"):
+                            img = cv2.imread(f'{final_path}/{filename}')
+                            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                            images.append(img)
 
-        #Take the final decision if there is a welding error. 
+                    for i, img in enumerate(images):
+                        #Normalize the input data
+                        image_normalize = data_processing.normalize(img, max_pixel_value)
+                        image_normalize_expand = np.expand_dims(image_normalize, axis=0)
+                        #Predict on the trained model
+                        result_norm = prediction(build_model, image_normalize_expand)
+                        #Evaluate the performances of the model
+                        test_loss, test_metric = build_model.evaluate(result_norm, result_norm)
+
+                        #Denormalize the data 
+                        input_test_denorm, result_test_denorm, difference_reshaped_denorm = data_processing.de_normalize(image_normalize_expand, result_norm, max_pixel_value)
+                        result_test_denorm = result_test_denorm.squeeze()
+                        difference_reshaped_denorm = difference_reshaped_denorm.squeeze()
+
+                        #Save the predicted image
+                        path_results = f'{final_path}/prediction/'
+                        os.makedirs(path_results, exist_ok=True)
+                        new_path_results = f'{path_results}/{sorted_filenames[i]}'
+
+                        createPredImg2(img, result_test_denorm, difference_reshaped_denorm, new_path_results)
+
+                        #Calculate error image metrics
+                        print(f'The shape of the image is: {img.shape}')
+                        psnr_value = psnr(img, result_test_denorm, data_range=255)
+                        ssim_value = ssim(img, result_test_denorm, data_range=255, channel_axis=-1)
+                        print(f'The psnr value is {psnr_value}')
+                        print(f'Tje ssim value is {ssim_value}')
+
+                        #Taking decision if defect or not
+                        if test_loss >= mae_threshold:
+                            error = 1
+                        else:
+                            error = 0
+
+                        #Write the information to a csv file
+                        write_error_csv(test_loss, psnr_value, ssim_value, mae_threshold, error, path_results, image, view, weld_num, i)
+
+        # for i in range(test_images.shape[0]):
+        #     #Segmente the welding image
+        #     image_number = (i // 4) + 1
+        #     print(f'Currently analysing image number: {image_number}')
+        #     test_images[i] = cv2.cvtColor(test_images[i], cv2.COLOR_RGB2BGR) 
+        #     welding_segmented = data_processing.segment(test_images[i])
+
+        #     #Subdivise the segmented image (For the number of welding that where in the image).
+        #     for l, welding in enumerate(welding_segmented):
+        #         print(f'The length of the segmented welding is: {len(welding_segmented)}')
+        #         print(f'The new l value is: {l}')
+        #         divised_welding_segmented = data_processing.subdivise(welding)
+        #         #Do a prediction on every subdivised image
+        #         for k, image in enumerate(divised_welding_segmented):
+        #             #Put the data into RGB format
+        #             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) 
+        #             #cv2.imwrite(f'/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/result_paths/image_{k}.jpg', image)
+
+        #             #Normalize the data
+        #             image_normalize = data_processing.normalize(image, max_pixel_value)
+        #             image_normalize_expand = np.expand_dims(image_normalize, axis=0)
+
+        #             #Predict with the network
+        #             result_norm = prediction(build_model, image_normalize_expand)
+        #             #Evaluate the model
+        #             test_loss, test_metric = build_model.evaluate(image_normalize_expand, image_normalize_expand)
+
+        #             #Save the predicted image
+        #             #TODO save the predicted image, original image and error between the image. 
+
+        #             #Calculate the mae between the input and the prediction
+        #             result_norm = np.squeeze(result_norm)
+        #             image_normalize_flattened = image_normalize.flatten()
+        #             result_norm_flattened = result_norm.flatten()
+        #             mae = mean_absolute_error_hand(image_normalize, result_norm)
+        #             #mae = mean_absolute_error(image_normalize_flattened, result_norm_flattened)
+        #             print(f'The mae value is {mae}')
+
+        #             #Validate with the threshold
+        #             if mae >= mae_threshold:
+        #                 error = 1
+        #             else:
+        #                 error = 0
+
+        #             #Write to a csv file if there is a welding error. 
+        #             print('Writting info to csv...')
+        #             write_error_csv(mae, mae_threshold, error, path_results, image_number, l, k)
         

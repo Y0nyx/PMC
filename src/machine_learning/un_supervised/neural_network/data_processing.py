@@ -184,21 +184,20 @@ class DataProcessing():
 
         return image_stain
 
-    def apply_random_blackout(self, images, blackout_size=(32, 32)):
+    def apply_random_blackout(self, images, blackout_size=(256, 256)):
         """
         Apply random blackout to data for self supervised training. 
         """
         augmented_images = images.copy()
 
-        for i in range(images.shape[0]):
-            # Randomly select the position to blackout
-            x = np.random.randint(0, images.shape[1] - blackout_size[0] + 1)
-            y = np.random.randint(0, images.shape[2] - blackout_size[1] + 1)
+        # Randomly select the position to blackout
+        x = np.random.randint(0, images.shape[0] - blackout_size[0] + 1)
+        y = np.random.randint(0, images.shape[1] - blackout_size[1] + 1)
 
-            # Black out the selected region for each channel
-            channels = 3
-            for channel in range(channels):
-                augmented_images[i, x:x+blackout_size[0], y:y+blackout_size[1], channel] = 0.0
+        # Black out the selected region for each channel
+        channels = 3
+        for channel in range(channels):
+            augmented_images[x:x+blackout_size[0], y:y+blackout_size[1], channel] = 0.0
 
         return augmented_images
     
