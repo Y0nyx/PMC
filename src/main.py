@@ -18,7 +18,7 @@ def path_initialization():
     segmentation_model_path = f"{SEGMENTATION_MODEL_PATH}{SEGMENTATION_MODEL_REF}.pt"
 
     #Init path to unsupervised detection model
-    unsupervised_model_higher_path = "../../"
+    unsupervised_model_higher_path = ""
     unsupervised_model_path = f'{unsupervised_model_higher_path}{UNSUPERVISED_MODEL_REF}.keras'
 
     #Init path to current model iteration for logging purposes
@@ -37,6 +37,5 @@ if __name__ == "__main__":
     unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
 
     pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path)
-
-    networkManager = NetworkManager(pipeline, HOST, PORT, True)
+    networkManager = NetworkManager(pipeline, HOST, PORT, SUPERVISED_HOST, SUPERVISED_PORT, UNSUPERVISED_HOST, UNSUPERVISED_PORT, True)
     networkManager.start()

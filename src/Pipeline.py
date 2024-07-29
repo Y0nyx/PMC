@@ -38,7 +38,7 @@ class Pipeline():
         self.stop_flag = threading.Event()
 
         #Init network manager
-        self.network_manager = NetworkManager(HOST, PORT, self.verbose)
+        self.network_manager = NetworkManager(HOST, PORT, SUPERVISED_HOST, SUPERVISED_PORT, UNSUPERVISED_HOST, UNSUPERVISED_PORT, self.verbose)
 
         self.print("=== Init Pipeline ===")  # Fixed this line
 
@@ -364,7 +364,7 @@ if __name__ == "__main__":
     # data_path = "../../Datasets/default-detection-format-v3/data.yaml"
     # pipeline.train(data_path, "yolov8l", epochs=350, batch=-1, workers=0)
 
-    # segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
+    segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
 
     supervised_models = [YoloModel(Path(segmentation_model_path))]
     unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)

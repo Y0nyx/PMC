@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 
-SAVE_PATH = Path("../../pipeline_results")
+SAVE_PATH = Path("")
 SAVE_PATH_UNSUPERVISED_PREDICTION = Path("/unsupervised_prediction")
 SAVE_PATH_SEGMENTATION = Path("/segmentation")
 SAVE_PATH_SUBDIVISION = Path("/subidivision")
@@ -24,6 +24,10 @@ CLASSES = ['default']
 # Connection Electron
 PORT = 8002
 HOST = '127.0.0.1'
+SUPERVISED_PORT = 8003
+SUPERVISED_HOST = '127.0.0.1'
+UNSUPERVISED_PORT = 8004
+UNSUPERVISED_HOST = '127.0.0.1'
 
 #TODO: Ajouter les constantes pour le CSV
 CSV_FIELDS = ['id', 'un_sup_model_ref', 'seg_model_ref', 'sup_model_ref',
