@@ -32,7 +32,7 @@ from RocPipeline import RocPipeline
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
-    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = True):
+    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = True, roc_curve = False):
         self.verbose = verbose
 
         self.stop_flag = threading.Event()
@@ -56,7 +56,7 @@ class Pipeline():
         #Set initial pipeline state
         self._state = State
         if self._state == PipelineState.TRAINING:
-            #self._dataManager = Mock_DataManager(Path("./dataset/mock"))
+            self._dataManager = Mock_DataManager(Path("./dataset/mock"))
             pass
         else:
             self._dataManager = DataManager(
@@ -67,6 +67,8 @@ class Pipeline():
         self._trainingManager = TrainingManager(is_time_threshold=False, verbose=self.verbose)
 
         self._csv_logging = csv_logging
+        if roc_curve:
+            self.roc_pipeline = RocPipeline(None, "Test", "unsupervised_test_roc")
         if csv_logging:
             # Init and set CSV logging tools
             self._current_iteration_logging_path = current_iteration_logging_path
@@ -173,7 +175,10 @@ class Pipeline():
                     segmented_image_collection = self._segmentation_image(captured_image, show, save, conf)
 
                     #Analyse the welds with the unsupervised model to find potential defaults
-                    self._unsupervised_defect_detection(i, segmented_image_collection)
+                    unsupervised_result_collections, 
+                    sub_mask_collection, 
+                    sub_image_collection, 
+                    average_predicted_sub_image_collection = self._unsupervised_defect_detection(i, segmented_image_collection)
 
                     # TODO Integrate supervised model
                     
@@ -216,12 +221,19 @@ class Pipeline():
 
     def _unsupervised_defect_detection(self, i, segmented_image_collection):
         unsupervised_result_collections = []
+        sub_mask_collection = []
+        sub_image_collection = []
+        average_predicted_sub_image_collection = []
         csv_result_rows = []
 
         for segmentation in segmented_image_collection:
-            csv_result_rows, unsupervised_result_collection = self._unsupervised_pipeline.detect_defect(segmentation, self._csv_result_row)
+            csv_result_rows, unsupervised_result_collection, sub_masks, sub_images, average_predicted_images = self._unsupervised_pipeline.detect_defect(segmentation, self._csv_result_row)
             
             unsupervised_result_collections.append(unsupervised_result_collection)
+            sub_mask_collection.append(sub_masks)
+            sub_image_collection.append(sub_images)
+            average_predicted_sub_image_collection.append(average_predicted_images)
+
         if self._csv_logging:            
             for y, unsupervised_result_collection in enumerate(unsupervised_result_collections):
                 for z, unsupervised_results in enumerate(unsupervised_result_collection):
@@ -229,6 +241,8 @@ class Pipeline():
                     unsupervised_results[0].save(unsupervised_results_path)
 
                     self.write_csv_rows(csv_result_rows, unsupervised_results_path)
+
+        return unsupervised_result_collections, sub_mask_collection, sub_image_collection, average_predicted_sub_image_collection
 
     def _get_images(self):
         images = self._dataManager.get_all_img()
@@ -242,7 +256,6 @@ class Pipeline():
 
     def _segmentation_image(self, img: Image, save: bool, show: bool, conf: float):
         imgCollection = ImageCollection([])
-        boxList = []
         for model in self.supervised_models:
             results = model.predict(source=img.value, show=show, conf=conf, save=save)
 
@@ -250,7 +263,6 @@ class Pipeline():
             for result in results:
                 for boxes in result.boxes:
                     imgCollection.add(img.crop(boxes))
-                    boxList.append(boxes.xyxy.tolist()[0])
 
         if self._csv_logging:
             segmented_image_collection_path = f"{SAVE_PATH}{self._current_iteration_logging_path}{SAVE_PATH_SEGMENTATION}"
@@ -260,7 +272,7 @@ class Pipeline():
             self._csv_result_row.seg_results = imgCollection.img_count
             self._csv_result_row.seg_threshold = conf
 
-        return imgCollection, boxList
+        return imgCollection
 
     def print(self, string):
         if self.verbose:
@@ -295,40 +307,6 @@ class Pipeline():
                     #Find the welds in the capture image
                     segmented_image_collection, boxList = self._segmentation_image(captured_image, show, save, conf)
                     segmented_mask_collection = self.crop_masked_images(masked_image, boxList)
-
-                    
-
-    def crop_masked_images(self, masks, boxList):
-        cropped_mask = []
-        for mask, box in zip(masks, boxList):
-            cropped_mask.append(mask[box.xyxy.tolist()[0]]) 
-
-        return cropped_mask
-    
-    def create_bounding_box_mask(x1, y1, x2, y2, image_width, image_height):
-        # Initialize an empty mask with the same dimensions as the image
-        mask = np.zeros((image_height, image_width))
-
-        # Convert normalized coordinates to pixel coordinates if necessary
-        # Assuming x1, y1, x2, y2 are already in pixel coordinates
-        # If they are normalized, you would need to convert them here
-
-        # Calculate the bounding box dimensions
-        bbox_width = x2 - x1
-        bbox_height = y2 - y1
-
-        # Ensure the bounding box coordinates are within the image dimensions
-        x1 = max(0, x1)
-        y1 = max(0, y1)
-        x2 = min(image_width, x2)
-        y2 = min(image_height, y2)
-
-        # Set the mask values within the bounding box to 1
-        mask[y1:y2, x1:x2] = 1
-
-        return mask
-
-
 
 def count_folders_starting_with(start_string, path):
     count = 0

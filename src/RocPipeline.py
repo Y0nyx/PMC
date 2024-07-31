@@ -9,10 +9,16 @@ from skimage.metrics import structural_similarity as ssim
 
 class RocPipeline:
 
-    def __init__(self, model, validation_dataset_path, curve_name):
+    def __init__(self, model, validation_dataset_path, curve_name, origina_images, predicted_images, masked_images):
         self._model = model
         self._validation_dataset_path = validation_dataset_path
         self._curve_name = curve_name
+        self.origina_images = origina_images
+        self.predicted_images = predicted_images
+        self.masked_images = masked_images
+
+    def contains_one(self, nparray):
+        return 1 if np.any(array == 1) else 0
 
     def parse_annotations(self):
         annotation_dir = self._validation_dataset_path + "/labels"
@@ -45,14 +51,14 @@ class RocPipeline:
         
         return images
     
-    def prediction_based_on_metric_threshold(self, images, metric):
-        results = self._model.predict(images)
+    def prediction_based_on_metric_threshold(self, origina_images, predicted_images, metric):
+        #results = self._model.predict(images)
         predictions = []
         match metric:
             case 'psnr':
-                predictions = self.calculate_psnr_for_images(images, results)
+                predictions = self.calculate_psnr_for_images(origina_images, predicted_images)
             case 'ssim':
-                predictions = self.calculate_ssim_for_images(images, results)
+                predictions = self.calculate_ssim_for_images(origina_images, predicted_images)
 
         return predictions
 
@@ -89,6 +95,7 @@ class RocPipeline:
         images = self.load_images()
 
         y_scores = self.prediction_based_on_metric_threshold(images, 'psnr')
+        y_labels = self.contains_one(self.masked_images)
 
         # Calculate true positive rate (TPR) and false positive rate (FPR)
         fpr, tpr, thresholds = roc_curve(y_labels, y_scores)

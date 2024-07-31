@@ -48,6 +48,7 @@ class Image:
 
         # if _validate_img(img):
         self._img = img
+        self._mask = None
 
     def load_img_from_file(self, file_path: str) -> np.ndarray:
         """
@@ -86,6 +87,23 @@ class Image:
             raise Exception("Not valid image")
 
     @property
+    def mask(self) -> np.ndarray:
+        """
+        Get the value of the Image class
+        :return:
+        """
+        return self._mask
+
+    @mask.setter
+    def mask(self, img: np.ndarray) -> None:
+        """
+        Set the value of the Image class
+        :param img:
+        :return:
+        """
+        self.mask = img
+
+    @property
     def shape(self):
         """
         Get the shape of the Image class
@@ -115,7 +133,14 @@ class Image:
         image = Img.fromarray(self._img)
         cropped_image = image.crop(boxes.xyxy.tolist()[0])
 
-        return Image(np.array(cropped_image))
+        mask = Img.fromarray(self._mask)
+        cropped_mask = mask.crop(boxes.xyxy.tolist()[0])
+
+        image_obj = Image(np.array(cropped_image))
+
+        image_obj.mask = cropped_mask
+
+        return image_obj
 
 
 if __name__ == "__main__":
