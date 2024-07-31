@@ -6,13 +6,11 @@ async def handle_connection(websocket, path):
     try:
         async for message in websocket:
             print(f"Received message on 8003: {message}")
-            # Parse the received message
             data = json.loads(message)
             
-            # Respond to the message based on the 'code' received
             if data.get('code') == 'init':
-                response = json.dumps({'code': 'start'})
-            elif data.get('code') == 'start':
+                response = json.dumps({'code': 'supervised init'})
+            elif data.get('code') == 'train':
                 response = json.dumps({'code': 'resultat', 'data': 'result from 8003'})
             elif data.get('code') == 'stop':
                 response = json.dumps({'code': 'stopped'})
@@ -26,7 +24,7 @@ async def handle_connection(websocket, path):
 
 async def main():
     async with websockets.serve(handle_connection, "127.0.0.1", 8003):
-        await asyncio.Future()  # Run forever
+        await asyncio.Future()
 
 if __name__ == "__main__":
     asyncio.run(main())

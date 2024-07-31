@@ -63,8 +63,8 @@ class NetworkManager():
         websocket = self.websockets.get(service_name)
         while True:
             try:
-                data = await websocket.recv()
-                received_json = json.loads(data)
+                received = await websocket.recv()
+                received_json = json.loads(received)
                 code = received_json['code']
                 self.print(f'Received code ({service_name}): {code}')
 
@@ -82,8 +82,31 @@ class NetworkManager():
                     self.worker.stop()
                     await self.send_message(service_name, {'code': 'stop'})
                 
-                elif code == "train":
-                    await self.send_message(service_name, {'code': 'train'})
+                elif code == "train" and service_name == 'server':
+                    try:
+                        await asyncio.gather(self.heartbeat('supervised'))
+                    except (websockets.exceptions.ConnectionClosedError,
+                            websockets.exceptions.ConnectionClosedOK,
+                            websockets.exceptions.InvalidURI,
+                            AttributeError):
+                        await self.send_message('server', {'code': 'error', 'data': 'supervised container disconnected'})
+
+                    try:
+                        await asyncio.gather(self.heartbeat('unsupervised'))
+                    except (websockets.exceptions.ConnectionClosedError,
+                            websockets.exceptions.ConnectionClosedOK,
+                            websockets.exceptions.InvalidURI,
+                            AttributeError):
+                        await self.send_message('server', {'code': 'error', 'data': 'unsupervised container disconnected'})
+
+                    await self.send_message('supervised', {'code': 'train'})
+                    await self.send_message('unsupervised', {'code': 'train'})
+
+                
+                elif code == "resultat":
+                    result = received_json['result']
+                    await self.send_message('server', {'code': 'resultat', 'data': result})
+
 
             except websockets.exceptions.ConnectionClosedError as e:
                 self.print(f"Connection closed by the {service_name}: {e}")
@@ -110,7 +133,7 @@ class NetworkManager():
         if websocket:
             serialized_data = json.dumps(data)
             await websocket.send(serialized_data)
-            self.print(f"Sent message to {service_name}")
+            self.print(f"Sent message {data} to {service_name}")
 
     def start(self):
         asyncio.ensure_future(self.run(), loop=self.loop)

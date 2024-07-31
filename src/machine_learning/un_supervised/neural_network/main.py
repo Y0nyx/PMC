@@ -11,11 +11,11 @@ async def handle_connection(websocket, path):
             
             # Respond to the message based on the 'code' received
             if data.get('code') == 'init':
-                response = json.dumps({'code': 'start'})
-            elif data.get('code') == 'start':
-                response = json.dumps({'code': 'resultat', 'data': 'result from 8004'})
+                response = json.dumps({'code': 'unsupervised init'})
             elif data.get('code') == 'stop':
                 response = json.dumps({'code': 'stopped'})
+            elif data.get('code') == 'train':
+                response = json.dumps({'code': 'resultat', 'data': 'result from 8003'})
             else:
                 response = json.dumps({'code': 'unknown', 'message': 'Unknown code'})
 
