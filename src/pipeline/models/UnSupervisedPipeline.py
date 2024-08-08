@@ -3,6 +3,7 @@ import numpy as np
 #from skimage.metrics import structural_similarity as ssim
 from common.image.ImageCollection import ImageCollection
 from common.image.Image import Image
+from common.image.ImageUnsupResult import ImageUnsupResult
 from skimage.metrics import structural_similarity as ssim
 
 class UnSupervisedPipeline:
@@ -26,7 +27,7 @@ class UnSupervisedPipeline:
 
         return image
     
-    def mask(self, sub_image, x, y):
+    def blackout(self, sub_image, x, y, image_mask_toggle=False):
         # Create a copy of the original image
         current_image = np.copy(sub_image)
         ig1, ig2, channels = current_image.shape
@@ -35,7 +36,8 @@ class UnSupervisedPipeline:
         square_bottom_right = (square_top_left[0] + self._square_size, square_top_left[1] + self._square_size)
         # Black out the square for each channel
         for channel in range(channels):
-            current_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel] = 0
+            if not image_mask_toggle: current_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel] = 0
+            else:
         
         return current_image
 
@@ -85,7 +87,7 @@ class UnSupervisedPipeline:
         comparision = self.comparision(sub_image, prediction)
         return False
 
-    def mask_and_predict(self, sub_image):
+    def mask_and_predict(self, sub_image, sub_masks):
 
         imgCollection = ImageCollection([])
         threshold_results = []
@@ -100,10 +102,10 @@ class UnSupervisedPipeline:
 
         for x in range(nb_x_mask):
             for y in range(nb_y_mask):
-                masked_sub_image = self.mask(sub_image, x, y)
-                masked_sub_image = self.masked_sub_image_preprocessing(masked_sub_image)
+                blackedout_sub_image = self.blackout(sub_image, x, y)
+                blackedout_sub_image = self.blackedout_sub_image_preprocessing(blackedout_sub_image)
 
-                prediction = self._model.predict(masked_sub_image, verbose=0)
+                prediction = self._model.predict(blackedout_sub_image, verbose=0)
                 predicted_image = self.predicted_image_postprocessing(prediction)
 
                 mse, ssim_value, psnr_value, decision  = self.threshold_comparison(sub_image, predicted_image)
@@ -116,7 +118,7 @@ class UnSupervisedPipeline:
                 self._csv_row.unsup_defect_res = decision
                 self._csv_row.unsup_defect_bb = bb
                 csv_rows.append(self._csv_row)
-                predicted_image = Image(predicted_image)
+                result_img = ImageUnsupResult(predicted_image)
                 imgCollection.add(predicted_image)
 
                 # Accumulate predicted image for averaging
@@ -129,7 +131,7 @@ class UnSupervisedPipeline:
 
         return csv_rows, [imgCollection, threshold_results], average_predicted_image
 
-    def masked_sub_image_preprocessing(self, masked_sub_image):
+    def blackedout_sub_image_preprocessing(self, masked_sub_image):
         #TODO: Subdivide in separate functions and add bool for grayscale conversion
         masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_BGR2GRAY)
         masked_sub_image = cv2.cvtColor(masked_sub_image, cv2.COLOR_GRAY2RGB)
@@ -184,7 +186,7 @@ class UnSupervisedPipeline:
             for y in range(self._nb_y_sub):
                 # Correctly index into the subdivisions list
                 subdivision_index = x * self._nb_y_sub + y
-                csv_rows, predictions, average_predicted_image = self.mask_and_predict(sub_images[subdivision_index])
+                csv_rows, predictions, average_predicted_image = self.mask_and_predict(sub_images[subdivision_index], sub_masks)
                 average_predicted_images.append(average_predicted_image)
                 predicted_collection.append(predictions)
                 csv_rows_collection.extend(csv_rows)
