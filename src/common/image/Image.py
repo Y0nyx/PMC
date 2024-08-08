@@ -89,19 +89,19 @@ class Image:
     @property
     def mask(self) -> np.ndarray:
         """
-        Get the value of the Image class
-        :return:
+        Get the mask of the Image class.
+        :return: Numpy array representing the mask.
         """
         return self._mask
 
     @mask.setter
-    def mask(self, img: np.ndarray) -> None:
+    def mask(self, mask: np.ndarray) -> None:
         """
-        Set the value of the Image class
-        :param img:
-        :return:
+        Set the mask of the Image class.
+        :param mask: Numpy array representing the mask.
+        :return: None
         """
-        self.mask = img
+        self._mask = mask
 
     @property
     def shape(self):
