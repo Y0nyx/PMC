@@ -1,9 +1,13 @@
 
+*.zip
+
 __pycache__/
 runs/*
-idea/*
 wandb/*
 dataset/*
 datasets/*
 # yolo models
 yolo*pt
+*.pt
+# IDE config
+.idea/*

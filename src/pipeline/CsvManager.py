@@ -7,7 +7,7 @@ class CsvManager:
     def __init__(self) -> None:
         self.check_headers()
 
-    def add_new_row(self, row2write):
+    def add_new_row(self, row2write: CsvResultRow):
         # Determine the next ID by reading the CSV file and finding the max ID
         next_id = 1
         with open(CSV_FILE_NAME, 'r', newline='') as csvfile:
