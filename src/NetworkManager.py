@@ -6,58 +6,134 @@ import websockets
 from common.Constants import *
 
 class NetworkManager():
-    def __init__(self, worker: threading.Thread, host: str, port: str, verbose: bool = False):
+    def __init__(self, worker: threading.Thread, server_host: str, server_port: str, unsupervised_host: str, unsupervised_port: str, supervised_host: str, supervised_port: str, verbose: bool = False):
         self.verbose = verbose
-        self.host = host
-        self.port = port
+        self.server_host = server_host
+        self.server_port = server_port
+        self.unsupervised_host = unsupervised_host
+        self.unsupervised_port = unsupervised_port
+        self.supervised_host = supervised_host
+        self.supervised_port = supervised_port
         self.worker = worker
         self.executor = ThreadPoolExecutor()
         self.loop = asyncio.get_event_loop()
         self.future = None
+        self.heartbeat_interval = 10
+        self.websockets = {}
 
     async def run(self):
-        async with websockets.connect(f"ws://{self.host}:{self.port}") as websocket:
-            self.websocket = websocket
-            await self.send_message({'code':'init'})
-            await self.receive_message()
+        tasks = [
+            asyncio.create_task(self.connect_service('server')),
+            asyncio.create_task(self.connect_service('supervised')),
+            asyncio.create_task(self.connect_service('unsupervised'))
+        ]
+        await asyncio.gather(*tasks)
 
-    async def receive_message(self) -> None:
-        while True:
-            print("received message")
-            data = await self.websocket.recv()
-            print("after recv")
-            received_json = json.loads(data)
-            print(received_json)
-            code = received_json['code']
-            self.print(f'Received code: {code}')
-
-            if self.future and self.future.done():
-                self.print("NetworkManager : Finish Pipeline")
-                await self.send_message(self.future.result())
-                self.future = None
-
-            if code == "start":
-                self.print("NetworkManager : Start Pipeline")
-                await self.send_message({'code': 'start'})
-                self.future = self.loop.run_in_executor(self.executor, self.worker.start)
-                result = await self.future
-                await self.send_message({'code': 'resultat', 'data': result})
-                
-            elif code == "stop":
-                self.print("NetworkManager : Stop Pipeline")
-                self.worker.stop()
-                await self.send_message({'code': 'stop'})
-
-    async def send_message(self, data) -> None:
-        serialized_data = json.dumps(data)
-        await self.websocket.send(serialized_data)
-        self.print("Sent message")
+    async def connect_service(self, service_name):
+        if service_name == 'server':
+            host = self.server_host
+            port = self.server_port
+        elif service_name == 'supervised':
+            host = self.supervised_host
+            port = self.supervised_port
+        elif service_name == 'unsupervised':
+            host = self.unsupervised_host
+            port = self.unsupervised_port
         
-    async def socket_connect(self) -> None:
-        pass
+        while True:
+            try:
+                async with websockets.connect(f"ws://{host}:{port}") as websocket:
+                    self.websockets[service_name] = websocket
+                    await self.send_message(service_name, {'code': 'init'})
+                    await asyncio.gather(
+                        self.receive_message(service_name),
+                        self.heartbeat(service_name)
+                    )
+            except (websockets.exceptions.ConnectionClosedError,
+                    websockets.exceptions.ConnectionClosedOK,
+                    websockets.exceptions.InvalidURI) as e:
+                self.print(f"Connection error ({service_name}): {e}")
+                self.print("Retrying connection...")
+                await asyncio.sleep(5)
+            except Exception as e:
+                self.print(f"Unexpected error ({service_name}): {e}")
+                await asyncio.sleep(5)
 
-    def close_socket(self) -> None:
-        pass
+    async def receive_message(self, service_name) -> None:
+        websocket = self.websockets.get(service_name)
+        while True:
+            try:
+                received = await websocket.recv()
+                received_json = json.loads(received)
+                code = received_json['code']
+                self.print(f'Received code ({service_name}): {code}')
+
+                if self.future and self.future.done():
+                    await self.send_message(service_name, self.future.result())
+                    self.future = None
+
+                if code == "start":
+                    await self.send_message(service_name, {'code': 'start'})
+                    self.future = self.loop.run_in_executor(self.executor, self.worker.start)
+                    result = await self.future
+                    await self.send_message(service_name, {'code': 'resultat', 'data': result})
+
+                elif code == "stop":
+                    self.worker.stop()
+                    await self.send_message(service_name, {'code': 'stop'})
+                
+                elif code == "train" and service_name == 'server':
+                    try:
+                        await asyncio.gather(self.heartbeat('supervised'))
+                    except (websockets.exceptions.ConnectionClosedError,
+                            websockets.exceptions.ConnectionClosedOK,
+                            websockets.exceptions.InvalidURI,
+                            AttributeError):
+                        await self.send_message('server', {'code': 'error', 'data': 'supervised container disconnected'})
+
+                    try:
+                        await asyncio.gather(self.heartbeat('unsupervised'))
+                    except (websockets.exceptions.ConnectionClosedError,
+                            websockets.exceptions.ConnectionClosedOK,
+                            websockets.exceptions.InvalidURI,
+                            AttributeError):
+                        await self.send_message('server', {'code': 'error', 'data': 'unsupervised container disconnected'})
+
+                    await self.send_message('supervised', {'code': 'train'})
+                    await self.send_message('unsupervised', {'code': 'train'})
+
+                
+                elif code == "resultat":
+                    result = received_json['result']
+                    await self.send_message('server', {'code': 'resultat', 'data': result})
+
+
+            except websockets.exceptions.ConnectionClosedError as e:
+                self.print(f"Connection closed by the {service_name}: {e}")
+                break
+            except websockets.exceptions.ConnectionClosedOK:
+                self.print(f"Connection closed normally ({service_name}).")
+                break
+            except Exception as e:
+                self.print(f"An error occurred ({service_name}): {e}")
+                break
+
+    async def heartbeat(self, service_name):
+        websocket = self.websockets.get(service_name)
+        while True:
+            try:
+                await websocket.ping()
+                await asyncio.sleep(self.heartbeat_interval)
+            except websockets.exceptions.ConnectionClosed:
+                self.print(f"Connection closed ({service_name}), stopping heartbeat.")
+                break
+
+    async def send_message(self, service_name, data) -> None:
+        websocket = self.websockets.get(service_name)
+        if websocket:
+            serialized_data = json.dumps(data)
+            await websocket.send(serialized_data)
+            self.print(f"Sent message {data} to {service_name}")
 
     def start(self):
         asyncio.ensure_future(self.run(), loop=self.loop)
@@ -68,6 +144,8 @@ class NetworkManager():
         finally:
             self.loop.close()
 
-    def print(self, str) -> None:
+    def print(self, message) -> None:
         if self.verbose:
-            print(str)
+            print(message)
+
+

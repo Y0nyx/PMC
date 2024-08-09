@@ -22,6 +22,7 @@ class UnSupervisedPipeline:
         closest_width = int(np.ceil(image.value.shape[1] / self._model_shape[1]) * self._model_shape[1])
         closest_height = int(np.ceil(image.value.shape[0] / self._model_shape[2]) * self._model_shape[2])
         image.value = cv2.resize(image.value, (closest_width, closest_height))
+        image.mask = cv2.resize(image.mask, (closest_width, closest_height))
 
         return image
     
@@ -56,6 +57,7 @@ class UnSupervisedPipeline:
     def subdivise(self, image):
         image = self.resize(image)
         sub_images = []
+        sub_masks = []
         # Get the dimensions of the original image
         width, height, channels = image.value.shape
 
@@ -76,7 +78,8 @@ class UnSupervisedPipeline:
 
                 # Crop the sub-image using NumPy array slicing
                 sub_images.append(image.value[left:right, top:bottom, :])
-        return sub_images
+                sub_masks.append(image.mask[left:right, top:bottom, :])
+        return sub_images, sub_masks
     
     def decision(self, sub_image, prediction):
         comparision = self.comparision(sub_image, prediction)
@@ -91,6 +94,9 @@ class UnSupervisedPipeline:
         width, height, channels = sub_image.shape
         nb_x_mask = width//self._square_size
         nb_y_mask = height//self._square_size
+
+        total_images = 0
+        average_predicted_image = np.zeros_like(sub_image, dtype=np.float32)
 
         for x in range(nb_x_mask):
             for y in range(nb_y_mask):
@@ -113,7 +119,15 @@ class UnSupervisedPipeline:
                 predicted_image = Image(predicted_image)
                 imgCollection.add(predicted_image)
 
-        return csv_rows, [imgCollection, threshold_results]
+                # Accumulate predicted image for averaging
+                average_predicted_image += predicted_image.asarray().astype(np.float32)
+                total_images += 1
+
+        # Calculate average predicted image
+        average_predicted_image /= total_images
+        average_predicted_image = average_predicted_image.astype(np.uint8)
+
+        return csv_rows, [imgCollection, threshold_results], average_predicted_image
 
     def masked_sub_image_preprocessing(self, masked_sub_image):
         #TODO: Subdivide in separate functions and add bool for grayscale conversion
@@ -159,17 +173,20 @@ class UnSupervisedPipeline:
 
         self._csv_row = csv_row
 
-        sub_images = self.subdivise(image)
+        sub_images, sub_masks = self.subdivise(image)
         predicted_collection = []
         csv_rows_collection = []
+
+        average_predicted_images = []
 
         # Iterate through each subdivision
         for x in range(self._nb_x_sub):
             for y in range(self._nb_y_sub):
                 # Correctly index into the subdivisions list
                 subdivision_index = x * self._nb_y_sub + y
-                csv_rows, predictions = self.mask_and_predict(sub_images[subdivision_index])
+                csv_rows, predictions, average_predicted_image = self.mask_and_predict(sub_images[subdivision_index])
+                average_predicted_images.append(average_predicted_image)
                 predicted_collection.append(predictions)
                 csv_rows_collection.extend(csv_rows)
 
-        return csv_rows_collection, predicted_collection
+        return csv_rows_collection, predicted_collection, sub_masks, sub_images, average_predicted_images
