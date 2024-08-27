@@ -7,8 +7,7 @@ import yaml
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
-grandparent_dir = os.path.dirname(parent_dir)
-sys.path.append(grandparent_dir)
+sys.path.append(parent_dir)
 
 from common.image.ImageCollection import ImageCollection
 from common.image.Image import Image
