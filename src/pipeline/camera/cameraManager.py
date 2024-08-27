@@ -42,7 +42,7 @@ class CameraManager:
 
     def remove_camera(self, index_camera):
         if index_camera < len(self.cameras):
-            del self.cameras[index_camera]
+            self.cameras.pop(index_camera)
             return True
         else:
             warn("Erreur : Index de caméra invalide.")
