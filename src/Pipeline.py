@@ -32,7 +32,7 @@ from RocPipeline import RocPipeline
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
-    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = True, roc_curve = False):
+    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = False, roc_curve = False):
         self.verbose = verbose
 
         self.stop_flag = threading.Event()
