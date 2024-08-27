@@ -5,3 +5,4 @@ PyYAML~=6.0
 websockets
 scikit-image
 scikit-learn
+coverage
