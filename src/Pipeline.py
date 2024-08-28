@@ -1,32 +1,31 @@
-from pipeline.models.Model import YoloModel
-from pipeline.models.Callbacks import on_fit_epoch_end, on_train_epoch_end
-from pipeline.data.DataManager import DataManager
-from NetworkManager import NetworkManager
-from common.enums.PipelineStates import PipelineState
-from common.image.Image import Image
-from pipeline.CsvManager import CsvManager
-from pipeline.CsvResultRow import CsvResultRow
 from datetime import datetime
-
 import matplotlib.pyplot as plt
 #import tensorflow as tf
 #from tensorflow.keras.models import load_model
 from PIL import Image as Img
 import numpy as np
 import asyncio
-
-#from clearml import Task
-from common.image.ImageCollection import ImageCollection
-from common.utils import DataManager as Mock_DataManager
-from common.Constants import *
-from TrainingManager import TrainingManager
-from pipeline.models.UnSupervisedPipeline import UnSupervisedPipeline
-
 import os
 import threading
 from pathlib import Path
 import json
+#from clearml import Task
 
+from pipeline.models.Model import YoloModel
+from pipeline.models.Callbacks import on_fit_epoch_end, on_train_epoch_end
+from pipeline.data.DataManager import DataManager
+from pipeline.CsvManager import CsvManager
+from pipeline.CsvResultRow import CsvResultRow
+from pipeline.models.UnSupervisedPipeline import UnSupervisedPipeline
+
+from common.enums.PipelineStates import PipelineState
+from common.image.Image import Image
+from common.image.ImageCollection import ImageCollection
+from common.utils import DataManager as Mock_DataManager
+from common.Constants import *
+
+from NetworkManager import NetworkManager
+from TrainingManager import TrainingManager
 from RocPipeline import RocPipeline
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
