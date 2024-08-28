@@ -6,3 +6,4 @@ websockets
 scikit-image
 scikit-learn
 coverage
+opencv-python
