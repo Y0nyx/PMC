@@ -15,11 +15,6 @@ class NetworkManager():
         verbose (bool): Flag for verbose prints.
     Methods:
         start: Starts all services.
-        _connect_service: Connects to the specified service
-        _receive_message: Listens and parses received messages from other services
-        hearbeat
-        
-        
     """
     def __init__(self, worker: threading.Thread, server_host: str, server_port: str, unsupervised_host: str, unsupervised_port: str, supervised_host: str, supervised_port: str, verbose: bool = False):
         self.verbose = verbose
