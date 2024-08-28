@@ -31,7 +31,21 @@ from RocPipeline import RocPipeline
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
-    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = False, roc_curve = False):
+     """
+    This class manages the AI detection pipeline, multiple methods allow the use and training of the detection neural networks.
+    ::
+    Attributes:
+        supervised_models (?): List of supervised models used in the pipeline (segmentation model and detection model usually).
+        unsupervised_model (?): The unsupervised detection model.
+        current_iteration_logging_path (str): path for all the logs of the current iteration.
+        verbose (bool): Flag for verbose prints.
+        State (PipelineState): State of the pipeline, based on PipelineState struct.
+        csv_logging (bool): Flag for csv_logging of results.
+        roc_curve (bool): Flag for roc curve generation when doing detection
+    Methods:
+        start: Starts all services.
+    """
+    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path: str, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = False, roc_curve: bool = False) -> None:
         self.verbose = verbose
 
         self.stop_flag = threading.Event()
@@ -80,6 +94,14 @@ class Pipeline():
             self._csv_result_row.sup_model_ref = SUPERVISED_MODEL_REF
 
     def start(self):
+        """
+        Method called for this object when its thread starts. It starts the detection code
+        ::
+        Args:
+        Returns:
+            results (?): Detection results
+        """
+        #TODO: Rename ou modifier pour avoir un start de détection et de training
         self.print('START SET')
         self.stop_flag.clear()
         results = self.detect(cam_debug=True)
@@ -87,6 +109,13 @@ class Pipeline():
         return results
 
     def stop(self):
+        """
+        Method called for this object when its thread stops.
+        ::
+        Args:
+        Returns:
+            None
+        """
         self.print('STOP SET')
         self.stop_flag.set()
 
@@ -136,7 +165,7 @@ class Pipeline():
         self._state = PipelineState.INIT
 
     def train(self, yaml_path: str, yolo_model: str, **kargs):
-
+        #TODO Mettre ça ailleurs
         model = YoloModel(f"{yolo_model}.pt")
 
         # add important callbacks
@@ -157,7 +186,17 @@ class Pipeline():
 
         return results
 
-    def detect(self, show: bool = False, save: bool = False, conf: float = 0.7, cam_debug=False):
+    def detect(self, show: bool = False, save_seg: bool = False, conf: float = 0.7):
+        """
+        Detection method, it calls all necessary sub methods to take the pictures, segment them and make a prediction on the wether there is a defect or not
+        ::
+        Args:
+            show (bool): Flag for debug purposes, will show the image with matplotlib. (default = False)
+            save_seg (bool): Flag to save the segmented images. (default = False)
+            conf (float): Confidence level for the segmentation detection. (default = 0.7)
+        Returns:
+            results (?): Detection results
+        """
         if self._state != PipelineState.TRAINING:
             self._state = PipelineState.TRAINING
 
@@ -171,7 +210,7 @@ class Pipeline():
                 if not self.stop_flag.is_set():
 
                     #Find the welds in the capture image
-                    segmented_image_collection = self._segmentation_image(captured_image, show, save, conf)
+                    segmented_image_collection = self._segmentation_image(captured_image, show, save_seg, conf)
 
                     #Analyse the welds with the unsupervised model to find potential defaults
                     unsupervised_result_collections, 
@@ -218,7 +257,16 @@ class Pipeline():
                 "erreurSoudure": "pepe"
             }
 
-    def _unsupervised_defect_detection(self, i, segmented_image_collection):
+    def _unsupervised_defect_detection(self, i: int, segmented_image_collection):
+        """
+        Method to perform detection using the unsupervised model.
+        ::
+        Args:
+            i (int): Index of the segmentation in the segmentation collection.
+            segmented_image_collection (?): All the segmented images of welds. 
+        Returns:
+            results (?): Detection results
+        """
         unsupervised_result_collections = []
         sub_mask_collection = []
         sub_image_collection = []
@@ -244,6 +292,13 @@ class Pipeline():
         return unsupervised_result_collections, sub_mask_collection, sub_image_collection, average_predicted_sub_image_collection
 
     def _get_images(self):
+        """
+        Method to get images captured by the cameras.
+        ::
+        Args:
+        Returns:
+            images (?): List of images captured by the cameras
+        """
         images = self._dataManager.get_all_img()
         
         if self._csv_logging and images.img_count > 0:
@@ -254,6 +309,18 @@ class Pipeline():
         return images
 
     def _segmentation_image(self, img: Image, save: bool, show: bool, conf: float):
+        """
+        Gets the segmented weld out of the captured image using the supervised segmentation model.
+        ::
+        Args:
+            img (Image): Image captured by the camera.
+            save (bool): Flag to save the segmentation.
+            show (bool): Flag to show the segmentation using matplotlib.
+            conf (float): Confidence threshold for the segmentation detection .
+        Returns:
+            imgCollection (?): Collection of all segmentations detection in the image.
+        """
+        #TODO: Rename la fonction poru get
         imgCollection = ImageCollection([])
         for model in self.supervised_models:
             results = model.predict(source=img.value, show=show, conf=conf, save=save)
@@ -277,7 +344,13 @@ class Pipeline():
         if self.verbose:
             print(string)
 
-    def write_csv_rows(self, csv_rows, unsupervised_results_path):
+    def write_csv_rows(self, csv_rows, unsupervised_results_path) -> None:
+        """
+        DEPRECATED Writes the csv rows provided.
+        ::
+        Args:
+        Returns:
+        """
         for i, csv_row in enumerate(csv_rows):
             csv_row.unsup_pred_img_path = unsupervised_results_path + "_img_" +str(i)
             csv_row.sup_defect_res = ""
@@ -287,7 +360,18 @@ class Pipeline():
             csv_row.date = datetime.now()
             self.csv_manager.add_new_row(self._csv_result_row)
     
-    def model_test(self, show: bool = False, save: bool = False, conf: float = 0.7, cam_debug=False):
+    def model_test(self, show: bool = False, save: bool = False, conf: float = 0.7) -> None:
+        """
+        Gets the segmented weld out of the captured image using the supervised segmentation model.
+        ::
+        Args:
+            show (bool): Flag to show the segmentation using matplotlib.
+            save (bool): Flag to save the segmentation.
+            conf (float): Confidence threshold for the segmentation detection .
+        Returns:
+            None
+        """
+        #TODO: Unfinished?
         if self._state != PipelineState.TRAINING:
             self._state = PipelineState.TRAINING
         
@@ -316,7 +400,13 @@ def count_folders_starting_with(start_string, path):
     return count
 
 def path_initialization():
-
+    """
+    Initializes all necessary paths and returns them.
+    ::
+    Args:
+    Returns:
+        ?
+    """
     #Init path to segmentation model
     segmentation_model_path = f"{SEGMENTATION_MODEL_PATH}{SEGMENTATION_MODEL_REF}.pt"
 
