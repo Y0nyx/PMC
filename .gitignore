@@ -11,3 +11,6 @@ yolo*pt
 *.pt
 # IDE config
 .idea/*
+# coverage
+.coverage
+coverage.xml
