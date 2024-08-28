@@ -43,3 +43,16 @@ jobs:
       with:
         name: coverage-report
         path: coverage.xml
+        
+    - name: Generate Test Report
+      id: test-results
+      run: |
+        test_results=$(coverage report)
+        echo "::set-output name=test-results::$test_results"
+
+    - name: Post Test Results as PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        header: Unit Test Results
+        message: ${{ steps.test-results.outputs.test-results }}
