@@ -19,7 +19,10 @@ from pipeline.camera.cameraManager import CameraManager
 class TestCameraManager(unittest.TestCase):
 
     def setUp(self):
-        # Mock dependencies
+        # Mock dependencies and patch tqdm globally for all tests
+        self.patcher_tqdm = patch("tqdm.tqdm", autospec=True)
+        self.mock_tqdm = self.patcher_tqdm.start()
+
         self.yaml_content = """
         cameras:
           - camera_id: 1
@@ -33,6 +36,10 @@ class TestCameraManager(unittest.TestCase):
         # Create instance of CameraManager with mocked YAML file
         with patch("builtins.open", mock_open(read_data=self.yaml_content)):
             self.manager = CameraManager(self.mock_yaml_file, self.verbose)
+
+    def tearDown(self):
+        # Stop patching tqdm after each test
+        self.patcher_tqdm.stop()
 
     def test_singleton_instance(self):
         with open(self.mock_yaml_file, 'w') as file:
@@ -91,11 +98,11 @@ class TestCameraManager(unittest.TestCase):
         mock_camera = MagicMock(spec=CameraSensor)
         mock_image = MagicMock(spec=Image)
         mock_camera.get_img.return_value = mock_image
+        self.manager.cameras = []
         self.manager.add_camera(mock_camera)
         
         image = self.manager.get_img(0)
         self.assertIsInstance(image, Image)
-
     def test_get_img_invalid_index(self):
         # Test get_img with an invalid index
         image = self.manager.get_img(10)
