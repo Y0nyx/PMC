@@ -34,25 +34,10 @@ jobs:
     
     - name: Run tests with coverage
       run: |
-        coverage run -m unittest discover -s src/test 
-        coverage report
-        coverage xml
+        python -m pytest src/test --cov-report "xml:reports/coverage/coverage.xml" --junitxml="reports/unit/unit.xml"
 
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v3
+    - name: Test Reports
+      uses: xportation/junit-coverage-report@main
       with:
-        name: coverage-report
-        path: coverage.xml
-        
-    - name: Generate Test Report
-      id: test-results
-      run: |
-        test_results=$(coverage report)
-        echo "::set-output name=test-results::$test_results"
-
-    - name: Post Test Results as PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        header: Unit Test Results
-        message: ${{ steps.test-results.outputs.test-results }}
+        junit-path: ./reports/unit/unit.xml  
+        coverage-path: ./reports/coverage/coverage.xml

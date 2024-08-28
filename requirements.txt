@@ -5,6 +5,9 @@ PyYAML~=6.0
 websockets
 scikit-image
 scikit-learn
-coverage
 opencv-python
 tqdm
+
+coverage
+pytest
+pytest-cov
