@@ -17,6 +17,7 @@ VALID_FILE = Path("./dataset/valid/")
 YAML_FILE = Path('./dataset/data.yaml')
 
 EPOCHS = 3
+# batch -1 : auto-batch size
 BATCH = -1
 NC = 1
 CLASSES = ['default']

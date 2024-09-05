@@ -64,7 +64,8 @@ def test_add_camera(camera_manager):
 
 def test_add_invalid_camera(camera_manager):
     invalid_camera = object()  # Not a CameraSensor
-    result = camera_manager.add_camera(invalid_camera)
+    with pytest.warns(UserWarning, match="Erreur : L'objet .* n'est pas une instance de CameraSensor."):
+        result = camera_manager.add_camera(invalid_camera)
     assert not result
     assert invalid_camera not in camera_manager.cameras
 
@@ -77,7 +78,8 @@ def test_remove_camera(camera_manager):
     assert mock_camera not in camera_manager.cameras
 
 def test_remove_invalid_camera(camera_manager):
-    result = camera_manager.remove_camera(10)
+    with pytest.warns(UserWarning, match="Erreur : Index de caméra invalide."):
+        result = camera_manager.remove_camera(10)
     assert not result
 
 def test_get_all_img(camera_manager):
@@ -103,7 +105,8 @@ def test_get_img(camera_manager):
     assert isinstance(image, Image)
 
 def test_get_img_invalid_index(camera_manager):
-    image = camera_manager.get_img(10)
+    with pytest.warns(UserWarning, match="Erreur : Index de caméra invalide."):
+        image = camera_manager.get_img(10)
     assert image is None
 
 def test_get_state(camera_manager):
