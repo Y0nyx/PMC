@@ -10,6 +10,15 @@ Pour mettre le requirements a jours, veiller utiliser la librairie pipreqs avec 
 
 `pipreqs /home/project/location`
 
+# Test Unitaire
+## Faire un test unitaire
+Pytest va aller chercher tout fichier commençant par 'test_<nom du fichier tester>.py et donc suivre cette nomenclature pour le développement des unittests. Tout les testes se trouve dans src/test. Suivre les exemples de test déjà fait et utiliser tout AI de génération de code pour vous aider dans le développement de test.
+
+## Lancer les tests unitaire
+Exécuter cette commande au root du projet
+
+`python -m pytest`
+
 ## Flux de Travail (Workflow)
 
 Durant le développement du PMC, nous allons utiliser la méthodologie GitFlow, qui est décrite en détail dans ce tutoriel: [GitFlow Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).

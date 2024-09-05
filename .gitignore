@@ -1,0 +1,16 @@
+
+*.zip
+*.xml
+
+__pycache__/
+runs/*
+wandb/*
+dataset/*
+datasets/*
+# yolo models
+yolo*pt
+*.pt
+# IDE config
+.idea/*
+# report
+.report/*
