@@ -3,9 +3,19 @@ import asyncio
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import websockets
+
 from common.Constants import *
 
 class NetworkManager():
+    """
+    This class manages the network connections with the other docker containers used in the system.
+    ::
+    Attributes:
+        worker (threading.Thread): Object passed to the thread, that the thread will use to perform actions. The object needs to have the start method.
+        verbose (bool): Flag for verbose prints.
+    Methods:
+        start: Starts all services.
+    """
     def __init__(self, worker: threading.Thread, server_host: str, server_port: str, unsupervised_host: str, unsupervised_port: str, supervised_host: str, supervised_port: str, verbose: bool = False):
         self.verbose = verbose
         self.server_host = server_host
@@ -18,18 +28,33 @@ class NetworkManager():
         self.executor = ThreadPoolExecutor()
         self.loop = asyncio.get_event_loop()
         self.future = None
-        self.heartbeat_interval = 10
+        self._heartbeat_interval = 10
         self.websockets = {}
 
-    async def run(self):
+    async def _run(self) -> None:
+        """
+        Creates all necessary tasks to connect to the services.
+        ::
+        Args:
+        Returns:
+            None
+        """
         tasks = [
-            asyncio.create_task(self.connect_service('server')),
-            asyncio.create_task(self.connect_service('supervised')),
-            asyncio.create_task(self.connect_service('unsupervised'))
+            asyncio.create_task(self._connect_service('server')),
+            asyncio.create_task(self._connect_service('supervised')),
+            asyncio.create_task(self._connect_service('unsupervised'))
         ]
         await asyncio.gather(*tasks)
 
-    async def connect_service(self, service_name):
+    async def _connect_service(self, service_name: str) -> None:
+        """
+        Connects to the specified service, sends the init message to the service and waits for a response while checking for a heartbeat.
+        ::
+        Args:
+            service_name (str): Name of the service to connect.
+        Returns:
+            None
+        """
         if service_name == 'server':
             host = self.server_host
             port = self.server_port
@@ -44,10 +69,10 @@ class NetworkManager():
             try:
                 async with websockets.connect(f"ws://{host}:{port}") as websocket:
                     self.websockets[service_name] = websocket
-                    await self.send_message(service_name, {'code': 'init'})
+                    await self._send_message(service_name, {'code': 'init'})
                     await asyncio.gather(
-                        self.receive_message(service_name),
-                        self.heartbeat(service_name)
+                        self._receive_message(service_name),
+                        self._heartbeat(service_name)
                     )
             except (websockets.exceptions.ConnectionClosedError,
                     websockets.exceptions.ConnectionClosedOK,
@@ -59,7 +84,15 @@ class NetworkManager():
                 self.print(f"Unexpected error ({service_name}): {e}")
                 await asyncio.sleep(5)
 
-    async def receive_message(self, service_name) -> None:
+    async def _receive_message(self, service_name: str) -> None:
+        """
+        Waits for a message, parses it when received and responds according to the specified code.
+        ::
+        Args:
+            service_name (str): Name of the service to connect.
+        Returns:
+            None
+        """
         websocket = self.websockets.get(service_name)
         while True:
             try:
@@ -69,43 +102,43 @@ class NetworkManager():
                 self.print(f'Received code ({service_name}): {code}')
 
                 if self.future and self.future.done():
-                    await self.send_message(service_name, self.future.result())
+                    await self._send_message(service_name, self.future.result())
                     self.future = None
 
                 if code == "start":
-                    await self.send_message(service_name, {'code': 'start'})
-                    self.future = self.loop.run_in_executor(self.executor, self.worker.start)
+                    await self._send_message(service_name, {'code': 'start'})
+                    self.future = self.loop._run_in_executor(self.executor, self.worker.start)
                     result = await self.future
-                    await self.send_message(service_name, {'code': 'resultat', 'data': result})
+                    await self._send_message(service_name, {'code': 'resultat', 'data': result})
 
                 elif code == "stop":
                     self.worker.stop()
-                    await self.send_message(service_name, {'code': 'stop'})
+                    await self._send_message(service_name, {'code': 'stop'})
                 
                 elif code == "train" and service_name == 'server':
                     try:
-                        await asyncio.gather(self.heartbeat('supervised'))
+                        await asyncio.gather(self._heartbeat('supervised'))
                     except (websockets.exceptions.ConnectionClosedError,
                             websockets.exceptions.ConnectionClosedOK,
                             websockets.exceptions.InvalidURI,
                             AttributeError):
-                        await self.send_message('server', {'code': 'error', 'data': 'supervised container disconnected'})
+                        await self._send_message('server', {'code': 'error', 'data': 'supervised container disconnected'})
 
                     try:
-                        await asyncio.gather(self.heartbeat('unsupervised'))
+                        await asyncio.gather(self._heartbeat('unsupervised'))
                     except (websockets.exceptions.ConnectionClosedError,
                             websockets.exceptions.ConnectionClosedOK,
                             websockets.exceptions.InvalidURI,
                             AttributeError):
-                        await self.send_message('server', {'code': 'error', 'data': 'unsupervised container disconnected'})
+                        await self._send_message('server', {'code': 'error', 'data': 'unsupervised container disconnected'})
 
-                    await self.send_message('supervised', {'code': 'train'})
-                    await self.send_message('unsupervised', {'code': 'train'})
+                    await self._send_message('supervised', {'code': 'train'})
+                    await self._send_message('unsupervised', {'code': 'train'})
 
                 
                 elif code == "resultat":
                     result = received_json['result']
-                    await self.send_message('server', {'code': 'resultat', 'data': result})
+                    await self._send_message('server', {'code': 'resultat', 'data': result})
 
 
             except websockets.exceptions.ConnectionClosedError as e:
@@ -118,27 +151,51 @@ class NetworkManager():
                 self.print(f"An error occurred ({service_name}): {e}")
                 break
 
-    async def heartbeat(self, service_name):
+    async def _heartbeat(self, service_name: str) -> None:
+        """
+        Pings the specified service at a set interval and raises and exception if the service doesn't respond.
+        ::
+        Args:
+            service_name (str): Name of the service to ping.
+        Returns:
+            None
+        """
         websocket = self.websockets.get(service_name)
         while True:
             try:
                 await websocket.ping()
-                await asyncio.sleep(self.heartbeat_interval)
+                await asyncio.sleep(self._heartbeat_interval)
             except websockets.exceptions.ConnectionClosed:
-                self.print(f"Connection closed ({service_name}), stopping heartbeat.")
+                self.print(f"Connection closed ({service_name}), stopping _heartbeat.")
                 break
 
-    async def send_message(self, service_name, data) -> None:
+    async def _send_message(self, service_name: str, data: dict) -> None:
+        """
+        Sends a message to the specified service.
+        ::
+        Args:
+            service_name (str): Name of the service to send the message to.
+            data (dict): Data to send in a dict following the format: {'code': code, 'data': data}
+        Returns:
+            None
+        """
         websocket = self.websockets.get(service_name)
         if websocket:
             serialized_data = json.dumps(data)
             await websocket.send(serialized_data)
             self.print(f"Sent message {data} to {service_name}")
 
-    def start(self):
-        asyncio.ensure_future(self.run(), loop=self.loop)
+    def start(self) -> None:
+        """
+        Starts the network manager and all its tasks.
+        ::
+        Args:
+        Returns:
+            None
+        """
+        asyncio.ensure_future(self._run(), loop=self.loop)
         try:
-            self.loop.run_forever()
+            self.loop._run_forever()
         except KeyboardInterrupt:
             print("Keyboard interrupt received, stopping...")
         finally:

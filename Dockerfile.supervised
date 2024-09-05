@@ -1,14 +1,9 @@
-# Set image name as a variable
 FROM ultralytics/ultralytics:latest
 
-# Install git to clone the repository
+# Install necessary librairies to use the cameras in docker (OPENCV error because docker has no GUI)
 RUN apt-get update && apt-get install -y git && \
     apt-get install -y libgl1-mesa-dev && \
     apt-get install -y libglib2.0-0
-
-# Security updates
-# https://security.snyk.io/vuln/SNYK-UBUNTU1804-OPENSSL-3314796
-RUN apt upgrade --no-install-recommends -y openssl tar
 
 # Run exports to AutoInstall packages
 # Edge TPU export fails the first time so is run twice here

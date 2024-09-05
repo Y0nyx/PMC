@@ -1,15 +1,11 @@
 # Use the TensorFlow GPU image as the base image
 FROM pytorch/pytorch:latest
 
-# Install git to clone the repository
+#Install necessary libraries so docker can use the cameras (no GUI generates errors when using OPENCV)
 RUN apt-get update && apt-get install -y git && \
     apt-get install -y libgl1-mesa-dev && \
     apt-get install -y libglib2.0-0 && \
     rm -rf /var/lib/apt/lists/*
-
-# Security updates
-# https://security.snyk.io/vuln/SNYK-UBUNTU1804-OPENSSL-3314796
-RUN apt upgrade --no-install-recommends -y openssl tar
 
 # Change the working directory to the cloned repository
 WORKDIR /PMC
@@ -18,8 +14,6 @@ WORKDIR /PMC
 COPY src/ src/
 
 RUN pip install ultralytics
-
-# RUN pip install tensorflow
 
 # Fix error: `np.bool` was a deprecated alias for the builtin `bool` segmentation error in Tests
 RUN pip install --no-cache numpy==1.23.5

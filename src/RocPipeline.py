@@ -9,8 +9,21 @@ from skimage.metrics import structural_similarity as ssim
 from pipeline.models.Model import YoloModel
 
 class RocPipeline:
-
+    """
+    This class produces ROC curves for the supervised and unsupervised models.
+    ::
+    Attributes:
+        model (?): Model to test against.
+        validation_dataset_path (str): Path to the validation dataset.
+        curve_name (str): Name of the plotted and saved ROC curve.
+        original_images (?): Images to predict on.
+        predicted_images (?): Images that were predicted by the model.
+        masked_images (?): Mask on original images where defects are.
+    Methods:
+        generate_roc: Generates the ROC curve.
+    """
     def __init__(self, model, validation_dataset_path, curve_name, origina_images, predicted_images, masked_images):
+        #TODO: Revoir la logique et le scope de la classe. Si on fait des predict dedans ou non.
         self._model = model
         self._validation_dataset_path = validation_dataset_path
         self._curve_name = curve_name
@@ -18,10 +31,28 @@ class RocPipeline:
         self.predicted_images = predicted_images
         self.masked_images = masked_images
 
-    def contains_one(self, nparray):
+    def _contains_one(self, array) -> int:
+        """
+        Checks if the input array contains a 1.
+        ::
+        Args:
+            array [float]: Array to check for ones.
+        Returns:
+            contains_one (int): 1 if the array contains a 1 and 0 otherwise
+        """
         return 1 if np.any(array == 1) else 0
 
-    def parse_annotations(self):
+    def _parse_annotations(self):
+        """
+        Parses image annotations in annotation_dir.
+        ::
+        Args:
+        Returns:
+            y_true [int]: Array with 1 for images with a defect and 0 for images without.
+            filenames [str]: Array of the filenames in the directory.
+            count_true (int): Number of images with a defect in the directory.
+            count_false (int): Number of images without a defect in the directory.
+        """
         annotation_dir = self._validation_dataset_path + "/labels"
         y_true = []
         count_true = 0
@@ -44,39 +75,71 @@ class RocPipeline:
 
         return y_true, filenames, count_true, count_false
 
-    def load_images(self):
+    def _load_images(self):
+        """
+        Loads the images from _validation_dataset_path.
+        ::
+        Args:
+        Returns:
+            images [Image]: Loaded images
+        """
         data_path = self._validation_dataset_path + "/images"
         images = []
         for filename in os.listdir(data_path):
             if filename.endswith(".jpg"):
                 img = cv2.imread(f'{data_path}/{filename}', cv2.COLOR_RGB2BGR)
                 images.append(img)
-        
+
+        #TODO: Mettre image collection (do we care?)
         return images
     
-    def prediction_based_on_metric_threshold(self, origina_images, predicted_images, metric):
+    def _prediction_based_on_metric_threshold(self, origina_images, predicted_images, metric):
+        """
+        UNTESTED: Makes a prediction based on specified metric(s).
+        ::
+        Args:
+        Returns:
+        """
         #results = self._model.predict(images)
         predictions = []
         match metric:
             case 'psnr':
-                predictions = self.calculate_psnr_for_images(origina_images, predicted_images)
+                predictions = self._calculate_psnr_for_images(origina_images, predicted_images)
             case 'ssim':
-                predictions = self.calculate_ssim_for_images(origina_images, predicted_images)
+                predictions = self._calculate_ssim_for_images(origina_images, predicted_images)
 
         return predictions
 
-    def calculate_psnr(self, img1, img2):
+    def _calculate_psnr(self, img1, img2):
+        """
+        UNTESTED: Calculates the psnr.
+        ::
+        Args:
+        Returns:
+        """
         psnr = measure.compare_psnr(img1, img2)
         return psnr
 
-    def calculate_psnr_for_images(self, images, results):
+    def _calculate_psnr_for_images(self, images, results):
+        """
+        UNTESTED: Calculates the psnr for specified images.
+        ::
+        Args:
+        Returns:
+        """
         psnr_values = []
         for image, result in zip(images, results):
-            psnr = self.calculate_psnr(image, result)
+            psnr = self._calculate_psnr(image, result)
             psnr_values.append(psnr)
         return psnr_values
 
-    def calculate_ssim(self, img1, img2):
+    def _calculate_ssim(self, img1, img2):
+        """
+        UNTESTED: Calculates the ssim.
+        ::
+        Args:
+        Returns:
+        """
         # Ensure images are the same size
         if img1.shape != img2.shape:
             raise ValueError("Images must be the same size")
@@ -85,15 +148,28 @@ class RocPipeline:
         ssim_value = ssim(img1, img2, multichannel=True)
         return ssim_value
 
-    def calculate_ssim_for_images(self, images, results):
+    def _calculate_ssim_for_images(self, images, results):
+        """
+        UNTESTED: Calculates the ssim for specified images.
+        ::
+        Args:
+        Returns:
+        """
         ssim_values = []
         for image, result in zip(images, results):
-            ssim_value = self.calculate_ssim(image, result)
+            ssim_value = self._calculate_ssim(image, result)
             ssim_values.append(ssim_value)
         return ssim_values
 
-    def generate_roc(self, save = True):
-        y_labels, filenames, count_true, count_false = self.parse_annotations()
+    def generate_roc(self, save:bool = True) -> None:
+        """
+        Generates the roc curve, given the objects attributes.
+        ::
+        Args:
+            save (bool
+        Returns:
+        """
+        y_labels, filenames, count_true, count_false = self._parse_annotations()
 
         # Trouver les indices des images avec et sans défaut
         indices_true = [i for i, label in enumerate(y_labels) if label == True]
@@ -112,8 +188,8 @@ class RocPipeline:
         filenames_balanced = [filenames[i] for i in selected_indices]
 
         if not self.is_yolo:
-            images = self.load_images()
-            y_scores = self.prediction_based_on_metric_threshold(images, 'psnr')
+            images = self._load_images()
+            y_scores = self._prediction_based_on_metric_threshold(images, 'psnr')
         else:
             y_scores = []
             images_path = self._validation_dataset_path + "\\images"
@@ -128,8 +204,8 @@ class RocPipeline:
                     else:
                         y_scores.append(0)
 
-        y_scores = self.prediction_based_on_metric_threshold(images, 'psnr')
-        y_labels = self.contains_one(self.masked_images)
+        y_scores = self._prediction_based_on_metric_threshold(images, 'psnr')
+        y_labels = self._contains_one(self.masked_images)
 
         # Calculate true positive rate (TPR) and false positive rate (FPR)
         fpr, tpr, thresholds = roc_curve(y_labels_balanced, y_scores)
