@@ -49,12 +49,12 @@ class CameraSensor(ABC):
             self.state = SensorState.ERROR
 
     @abstractmethod
-    def get_img(self) -> Image:
-        pass
+    def get_img(self) -> Image: # pragma: no cover
+        raise NotImplemented()
 
     @abstractmethod
-    def get_state(self) -> SensorState:
-        pass
+    def get_state(self) -> SensorState: # pragma: no cover
+        raise NotImplemented()
 
     def set_capture_resolution(self):
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.capture_resolution[0])

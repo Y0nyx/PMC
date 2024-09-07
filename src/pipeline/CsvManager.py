@@ -1,7 +1,7 @@
 import csv
 import os
 from pipeline.CsvResultRow import CsvResultRow
-from common.Constants import *
+from common.constants import *
 
 class CsvManager:
     def __init__(self) -> None:

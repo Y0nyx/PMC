@@ -1,18 +1,12 @@
+from . import ajuste_import
+ajuste_import()
+
+import os
+import yaml
 import pytest
 from unittest.mock import MagicMock, patch, mock_open
-import os
-import sys
-import yaml
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.append(parent_dir)
-
-from common.image.ImageCollection import ImageCollection
-from common.image.Image import Image
-from pipeline.camera.cameraSensor import CameraSensor
-from pipeline.camera.sensorState import SensorState
-from pipeline.camera.cameraManager import CameraManager
+from common.image import ImageCollection, Image
+from pipeline.camera import CameraSensor, SensorState, CameraManager
 
 @pytest.fixture
 def camera_manager():
@@ -32,12 +26,13 @@ def camera_manager():
 
     # Create instance of CameraManager with mocked YAML file
     manager = CameraManager(mock_yaml_file, verbose)
+
     yield manager
     # Cleanup
     if os.path.exists(mock_yaml_file):
         os.remove(mock_yaml_file)
 
-def test_singleton_instance(camera_manager):
+def test_singleton_instance():
     yaml_content = """
     cameras:
       - camera_id: 1
@@ -49,8 +44,8 @@ def test_singleton_instance(camera_manager):
     with open(mock_yaml_file, 'w') as file:
         file.write(yaml_content)
 
-    manager1 = CameraManager.get_instance(mock_yaml_file, camera_manager.verbose)
-    manager2 = CameraManager.get_instance(mock_yaml_file, camera_manager.verbose)
+    manager1 = CameraManager.get_instance(mock_yaml_file)
+    manager2 = CameraManager.get_instance(mock_yaml_file)
     
     assert manager1 is manager2
 
@@ -63,7 +58,7 @@ def test_add_camera(camera_manager):
     assert mock_camera in camera_manager.cameras
 
 def test_add_invalid_camera(camera_manager):
-    invalid_camera = object()  # Not a CameraSensor
+    invalid_camera = object()
     with pytest.warns(UserWarning, match="Erreur : L'objet .* n'est pas une instance de CameraSensor."):
         result = camera_manager.add_camera(invalid_camera)
     assert not result
@@ -151,8 +146,16 @@ def test_read_yaml_invalid(mock_open, camera_manager):
 
 def test_print(camera_manager):
     with patch("builtins.print") as mock_print:
+        camera_manager.verbose = True
         camera_manager.print("Test message")
-        if camera_manager.verbose:
-            mock_print.assert_called_once_with("Test message")
-        else:
-            mock_print.assert_not_called()
+        mock_print.assert_called_once_with("Test message")
+
+        mock_print.reset_mock()
+        
+        camera_manager.verbose = False
+        camera_manager.print("Test message")
+        mock_print.assert_not_called()
+
+def test_reset_instance(camera_manager):
+    camera_manager.reset_instance()
+    assert camera_manager._instance == None

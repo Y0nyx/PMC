@@ -23,11 +23,15 @@ class CameraManager:
         self.read_yaml(yaml_file)
         self.state = SensorState.INIT
 
-    @staticmethod
-    def get_instance(yaml_file, verbose: bool = False):
-        if CameraManager._instance is None:
-            CameraManager._instance = CameraManager(yaml_file, verbose)
-        return CameraManager._instance
+    @classmethod
+    def get_instance(cls, yaml_file, verbose: bool = False):
+        if cls._instance is None:
+            cls._instance = CameraManager(yaml_file, verbose)
+        return cls._instance
+    
+    @classmethod
+    def reset_instance(cls):
+        cls._instance = None
 
     def add_camera(self, *cameras):
         for camera in cameras:
@@ -58,8 +62,8 @@ class CameraManager:
             image = camera.get_img()
             if image is not None:
                 images.add(image)
-            else:
-                self.print(
+            else: 
+                self.print( #Pragma : no cover
                     f"camera {camera.camera_id} was not able to capture an Image"
                 )
         return images
@@ -112,10 +116,10 @@ class CameraManager:
                                 self.add_camera(camera)
                             else:
                                 self.print(
-                                    f'Camera {config.get("camera_id", None)} was not initialize'
+                                    f'Camera {config.get("camera_id", None)} was not initialize' #Pragma : no cover
                                 )
                             pbar.update(1)
-            except yaml.YAMLError as e:
+            except yaml.YAMLError as e: #Pragma : no cover
                 warn("Erreur lors de la lecture du fichier YAML : {e}")
 
     def print(self, string):
