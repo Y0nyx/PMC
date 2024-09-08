@@ -18,7 +18,8 @@ def webcam_camera():
         with patch.object(camera, 'print', autospec=True) as mock_print:
             camera.print = mock_print
             yield camera
-    
+
+@pytest.mark.short
 def test_get_img_exception_handling(webcam_camera):
     webcam_camera.is_active = True
     webcam_camera.cap.read.side_effect = Exception("Mocked exception")
@@ -29,6 +30,7 @@ def test_get_img_exception_handling(webcam_camera):
     assert webcam_camera.get_state() == SensorState.ERROR
     webcam_camera.print.assert_called_with("Error capturing image: Mocked exception")
 
+@pytest.mark.short
 def test_get_img_success(webcam_camera):
     webcam_camera.is_active = True
     webcam_camera.cap.isOpened.return_value = True
@@ -39,6 +41,7 @@ def test_get_img_success(webcam_camera):
     assert isinstance(result, Image)
     webcam_camera.cap.set.assert_called()
 
+@pytest.mark.short
 def test_get_img_not_active(webcam_camera):
     webcam_camera.is_active = False
 
@@ -47,6 +50,7 @@ def test_get_img_not_active(webcam_camera):
     assert result is None
     assert webcam_camera.get_state() == SensorState.INIT
 
+@pytest.mark.short
 def test_get_img_camera_not_opened(webcam_camera):
     webcam_camera.is_active = True
     webcam_camera.cap.isOpened.return_value = False 
@@ -56,6 +60,7 @@ def test_get_img_camera_not_opened(webcam_camera):
     assert result is None
     assert webcam_camera.get_state() == SensorState.ERROR
 
+@pytest.mark.short
 def test_get_img_capture_failure(webcam_camera):
     webcam_camera.is_active = True
     webcam_camera.cap.isOpened.return_value = True

@@ -36,6 +36,7 @@ def camera_sensor(mock_videocapture, mock_platform):
     return _TestCameraSensor(camera_id=1, verbose=True)
 
 
+@pytest.mark.short
 def test_camera_sensor_init_windows(mock_videocapture, mock_platform):
     mock_platform.return_value = 'Windows'
     mock_cap = mock_videocapture.return_value
@@ -52,7 +53,7 @@ def test_camera_sensor_init_windows(mock_videocapture, mock_platform):
     mock_cap.set.assert_any_call(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     mock_cap.set.assert_any_call(cv2.CAP_PROP_FPS, 1)
 
-
+@pytest.mark.short
 def test_camera_sensor_init_linux(mock_videocapture, mock_platform):
     mock_platform.return_value = 'Linux'
     mock_cap = mock_videocapture.return_value
@@ -69,7 +70,7 @@ def test_camera_sensor_init_linux(mock_videocapture, mock_platform):
     mock_cap.set.assert_any_call(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     mock_cap.set.assert_any_call(cv2.CAP_PROP_FPS, 1)
 
-
+@pytest.mark.short
 def test_camera_sensor_init_error(mock_videocapture):
     mock_videocapture.side_effect = Exception("Camera error")
 
@@ -79,21 +80,21 @@ def test_camera_sensor_init_error(mock_videocapture):
     assert sensor.is_active is False
     assert sensor.state == SensorState.ERROR
 
-
+@pytest.mark.short
 def test_set_capture_resolution(camera_sensor):
     mock_cap = camera_sensor.cap
     camera_sensor.set_capture_resolution()
     mock_cap.set.assert_any_call(cv2.CAP_PROP_FRAME_WIDTH, 1920)
     mock_cap.set.assert_any_call(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
-
+@pytest.mark.short
 def test_set_standby_resolution(camera_sensor):
     mock_cap = camera_sensor.cap
     camera_sensor.set_standby_resolution()
     mock_cap.set.assert_any_call(cv2.CAP_PROP_FRAME_WIDTH, 426)
     mock_cap.set.assert_any_call(cv2.CAP_PROP_FRAME_HEIGHT, 240)
 
-
+@pytest.mark.short
 def test_print(camera_sensor, capsys):
     camera_sensor.print("Test message")
     captured = capsys.readouterr()
