@@ -1,0 +1,13 @@
+[run]
+# Source directory to include in the coverage
+source = src
+
+[report]
+# Exclude specific files or directories from the coverage report
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+
+# Files to omit from the coverage
+omit =
+    src/test/*

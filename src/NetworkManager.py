@@ -4,7 +4,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 import websockets
 
-from common.Constants import *
+from common.constants import *
 
 class NetworkManager():
     """

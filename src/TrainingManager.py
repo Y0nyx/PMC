@@ -2,7 +2,7 @@ import os
 import yaml
 from datetime import datetime
 from shutil import move
-from common.Constants import *
+from common.constants import *
 from pipeline.models.Model import YoloModel
 
 

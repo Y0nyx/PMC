@@ -1,7 +1,7 @@
 from pipeline.models.Model import YoloModel
 from NetworkManager import NetworkManager
 from Pipeline import Pipeline
-from common.Constants import *
+from common.constants import *
 import tensorflow as tf
 
 def count_folders_starting_with(start_string, path):

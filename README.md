@@ -11,13 +11,53 @@ Pour mettre le requirements a jours, veiller utiliser la librairie pipreqs avec 
 `pipreqs /home/project/location`
 
 # Test Unitaire
+
 ## Faire un test unitaire
-Pytest va aller chercher tout fichier commençant par 'test_<nom du fichier tester>.py et donc suivre cette nomenclature pour le développement des unittests. Tout les testes se trouve dans src/test. Suivre les exemples de test déjà fait et utiliser tout AI de génération de code pour vous aider dans le développement de test.
 
-## Lancer les tests unitaire
-Exécuter cette commande au root du projet
+`pytest` recherche les fichiers de test qui commencent par `test_` ou se terminent par `_test.py`. Par exemple, pour tester le fichier `example.py`, créez un fichier de test nommé `test_example.py`.
 
-`python -m pytest`
+Tous les tests se trouvent dans le répertoire `src/test`. Assurez-vous de suivre les conventions de nommage et les exemples de tests existants. Vous pouvez également utiliser des outils d'IA pour générer des tests si nécessaire.
+
+## Utiliser des balises
+
+Vous pouvez marquer vos tests avec des balises pour les organiser. Par exemple :
+
+```python
+import pytest
+
+@pytest.mark.short
+def test_example_short():
+    assert True
+
+@pytest.mark.long
+def test_example_long():
+    assert True
+```
+
+## Lancer les tests unitaires
+
+Pour exécuter tous les tests, utilisez :
+
+```bash
+python -m pytest
+```
+### Exécuter des tests avec des balises
+Pour exécuter les tests marqués comme short :
+
+```bash
+python -m pytest -m short
+```
+Pour exécuter les tests marqués comme long :
+
+```bash
+python -m pytest -m long
+```
+
+Pour voir toutes les balises définies :
+
+```
+python -m pytest --markers
+```
 
 ## Flux de Travail (Workflow)
 

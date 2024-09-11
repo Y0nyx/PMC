@@ -6,9 +6,8 @@ from common.image.Image import Image
 from common.image.ImageCollection import ImageCollection
 from ..camera.cameraManager import (
     CameraManager,
-)  # May have to be modified depending on implementation
-from ..camera.webcamCamera import WebcamCamera
-from ..camera.sensorState import SensorState
+)
+from ..camera import WebcamCamera, SensorState
 
 
 class DataManager:
@@ -191,6 +190,6 @@ class DataManager:
         #     except yaml.YAMLError as exc:
         #         print(exc)
 
-    def print(self, string):
+    def print(self, string): #Pragma : no cover
         if self.verbose:
             print(string)

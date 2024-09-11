@@ -22,7 +22,7 @@ from common.enums.PipelineStates import PipelineState
 from common.image.Image import Image
 from common.image.ImageCollection import ImageCollection
 from common.utils import DataManager as Mock_DataManager
-from common.Constants import *
+from common.constants import *
 
 from NetworkManager import NetworkManager
 from TrainingManager import TrainingManager

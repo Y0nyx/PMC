@@ -1,3 +1,6 @@
+import numpy as np
+from . import Image
+
 class ImageUnsupResult(Image):
     """
     This class is built to store the resulting output of the unsupervised model. It contains all necessary information
