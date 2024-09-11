@@ -7,6 +7,9 @@ from common.image.ImageCollection import ImageCollection
 
 
 class DataManager:
+    """
+    TODO Ajouter de la doccumentation pour la classe, i.e. son role. 
+    """
     def __init__(self, dataset_path: str):
         self.dataset_path = Path(dataset_path)
         self.current_iteration = 0
