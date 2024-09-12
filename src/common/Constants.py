@@ -41,6 +41,7 @@ CSV_FILE_NAME = SAVE_PATH / "results.csv"
 
 UNSUPERVISED_MODEL_REF = "simple_cae_blackout_model"
 SEGMENTATION_MODEL_REF = "v1"
-SUPERVISED_MODEL_REF = "TEMP VALUE"
+SUPERVISED_MODEL_REF = "v1"
 
 SEGMENTATION_MODEL_PATH = "./ia/segmentation/"
+SUPERVISED_MODEL_PATH = "./ia/supervised/"

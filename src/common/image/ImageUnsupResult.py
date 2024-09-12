@@ -1,4 +1,6 @@
-class ImageUnsupResult(Image):
+#import Image
+import numpy as np
+class ImageUnsupResult():
     """
     This class is built to store the resulting output of the unsupervised model. It contains all necessary information
     to interpret and validate the model's prediction.

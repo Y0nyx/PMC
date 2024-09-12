@@ -37,7 +37,6 @@ class UnSupervisedPipeline:
         # Black out the square for each channel
         for channel in range(channels):
             if not image_mask_toggle: current_image[square_top_left[0]:square_bottom_right[0], square_top_left[1]:square_bottom_right[1], channel] = 0
-            else:
         
         return current_image
 
