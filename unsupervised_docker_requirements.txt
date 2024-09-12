@@ -1,9 +1,0 @@
-numpy
-wandb
-keras
-keras-tuner
-matplotlib
-scikit-image
-scikit-learn
-pyyaml
-opencv-python

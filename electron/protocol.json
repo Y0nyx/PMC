@@ -1,0 +1,11 @@
+{
+    "code":{
+        "start":"start", 
+        "end":"end",
+        "error":"error",
+        "resultat":"resultat",
+        "train":"train",
+        "ready":"ready",
+        "setting":"setting"
+    }
+}

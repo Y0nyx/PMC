@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Dofa desktiop
+Exec=/usr/bin/dofa
+Hidden=false
+X-GNOME-Autostart-enabled=true
+
+
+
+
