@@ -33,9 +33,10 @@ if __name__ == "__main__":
 
     segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
 
-    supervised_models = [YoloModel(Path(segmentation_model_path))]
-    unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
+    segmentation_model = YoloModel(Path(segmentation_model_path))
+    supervised_detection_model = YoloModel(Path(f"{SUPERVISED_MODEL_PATH}{SUPERVISED_MODEL_REF}.pt"))
+    unsupervised_model = None #tf.keras.models.load_model(unsupervised_model_path)
 
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path)
+    pipeline = Pipeline(segmentation_model=segmentation_model, supervised_detection_model=supervised_detection_model, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path)
     networkManager = NetworkManager(pipeline, HOST, PORT, SUPERVISED_HOST, SUPERVISED_PORT, UNSUPERVISED_HOST, UNSUPERVISED_PORT, True)
     networkManager.start()

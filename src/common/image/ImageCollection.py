@@ -67,9 +67,10 @@ class ImageCollection:
         """
         os.makedirs(file_path, exist_ok=True)
         self._save_counter = len(os.listdir(file_path))
-        for i, img in enumerate(self._img_list, start=self._save_counter):
-            img.save(f"{file_path}/img_{i}.png")
-        self._save_counter += len(self._img_list)
+        if self.img_count != 0:
+            for i, img in enumerate(self._img_list, start=self._save_counter):
+                img.save(f"{file_path}/img_{i}.png")
+            self._save_counter += len(self._img_list)
 
     def add(self, img):
         """

@@ -81,10 +81,11 @@ class Image:
         :param img:
         :return:
         """
-        if _validate_img(img):
-            self._img = img
-        else:
-            raise Exception("Not valid image")
+        # TODO: Fix that shit
+        #if _validate_img(img):
+        self._img = img
+        #else:
+        #    raise Exception("Not valid image")
 
     @property
     def mask(self) -> np.ndarray:
@@ -132,13 +133,10 @@ class Image:
     def crop(self, boxes):
         image = Img.fromarray(self._img)
         cropped_image = image.crop(boxes.xyxy.tolist()[0])
-
-        mask = Img.fromarray(self._mask)
-        cropped_mask = mask.crop(boxes.xyxy.tolist()[0])
-
+        #mask = Img.fromarray(self._mask)
+        #cropped_mask = mask.crop(boxes.xyxy.tolist()[0])
         image_obj = Image(np.array(cropped_image))
-
-        image_obj.mask = cropped_mask
+        #image_obj.mask = cropped_mask
 
         return image_obj
 

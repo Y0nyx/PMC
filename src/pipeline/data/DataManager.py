@@ -90,7 +90,7 @@ class DataManager:
             images: Preprocessed images
         """
         # if(condition):
-        # images = self._grayscale_conversion(images)
+        images = self._grayscale_conversion(images)
         # if(condition):
         #    images = _normalization_conversion(images)
         # if(condition):
@@ -113,7 +113,8 @@ class DataManager:
             images: Converted images
         """
         for image in images:
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            gray_image = cv2.cvtColor(image.value, cv2.COLOR_BGR2GRAY)
+            image.value = cv2.cvtColor(gray_image, cv2.COLOR_GRAY2BGR)
 
         return images
 

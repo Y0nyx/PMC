@@ -14,7 +14,7 @@ class WebcamCamera(CameraSensor):
         function to get image from sensor
         :return: Image
         """
-        frames_to_skip = 15
+        frames_to_skip = 5
         if self.is_active:
             self.print("Setting capture resolution")
             self.set_capture_resolution()

@@ -32,7 +32,7 @@ from RocPipeline import RocPipeline
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
-    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = True, roc_curve = False):
+    def __init__(self, segmentation_model, supervised_detection_model, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = False, roc_curve = False):
         self.verbose = verbose
 
         self.stop_flag = threading.Event()
@@ -43,15 +43,14 @@ class Pipeline():
         self.print("=== Init Pipeline ===")  # Fixed this line
 
         #Set supervised models
-        self.supervised_models = []
-        for model in supervised_models:
-            self.supervised_models.append(model)
+        self._segmentation_model = segmentation_model
+        self._supervised_detection_model = supervised_detection_model
 
         #Set unsupervised model
         self.unsupervised_model = unsupervised_model
 
         #Init unsupervised pipeline
-        self._unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model)
+        #self._unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model)
 
         #Set initial pipeline state
         self._state = State
@@ -83,7 +82,7 @@ class Pipeline():
     def start(self):
         self.print('START SET')
         self.stop_flag.clear()
-        results = self.detect(cam_debug=True)
+        results = self.detect(cam_debug=True, save=True)
         self.print('DONE DETECTING')
         return results
 
@@ -163,8 +162,8 @@ class Pipeline():
             self._state = PipelineState.TRAINING
 
         captured_image_collection = self._get_images()
-
-
+        captured_image_collection.save(f"{SAVE_PATH}/picture")
+        print("captured")
         if captured_image_collection.img_count > 0:
             for i, captured_image in enumerate(captured_image_collection):
 
@@ -172,13 +171,23 @@ class Pipeline():
                 if not self.stop_flag.is_set():
 
                     #Find the welds in the capture image
+                    detection_collection = ImageCollection([])
+                    print("seg")
                     segmented_image_collection = self._segmentation_image(captured_image, show, save, conf)
+                    #print(segmented_image_collection._img_list)
+                    if segmented_image_collection.img_count == 0:
+                        print("detect")
+                        detection_collection = self._supervised_detection(captured_image, show, save, 0.6)
+                    else:
+                        detection_collection = self._supervised_detection(segmented_image_collection, show, save, 0.6)
+                    
+                    #detection_collection.save(SAVE_PATH+"/default")
 
                     #Analyse the welds with the unsupervised model to find potential defaults
-                    unsupervised_result_collections, 
-                    sub_mask_collection, 
-                    sub_image_collection, 
-                    average_predicted_sub_image_collection = self._unsupervised_defect_detection(i, segmented_image_collection)
+                    # unsupervised_result_collections, 
+                    # sub_mask_collection, 
+                    # sub_image_collection, 
+                    # average_predicted_sub_image_collection = self._unsupervised_defect_detection(i, segmented_image_collection)
 
                     # TODO Integrate supervised model
                     
@@ -253,16 +262,38 @@ class Pipeline():
             self._csv_result_row.capture_img_path = captured_image_path
 
         return images
+    def _supervised_detection(self, imgCol: ImageCollection, save: bool, show: bool, conf: float):
+        imgCollection = ImageCollection([])
+        model = self._supervised_detection_model
+
+        for img in imgCol:
+            results = model.predict(source=img.value, show=False, conf=conf, save=False)
+            # crop images with bounding box
+            for i, result in enumerate(results):
+                for j, boxe in enumerate(result.boxes):
+                    print(img.shape)
+                    print(boxe)
+                    image = img.crop(boxe)
+                    image.save(f"{SAVE_PATH}/result_{i}_box_{j}_detection.png")
+                    imgCollection.add(image)
 
     def _segmentation_image(self, img: Image, save: bool, show: bool, conf: float):
         imgCollection = ImageCollection([])
-        for model in self.supervised_models:
-            results = model.predict(source=img.value, show=show, conf=conf, save=save)
+        model = self._segmentation_model
+        results = model.predict(source=img.value, show=False, conf=conf, save=False)
+        # crop images with bounding box
+        for i, result in enumerate(results):
+            for j, boxe in enumerate(result.boxes):
+                print(img.shape)
+                print(boxe)
+                image = img.crop(boxe)
+                
+                image.save(f"{SAVE_PATH}/result_{i}_box_{j}.png")
+                imgCollection.add(image)
+                
+        if save:
+                imgCollection.save(SAVE_PATH)
 
-            # crop images with bounding box
-            for result in results:
-                for boxes in result.boxes:
-                    imgCollection.add(img.crop(boxes))
 
         if self._csv_logging:
             segmented_image_collection_path = f"{SAVE_PATH}{self._current_iteration_logging_path}{SAVE_PATH_SEGMENTATION}"
