@@ -3,6 +3,10 @@ const ipcRenderer = window.require("electron").ipcRenderer;
 export async function pieceParser(piece) {
   let srcBase64;
   let base64Image = await ipcRenderer.invoke("readImage", piece.photo);
+  let boundingBox = await ipcRenderer.invoke(
+    "readBoundingBox",
+    piece.boundingbox
+  );
 
   if (base64Image) {
     srcBase64 = `data:image/jpeg;base64,${base64Image}`;
@@ -10,7 +14,6 @@ export async function pieceParser(piece) {
     console.error("No image content received.");
   }
 
-  console.log(piece);
   let date = new Date(piece.date);
 
   let result = piece.resultat == "1" ? "succès" : "échec";
@@ -20,6 +23,7 @@ export async function pieceParser(piece) {
   let row = {
     id: piece.id,
     url: srcBase64,
+    box: boundingBox,
     date: date.toISOString().split("T")[0],
     hour: date.getHours() + ":" + date.getMinutes(),
     result: result,
@@ -31,13 +35,10 @@ export async function pieceParser(piece) {
     id_log: piece.id_log,
   };
 
-  console.log(row);
   return row;
 }
 
-
-export function idSubstring(id)
-{
+export function idSubstring(id) {
   return id.substring(0, 8) + "..." + id.substring(id.length - 4);
 }
 

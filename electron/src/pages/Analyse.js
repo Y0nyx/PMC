@@ -12,32 +12,31 @@ export default function Analyse() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const navigate = useNavigate();
 
-  ipcRenderer.on("resultat", async (event,data) => {
-
+  ipcRenderer.on("resultat", async (event, data) => {
+    console.log(data);
     const newPiece = {
-      url : data.url,
-      resultat : data.resultat == true ? 1 : 0,
+      url: data.url,
+      boundingbox: data.boundingbox,
+      resultat: data.resultat == true ? 1 : 0,
       id_client: uicontext.state_client.id,
       id_log: uicontext.state_log.id,
       id_type_piece: uicontext.state_type_piece.id,
-      id_erreur_soudure: data.erreurSoudure
-    }
-    
+      id_erreur_soudure: data.erreurSoudure,
+    };
+    console.log(newPiece);
     let piece = await ipcRenderer.invoke("createPiece", newPiece);
-    
-    if(data.resultat == true)
-    {
-      const resultat = piece
-      uicontext.setState(protocol.state.analysePass)
-      navigate("/",{ state: {resultat} })
+
+    if (data.resultat == true) {
+      const resultat = piece;
+      uicontext.setState(protocol.state.analysePass);
+      navigate("/", { state: { resultat } });
+    } else {
+      const resultat = piece;
+      uicontext.setState(protocol.state.analyseFailed);
+      navigate("/analysefailed/" + resultat.id);
     }
-    else{
-      const resultat = piece
-      uicontext.setState(protocol.state.analyseFailed)
-      navigate("/analysefailed/" + resultat.id)
-    }
-  })
-  
+  });
+
   useEffect(() => {
     // uicontext.setState(protocol.state.analysePass) // For testing verification pass
     switch (uicontext.ref_state.current) {

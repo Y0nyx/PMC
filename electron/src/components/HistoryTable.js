@@ -378,11 +378,28 @@ export default function EnhancedTable({ rows_ }) {
                       scope="row"
                       className="py-2"
                     >
-                      <img
-                        src={row.url}
-                        alt="thumbnail"
-                        className=" w-48 h-48 rounded-lg"
-                      />
+                      {row.result == "succès" ? (
+                        <img
+                          className="w-48 h-48 rounded-lg"
+                          src={row.url}
+                        ></img>
+                      ) : (
+                        <div className="relative w-48 h-48 rounded-lg">
+                          <img
+                            src={row.url}
+                            className="w-full h-full rounded-lg"
+                          />
+                          <div
+                            style={{
+                              top: `${row.box.yCenter * 100}%`,
+                              left: `${row.box.xCenter * 100}%`,
+                              width: `${row.box.width * 100}%`,
+                              height: `${row.box.height * 100}%`,
+                            }}
+                            className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
+                          ></div>
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell
                       className="font-bold  font-normal"

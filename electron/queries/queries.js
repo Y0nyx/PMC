@@ -4,35 +4,31 @@ let appPath = global.appPath;
 const config = require(path.join(appPath, "configElectron.js"));
 // Create a new PostgreSQL client
 
-
-
 async function deletePiece(selected) {
   let table = "piece";
-  let query = `DELETE FROM ${table} WHERE id IN (${selected.join(',')});;`;
+  let query = `DELETE FROM ${table} WHERE id IN (${selected.join(",")});;`;
 
   await makeQuery(query);
-
 }
 
 async function createPiece(piece) {
-  
-    let table = "piece";
-    let query = `INSERT INTO ${table} (id,date,photo,resultat,id_client,id_log,id_type_piece,id_erreur_soudure) VALUES ('${piece.id}','${piece.date}','${piece.url}','${piece.resultat}','${piece.id_client}','${piece.id_log}','${piece.id_type_piece}','${piece.id_erreur_soudure}');`;
-    await makeQuery(query);
-  
+  let table = "piece";
+  let query = `INSERT INTO ${table} (id,date,photo,boundingbox,resultat,id_client,id_log,id_type_piece,id_erreur_soudure) VALUES ('${piece.id}','${piece.date}','${piece.url}','${piece.boundingbox}','${piece.resultat}','${piece.id_client}','${piece.id_log}','${piece.id_type_piece}','${piece.id_erreur_soudure}');`;
+  await makeQuery(query);
 }
 
-async function fetchPieces(id_client,id_log) {
+async function fetchPieces(id_client, id_log) {
   let table = "piece";
   let table2 = "erreur_soudure";
   let table3 = "type_piece";
-  let table4 = "client"
-  let table5 = "log"
+  let table4 = "client";
+  let table5 = "log";
 
   let query = `SELECT 
   ${table}.id as id,
   ${table}.date as date,
   ${table}.photo as photo,
+  ${table}.boundingbox as boundingbox,
   ${table}.resultat as resultat,
   ${table}.id_erreur_soudure,
   ${table2}.nom as nom_erreur_soudure,
@@ -47,7 +43,6 @@ async function fetchPieces(id_client,id_log) {
   JOIN ${table5} ON ${table}.id_log = ${table5}.id  
   WHERE ${table}.id_client = '${id_client}' AND ${table}.id_log = '${id_log}';`;
 
-
   let result = await makeQuery(query);
 
   return result;
@@ -57,13 +52,14 @@ async function fetchPiece(id) {
   let table = "piece";
   let table2 = "erreur_soudure";
   let table3 = "type_piece";
-  let table4 = "client"
-  let table5 = "log"
+  let table4 = "client";
+  let table5 = "log";
 
   let query = `SELECT 
   ${table}.id as id,
   ${table}.date as date,
   ${table}.photo as photo,
+  ${table}.boundingbox as boundingbox,
   ${table}.resultat as resultat,
   ${table}.id_erreur_soudure,
   ${table2}.nom as nom_erreur_soudure,
@@ -83,7 +79,6 @@ async function fetchPiece(id) {
 
   return result[0];
 }
-
 
 async function fetchClients() {
   let table = "client";
@@ -121,23 +116,17 @@ async function fetchTypesPiece() {
 }
 
 async function createClient(client) {
-
   let table = "client";
   let query = `INSERT INTO ${table} (id,nom,telephone,email) VALUES ('${client.id}','${client.nom}','${client.telephone}','${client.email}');`;
   await makeQuery(query);
-
 }
 
-
 async function createLog(log) {
-
   let table = "log";
   let query = `INSERT INTO ${table} (id,id_client,nom) VALUES ('${log.id}','${log.id_client}','${log.nom}');`;
 
   await makeQuery(query);
-
 }
-
 
 async function makeQuery(query) {
   try {
@@ -148,7 +137,7 @@ async function makeQuery(query) {
       password: config.DB_PASSWORD,
       port: config.DB_PORT,
     });
-    
+
     await client.connect();
     const result = await client.query(query);
 
@@ -156,7 +145,6 @@ async function makeQuery(query) {
     const rows = result.rows;
     await client.end();
     return rows;
-    
   } catch (error) {
     console.error("Error executing query", error);
     throw error; // Propagate the error to the caller

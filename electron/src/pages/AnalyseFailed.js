@@ -16,6 +16,8 @@ export default function AnalyseFailed() {
     id: "7631E40B-BB8A-4278-A5B7-1B2B8E15FAEF",
     nom: "",
     description: "",
+    boundingbox: "",
+    box: { xCenter: 0, yCenter: 0, width: 0, height: 0 },
     url: "",
     date: "",
   });
@@ -30,7 +32,6 @@ export default function AnalyseFailed() {
     ipcRenderer.send("fetchPiece", id);
   }, []);
 
-
   function RestartCommand() {
     ipcRenderer.send("restart", piece.id);
     uicontext.setState(protocol.state.analyseInProgress);
@@ -41,12 +42,23 @@ export default function AnalyseFailed() {
     <div className="w-screen h-screen overflow-hidden">
       <div className="box-border flex flex-col justify-center items-center w-full h-full bg-gray-200 p-5">
         <div className="box-border  shadow-xl rounded-lg flex justify-between items-center p-5 w-5/6 h-4/6 border-gray-300 bg-gray-100">
-          <img
-            className="box-border object-cover w-7/12 h-full rounded-lg flex justify-end items-end"
-            src={piece.url}
-          ></img>
+          <div className="relative box-border object-cover w-7/12 h-full rounded-lg flex justify-end items-end">
+            <img src={piece.url} className="w-full h-full" />
+            <div
+              style={{
+                top: `${piece.box.yCenter * 100}%`,
+                left: `${piece.box.xCenter * 100}%`,
+                width: `${piece.box.width * 100}%`,
+                height: `${piece.box.height * 100}%`,
+              }}
+              className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
+            ></div>
+          </div>
+
           <div className="flex w-5/12 flex-col justify-center items-center box-border p-3  ">
-            <span className=" box-border font-normal text-xl m-2 flex justify-center items-center">{"La pièce " + idSubstring(piece.id) + " a échoué"}</span>
+            <span className=" box-border font-normal text-xl m-2 flex justify-center items-center">
+              {"La pièce " + idSubstring(piece.id) + " a échoué"}
+            </span>
             <div className="box-border flex justify-between items-center w-full bg-white rounded-lg p-2 text-lg text-gray-800  font-normal m-1">
               <span>{"ID:"}</span>
               <span>{piece.id}</span>
@@ -71,16 +83,15 @@ export default function AnalyseFailed() {
           </div>
         </div>
         <div className="box-border  flex border-gray-200 shadow-xl  rounded-2xl border p-3 justify-center items-center h-2/6 m-5">
-        <div
-          className="border-box flex justify-center items-center mx-6 font-bold font-normal text-3xl text-white text- hover:scale-110 bg-yellow-500 rounded-lg hover:bg-yellow-500 w-80 h-64 "
-          onClick={RestartCommand}
-        >
-          <span>RECOMMENCER</span>
+          <div
+            className="border-box flex justify-center items-center mx-6 font-bold font-normal text-3xl text-white text- hover:scale-110 bg-yellow-500 rounded-lg hover:bg-yellow-500 w-80 h-64 "
+            onClick={RestartCommand}
+          >
+            <span>RECOMMENCER</span>
+          </div>
+          <ContinueButton />
         </div>
-        <ContinueButton />
       </div>
-      </div>
-
     </div>
   );
 }
