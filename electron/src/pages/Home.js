@@ -1,6 +1,5 @@
-import {React,useEffect} from "react";
+import { React, useEffect } from "react";
 import StartButton from "../components/StartButton";
-import SettingsIcon from "@mui/icons-material/Settings";
 import HistoryButton from "../components/HistoryButton";
 import OptionPieceButton from "../components/OptionPieceButton";
 import { useContext } from "react";
@@ -10,7 +9,7 @@ import Loading from "../components/Loading";
 import { useLocation } from "react-router-dom";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { idSubstring } from "../utils/utils";
-
+import SettingButton from "../components/SettingButton";
 export default function Home() {
   const uicontext = useContext(UIStateContext);
   const ipcRenderer = window.require("electron").ipcRenderer;
@@ -18,12 +17,11 @@ export default function Home() {
   const { resultat } = state || {};
 
   useEffect(() => {
-  
-   if(uicontext.ref_dev.current) uicontext.setState(protocol.state.idle);
+    if (uicontext.ref_dev.current) uicontext.setState(protocol.state.idle);
   }, []); // Empty dependency array ensures the effect runs once on mount
-  
+
   ipcRenderer.on("init", () => {
-     uicontext.setState(protocol.state.idle);
+    uicontext.setState(protocol.state.idle);
   });
 
   return (
@@ -38,7 +36,7 @@ export default function Home() {
               {"Accueil"}
             </div>
             <div className="flex justify-end items-center w-1/3">
-              <SettingsIcon className="text-gray-700 text-6xl hover:scale-105" />
+              <SettingButton />
             </div>
           </div>
           <div className="shadow-xl rounded-lg flex justify-around items-center w-5/6 h-full border-gray-300 bg-gray-100 p-5">
@@ -61,7 +59,8 @@ export default function Home() {
                 {resultat ? (
                   <div className=" my-1 flex font-normal font-bold justify-center items-center text-3xl text-center">
                     <div className="flex font-normal font-bold justify-center items-center text-3xl my-20 text-center m-2">
-                      {resultat && "La pièce " + idSubstring(resultat.id) + " succès"}
+                      {resultat &&
+                        "La pièce " + idSubstring(resultat.id) + " succès"}
                     </div>
                     {uicontext.state_state === protocol.state.analysePass && (
                       <CheckCircleIcon className="text-green-500 text-5xl m-2" />

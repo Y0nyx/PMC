@@ -2,6 +2,8 @@ const { ipcMain } = require("electron");
 const fs = require("fs");
 const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
+const { exec } = require("child_process");
+
 //API avec Frontend
 const query = require("./queries/queries");
 
@@ -120,6 +122,40 @@ function apiFrontend(mainWindow, configReact) {
   ipcMain.on("restart", async (event, id) => {
     await query.deletePiece(id);
     writeToPython({ code: "start", data: "" });
+  });
+
+  ipcMain.on("powerOffMachine", async () => {
+    exec("sudo poweroff", (error, stdout, stderr) => {
+      if (error || stderr) {
+        console.log(error);
+        return;
+      }
+    });
+  });
+
+  ipcMain.on("rebootMachine", async () => {
+    exec("sudo reboot", (error, stdout, stderr) => {
+      if (error || stderr) {
+        console.log(error);
+        return;
+      }
+    });
+  });
+
+  ipcMain.on("resetData", async () => {
+    let result = await query.resetData();
+  });
+
+  ipcMain.on("resetAll", async () => {
+    exec(
+      "sudo docker stop $(sudo docker ps -q) && sudo docker rm $(sudo docker ps -aq) && sudo docker volume rm $(sudo docker volume ls -q) && sudo docker-compose -f ../docker/docker-compose.yml up -d",
+      (error, stdout, stderr) => {
+        if (error || stderr) {
+          console.log(error);
+          return;
+        }
+      }
+    );
   });
 
   ipcMain.on("command", (event, req) => {

@@ -13,6 +13,7 @@ import CreerClient from "./pages/CreerClient";
 import CreerLog from "./pages/CreerLog";
 import { StyledEngineProvider } from "@mui/material/styles";
 import LoadingPage from "./pages/LoadingPage";
+import SettingMachine from "./pages/SettingMachine";
 function App() {
   const uiState = useUIState();
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="creerclient" Component={CreerClient} />
             <Route path="creerlog" Component={CreerLog} />
             <Route path="loading" Component={LoadingPage} />
+            <Route path="setting" Component={SettingMachine} />
           </Routes>
         </HashRouter>
       </uiContext.Provider>

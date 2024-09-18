@@ -151,6 +151,11 @@ async function makeQuery(query) {
   }
 }
 
+async function resetData() {
+  let query = `TRUNCATE TABLE erreur_Soudure,client,log,piece,type_piece`;
+  await makeQuery(query);
+}
+
 module.exports = {
   fetchPieces,
   fetchPiece,
@@ -161,4 +166,5 @@ module.exports = {
   createClient,
   createPiece,
   createLog,
+  resetData,
 };
