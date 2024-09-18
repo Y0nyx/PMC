@@ -72,9 +72,13 @@
       "configElectron.js",
       "configReact.js",
       "index.js",
+      "apiAi.js",
+      "apiFrontend.js",
+      "utils.js",
       "queries/**/*",
       "package.json",
       "protocol.json"
+      
     ],
     "extraFiles": [
       {

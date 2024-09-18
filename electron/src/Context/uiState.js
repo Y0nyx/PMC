@@ -33,7 +33,7 @@ function useUIState() {
   });
   const ref_log = useRef({ id: "1", id_client: "1", nom: "log1" });
   const ref_type_piece = useRef({ id: "1", nom: "1", description: "" });
-  const ref_dev = useRef(true);
+  const ref_dev = useRef(false);
   ipcRenderer.send("fetchConfig");
   ipcRenderer.on("ReceiveConfig", (event, config) => {
     ref_config.current = config;

@@ -32,9 +32,10 @@ function createMainWindow() {
   //create window
   mainWindow = new BrowserWindow({
     title: "Dofa",
-    kiosk: false,
-    fullscreen: false,
+    kiosk: true,
+    fullscreen: true,
     webPreferences: {
+      sandbox: false,
       nodeIntegration: true,
       contextIsolation: false,
       webSecurity: false,
