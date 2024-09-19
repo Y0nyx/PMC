@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Dofa desktiop
+Exec=sudo /usr/bin/dofa --no-sandbox --in-process-gpu
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Terminal=false
+
+
+

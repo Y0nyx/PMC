@@ -1,0 +1,29 @@
+
+////// JSON a copy paste dans votre propre JSON  ///////////////////////
+{
+    "code":{
+        "start":"start", 
+        "error":"error",
+        "resultat":"resultat",
+        "train":"train",
+        "setting":"setting",
+        "init" : "init"
+    }
+}
+///////////////////////////////////////////////
+
+///// Object data à recevoir ou envoyer en plus du code//////
+
+ {"code": "", data: Object}
+  
+/////// Data object //////////////////
+    start : data {}
+    stop :  data {}
+    error : data {message : "erreur de ...."}
+    resultat: data {resultat: true or false, //true = pas erreur , false = erreur
+                    url : "/imageSoudure....",
+                    erreurSoudure : "1"}
+    train: data {running: true/false }
+    "setting": data {setting:[]}
+    "init": data {}
+
