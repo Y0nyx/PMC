@@ -8,14 +8,14 @@ Description: Training Neural Network.
 
 #Definition of read only variables (Constants)
 #Variable for environment set-up
-readonly PATH_NN='/PMC/src/machine_learning/un_supervised/neural_network'  #/PMC/src/machine_learning/un_supervised/neural_network
+readonly PATH_NN='/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network'  #/PMC/src/machine_learning/un_supervised/neural_network
 readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate' #Utiliser doker
 readonly SCRIPT_NAME='train.py'
 
-readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc' #'../../../../../Datasets/grosse_piece_seg_1' #TODO convert for docker
+readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale' #'/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc' In PMC 760 that was the datapath
 #Variable for Callbacks
 readonly MODEL='aes_defect_detection'
-readonly TEST_NAME='4k_images_stain'
+readonly TEST_NAME='pmc860_grayscale_dataset'
 readonly MONITOR_LOSS='mean_absolute_error'
 readonly MONITOR_METRIC='mean_squared_error'
 readonly MODE_METRIC='min'
@@ -23,9 +23,9 @@ readonly VERBOSE=TRUE #If false remove --VERBOSE from line 40
 #Variable for HP search 
 readonly DO_HP_SEARCH=True #If false remove --DO_HP_SEARCH from line 40
 readonly EPOCHS_HP=40
-readonly NUM_TRIALS_HP=4
-readonly EXECUTION_PER_TRIAL_HP=2
-readonly NBEST=2
+readonly NUM_TRIALS_HP=5
+readonly EXECUTION_PER_TRIAL_HP=1
+readonly NBEST=1
 #Variable for default training
 readonly EPOCHS=5
 readonly BATCH_SIZE=256

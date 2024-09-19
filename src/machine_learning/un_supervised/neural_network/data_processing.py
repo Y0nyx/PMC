@@ -155,7 +155,7 @@ class DataProcessing():
         return input_train, input_valid, input_test
     
     def add_stain(self, image, max_pixel_value):
-        elipse_size = "5-10"
+        elipse_size = "10-30"
         blur = 0
         pourcentage_scale_factor = 100.
 
@@ -184,7 +184,7 @@ class DataProcessing():
 
         return image_stain
 
-    def apply_random_blackout(self, images, blackout_size=(256, 256)):
+    def apply_random_blackout(self, images, blackout_size=(128, 128)):
         """
         Apply random blackout to data for self supervised training. 
         """
@@ -311,7 +311,7 @@ class DataProcessing():
         Do the data processing with Stain noise used to try to beat the bench mark
         Used for test 3.
         """
-        print("You are currently doing test 3")
+        print("You are currently doing the data processing with stain")
         if not test: 
             input_train, input_valid, input_test = self.load_data(data_path, subdvisise=True, segment=True)
 
@@ -338,8 +338,220 @@ class DataProcessing():
             # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
 
             return non_defauts_images, defauts_images
+        
+    def get_data_processing_stain_PMC860(self, data_path, max_pixel_value, test=False):
+        """
+        Data processing to obtain stain on the data and normalize the data between 0 and 1. 
+        Called PMC860, because this dataprocessing is done using the new dataset nammed: "Datasets_segmentation_grayscale"
+        """
+        print("You are currently doing the data processing with stain for dataset: Datasets_segmentation_grayscale")
+        if not test: 
+            """
+            Setps done during the training phase. 
+            """
+            # Loading the training data
+            print(f'Loading the training images')
+            input_train_path = f'{data_path}/train/segmentation/as_no_default'
+            input_train = []
 
-    
+            for i, filename in enumerate(os.listdir(input_train_path)):
+                print(f'Loading image: {i}')
+                if filename.endswith(".jpg") and i <= 100:
+                    input_train.append(cv2.imread(f'{input_train_path}/{filename}'))
+
+            # Loading the validation data
+            print(f'Loading the validation images')
+            input_valid_path = f'{data_path}/valid/segmentation/as_no_default'
+            input_valid = []
+
+            for i, filename in enumerate(os.listdir(input_valid_path)):
+                print(f'Loading image: {i}')
+                if filename.endswith(".jpg") and i <= 100:
+                    input_valid.append(cv2.imread(f'{input_valid_path}/{filename}'))
+
+            # Segmenting the training and validation data.
+            seg_images_training = []
+            seg_images_validation = []
+
+            print(f'Image segmentation for training data')
+            for image_training in input_train:
+                seg_images_training.extend(self.segment(image_training))
+            input_train = seg_images_training
+            
+            print(f'Image segmentation for validation data\n')
+            for image_validation in input_valid:
+                seg_images_validation.extend(self.segment(image_validation))
+            input_valid = seg_images_validation
+
+            # Subdivise the training and validation data. 
+            sub_images_training = []
+            sub_images_validating = []
+
+            print(f'Subdivising the training data')
+            for images_training in input_train:
+                sub_images_training.extend(self.subdivise(images_training))
+            input_train = sub_images_training
+
+            print(f'Subdivising the validation data\n')
+            for images_validating in input_valid:
+                sub_images_validating.extend(self.subdivise(images_validating))
+            input_valid = sub_images_validating
+
+            # Adding patch to the images for the training and validation set. 
+            images_stain_train = []
+            images_stain_valid = []
+            print(f'Adding patches for the training data')
+            for img in input_train:
+                images_stain_train.append(self.add_stain(img, max_pixel_value)) 
+            print(f'Adding patches for the validation data\n')
+            for img in input_valid:
+                images_stain_valid.append(self.add_stain(img, max_pixel_value))
+            images_stain_train = np.array(images_stain_train)
+            images_stain_valid = np.array(images_stain_valid)
+            input_train = np.array(input_train)
+            input_valid = np.array(input_valid)
+
+            # Normalizing the input data in range 0 to 1. 
+            print(f'Normalizing the data')
+            train_input_norm = self.normalize(images_stain_train, max_pixel_value)    
+            train_input_loss_norm = self.normalize(input_train, max_pixel_value)
+            valid_input_norm = self.normalize(images_stain_valid, max_pixel_value) 
+            valid_input_loss_norm = self.normalize(input_valid, max_pixel_value)
+
+            # Delete images that have all pixels equals to 0. 
+            print(f'Deleting black images')
+            filtered_train_input = []
+            filtered_train_target = []
+            cptr = 0
+
+            for i, (train_input, train_target) in enumerate(zip(train_input_norm, train_input_loss_norm)):
+                if not np.all(train_target == 0):
+                    filtered_train_input.append(train_input)
+                    filtered_train_target.append(train_target)
+                else:
+                    cptr += 1
+            print(f'We removed: {cptr} train images')
+                    
+            filtered_valid_input = []
+            filtered_valid_target = []
+            cptr = 0 
+
+            for i, (valid_input, valid_target) in enumerate(zip(valid_input_norm, valid_input_loss_norm)):
+                if not np.all(valid_target == 0):
+                    if not np.all(valid_target == 0):
+                        filtered_valid_input.append(valid_input)
+                        filtered_valid_target.append(valid_target)
+                else:
+                    cptr += 1
+            print(f'We removed: {cptr} valid images')
+                
+            return np.array(filtered_train_input), np.array(filtered_train_target), np.array(filtered_valid_input), np.array(filtered_valid_target)
+        else:
+            non_defauts_images, defauts_images = self.load_data(data_path, segment=False, test=True) 
+
+            # test_input_norm = self.normalize(input_test, max_pixel_value)
+            # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
+
+            return non_defauts_images, defauts_images
+        
+    def get_data_processing_stain_PMC860_test(self, data_path, max_pixel_value):
+        """
+        Data processing to obtain stain on the data and normalize the data between 0 and 1. 
+        Called PMC860, because this dataprocessing is done using the new dataset nammed: "Datasets_segmentation_grayscale"
+        Used when testing the model with test data. 
+        """
+        print("You are currently doing the data processing with stain for dataset: Datasets_segmentation_grayscale")
+        # Loading the training data
+        print(f'Loading the testing without defect data')
+        input_test_no_defects = f'{data_path}/test/segmentation/as_no_default'
+        test_no_defects = []
+
+        for i, filename in enumerate(os.listdir(input_test_no_defects)):
+            print(f'Loading image: {i}')
+            if filename.endswith(".jpg"):
+                test_no_defects.append(cv2.imread(f'{input_test_no_defects}/{filename}'))
+
+        # Loading the validation data
+        print(f'Loading the testing with defect data')
+        input_test_defects = f'{data_path}/test/segmentation/as_default'
+        test_defects = []
+
+        for i, filename in enumerate(os.listdir(input_test_defects)):
+            print(f'Loading image: {i}')
+            if filename.endswith(".jpg") and i <= 300:
+                test_defects.append(cv2.imread(f'{input_test_defects}/{filename}'))
+
+        # # Segmenting the training and validation data.
+        # seg_images_defects = []
+        # seg_images_validation = []
+
+        # print(f'Image segmentation for training data')
+        # for image_training in test_no_defects:
+        #     seg_images_defects.extend(self.segment(image_training))
+        # test_no_defects = seg_images_defects
+        # print(f'There are: {len(test_no_defects)} elements in image segmentation without defects')
+        
+        # print(f'Image segmentation for validation data\n')
+        # for image_validation in test_defects:
+        #     seg_images_validation.extend(self.segment(image_validation))
+        # test_defects = seg_images_validation
+        # print(f'There are: {len(test_defects)} elements in image segmentation with defects')
+
+        # Subdivise the training and validation data. 
+        sub_images_no_defects = []
+        sub_images_defects = []
+
+        print(f'Subdivising the training data')
+        for images_training in test_no_defects:
+            if not np.all(images_training == 0):
+                sub_images_no_defects.extend(self.subdivise(images_training))
+        test_no_defects = sub_images_no_defects
+        print(f'There are: {len(test_no_defects)} images in subdivise test no defects')
+
+        print(f'Subdivising the validation data\n')
+        for images_validating in test_defects:
+            if not np.all(images_validating == 0):
+                sub_images_defects.extend(self.subdivise(images_validating))
+        test_defects = sub_images_defects
+        print(f'There are: {len(test_defects)} images in subdivise test defects')
+
+        test_no_defects = np.array(test_no_defects)
+        test_defects = np.array(test_defects)
+
+        # Normalizing the input data in range 0 to 1. 
+        print(f'Normalizing the data')
+        train_no_defects_loss_norm = self.normalize(test_no_defects, max_pixel_value)
+        valid_defects_loss_norm = self.normalize(test_defects, max_pixel_value)
+        print(f'The shape after the normalization is: {train_no_defects_loss_norm.shape} without defects')
+        print(f'The shape after the normalization is: {valid_defects_loss_norm.shape} with defects')
+
+        # Delete images that have all pixels equals to 0. 
+        print(f'Deleting black images')
+        filtered_no_defects = []
+        cptr = 0
+
+        for i, testing_no_defects in enumerate(train_no_defects_loss_norm):
+            if not np.all(testing_no_defects == 0):
+                filtered_no_defects.append(testing_no_defects)
+            else:
+                cptr += 1
+        print(f'We removed: {cptr} no defects images')
+        print(f'There are: {len(filtered_no_defects)} images without defects after deleting black images')
+                
+        filtered_defects = []
+        cptr = 0 
+
+        for i, testing_defects in enumerate(valid_defects_loss_norm):
+            if not np.all(testing_defects == 0):
+                filtered_defects.append(testing_defects)
+            else:
+                cptr += 1
+        print(f'We removed: {cptr} defects images')
+        print(f'There are: {len(filtered_defects)} images with defects after deleting black images')
+            
+        return np.array(filtered_no_defects), np.array(filtered_defects)
+
+
     def resize(self, image):
         closest_width = int(np.ceil(image.shape[1] / self.width ) * self.width )
         closest_height = int(np.ceil(image.shape[0] / self.height) * self.height)

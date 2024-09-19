@@ -5,15 +5,15 @@ Contributor(s):
 Date: 02/07/2024
 Description: Run test_AE on a super_computer or localy. 
 """
-readonly PATH_NN='/PMC/src/machine_learning/un_supervised/neural_network'
+readonly PATH_NN='/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning/un_supervised/neural_network'
 readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate'
 readonly SCRIPT_NAME='test.py'
 
-readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc' #'../../../../../Datasets/grosse_piece_seg_1'   #TODO convert for docker     #same as train.sh
+readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale' #/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc #'../../../../../Datasets/grosse_piece_seg_1'   #TODO convert for docker     #same as train.sh
 readonly MODEL='aes_defect_detection'                                                     #same as train.sh
-readonly TEST_NAME='4k_images_stain'                                                   #same as train.sh
-readonly NBEST=2                                                                          #same as train.sh
-readonly NUM_TRAIN_REGENERATE=40
+readonly TEST_NAME='pmc860_grayscale_dataset'                                             #same as train.sh
+readonly NBEST=1                                                                          #same as train.sh
+readonly NUM_TRAIN_REGENERATE=300
 readonly MONITOR_LOSS='mean_absolute_error'
 readonly MONITOR_METRIC='mean_squared_error'
 readonly MAX_PIXEL_VALUE=255

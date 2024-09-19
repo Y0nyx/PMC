@@ -15,6 +15,7 @@ import os
 import pandas as pd
 import re
 
+from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
@@ -42,14 +43,17 @@ def prediction(model, input_test):
         callbacks=None
     )
 
-def createPredImg(input_train, input_test, difference_reshaped, image, num, path_results):
+def createPredImg(input_train, input_test, difference_reshaped, image, num, path_results, title, type):
     fig, axes = plt.subplots(1, 3, figsize=(24,8))
-    fig.suptitle('Input data vs Results')
+    fig.suptitle(title)
+
+    vmin = min(input_train.min(), input_test.min())
+    vmax = max(input_train.max(), input_test.max())
 
     axes[0].set_title('Inputs')
-    im0 = axes[0].imshow(input_train, cmap='gray')
+    im0 = axes[0].imshow(input_train, cmap='gray', vmin=vmin, vmax=vmax)
     axes[1].set_title('Results')
-    im1 = axes[1].imshow(input_test, cmap='gray')
+    im1 = axes[1].imshow(input_test, cmap='gray', vmin=vmin, vmax=vmax)
     axes[2].set_title('difference')
     im2 = axes[2].imshow(difference_reshaped, cmap='jet')
 
@@ -59,7 +63,7 @@ def createPredImg(input_train, input_test, difference_reshaped, image, num, path
     fig.colorbar(im1, ax=axes[1], fraction=0.046, pad=0.04)
     fig.colorbar(im2, ax=axes[2], fraction=0.046, pad=0.04)
 
-    dir = f'{path_results}/image/result_model_{num+1}'
+    dir = f'{path_results}/image/result_{type}_{num+1}'
     if not os.path.exists(dir):
         os.makedirs(dir)
     plt.savefig(f'{dir}/{image+1}.png')
@@ -272,12 +276,12 @@ if __name__ =='__main__':
     sub_width = args.SUB_WIDTH
     sub_height = args.SUB_HEIGHT
 
-    test = True
+    test = False
     if not test:
         data_processing = dp.DataProcessing(sub_width, sub_height)
-        train_input, train_input_loss, valid_input, valid_input_loss, test_input = data_processing.get_data_processing_standard(data_path, max_pixel_value, test=False) #Put test to True later...  , defaut_images_norm
+        test_input_no_defects, test_input_defects = data_processing.get_data_processing_stain_PMC860_test(data_path, max_pixel_value) #Put test to True later...  , defaut_images_norm
 
-        _, row, column, channels = train_input.shape
+        _, row, column, channels = test_input_no_defects.shape
         image_dimentions = (row, column, channels)
         print(image_dimentions)
 
@@ -292,26 +296,60 @@ if __name__ =='__main__':
             name = f"model{j+1}"
             build_model.load_weights(f'{filepath_weights}/search_{name}')
 
-            input_test_norm = test_input[0:num_train_regenerate]
+            test_no_defects_norm = test_input_no_defects[0:num_train_regenerate]
+            test_defects_norm = test_input_defects[0:num_train_regenerate]
 
-            result_norm = prediction(build_model, input_test_norm)
+            print(f'Shape test_no_defects_norm: {test_no_defects_norm.shape}, shape test_defects_norm: {test_defects_norm.shape}')
+            result_no_defects_norm = prediction(build_model, test_no_defects_norm)
+            result_defects_norm = prediction(build_model, test_defects_norm)
 
-            input_test_denorm, result_denorm, difference_reshaped = data_processing.de_normalize(input_test_norm, result_norm, max_pixel_value)
+            test_no_defects_denorm, result_no_defects_denorm, difference_no_defects_reshaped = data_processing.de_normalize(test_no_defects_norm, result_no_defects_norm, max_pixel_value)
+            test_defects_denorm, result_defects_denorm, difference_defects_reshaped = data_processing.de_normalize(test_defects_norm, result_defects_norm, max_pixel_value)
+
+
+            mse_value_no_defects = []
+            mse_value_defects = []
 
             for i in range(num_train_regenerate):
-                createPredImg(input_test_denorm[i], result_denorm[i], difference_reshaped[i], i, j, path_results)
+                print(f'Regenarating image: {i+1}')
+                createPredImg(test_no_defects_denorm[i], result_no_defects_denorm[i], difference_no_defects_reshaped[i], i, j, path_results, 'Input data vs Results for no defects', 'no_defects')
+                createPredImg(test_defects_denorm[i], result_defects_denorm[i], difference_defects_reshaped[i], i, j, path_results, 'Input data vs Results for defects', 'defects')
+
+                # Calculating the metrics
+                mask = test_no_defects_denorm[i] != 0
+                masked_test = test_no_defects_denorm[i][mask]
+                masked_result = result_no_defects_denorm[i][mask]
+
+                mse_value_no_defects.append(mean_squared_error(masked_test, masked_result))
+
+                mask = test_defects_denorm[i] != 0
+                masked_test = test_defects_denorm[i][mask]
+                masked_result = result_defects_denorm[i][mask]
+
+                mse_value_defects.append(mean_squared_error(masked_test, masked_result))
+
+            
+            np.array(mse_value_no_defects)
+            np.array(mse_value_defects)
+
+            mean_mse_no_defect = np.mean(mse_value_no_defects)
+            mean_mse_defect = np.mean(mse_value_defects)
+
+            print(f'The mse over the test set for no defect is: {mean_mse_no_defect} and for defect is: {mean_mse_defect}')
+
+
 
         print('The testing of the Neural Network has been done corectly!')
 
     #If we want to see if there is a welding error in a piece. 
     else:
         #Define a threshold
-        mae_threshold = 0.10
-        direct = '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/4k_images_stain/image/subdivised'
+        ssim_treshold = 0.80
+        direct = '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/4k_images_stain_01/image/subdivised'
 
         #Data processing and split the data into set (Train, test, valid).
         data_processing = dp.DataProcessing(sub_width, sub_height)
-        test_input, defaut_images = data_processing.get_data_processing_blackout(data_path, max_pixel_value, test=True)
+        test_input, defaut_images = data_processing.get_data_processing_stain(data_path, max_pixel_value, test=True)
 
         #Concatenate defect with non defect test images. 
         test_images = np.concatenate((defaut_images, test_input), axis=0)
@@ -326,7 +364,7 @@ if __name__ =='__main__':
         #List all the hp used during training. 
         learning_rate = data_frame['lr']
         #Selected model
-        j = 1
+        j = 0
 
         #Create the model that will be used
         image_dimentions = (256, 256, 3) #TODO eventually change the hardcoded value
@@ -335,7 +373,7 @@ if __name__ =='__main__':
         name = f"model{j+1}"
         build_model.load_weights(f'{filepath_weights}/search_{name}')
 
-        do_data_processing = True
+        do_data_processing = False
         if do_data_processing: 
             #Get the segmented images.
             segmented_images = get_segmented_images(test_images, path_results)
@@ -401,59 +439,10 @@ if __name__ =='__main__':
                         print(f'Tje ssim value is {ssim_value}')
 
                         #Taking decision if defect or not
-                        if test_loss >= mae_threshold:
+                        if ssim_value <= ssim_treshold:
                             error = 1
                         else:
                             error = 0
 
                         #Write the information to a csv file
-                        write_error_csv(test_loss, psnr_value, ssim_value, mae_threshold, error, path_results, image, view, weld_num, i)
-
-        # for i in range(test_images.shape[0]):
-        #     #Segmente the welding image
-        #     image_number = (i // 4) + 1
-        #     print(f'Currently analysing image number: {image_number}')
-        #     test_images[i] = cv2.cvtColor(test_images[i], cv2.COLOR_RGB2BGR) 
-        #     welding_segmented = data_processing.segment(test_images[i])
-
-        #     #Subdivise the segmented image (For the number of welding that where in the image).
-        #     for l, welding in enumerate(welding_segmented):
-        #         print(f'The length of the segmented welding is: {len(welding_segmented)}')
-        #         print(f'The new l value is: {l}')
-        #         divised_welding_segmented = data_processing.subdivise(welding)
-        #         #Do a prediction on every subdivised image
-        #         for k, image in enumerate(divised_welding_segmented):
-        #             #Put the data into RGB format
-        #             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) 
-        #             #cv2.imwrite(f'/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/result_paths/image_{k}.jpg', image)
-
-        #             #Normalize the data
-        #             image_normalize = data_processing.normalize(image, max_pixel_value)
-        #             image_normalize_expand = np.expand_dims(image_normalize, axis=0)
-
-        #             #Predict with the network
-        #             result_norm = prediction(build_model, image_normalize_expand)
-        #             #Evaluate the model
-        #             test_loss, test_metric = build_model.evaluate(image_normalize_expand, image_normalize_expand)
-
-        #             #Save the predicted image
-        #             #TODO save the predicted image, original image and error between the image. 
-
-        #             #Calculate the mae between the input and the prediction
-        #             result_norm = np.squeeze(result_norm)
-        #             image_normalize_flattened = image_normalize.flatten()
-        #             result_norm_flattened = result_norm.flatten()
-        #             mae = mean_absolute_error_hand(image_normalize, result_norm)
-        #             #mae = mean_absolute_error(image_normalize_flattened, result_norm_flattened)
-        #             print(f'The mae value is {mae}')
-
-        #             #Validate with the threshold
-        #             if mae >= mae_threshold:
-        #                 error = 1
-        #             else:
-        #                 error = 0
-
-        #             #Write to a csv file if there is a welding error. 
-        #             print('Writting info to csv...')
-        #             write_error_csv(mae, mae_threshold, error, path_results, image_number, l, k)
-        
+                        write_error_csv(test_loss, psnr_value, ssim_value, ssim_treshold, error, direct, image, view, weld_num, i)

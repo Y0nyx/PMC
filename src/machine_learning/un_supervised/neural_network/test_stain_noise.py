@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 import data_processing as dp
 
 #Add the path where you are doing your test. 
-data_path = '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/4k_images_blackout/image/segmented/image1'
+data_path = '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/4k_images_blackout/image/subdivised/image1/imageView_1/segment_0'
 IMG_SIZE = (256, 256) #row, column 
 img_size_row = IMG_SIZE[0] #The size of the tested images. 
 img_size_col = IMG_SIZE[1] #The size of the tested images. 
@@ -26,7 +26,7 @@ images = []
 #Data loading
 for i, filename in enumerate(os.listdir(data_path)):
     print(f'Loading image {i}')
-    if filename.endswith(".jpg") and i < 10:
+    if filename.endswith(".jpg") and i < 30:
         img = cv2.imread(f'{data_path}/{filename}')
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         images.append(img)
@@ -39,7 +39,7 @@ data_process = dp.DataProcessing(256, 256)
 images_stain = []
 for i, img in enumerate(images):
     print(f'Analysing image {i}')
-    if i < 10:
+    if i < 30:
         img = data_process.normalize(img, de_norm_value)
         images_stain.append(data_process.add_stain(img, 255))
     else:
@@ -51,7 +51,7 @@ data_process = dp.DataProcessing(256, 256)
 images_blackout = []
 for i, img in enumerate(images):
     print(f'Analysing image {i}')
-    if i < 10:
+    if i < 30:
         img = data_process.normalize(img, de_norm_value)
         print(img.shape)
         images_blackout.append(data_process.apply_random_blackout(img))
@@ -59,9 +59,9 @@ for i, img in enumerate(images):
         break
 print('Blackout added.')
 
-for i, (img, img_stain) in enumerate(zip(images, images_blackout)):
+for i, (img, img_stain) in enumerate(zip(images, images_stain)):
     print(f'The original data is of type: {img.dtype}')
-    if i < 10:
+    if i < 30:
         #Denormalize data
         # img_stain = (img_stain * de_norm_value).astype('uint8')
         # img = (img * de_norm_value).astype('uint8')

@@ -11,6 +11,7 @@ import gc
 import os
 import tensorflow as tf
 import cv2
+import matplotlib.pyplot as plt
 
 from keras import backend as K
 
@@ -98,7 +99,7 @@ class ModelTrainer:
         self.monitor_loss = monitor_loss
         self.image_dimentions = image_dimentions
 
-    def train_hp(self, epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search):
+    def train_hp(self, epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search, strategy):
         """
         Here we are doing an hp search and training the model with the N best results. 
         """
@@ -106,12 +107,13 @@ class ModelTrainer:
         callbacks_list_search = callback_search.get_callbacks(None)
 
         hp_tuner_instance = hp_tuner.KerasTuner(self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, epochs_hp, num_trials_hp, 
-                                                execution_per_trial_hp, self.mode_metric, self.verbose, callbacks_list_search, self.monitor_metric, self.monitor_loss, self.image_dimentions)
+                                                execution_per_trial_hp, self.mode_metric, self.verbose, callbacks_list_search, self.monitor_metric, self.monitor_loss, self.image_dimentions, strategy)
         hp_search_done = hp_tuner_instance.get_hp_search(hp_search, hp_name)
 
         #Store the results of the search
         if not os.path.exists(path_results):
             os.makedirs(path_results)
+        print(f'The path to the reseult is: {path_results}')
         training_info = tr_info.TrainingInformation()
         training_info.write_hp_csv(path_results, hp_search_done, self.monitor_metric)
 
@@ -119,21 +121,23 @@ class ModelTrainer:
         best_hp = hp_search_done[:nbest]
         for j, trial in enumerate(best_hp, start=1):
             hp = trial.hyperparameters
-            model = mod.AeModels(hp.get('lr'), self.monitor_loss, self.monitor_metric, self.image_dimentions)
-            build_model = model.aes_defect_detection()
+            with strategy.scope():
+                model = mod.AeModels(hp.get('lr'), self.monitor_loss, self.monitor_metric, self.image_dimentions)
+                build_model = model.aes_defect_detection()
 
             name = f'model{j}'
             callback = cb.TrainingCallbacks(filepath_weights, self.monitor_metric, self.mode_metric, self.verbose)
             callbacks_list = callback.get_callbacks(name)
 
             history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, int(1.2*epochs_hp), hp.get('batch_size'), callbacks_list)
+
             training_info.plot_graph(history, name, path_results, self.monitor_metric)
 
             # Nettoyage de la session Keras et collecte des dechets
             K.clear_session()
             gc.collect()
         
-    def train_normal(self, epochs, batch_size, learning_rate, path_results):
+    def train_normal(self, epochs, batch_size, learning_rate, path_results, strategy):
         """
         Here we are training the model with the default parameters given in the initial variables. 
         """
@@ -141,8 +145,10 @@ class ModelTrainer:
         callback = cb.TrainingCallbacks(filepath_weights, self.monitor_metric, self.mode_metric, self.verbose)
         callbacks_list = callback.get_callbacks(name)
         
-        model = mod.AeModels(learning_rate, self.monitor_loss, self.monitor_metric, self.image_dimentions)
-        build_model = model.aes_defect_detection()
+        
+        with strategy.scope():
+            model = mod.AeModels(learning_rate, self.monitor_loss, self.monitor_metric, self.image_dimentions)
+            build_model = model.aes_defect_detection()
         history = train(build_model, self.input_train_norm, self.input_train_label, self.input_valid_norm, self.input_valid_label, epochs, batch_size, callbacks_list)
 
         training_info = tr_info.TrainingInformation()
@@ -193,41 +199,63 @@ if __name__ == '__main__':
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
 
-    if debug:
-        #Quick tests
-        do_hp_search = False
-        data_path = "../../../../../Datasets/to_segment"
-        sub_width = 256
-        sub_height = 256
-        max_pixel_value = 255
-
     if gpus:
         try:
             for gpu in gpus:
                 tf.config.experimental.set_memory_growth(gpu, True)
             
-            tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
+            tf.config.experimental.set_visible_devices(gpus, 'GPU')
+
+            strategy = tf.distribute.MirroredStrategy()
+            print(f'Number of devices: {strategy.num_replicas_in_sync}')
 
         except RuntimeError as e:
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
     data_processing = dp.DataProcessing(sub_width, sub_height)
-    train_input, train_input_loss, valid_input, valid_input_loss, test_input = data_processing.get_data_processing_stain(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+    train_input, train_input_loss, valid_input, valid_input_loss = data_processing.get_data_processing_stain_PMC860(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
-    #if visualise:
-    #    output_dir = "./output"
-    #    if not os.path.exists(output_dir):
-    #        os.makedirs(output_dir)
-    #    for i in range(10):
-    #        cv2.imwrite(f"{output_dir}/train_input_{i}.png", (train_input[i]*max_pixel_value))
-    #    for i in range(10):
-    #        cv2.imwrite(f"{output_dir}/train_input_loss_{i}.png", train_input_loss[i]*max_pixel_value)
-    #    for i in range(10):
-    #        cv2.imwrite(f"{output_dir}/valid_input_{i}.png", valid_input[i]*max_pixel_value)
-    #    # for i in range(10):
-    #    #     cv2.imwrite(f"{output_dir}/valid_input_loss_{i}.png", valid_input_loss[i]*max_pixel_value)
-    #    for i in range(10):
-    #        cv2.imwrite(f"{output_dir}/test_input_{i}.png", test_input[i]*max_pixel_value)
+    # # TEST: Displaying the images results to see if it was well executed. 
+    # # Displaying the training input and target images
+    # print(f'Testing the input and target train')
+    # for i, (img_train_input, img_train_target) in enumerate(zip(train_input, train_input_loss)):
+    #     if i < 100:
+    #         # Denormalizing data
+    #         img_train_input = (img_train_input * max_pixel_value).astype('uint8')
+    #         img_train_target = (img_train_target * max_pixel_value).astype('uint8')
+
+    #         fig, axes = plt.subplots(1, 2)
+    #         fig.suptitle('Input vs Target for training set')
+
+    #         axes[0].set_title('Input')
+    #         axes[0].imshow(img_train_input)
+    #         axes[1].set_title('Target')
+    #         axes[1].imshow(img_train_target)
+
+    #         plt.savefig(f'/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/PMC860/training_data_processing/train_{i+1}.png')
+    #         plt.close(fig)
+    #     else:
+    #         break
+
+    # print(f'Testing the input and target valid')
+    # for i, (img_valid_input, img_valid_target) in enumerate(zip(valid_input, valid_input_loss)):
+    #     if i < 100:
+    #         # Denormalizing data
+    #         img_valid_input = (img_valid_input * max_pixel_value).astype('uint8')
+    #         img_valid_target = (img_valid_target * max_pixel_value).astype('uint8')
+
+    #         fig, axes = plt.subplots(1, 2)
+    #         fig.suptitle('Input vs Target for validation set')
+
+    #         axes[0].set_title('Input')
+    #         axes[0].imshow(img_valid_input)
+    #         axes[1].set_title('Target')
+    #         axes[1].imshow(img_valid_target)
+
+    #         plt.savefig(f'/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/PMC860/validating_data_processing/valid_{i+1}.png')
+    #         plt.close(fig)
+    #     else:
+    #         break
 
     #DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
     _, row, column, channels = train_input.shape
@@ -235,8 +263,10 @@ if __name__ == '__main__':
 
     train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input_loss, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
     if do_hp_search:
-       history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search)
+       print(f'We are doing a hp search')
+       history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search, strategy)
     else:
-       history = train_model.train_normal(epochs, batch_size, learning_rate, path_results)
+       print(f'We are only training the model without hp search')
+       history = train_model.train_normal(epochs, batch_size, learning_rate, path_results, strategy)
 
     print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
