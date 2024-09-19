@@ -34,6 +34,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 class Pipeline():
     def __init__(self, segmentation_model, supervised_detection_model, unsupervised_model, current_iteration_logging_path, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = False, roc_curve = False):
         self.verbose = verbose
+        self._state = State
 
         self.stop_flag = threading.Event()
 
@@ -53,7 +54,6 @@ class Pipeline():
         #self._unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model)
 
         #Set initial pipeline state
-        self._state = State
         if self._state == PipelineState.TRAINING:
             self._dataManager = Mock_DataManager(Path("./dataset/mock"))
             pass
@@ -113,20 +113,9 @@ class Pipeline():
             key = input("Press 'q' to capture photo, 'e' to exit: ")
 
             if key == "q":
-                Images = self._dataManager.get_all_img()
-                if isinstance(Images, list):
-                    for i, Image in enumerate(Images):
-                        Image.save(
-                            os.path.join(
-                                session_path, f"photo_camera_{counter}_{i  }.png"
-                            )
-                        )
-                    counter += 1
-                else:
-                    Image.save(
-                        os.path.join(session_path, f"photo_camera_{counter}_{0}.png")
-                    )
-                    counter += 1
+                imgs = self._dataManager.get_all_img()
+                imgs.save(session_path)
+                counter += imgs.img_count
                 print("Capture Done")
 
             if key == "e":
@@ -367,17 +356,16 @@ def path_initialization():
 if __name__ == "__main__":
     #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
     # TRAINING
-    # pipeline = Pipeline(supervised_models=[], unsupervised_models=[], State=PipelineState.TRAINING)
-
-
-    # data_path = "../../Datasets/default-detection-format-v3/data.yaml"
-    # pipeline.train(data_path, "yolov8l", epochs=350, batch=-1, workers=0)
-
     segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
+    pipeline = Pipeline(segmentation_model=None, supervised_detection_model=None, unsupervised_model=None, State=PipelineState.TRAINING, current_iteration_logging_path=current_iteration_logging_path)
 
-    supervised_models = [YoloModel(Path(segmentation_model_path))]
-    unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
 
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
+    data_path = "/usr/src/datasets/grayscale-soudure/data.yaml"
+    pipeline.train(yaml_path=data_path, yolo_model="yolov8m-seg", epochs=150, batch=17, workers=0, singlecls=True, patience=50)
 
-    
+    #segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initializa_tion()
+
+    #supervised_models = [YoloModel(Path(segmentation_model_path))]
+    #unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
+
+    #pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)

@@ -23,7 +23,7 @@ class NetworkManager():
 
     async def run(self):
         tasks = [
-            asyncio.create_task(self.connect_service('server')),
+            # asyncio.create_task(self.connect_service('server')),
             # asyncio.create_task(self.connect_service('supervised')),
             # asyncio.create_task(self.connect_service('unsupervised'))
         ]
