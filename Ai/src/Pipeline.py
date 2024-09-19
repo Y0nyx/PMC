@@ -201,7 +201,8 @@ class Pipeline():
             self._state = PipelineState.TRAINING
 
         captured_image_collection = self._get_images()
-
+        captured_image_collection_path = f"{SAVE_PATH}{self._current_iteration_logging_path}{SAVE_PATH_SEGMENTATION}"
+        captured_image_collection.save(captured_image_collection_path)
 
         if captured_image_collection.img_count > 0:
             for i, captured_image in enumerate(captured_image_collection):
@@ -210,42 +211,24 @@ class Pipeline():
                 if not self.stop_flag.is_set():
 
                     #Find the welds in the capture image
-                    segmented_image_collection = self._segmentation_image(captured_image, show, save_seg, conf)
-
-                    #Analyse the welds with the unsupervised model to find potential defaults
-                    unsupervised_result_collections, 
-                    sub_mask_collection, 
-                    sub_image_collection, 
-                    average_predicted_sub_image_collection = self._unsupervised_defect_detection(i, segmented_image_collection)
+                    segmented_image_collection, boxes = self._segmentation_image(captured_image, show, save_seg, conf)
 
                     # TODO Integrate supervised model
-                    
-
-                    # Integrate training loop
-                    #if self._trainingManager.check_flags():
-                    #    self._trainingManager.separate_dataset()
-                    #    model = self._trainingManager.train_supervised()
 
                     # TODO Integrate Classification
 
                     # TODO send to interface
 
-                    # Check if a stop signal has been received
-                    #if await self.check_stop_signal():
-                    #    print("Stop signal received, stopping detection")
-                    #    return
                 else:
                     return
-                    
+            
+            solder_defect = False
+            #TODO: envoyer un dossier à la place d'une image, car on a 5 images par piece
             result_data = {
-                "resultat": True,  # or False based on your condition
-                "url": f'{SAVE_PATH}{SAVE_PATH_CAPTURE}',
-                "erreurSoudure": "pepe"
+                "code": "resultat"
+                "data": {"resultat": solder_defect, "url": captured_image_collection_path, "boundingbox": "/images/whatever.txt", ,'erreurSoudure':'1'}
             }
-            # Convert the dictionary to JSON format
-            result_json = json.dumps(result_data)
             self._state = PipelineState.INIT
-            # Send the JSON data
             self.print("Finished detection")
             return result_data
                 
@@ -256,6 +239,34 @@ class Pipeline():
                 "url": "/imageSoudure....",
                 "erreurSoudure": "pepe"
             }
+
+    def _write_yolo_bounding_boxes(result, img_width, img_height, output_file):
+        """
+        Writes bounding boxes from result.boxes in YOLO format to a .txt file.
+
+        Args:
+            result: The detection result containing bounding boxes and class IDs.
+            img_width: The width of the image.
+            img_height: The height of the image.
+            output_file: Path to the output .txt file.
+        """
+        with open(output_file, 'w') as f:
+            for box in result.boxes:
+                # Get class ID
+                class_id = int(box.cls)  # Assuming box.cls holds class ID
+
+                # Get bounding box coordinates (x_min, y_min, x_max, y_max)
+                x_min, y_min, x_max, y_max = box.xyxy
+
+                # Calculate center, width, and height
+                x_center = (x_min + x_max) / 2 / img_width
+                y_center = (y_min + y_max) / 2 / img_height
+                width = (x_max - x_min) / img_width
+                height = (y_max - y_min) / img_height
+
+                # Write in YOLO format: class_id, x_center, y_center, width, height
+                f.write(f"{class_id} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
+
 
     def _unsupervised_defect_detection(self, i: int, segmented_image_collection):
         """
@@ -326,7 +337,8 @@ class Pipeline():
             results = model.predict(source=img.value, show=show, conf=conf, save=save)
 
             # crop images with bounding box
-            for result in results:
+            for i, result in enumerate(results):
+                self._write_yolo_bounding_boxes(result, 640, 640, captured_image_collection_path + f"bb_{i}.txt")
                 for boxes in result.boxes:
                     imgCollection.add(img.crop(boxes))
 
@@ -338,7 +350,7 @@ class Pipeline():
             self._csv_result_row.seg_results = imgCollection.img_count
             self._csv_result_row.seg_threshold = conf
 
-        return imgCollection
+        return imgCollection, results
 
     def print(self, string):
         if self.verbose:

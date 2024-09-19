@@ -22,8 +22,8 @@ def path_initialization():
     unsupervised_model_path = f'{unsupervised_model_higher_path}{UNSUPERVISED_MODEL_REF}.keras'
 
     #Init path to current model iteration for logging purposes
-    current_iteration_latest_version_id = count_folders_starting_with(f"{UNSUPERVISED_MODEL_REF}", unsupervised_model_higher_path)
-    current_iteration_logging_path = f'/{UNSUPERVISED_MODEL_REF}_{current_iteration_latest_version_id}'
+    current_iteration_latest_version_id = count_folders_starting_with(f"{SAVE_RESULT}", unsupervised_model_higher_path)
+    current_iteration_logging_path = f'/{SAVE_RESULT}_{current_iteration_latest_version_id}'
 
     return segmentation_model_path, unsupervised_model_path, current_iteration_logging_path
 

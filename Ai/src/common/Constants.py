@@ -6,6 +6,7 @@ SAVE_PATH_UNSUPERVISED_PREDICTION = Path("/unsupervised_prediction")
 SAVE_PATH_SEGMENTATION = Path("/segmentation")
 SAVE_PATH_SUBDIVISION = Path("/subidivision")
 SAVE_PATH_CAPTURE = Path("/capture")
+SAVE_RESULT = Path("/results")
 
 # training loop
 NUMBER_IMG_THRESHOLD = 10
