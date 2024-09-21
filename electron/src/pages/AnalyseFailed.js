@@ -23,12 +23,10 @@ export default function AnalyseFailed() {
   });
   const navigate = useNavigate();
   ipcRenderer.on("receivePiece", async (event, message) => {
-    console.log("message", message);
     setPiece(await pieceParser(message));
   });
 
   useEffect(() => {
-    console.log("state", uicontext.state_state);
     ipcRenderer.send("fetchPiece", id);
   }, []);
 
