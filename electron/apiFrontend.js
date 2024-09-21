@@ -3,6 +3,7 @@ const fs = require("fs");
 const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
 const { exec } = require("child_process");
+const path = require('path');
 
 //API avec Frontend
 const query = require("./queries/queries");
@@ -62,7 +63,7 @@ function apiFrontend(mainWindow, configReact) {
   
         return {
           fileName: file,
-          boundingBoxes: boxes,
+          box: boxes,
         };
       });
   

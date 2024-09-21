@@ -9,17 +9,17 @@ export async function pieceParser(piece) {
   );
 
 
-  for (image of base64Images){
+  for (let image of base64Images){
     if (image) {
       const imageFileNameWithoutExt = image.fileName.split('.').slice(0, -1).join('.');
 
     // Find the matching bounding box based on the filename (ignoring the extension)
-    const matchedBoundingBox = boundingBoxes.find(box => {
+    const matchedBoundingBox = boundingBox.find(box => {
       const boxFileNameWithoutExt = box.fileName.split('.').slice(0, -1).join('.');
       return imageFileNameWithoutExt === boxFileNameWithoutExt;
     });
 
-      images.push({url:`data:image/jpeg;base64,${image}` , boundingBox: matchedBoundingBox});
+      images.push({url:`data:image/jpeg;base64,${image.base64Image}` , boundingBox: matchedBoundingBox});
     } else {
       console.error("No image content received.");
     }
@@ -34,7 +34,6 @@ export async function pieceParser(piece) {
   let row = {
     id: piece.id,
     images: images,
-    box: boundingBox,
     date: date.toISOString().split("T")[0],
     hour: date.getHours() + ":" + date.getMinutes(),
     result: result,
@@ -46,7 +45,7 @@ export async function pieceParser(piece) {
     id_log: piece.id_log,
   };
 
-  console.log()
+  console.log(row)
   return row;
 }
 

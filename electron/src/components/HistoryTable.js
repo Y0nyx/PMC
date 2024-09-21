@@ -381,23 +381,27 @@ export default function EnhancedTable({ rows_ }) {
                       {row.result == "succès" ? (
                         <img
                           className="w-48 h-48 rounded-lg"
-                          src={row.url}
+                          src={row.images[0].url}
                         ></img>
                       ) : (
                         <div className="relative w-48 h-48 rounded-lg">
                           <img
-                            src={row.url}
+                            src={row.images[0].url}
                             className="w-full h-full rounded-lg"
                           />
-                          <div
+                          
+                          {row.images[0].boundingBox.box.map((box)=>{
+                            return <div
                             style={{
-                              top: `${row.box.yCenter * 100}%`,
-                              left: `${row.box.xCenter * 100}%`,
-                              width: `${row.box.width * 100}%`,
-                              height: `${row.box.height * 100}%`,
+                              top: `${box.yCenter * 100}%`,
+                              left: `${box.xCenter * 100}%`,
+                              width: `${box.width * 100}%`,
+                              height: `${box.height * 100}%`,
                             }}
                             className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
                           ></div>
+                          })}
+                          
                         </div>
                       )}
                     </TableCell>
