@@ -1,35 +1,39 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { idSubstring, pieceParser } from "../utils/utils";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import BackButton from "../components/BackButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export default function PagePiece() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const { id } = useParams();
-  const [piece, setPiece] = React.useState({
-    id: "7631E40B-BB8A-4278-A5B7-1B2B8E15FAEF",
-    nom: "",
-    description: "",
-    boundingbox: "",
-    box: { xCenter: 0, yCenter: 0, width: 0, height: 0 },
-    url: "",
-    date: "",
-  });
+  const [imageSelected, setImageSelected] = useState(0);
+  const [piece, setPiece] = React.useState();
   const navigate = useNavigate();
+
   ipcRenderer.on("receivePiece", async (event, message) => {
-    setPiece(await pieceParser(message));
+    let parser = await pieceParser(message);
+    console.log(parser);
+    if (parser.result == "succès") {
+      setImageSelected(0);
+    } else {
+      let index = parser.images.findIndex(
+        (image) => image.boundingBox != undefined
+      );
+
+      setImageSelected(index);
+    }
+    setPiece(parser);
   });
 
   useEffect(() => {
     ipcRenderer.send("fetchPiece", id);
   }, []);
 
-  useEffect(() => {
-    console.log(piece);
-  }, [piece]);
   function back() {
     navigate("/history");
   }
@@ -39,72 +43,118 @@ export default function PagePiece() {
         <div className="flex items-center w-5/6 border-gray-300 bg-gray-100 rounded-lg p-5 my-4">
           <div className="w-1/3"></div>
           <div className="w-1/3 text-xl  text-gray-800 uppercase font-normal flex justify-center items-center">
-            {"ID: " + idSubstring(piece.id)}
+            {piece && "ID: " + idSubstring(piece.id)}
           </div>
           <BackButton back={back}></BackButton>
         </div>
 
-        <div className=" shadow-xl rounded-lg flex justify-center items-center p-5 w-5/6  border-gray-300 bg-gray-100">
-          {piece.result == "succès" ? (
-            <img src={piece.url}></img>
-          ) : (
-            <div className="relative w-full h-full">
-              <img src={piece.url} className="w-full h-full" />
-              <div
-                style={{
-                  top: `${piece.box.yCenter * 100}%`,
-                  left: `${piece.box.xCenter * 100}%`,
-                  width: `${piece.box.width * 100}%`,
-                  height: `${piece.box.height * 100}%`,
-                }}
-                className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
-              ></div>
-            </div>
-          )}
-          <div className="flex w-5/12 flex-col justify-center items-center mx-20 p-5">
-            <div className="flex justify-between items-center w-full bg-white rounded-lg p-4 text-gray-800  font-normal m-1">
-              <span className=" text-xl">{"ID:"}</span>
-              <span className=" text-sm">{piece.id}</span>
-            </div>
-            <div className="flex justify-between items-center w-full bg-white rounded-lg p-4 text-xl text-gray-800  font-normal m-1">
-              <span>{"Client:"}</span>
-              <span>{piece.nom_client}</span>
-            </div>
-            <div className=" flex justify-between items-center w-full bg-white rounded-lg p-4 text-xl text-gray-800  font-normal m-1">
-              <span>{"#Log:"}</span>
-              <span>{piece.id_log}</span>
-            </div>
-            <div className="flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
-              <span>{"Type de Pièce: "}</span>
-              <span>{piece.nom_type_piece}</span>
-            </div>
-            <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
-              <span>{"Date:"}</span>
-              <span>{piece.date + " " + piece.hour}</span>
-            </div>
-            <div className="flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal ">
-              <span>{"Résultat:"}</span>
-              <span className="flex justify-center items-center">
-                {piece.result}
-                {piece.result == "succès" ? (
-                  <CheckCircleIcon className="text-green-500 text-3xl m-2" />
-                ) : (
-                  <CancelIcon className="text-red-500 text-3xl m-2" />
-                )}
-              </span>
+        {piece && (
+          <div className=" shadow-xl rounded-lg flex justify-center items-center p-5 w-5/6  border-gray-300 bg-gray-100">
+            <div className="flex justify-center items-center flex-col w-7/12 h-full">
+              {piece.result == "succès" ? (
+                <div className=" object-contain flex justify-center items-center w-full h-5/6">
+                  <img
+                    className="object-contain w-full h-full"
+                    src={piece.images[imageSelected].url}
+                  ></img>
+                </div>
+              ) : (
+                <div className="relative flex justify-center items-cente w-full h-full">
+                  <img
+                    src={piece.images[imageSelected].url}
+                    className="object-contain w-full h-full"
+                  />
+
+                  {piece.images[imageSelected].boundingBox &&
+                    piece.images[imageSelected].boundingBox.box.map((box) => {
+                      return (
+                        <div
+                          style={{
+                            top: `${box.yCenter * 100}%`,
+                            left: `${box.xCenter * 100}%`,
+                            width: `${box.width * 100}%`,
+                            height: `${box.height * 100}%`,
+                          }}
+                          className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
+                        ></div>
+                      );
+                    })}
+                </div>
+              )}
+
+              <div className="flex justify-center items-center w-full h-1/6 p-2">
+                <div
+                  onClick={() => {
+                    setImageSelected(Math.max(imageSelected - 1, 0));
+                  }}
+                  className="flex justify-center items-center w-60 h-full bg-gray-900 rounded-lg text-white mx-4"
+                >
+                  <ArrowBackIcon></ArrowBackIcon>
+                </div>
+                <div
+                  onClick={() => {
+                    let index = Math.min(
+                      imageSelected + 1,
+                      piece.images.length - 1
+                    );
+                    console.log(piece);
+                    console.log(piece.images.length - 1);
+                    console.log(imageSelected);
+                    console.log(index);
+                    setImageSelected(index);
+                  }}
+                  className="flex justify-center items-center w-60 h-full bg-gray-900 rounded-lg text-white mx-4"
+                >
+                  <ArrowForwardIcon></ArrowForwardIcon>
+                </div>
+              </div>
             </div>
 
-            <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
-              <span>{"Erreur:"}</span>
-              <span>{piece.errorType}</span>
-            </div>
+            <div className="flex w-5/12 flex-col justify-center items-center mx-20 p-5">
+              <div className="flex justify-between items-center w-full bg-white rounded-lg p-4 text-gray-800  font-normal m-1">
+                <span className=" text-xl">{"ID:"}</span>
+                <span className=" text-sm">{piece.id}</span>
+              </div>
+              <div className="flex justify-between items-center w-full bg-white rounded-lg p-4 text-xl text-gray-800  font-normal m-1">
+                <span>{"Client:"}</span>
+                <span>{piece.nom_client}</span>
+              </div>
+              <div className=" flex justify-between items-center w-full bg-white rounded-lg p-4 text-xl text-gray-800  font-normal m-1">
+                <span>{"#Log:"}</span>
+                <span>{piece.id_log}</span>
+              </div>
+              <div className="flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
+                <span>{"Type de Pièce: "}</span>
+                <span>{piece.nom_type_piece}</span>
+              </div>
+              <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
+                <span>{"Date:"}</span>
+                <span>{piece.date + " " + piece.hour}</span>
+              </div>
+              <div className="flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal ">
+                <span>{"Résultat:"}</span>
+                <span className="flex justify-center items-center">
+                  {piece.result}
+                  {piece.result == "succès" ? (
+                    <CheckCircleIcon className="text-green-500 text-3xl m-2" />
+                  ) : (
+                    <CancelIcon className="text-red-500 text-3xl m-2" />
+                  )}
+                </span>
+              </div>
 
-            <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
-              <span>{"Description de l'erreur:"}</span>
-              <span>{piece.errorDescription}</span>
+              <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
+                <span>{"Erreur:"}</span>
+                <span>{piece.errorType}</span>
+              </div>
+
+              <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
+                <span>{"Description de l'erreur:"}</span>
+                <span>{piece.errorDescription}</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

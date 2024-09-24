@@ -389,19 +389,21 @@ export default function EnhancedTable({ rows_ }) {
                             src={row.images[0].url}
                             className="w-full h-full rounded-lg"
                           />
-                          
-                          {row.images[0].boundingBox.box.map((box)=>{
-                            return <div
-                            style={{
-                              top: `${box.yCenter * 100}%`,
-                              left: `${box.xCenter * 100}%`,
-                              width: `${box.width * 100}%`,
-                              height: `${box.height * 100}%`,
-                            }}
-                            className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
-                          ></div>
-                          })}
-                          
+
+                          {row.images[0].boundingBox &&
+                            row.images[0].boundingBox.box.map((box) => {
+                              return (
+                                <div
+                                  style={{
+                                    top: `${box.yCenter * 100}%`,
+                                    left: `${box.xCenter * 100}%`,
+                                    width: `${box.width * 100}%`,
+                                    height: `${box.height * 100}%`,
+                                  }}
+                                  className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
+                                ></div>
+                              );
+                            })}
                         </div>
                       )}
                     </TableCell>
