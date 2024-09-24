@@ -336,6 +336,13 @@ export default function EnhancedTable({ rows_ }) {
               {visibleRows.map((row, index) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
+                let imageIndex;
+                if (row.result == "succès") index = 0;
+                else {
+                  imageIndex = row.images.findIndex(
+                    (image) => image.boundingBox != undefined
+                  );
+                }
 
                 return (
                   <TableRow
@@ -386,24 +393,26 @@ export default function EnhancedTable({ rows_ }) {
                       ) : (
                         <div className="relative w-48 h-48 rounded-lg">
                           <img
-                            src={row.images[0].url}
+                            src={row.images[imageIndex].url}
                             className="w-full h-full rounded-lg"
                           />
 
-                          {row.images[0].boundingBox &&
-                            row.images[0].boundingBox.box.map((box) => {
-                              return (
-                                <div
-                                  style={{
-                                    top: `${box.yCenter * 100}%`,
-                                    left: `${box.xCenter * 100}%`,
-                                    width: `${box.width * 100}%`,
-                                    height: `${box.height * 100}%`,
-                                  }}
-                                  className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
-                                ></div>
-                              );
-                            })}
+                          {row.images[imageIndex].boundingBox &&
+                            row.images[imageIndex].boundingBox.box.map(
+                              (box) => {
+                                return (
+                                  <div
+                                    style={{
+                                      top: `${box.yCenter * 100}%`,
+                                      left: `${box.xCenter * 100}%`,
+                                      width: `${box.width * 100}%`,
+                                      height: `${box.height * 100}%`,
+                                    }}
+                                    className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
+                                  ></div>
+                                );
+                              }
+                            )}
                         </div>
                       )}
                     </TableCell>

@@ -82,30 +82,32 @@ export default function PagePiece() {
                 </div>
               )}
 
-              <div className="flex justify-center items-center w-full h-1/6 p-2">
-                <div
-                  onClick={() => {
-                    setImageSelected(Math.max(imageSelected - 1, 0));
-                  }}
-                  className="flex justify-center items-center w-60 h-full bg-gray-900 rounded-lg text-white mx-4"
-                >
-                  <ArrowBackIcon></ArrowBackIcon>
-                </div>
-                <div
-                  onClick={() => {
-                    let index = Math.min(
-                      imageSelected + 1,
-                      piece.images.length - 1
-                    );
-                    console.log(piece);
-                    console.log(piece.images.length - 1);
-                    console.log(imageSelected);
-                    console.log(index);
-                    setImageSelected(index);
-                  }}
-                  className="flex justify-center items-center w-60 h-full bg-gray-900 rounded-lg text-white mx-4"
-                >
-                  <ArrowForwardIcon></ArrowForwardIcon>
+              <div className="flex flex-col justify-center items-center my-1 w-full h-1/6 p-2">
+                <span className="flex w-full items-center justify-center text-gray-500 text-sm">
+                  {imageSelected + 1 + "/" + piece.images.length}
+                </span>
+                <div className="flex justify-center items-center w-full h-full ">
+                  <div
+                    onClick={() => {
+                      setImageSelected(Math.max(imageSelected - 1, 0));
+                    }}
+                    className="flex justify-center items-center w-60 h-full bg-gray-900 rounded-lg text-white mx-4"
+                  >
+                    <ArrowBackIcon></ArrowBackIcon>
+                  </div>
+                  <div
+                    onClick={() => {
+                      let index = Math.min(
+                        imageSelected + 1,
+                        piece.images.length - 1
+                      );
+
+                      setImageSelected(index);
+                    }}
+                    className="flex justify-center items-center w-60 h-full bg-gray-900 rounded-lg text-white mx-4"
+                  >
+                    <ArrowForwardIcon></ArrowForwardIcon>
+                  </div>
                 </div>
               </div>
             </div>
