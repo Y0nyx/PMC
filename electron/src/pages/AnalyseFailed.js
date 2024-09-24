@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect,useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { idSubstring, pieceParser } from "../utils/utils";
 import UIStateContext from "../Context/context";
@@ -7,23 +7,25 @@ import { useParams } from "react-router";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import protocol from "../Protocol/protocol";
 import ContinueButton from "../components/ContinueButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export default function AnalyseFailed() {
   const uicontext = useContext(UIStateContext);
   const ipcRenderer = window.require("electron").ipcRenderer;
+  const [imageSelected, setImageSelected] = useState(0);
   const { id } = useParams();
-  const [piece, setPiece] = React.useState({
-    id: "7631E40B-BB8A-4278-A5B7-1B2B8E15FAEF",
-    nom: "",
-    description: "",
-    boundingbox: "",
-    box: { xCenter: 0, yCenter: 0, width: 0, height: 0 },
-    url: "",
-    date: "",
-  });
+  const [piece, setPiece] = React.useState();
   const navigate = useNavigate();
   ipcRenderer.on("receivePiece", async (event, message) => {
-    setPiece(await pieceParser(message));
+    let parser = await pieceParser(message);
+    setPiece(parser);
+
+    let index = parser.images.findIndex(
+      (image) => image.boundingBox != undefined
+    );
+
+    setImageSelected(index);
   });
 
   useEffect(() => {
@@ -39,19 +41,68 @@ export default function AnalyseFailed() {
   return (
     <div className="w-screen h-screen overflow-hidden">
       <div className="box-border flex flex-col justify-center items-center w-full h-full bg-gray-200 p-5">
-        <div className="box-border  shadow-xl rounded-lg flex justify-between items-center p-5 w-5/6 h-4/6 border-gray-300 bg-gray-100">
-          <div className="relative box-border object-cover w-7/12 h-full rounded-lg flex justify-end items-end">
-            <img src={piece.url} className="w-full h-full" />
-            <div
-              style={{
-                top: `${piece.box.yCenter * 100}%`,
-                left: `${piece.box.xCenter * 100}%`,
-                width: `${piece.box.width * 100}%`,
-                height: `${piece.box.height * 100}%`,
-              }}
-              className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
-            ></div>
-          </div>
+        {piece && <div className="box-border  shadow-xl rounded-lg flex justify-between items-center p-5 w-5/6 h-4/6 border-gray-300 bg-gray-100">
+        <div className="box-border flex justify-center items-center flex-col w-7/12 h-full">
+              {piece.result == "succès" ? (
+                <div className="box-border flex justify-center items-center w-full h-full">
+                  <img
+                    className="box-border object-contain w-full h-full"
+                    src={piece.images[imageSelected].url}
+                  ></img>
+                </div>
+              ) : (
+                <div className="box-border relative flex justify-center items-center w-full h-full">
+                  <img
+                    src={piece.images[imageSelected].url}
+                    className="object-contain w-full h-full"
+                  />
+
+                  {piece.images[imageSelected].boundingBox &&
+                    piece.images[imageSelected].boundingBox.box.map((box) => {
+                      return (
+                        <div
+                          style={{
+                            top: `${box.yCenter * 100}%`,
+                            left: `${box.xCenter * 100}%`,
+                            width: `${box.width * 100}%`,
+                            height: `${box.height * 100}%`,
+                          }}
+                          className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
+                        ></div>
+                      );
+                    })}
+                </div>
+              )}
+
+              <div className="box-border flex flex-col justify-center items-center my-1 w-full h-2/6 p-2">
+                <span className="flex w-full items-center justify-center text-gray-500 text-sm">
+                  {imageSelected + 1 + "/" + piece.images.length}
+                </span>
+                <div className="flex justify-center items-center w-full h-full ">
+                  <div
+                    onClick={() => {
+                      setImageSelected(Math.max(imageSelected - 1, 0));
+                    }}
+                    className="flex justify-center items-center w-60 h-20 bg-gray-900 rounded-lg text-white mx-4"
+                  >
+                    <ArrowBackIcon></ArrowBackIcon>
+                  </div>
+                  <div
+                    onClick={() => {
+                      let index = Math.min(
+                        imageSelected + 1,
+                        piece.images.length - 1
+                      );
+
+                      setImageSelected(index);
+                    }}
+                    className="box-border flex justify-center items-center w-60 h-20 bg-gray-900 rounded-lg text-white mx-4"
+                  >
+                    <ArrowForwardIcon></ArrowForwardIcon>
+                  </div>
+                </div>
+              </div>
+            </div>
 
           <div className="flex w-5/12 flex-col justify-center items-center box-border p-3  ">
             <span className=" box-border font-normal text-xl m-2 flex justify-center items-center">
@@ -79,7 +130,8 @@ export default function AnalyseFailed() {
               <span>{piece.errorDescription}</span>
             </div>
           </div>
-        </div>
+        </div>}
+        
         <div className="box-border  flex border-gray-200 shadow-xl  rounded-2xl border p-3 justify-center items-center h-2/6 m-5">
           <div
             className="border-box flex justify-center items-center mx-6 font-bold font-normal text-3xl text-white text- hover:scale-110 bg-yellow-500 rounded-lg hover:bg-yellow-500 w-80 h-64 "

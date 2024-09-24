@@ -52,14 +52,14 @@ export default function PagePiece() {
           <div className=" shadow-xl rounded-lg flex justify-center items-center p-5 w-5/6  border-gray-300 bg-gray-100">
             <div className="flex justify-center items-center flex-col w-7/12 h-full">
               {piece.result == "succès" ? (
-                <div className=" object-contain flex justify-center items-center w-full h-5/6">
+                <div className=" box-border  flex justify-center items-center w-full h-full">
                   <img
-                    className="object-contain w-full h-full"
+                    className="box-border object-contain w-full h-full"
                     src={piece.images[imageSelected].url}
                   ></img>
                 </div>
               ) : (
-                <div className="relative flex justify-center items-cente w-full h-full">
+                <div className="relative flex justify-center items-center w-full h-full">
                   <img
                     src={piece.images[imageSelected].url}
                     className="object-contain w-full h-full"

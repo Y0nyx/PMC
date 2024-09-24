@@ -369,7 +369,7 @@ export default function EnhancedTable({ rows_ }) {
                       />
                     </TableCell>
                     <TableCell
-                      className="font-bold font-normal"
+                      className="font-bold font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       component="th"
                       id={labelId}
@@ -417,28 +417,28 @@ export default function EnhancedTable({ rows_ }) {
                       )}
                     </TableCell>
                     <TableCell
-                      className="font-bold  font-normal"
+                      className="font-bold  font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       align="left"
                     >
                       {row.result}
                     </TableCell>
                     <TableCell
-                      className="font-bold  font-normal"
+                      className="font-bold  font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       align="left"
                     >
                       {row.errorType}
                     </TableCell>
                     <TableCell
-                      className="font-bold  font-normal"
+                      className="font-bold  font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       align="left"
                     >
                       {row.date}
                     </TableCell>
                     <TableCell
-                      className="font-bold  font-normal"
+                      className="font-bold  font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       align="left"
                     >
@@ -449,7 +449,7 @@ export default function EnhancedTable({ rows_ }) {
                         <div
                           on
                           onClick={(event) => navigatePiece(event, row.id)}
-                          className="  font-normal font-bold hover:scale-110 hover:text-black hover:bg-white rounded-lg  m-1  border-2 border-black bg-black text-white h-20 w-32 flex justify-center items-center"
+                          className=" text-lg font-normal font-bold hover:scale-110 hover:text-black hover:bg-white rounded-lg  m-1  border-2 border-black bg-black text-white h-20 w-32 flex justify-center items-center"
                         >
                           Voir
                         </div>
