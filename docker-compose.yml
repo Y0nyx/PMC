@@ -10,16 +10,21 @@ services:
       - MKL_THREADING_LAYER=GNU
     volumes:
       - ./:/PMC
-      - ./../Datasets:/Datasets
+      - ./Datasets:/Datasets
+      - /home/dofa/Documents/pipeline_analysis:/pipeline_analysis/
     network_mode: "host"
-    #networks:
-      #- app_network
     command: tail -F /dev/null
     devices: 
       - "/dev/video0:/dev/video0"
       - "/dev/video2:/dev/video2"
       - "/dev/video4:/dev/video4" # Additional camera
       - "/dev/video6:/dev/video6" # Additional camera
+    ports:
+      - "8002:8002"
+      - "8003:8003"
+      - "8004:8004"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 
   unsupervised_learning:
@@ -28,10 +33,13 @@ services:
       context: .
       dockerfile: Dockerfile.unsupervised
     volumes:
-      - ./:/PMC
-      - ./../Datasets:/Datasets
-    networks:
-      - app_network
+      - ./PMC:/PMC
+      - ./Datasets:/Datasets
+    network_mode: "host"
+    ports:
+      - "8004:8004"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: bash -c "nvidia-smi && tail -F /dev/null"
     deploy:
       resources:
@@ -50,10 +58,13 @@ services:
     environment:
       - MKL_THREADING_LAYER=GNU
     volumes:
-      - ./:/PMC
-      - ./../Datasets:/Datasets
-    networks:
-      - app_network
+      - ./PMC:/PMC
+      - ./Datasets:/Datasets
+    network_mode: "host"
+    ports:
+      - "8003:8003"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     command: tail -F /dev/null
     deploy:
       resources:
@@ -62,9 +73,32 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+  db:
+    container_name: postgres_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: JPL
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
 
 volumes:
   dataset:
+  postgres_data:
 
 networks:
   app_network:
