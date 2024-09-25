@@ -31,7 +31,7 @@ if [ "$(sudo docker ps | grep postgres_container)" ]; then
     echo "Le conteneur 'postgres_container' existe."
 else
     # Démarrer le conteneur Docker 'postgres_container et pgadmin4' avec Docker Compose à partir du chemin spécifié
-    DOFA_COMPOSE_PATH=~/PMCDOFA/dockers/docker-compose.yml
+    DOFA_COMPOSE_PATH=~/PMC/docker-compose.yml
     if [ -f $DOFA_COMPOSE_PATH ]; then
         sudo docker-compose -f $DOFA_COMPOSE_PATH up -d
         echo "Les conteneurs 'postgres_container et pgadmin4' a été démarré avec Docker Compose."

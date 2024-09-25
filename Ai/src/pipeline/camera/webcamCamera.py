@@ -2,6 +2,7 @@ from common.image.Image import Image
 from pipeline.camera.cameraSensor import CameraSensor
 from .sensorState import SensorState
 import warnings
+import time
 
 
 class WebcamCamera(CameraSensor):
@@ -13,12 +14,16 @@ class WebcamCamera(CameraSensor):
         function to get image from sensor
         :return: Image
         """
+        frames_to_skip = 10
         if self.is_active:
             self.print("Setting capture resolution")
             self.set_capture_resolution()
+            time.sleep(1)
             self.print("Capturing image")
             if self.cap.isOpened():
                 _, frame = self.cap.read()
+                for i in range(frames_to_skip):
+                    _, frame = self.cap.read()
                 image = Image(frame)
                 self.print("Camera back in standby mode")
                 self.set_standby_resolution()

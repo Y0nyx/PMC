@@ -1,10 +1,14 @@
 # Use the TensorFlow GPU image as the base image
 FROM tensorflow/tensorflow:latest-gpu
 
-# Install necessary librairies to use the cameras and open cv (OPEN CV errors because docker has no GUI)
+# Install git to clone the repository
 RUN apt-get update && apt-get install -y git && \
     apt-get install -y libgl1-mesa-dev && \
     apt-get install -y libglib2.0-0
+
+# Security updates
+# https://security.snyk.io/vuln/SNYK-UBUNTU1804-OPENSSL-3314796
+RUN apt upgrade --no-install-recommends -y openssl tar
     
 # Change the working directory to the cloned repository
 WORKDIR /PMC
@@ -16,4 +20,4 @@ COPY unsupervised_docker_requirements.txt .
 RUN pip install -r unsupervised_docker_requirements.txt
 
 # Copy source code from host machine to Docker image
-COPY src/ src/
+COPY /Ai/src/ src/

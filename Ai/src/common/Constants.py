@@ -41,7 +41,8 @@ CSV_FIELDS = ['id', 'un_sup_model_ref', 'seg_model_ref', 'sup_model_ref',
 CSV_FILE_NAME = SAVE_PATH / "results.csv"
 
 UNSUPERVISED_MODEL_REF = "simple_cae_blackout_model"
-SEGMENTATION_MODEL_REF = "v1"
-SUPERVISED_MODEL_REF = "TEMP VALUE"
+SEGMENTATION_MODEL_REF = "segmentation_v3"
+SUPERVISED_DETECTION_MODEL_REF = "TEMP VALUE"
 
-SEGMENTATION_MODEL_PATH = "./ia/segmentation/"
+SEGMENTATION_MODEL_PATH = "./ai_models/segmentation/"
+SAVE_RESULT = Path("/pipeline_analysis/")

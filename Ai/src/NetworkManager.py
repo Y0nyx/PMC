@@ -41,8 +41,8 @@ class NetworkManager():
         """
         tasks = [
             asyncio.create_task(self._connect_service('server')),
-            asyncio.create_task(self._connect_service('supervised')),
-            asyncio.create_task(self._connect_service('unsupervised'))
+            # asyncio.create_task(self._connect_service('supervised')),
+            # asyncio.create_task(self._connect_service('unsupervised'))
         ]
         await asyncio.gather(*tasks)
 
@@ -107,7 +107,7 @@ class NetworkManager():
 
                 if code == "start":
                     await self._send_message(service_name, {'code': 'start'})
-                    self.future = self.loop._run_in_executor(self.executor, self.worker.start)
+                    self.future = self.loop.run_in_executor(self.executor, self.worker.start)
                     result = await self.future
                     await self._send_message(service_name, {'code': 'resultat', 'data': result})
 
@@ -195,7 +195,7 @@ class NetworkManager():
         """
         asyncio.ensure_future(self._run(), loop=self.loop)
         try:
-            self.loop._run_forever()
+            self.loop.run_forever()
         except KeyboardInterrupt:
             print("Keyboard interrupt received, stopping...")
         finally:

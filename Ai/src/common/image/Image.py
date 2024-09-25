@@ -133,12 +133,7 @@ class Image:
         image = Img.fromarray(self._img)
         cropped_image = image.crop(boxes.xyxy.tolist()[0])
 
-        mask = Img.fromarray(self._mask)
-        cropped_mask = mask.crop(boxes.xyxy.tolist()[0])
-
         image_obj = Image(np.array(cropped_image))
-
-        image_obj.mask = cropped_mask
 
         return image_obj
 

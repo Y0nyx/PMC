@@ -9,6 +9,7 @@ import os
 import threading
 from pathlib import Path
 import json
+import re
 #from clearml import Task
 
 from pipeline.models.Model import YoloModel
@@ -31,7 +32,7 @@ from RocPipeline import RocPipeline
 os.environ["KMP_DUPLICATE_LIB_OK"] = "True"
 
 class Pipeline():
-     """
+    """
     This class manages the AI detection pipeline, multiple methods allow the use and training of the detection neural networks.
     ::
     Attributes:
@@ -45,7 +46,7 @@ class Pipeline():
     Methods:
         start: Starts all services.
     """
-    def __init__(self, supervised_models, unsupervised_model, current_iteration_logging_path: str, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = False, roc_curve: bool = False) -> None:
+    def __init__(self, segmentation_model, supervised_detection_model, unsupervised_model, current_iteration_logging_path: str, verbose: bool = True, State: PipelineState= PipelineState.INIT, csv_logging: bool = False, roc_curve: bool = False) -> None:
         self.verbose = verbose
 
         self.stop_flag = threading.Event()
@@ -56,15 +57,14 @@ class Pipeline():
         self.print("=== Init Pipeline ===")  # Fixed this line
 
         #Set supervised models
-        self.supervised_models = []
-        for model in supervised_models:
-            self.supervised_models.append(model)
+        self.supervised_detection_model = supervised_detection_model
+
+        self.segmentation_model = segmentation_model
 
         #Set unsupervised model
         self.unsupervised_model = unsupervised_model
 
-        #Init unsupervised pipeline
-        self._unsupervised_pipeline = UnSupervisedPipeline(self.unsupervised_model)
+        self._current_iteration_logging_path = current_iteration_logging_path
 
         #Set initial pipeline state
         self._state = State
@@ -84,14 +84,13 @@ class Pipeline():
             self.roc_pipeline = RocPipeline(None, "Test", "unsupervised_test_roc")
         if csv_logging:
             # Init and set CSV logging tools
-            self._current_iteration_logging_path = current_iteration_logging_path
 
             self.csv_manager = CsvManager()
             self._csv_result_row = CsvResultRow()
 
             self._csv_result_row.un_sup_model_ref = UNSUPERVISED_MODEL_REF
             self._csv_result_row.seg_model_ref = SEGMENTATION_MODEL_REF
-            self._csv_result_row.sup_model_ref = SUPERVISED_MODEL_REF
+            self._csv_result_row.sup_model_ref = SUPERVISED_DETECTION_MODEL_REF
 
     def start(self):
         """
@@ -104,7 +103,7 @@ class Pipeline():
         #TODO: Rename ou modifier pour avoir un start de détection et de training
         self.print('START SET')
         self.stop_flag.clear()
-        results = self.detect(cam_debug=True)
+        results = self.detect()
         self.print('DONE DETECTING')
         return results
 
@@ -201,7 +200,12 @@ class Pipeline():
             self._state = PipelineState.TRAINING
 
         captured_image_collection = self._get_images()
-
+        capture_image_collection_base_path = f"{self._current_iteration_logging_path}/"
+        print(capture_image_collection_base_path)
+        detection_id = self._count_folders(capture_image_collection_base_path)
+        self._captured_image_collection_path = f"{capture_image_collection_base_path}/detection_{detection_id}"
+        
+        captured_image_collection.save(self._captured_image_collection_path)
 
         if captured_image_collection.img_count > 0:
             for i, captured_image in enumerate(captured_image_collection):
@@ -210,52 +214,50 @@ class Pipeline():
                 if not self.stop_flag.is_set():
 
                     #Find the welds in the capture image
-                    segmented_image_collection = self._segmentation_image(captured_image, show, save_seg, conf)
-
-                    #Analyse the welds with the unsupervised model to find potential defaults
-                    unsupervised_result_collections, 
-                    sub_mask_collection, 
-                    sub_image_collection, 
-                    average_predicted_sub_image_collection = self._unsupervised_defect_detection(i, segmented_image_collection)
-
+                    segmented_image_collection, boxes = self._segmentation_image(captured_image, i, show, save_seg, conf)
                     # TODO Integrate supervised model
                     
-
-                    # Integrate training loop
-                    #if self._trainingManager.check_flags():
-                    #    self._trainingManager.separate_dataset()
-                    #    model = self._trainingManager.train_supervised()
-
-                    # TODO Integrate Classification
-
-                    # TODO send to interface
-
-                    # Check if a stop signal has been received
-                    #if await self.check_stop_signal():
-                    #    print("Stop signal received, stopping detection")
-                    #    return
                 else:
                     return
                     
+            solder_defect = False
+            #TODO: envoyer un dossier à la place d'une image, car on a 5 images par piece
             result_data = {
-                "resultat": True,  # or False based on your condition
-                "url": f'{SAVE_PATH}{SAVE_PATH_CAPTURE}',
-                "erreurSoudure": "pepe"
+                "code": "resultat",
+                "data": {"resultat": solder_defect, "url": self._captured_image_collection_path, "boundingbox": "prendre le folder lol",'erreurSoudure':'1'}
             }
-            # Convert the dictionary to JSON format
-            result_json = json.dumps(result_data)
-            self._state = PipelineState.INIT
-            # Send the JSON data
             self.print("Finished detection")
             return result_data
                 
         else:
             self.print("No image found")
             return {
-                "resultat": None,  # or False based on your condition
-                "url": "/imageSoudure....",
-                "erreurSoudure": "pepe"
+                "code": "resultat",
+                "data": {"resultat": solder_defect, "url": self._captured_image_collection_path, "boundingbox": "prendre le folder lol",'erreurSoudure':'0'}
             }
+        
+    def _count_folders(self, directory):
+        folder_count = len([item for item in os.listdir(directory) if os.path.isdir(os.path.join(directory, item))])
+        return folder_count
+
+    def _write_yolo_bounding_boxes(self, result, img_width, img_height, output_file):
+        """
+        Writes bounding boxes from result.boxes in YOLO format to a .txt file.
+        Args:
+            result: The detection result containing bounding boxes and class IDs.
+            img_width: The width of the image.
+            img_height: The height of the image.
+            output_file: Path to the output .txt file.
+        """
+        with open(output_file, 'w') as f:
+            for box in result.boxes:
+                x_min, y_min, x_max, y_max = box.xyxy.tolist()[0]
+                x_center = (x_min + x_max) / 2 / img_width
+                y_center = (y_min + y_max) / 2 / img_height
+                width = (x_max - x_min) / img_width
+                height = (y_max - y_min) / img_height
+
+                f.write(f"{x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
 
     def _unsupervised_defect_detection(self, i: int, segmented_image_collection):
         """
@@ -308,7 +310,7 @@ class Pipeline():
 
         return images
 
-    def _segmentation_image(self, img: Image, save: bool, show: bool, conf: float):
+    def _segmentation_image(self, img: Image, img_id: int, save: bool, show: bool, conf: float):
         """
         Gets the segmented weld out of the captured image using the supervised segmentation model.
         ::
@@ -321,24 +323,33 @@ class Pipeline():
             imgCollection (?): Collection of all segmentations detection in the image.
         """
         #TODO: Rename la fonction poru get
+        imgCollection = ImageCollection()
+        model = self.segmentation_model
+        results = model.predict(source=img.value, show=show, conf=conf, save=save)
+
+        # crop images with bounding box
+        for i, result in enumerate(results):
+            self._write_yolo_bounding_boxes(result, 640, 640, self._captured_image_collection_path + f"/img_{img_id}.txt")
+            for boxe in result.boxes:
+                image = img.crop(boxe)
+                imgCollection.add(image)
+
+        return imgCollection, results
+    
+    def _supervised_detection(self, imgCol: ImageCollection, save: bool, show: bool, conf: float):
         imgCollection = ImageCollection([])
-        for model in self.supervised_models:
-            results = model.predict(source=img.value, show=show, conf=conf, save=save)
+        model = self._supervised_detection_model
 
+        for img in imgCol:
+            results = model.predict(source=img.value, show=False, conf=conf, save=False)
             # crop images with bounding box
-            for result in results:
-                for boxes in result.boxes:
-                    imgCollection.add(img.crop(boxes))
-
-        if self._csv_logging:
-            segmented_image_collection_path = f"{SAVE_PATH}{self._current_iteration_logging_path}{SAVE_PATH_SEGMENTATION}"
-            imgCollection.save(segmented_image_collection_path)
-
-            self._csv_result_row.seg_img_path = segmented_image_collection_path
-            self._csv_result_row.seg_results = imgCollection.img_count
-            self._csv_result_row.seg_threshold = conf
-
-        return imgCollection
+            for i, result in enumerate(results):
+                for j, boxe in enumerate(result.boxes):
+                    print(img.shape)
+                    print(boxe)
+                    image = img.crop(boxe)
+                    image.save(f"{SAVE_PATH}/result_{i}_box_{j}_detection.png")
+                    imgCollection.add(image)
 
     def print(self, string):
         if self.verbose:
