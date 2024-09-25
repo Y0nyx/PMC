@@ -1,20 +1,23 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import UIStateContext from "../Context/context";
 import BackButton from "../components/BackButton";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
-import CreerClientButton from "../components/CreerClientButton";
-import CreerLogButton from "../components/CreerLogButton";
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import {
+  Button,
+  IconButton,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+
 
 export default function SettingMachine() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const uicontext = useContext(UIStateContext);
   const navigate = useNavigate();
-
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const powerOffMachine = () => {
     ipcRenderer.send("powerOffMachine");
   };
@@ -52,7 +55,7 @@ export default function SettingMachine() {
               GÉNÉRAUX
             </span>
 
-            <div className="flex flex-col justify-around items-center h-full w-full  rounded-lg border border-solid">
+            <div className="flex flex-col justify-around items-center h-full w-full  rounded-lg border-3 border-solid p-3">
               <div
                 className=" flex mx-6 font-bold justify-center items-center font-normal text-3xl text-white hover:scale-110 bg-black rounded-lg hover:bg-white w-96 h-64 "
                 onClick={powerOffMachine}
@@ -72,19 +75,103 @@ export default function SettingMachine() {
             <span className="text-4xl font-normal font-bold text-red-500 my-5">
               ZONE DANGER
             </span>
-            <div className="flex flex-col justify-around items-center w-full rounded-lg h-full border border-solid border-red-500">
+            <div className="flex flex-col justify-around items-center w-full rounded-lg h-full border-3 p-3 border-solid border-red-500">
               <div
-                className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 "
-                onClick={resetData}
+                className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 my-2 "
+                onClick={() => {
+                  setOpen(true);
+                }}
               >
                 <span>RÉINITIALISER LES DONNÉES</span>
               </div>
+              <Dialog
+                open={open}
+                aria-describedby="alert-dialog-slide-description"
+              >
+                <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+                  RÉINITIALISER LES DONNÉES
+                  <IconButton
+                    aria-label="close"
+                    onClick={() => setOpen(false)}
+                    sx={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                    }}
+                  >
+                    <div
+                      className="flex justify-center items-center w-full"
+                    >
+                      <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+                    </div>
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                  <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+                    <p className="text-justify  font-Cairo leading-normal text-3xl">
+                      Vous êtes sur le point de réinitialiser  les données
+                      de la machine (Client,log,historique). Êtes-vous sûr de
+                      vouloir continuer ?
+                    </p>
+                    <div
+                      className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 "
+                      onClick={() => {
+                        setOpen(true);
+                        resetData();
+                      }}
+                    >
+                      <span>RÉINITIALISER LES DONNÉES</span>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               <div
-                className=" flex mx-6 font-bold justify-center items-center font-normal text-3xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 "
-                onClick={resetAll}
+                className=" flex mx-6 font-bold justify-center items-center font-normal text-3xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 my-2 "
+                onClick={()=>{setOpen2(true)}}
               >
                 <span>RÉINITIALISER LA MACHINE</span>
               </div>
+              <Dialog
+                open={open2}
+                aria-describedby="alert-dialog-slide-description"
+              >
+                <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+                  RÉINITIALISER LES DONNÉES
+                  <IconButton
+                    aria-label="close"
+                    onClick={() => setOpen2(false)}
+                    sx={{
+                      position: "absolute",
+                      right: 8,
+                      top: 8,
+                    }}
+                  >
+                    <div
+                      className="flex justify-center items-center w-full"
+                    >
+                      <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+                    </div>
+                  </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                  <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+                    <p className="text-justify  font-Cairo leading-normal text-3xl">
+                      Vous êtes sur le point de réinitialiser la machine.
+                      À utiliser seulement si la machine ne fonctionne
+                      plus. Êtes-vous sûr de vouloir continuer ?
+                    </p>
+                    <div
+                      className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 "
+                      onClick={() => {
+                        setOpen2(true);
+                        resetAll();
+                      }}
+                    >
+                      <span>RÉINITIALISER LA MACHINE</span>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>

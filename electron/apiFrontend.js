@@ -3,6 +3,7 @@ const fs = require("fs");
 const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
 const { exec } = require("child_process");
+const path = require('path');
 
 //API avec Frontend
 const query = require("./queries/queries");
@@ -12,36 +13,65 @@ function apiFrontend(mainWindow, configReact) {
     mainWindow.webContents.send("ReceiveConfig", configReact);
   });
 
-  ipcMain.handle("readImage", (event, filePath) => {
+  ipcMain.handle("readImages", (event, folderPath) => {
     try {
-      const imageBuffer = fs.readFileSync(filePath);
-      const base64Image = Buffer.from(imageBuffer).toString("base64");
-
-      return base64Image;
+      // Read all files in the folder
+      const files = fs.readdirSync(folderPath);
+  
+      // Map through all files, read each image, and convert to base64
+      const base64Images = files.map(file => {
+        const filePath = path.join(folderPath, file);
+        const imageBuffer = fs.readFileSync(filePath);
+        const base64Image = Buffer.from(imageBuffer).toString("base64");
+  
+        return { fileName: file, base64Image };
+      });
+  
+      return base64Images; // Return the list of base64 images
     } catch (error) {
-      console.error("Error reading image:", error);
+      console.error("Error reading images from folder:", error);
       return null;
     }
   });
 
-  ipcMain.handle("readBoundingBox", (event, filePath) => {
-    const data = fs.readFileSync(filePath, "utf8");
-
-    const [classId, xCenter, yCenter, width, height, confidence] = data
-      .trim()
-      .split(" ")
-      .map(Number);
-
-    const boundingBox = {
-      classId,
-      xCenter,
-      yCenter,
-      width,
-      height,
-      confidence,
-    };
-
-    return boundingBox;
+  ipcMain.handle("readBoundingBox", (event, folderPath) => {
+    try {
+      // Read all files in the folder
+      const files = fs.readdirSync(folderPath);
+  
+      // Map through all files and read bounding boxes from each
+      const boundingBoxes = files.map(file => {
+        const filePath = path.join(folderPath, file);
+        const data = fs.readFileSync(filePath, "utf8");
+  
+        // Split the file data by lines, each line is a bounding box
+        const boxes = data.trim().split("\n").map(line => {
+          const [classId, xCenter, yCenter, width, height, confidence] = line
+            .trim()
+            .split(" ")
+            .map(Number);
+  
+          return {
+            classId,
+            xCenter,
+            yCenter,
+            width,
+            height,
+            confidence,
+          };
+        });
+  
+        return {
+          fileName: file,
+          box: boxes,
+        };
+      });
+  
+      return boundingBoxes; // Return the list of bounding boxes for each file
+    } catch (error) {
+      console.error("Error reading bounding boxes from folder:", error);
+      return null;
+    }
   });
 
   ipcMain.handle("createClient", async (event, client) => {
