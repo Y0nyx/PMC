@@ -203,9 +203,9 @@ class Pipeline():
         capture_image_collection_base_path = f"{self._current_iteration_logging_path}/"
         print(capture_image_collection_base_path)
         detection_id = self._count_folders(capture_image_collection_base_path)
-        self._captured_image_collection_path = f"{capture_image_collection_base_path}/detection_{detection_id}"
+        self._captured_image_collection_path = f"{capture_image_collection_base_path}detection_{detection_id}"
         
-        captured_image_collection.save(self._captured_image_collection_path)
+        captured_image_collection.save(self._captured_image_collection_path + "/images/")
 
         if captured_image_collection.img_count > 0:
             for i, captured_image in enumerate(captured_image_collection):
@@ -224,7 +224,7 @@ class Pipeline():
             #TODO: envoyer un dossier à la place d'une image, car on a 5 images par piece
             result_data = {
                 "code": "resultat",
-                "data": {"resultat": solder_defect, "url": self._captured_image_collection_path, "boundingbox": "prendre le folder lol",'erreurSoudure':'1'}
+                "data": {"resultat": solder_defect, "url": self._captured_image_collection_path+"/images/", "boundingbox": self._captured_image_collection_path + f"/bounding_boxes/",'erreurSoudure':'1'}
             }
             self.print("Finished detection")
             return result_data
@@ -233,7 +233,7 @@ class Pipeline():
             self.print("No image found")
             return {
                 "code": "resultat",
-                "data": {"resultat": solder_defect, "url": self._captured_image_collection_path, "boundingbox": "prendre le folder lol",'erreurSoudure':'0'}
+                "data": {"resultat": solder_defect, "url": self._captured_image_collection_path+"/images/", "boundingbox": "N/A",'erreurSoudure':'0'}
             }
         
     def _count_folders(self, directory):
@@ -249,7 +249,9 @@ class Pipeline():
             img_height: The height of the image.
             output_file: Path to the output .txt file.
         """
+        print("yo")
         with open(output_file, 'w') as f:
+            print("yo2")
             for box in result.boxes:
                 x_min, y_min, x_max, y_max = box.xyxy.tolist()[0]
                 x_center = (x_min + x_max) / 2 / img_width
@@ -258,6 +260,7 @@ class Pipeline():
                 height = (y_max - y_min) / img_height
 
                 f.write(f"{x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
+                print("yo3")
 
     def _unsupervised_defect_detection(self, i: int, segmented_image_collection):
         """
@@ -326,10 +329,10 @@ class Pipeline():
         imgCollection = ImageCollection()
         model = self.segmentation_model
         results = model.predict(source=img.value, show=show, conf=conf, save=save)
-
+        os.makedirs(self._captured_image_collection_path + f"/bounding_boxes/", exist_ok=True)
         # crop images with bounding box
         for i, result in enumerate(results):
-            self._write_yolo_bounding_boxes(result, 640, 640, self._captured_image_collection_path + f"/img_{img_id}.txt")
+            self._write_yolo_bounding_boxes(result, 640, 640, self._captured_image_collection_path + f"/bounding_boxes/img_{img_id}.txt")
             for boxe in result.boxes:
                 image = img.crop(boxe)
                 imgCollection.add(image)
