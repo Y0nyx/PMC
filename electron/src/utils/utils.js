@@ -1,17 +1,28 @@
 const ipcRenderer = window.require("electron").ipcRenderer;
 
 export async function pieceParser(piece) {
-  let srcBase64;
-  let base64Image = await ipcRenderer.invoke("readImage", piece.photo);
+  let images = [];
+  let base64Images = await ipcRenderer.invoke("readImages", piece.photo);
   let boundingBox = await ipcRenderer.invoke(
     "readBoundingBox",
     piece.boundingbox
   );
 
-  if (base64Image) {
-    srcBase64 = `data:image/jpeg;base64,${base64Image}`;
-  } else {
-    console.error("No image content received.");
+
+  for (let image of base64Images){
+    if (image) {
+      const imageFileNameWithoutExt = image.fileName.split('.').slice(0, -1).join('.');
+
+    // Find the matching bounding box based on the filename (ignoring the extension)
+    const matchedBoundingBox = boundingBox.find(box => {
+      const boxFileNameWithoutExt = box.fileName.split('.').slice(0, -1).join('.');
+      return imageFileNameWithoutExt === boxFileNameWithoutExt;
+    });
+
+      images.push({url:`data:image/jpeg;base64,${image.base64Image}` , boundingBox: matchedBoundingBox});
+    } else {
+      console.error("No image content received.");
+    }
   }
 
   let date = new Date(piece.date);
@@ -22,8 +33,7 @@ export async function pieceParser(piece) {
 
   let row = {
     id: piece.id,
-    url: srcBase64,
-    box: boundingBox,
+    images: images,
     date: date.toISOString().split("T")[0],
     hour: date.getHours() + ":" + date.getMinutes(),
     result: result,
@@ -35,6 +45,7 @@ export async function pieceParser(piece) {
     id_log: piece.id_log,
   };
 
+  console.log(row)
   return row;
 }
 

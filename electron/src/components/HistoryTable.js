@@ -336,6 +336,13 @@ export default function EnhancedTable({ rows_ }) {
               {visibleRows.map((row, index) => {
                 const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
+                let imageIndex;
+                if (row.result == "succès") index = 0;
+                else {
+                  imageIndex = row.images.findIndex(
+                    (image) => image.boundingBox != undefined
+                  );
+                }
 
                 return (
                   <TableRow
@@ -362,7 +369,7 @@ export default function EnhancedTable({ rows_ }) {
                       />
                     </TableCell>
                     <TableCell
-                      className="font-bold font-normal"
+                      className="font-bold font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       component="th"
                       id={labelId}
@@ -381,49 +388,57 @@ export default function EnhancedTable({ rows_ }) {
                       {row.result == "succès" ? (
                         <img
                           className="w-48 h-48 rounded-lg"
-                          src={row.url}
+                          src={row.images[0].url}
                         ></img>
                       ) : (
                         <div className="relative w-48 h-48 rounded-lg">
                           <img
-                            src={row.url}
+                            src={row.images[imageIndex].url}
                             className="w-full h-full rounded-lg"
                           />
-                          <div
-                            style={{
-                              top: `${row.box.yCenter * 100}%`,
-                              left: `${row.box.xCenter * 100}%`,
-                              width: `${row.box.width * 100}%`,
-                              height: `${row.box.height * 100}%`,
-                            }}
-                            className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
-                          ></div>
+
+                          {row.images[imageIndex].boundingBox &&
+                            row.images[imageIndex].boundingBox.box.map(
+                              (box) => {
+                                return (
+                                  <div
+                                    style={{
+                                      top: `${box.yCenter * 100}%`,
+                                      left: `${box.xCenter * 100}%`,
+                                      width: `${box.width * 100}%`,
+                                      height: `${box.height * 100}%`,
+                                    }}
+                                    className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
+                                  ></div>
+                                );
+                              }
+                            )}
                         </div>
                       )}
                     </TableCell>
                     <TableCell
-                      className="font-bold  font-normal"
+                      className="font-bold  font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       align="left"
                     >
                       {row.result}
                     </TableCell>
                     <TableCell
-                      className="font-bold  font-normal"
+                      className="font-bold  font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       align="left"
                     >
                       {row.errorType}
                     </TableCell>
                     <TableCell
-                      className="font-bold  font-normal"
+                      className="font-bold  font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       align="left"
                     >
                       {row.date}
                     </TableCell>
                     <TableCell
-                      className="font-bold  font-normal"
+                      className="font-bold  font-normal text-lg"
                       onClick={(event) => handleClick(event, row.id)}
                       align="left"
                     >
@@ -434,7 +449,7 @@ export default function EnhancedTable({ rows_ }) {
                         <div
                           on
                           onClick={(event) => navigatePiece(event, row.id)}
-                          className="  font-normal font-bold hover:scale-110 hover:text-black hover:bg-white rounded-lg  m-1  border-2 border-black bg-black text-white h-20 w-32 flex justify-center items-center"
+                          className=" text-lg font-normal font-bold hover:scale-110 hover:text-black hover:bg-white rounded-lg  m-1  border-2 border-black bg-black text-white h-20 w-32 flex justify-center items-center"
                         >
                           Voir
                         </div>
