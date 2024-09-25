@@ -2,7 +2,8 @@ version: '3'
 
 services:
   pipeline:
-    privileged: true 
+    privileged: true
+    restart: always 
     build:
       context: .
       dockerfile: Dockerfile.pipelines
@@ -13,7 +14,7 @@ services:
       - ./Datasets:/Datasets
       - /home/dofa/Documents/pipeline_analysis:/pipeline_analysis/
     network_mode: "host"
-    command: tail -F /dev/null
+    command: bash -c "chmod -R 777 /pipeline_analysis && tail -F /dev/null"
     devices: 
       - "/dev/video0:/dev/video0"
       - "/dev/video2:/dev/video2"
@@ -29,6 +30,7 @@ services:
 
   unsupervised_learning:
     privileged: true
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile.unsupervised
@@ -51,6 +53,7 @@ services:
 
 
   supervised_learning:
+    restart: always
     privileged: true
     build:
       context: .

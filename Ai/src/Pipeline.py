@@ -10,6 +10,7 @@ import threading
 from pathlib import Path
 import json
 import re
+import subprocess
 #from clearml import Task
 
 from pipeline.models.Model import YoloModel
@@ -221,19 +222,20 @@ class Pipeline():
                     return
                     
             solder_defect = False
+            subprocess.run(['chmod', '-R', '775', "/pipeline_analysis"], check=True) # pour gérer les permissions
+            
             #TODO: envoyer un dossier à la place d'une image, car on a 5 images par piece
             result_data = {
-                "code": "resultat",
-                "data": {"resultat": solder_defect, "url": self._captured_image_collection_path+"/images/", "boundingbox": self._captured_image_collection_path + f"/bounding_boxes/",'erreurSoudure':'1'}
-            }
+                'resultat': solder_defect, 'url': self._captured_image_collection_path+'/images/', 'boundingbox': self._captured_image_collection_path + f'/bounding_boxes/','erreurSoudure':'1'
+                }
+            
             self.print("Finished detection")
             return result_data
                 
         else:
             self.print("No image found")
             return {
-                "code": "resultat",
-                "data": {"resultat": solder_defect, "url": self._captured_image_collection_path+"/images/", "boundingbox": "N/A",'erreurSoudure':'0'}
+                'resultat': solder_defect, 'url': self._captured_image_collection_path+'/images/', 'boundingbox': 'N/A','erreurSoudure':'0'
             }
         
     def _count_folders(self, directory):
@@ -249,9 +251,7 @@ class Pipeline():
             img_height: The height of the image.
             output_file: Path to the output .txt file.
         """
-        print("yo")
         with open(output_file, 'w') as f:
-            print("yo2")
             for box in result.boxes:
                 x_min, y_min, x_max, y_max = box.xyxy.tolist()[0]
                 x_center = (x_min + x_max) / 2 / img_width
@@ -260,7 +260,6 @@ class Pipeline():
                 height = (y_max - y_min) / img_height
 
                 f.write(f"{x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
-                print("yo3")
 
     def _unsupervised_defect_detection(self, i: int, segmented_image_collection):
         """

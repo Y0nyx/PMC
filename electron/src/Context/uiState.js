@@ -7,15 +7,15 @@ function useUIState() {
 
   const [state_state, set_state] = useState(protocol.state.init);
   const [state_client, set_client] = useState({
-    id: "1",
-    nom: "Client1",
-    email: "client1@example.com",
-    telephone: "1234567890",
+    id: "0",
+    nom: "default",
+    email: "",
+    telephone: "",
   });
   const [state_log, set_log] = useState({
-    id: "1",
-    id_client: "1",
-    nom: "log1",
+    id: "0",
+    id_client: "0",
+    nom: "default",
   });
   const [state_type_piece, set_type_piece] = useState({
     id: "1",
@@ -26,12 +26,15 @@ function useUIState() {
   const ref_state = useRef(protocol.state.init);
   const ref_config = useRef();
   const ref_client = useRef({
-    id: "1",
-    nom: "Client1",
-    email: "client1@example.com",
-    telephone: "1234567890",
+    id: "0",
+    nom: "default",
+    email: "",
+    telephone: "",
   });
-  const ref_log = useRef({ id: "1", id_client: "1", nom: "log1" });
+  const ref_log = useRef({     id: "0",
+    id_client: "0",
+    nom: "default", });
+    
   const ref_type_piece = useRef({ id: "1", nom: "1", description: "" });
   const ref_dev = useRef(false);
   ipcRenderer.send("fetchConfig");
