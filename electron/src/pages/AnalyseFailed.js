@@ -51,7 +51,7 @@ export default function AnalyseFailed() {
                   ></img>
                 </div>
               ) : (
-                <div className="box-border relative flex justify-center items-center w-full h-full">
+                <div className="overflow-hidden box-border relative flex justify-center items-center w-full h-full">
                   <img
                     src={piece.images[imageSelected].url}
                     className="object-contain w-full h-full"
@@ -62,8 +62,8 @@ export default function AnalyseFailed() {
                       return (
                         <div
                           style={{
-                            top: `${box.yCenter * 100}%`,
-                            left: `${box.xCenter * 100}%`,
+                            top: `${(box.yCenter - box.height/2)  * 100}%`,
+                            left: `${(box.xCenter - box.width/2) * 100}%`,
                             width: `${box.width * 100}%`,
                             height: `${box.height * 100}%`,
                           }}

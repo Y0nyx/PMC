@@ -391,7 +391,7 @@ export default function EnhancedTable({ rows_ }) {
                           src={row.images[0].url}
                         ></img>
                       ) : (
-                        <div className="relative w-48 h-48 rounded-lg">
+                        <div className="overflow-hidden  relative w-48 h-48 rounded-lg">
                           <img
                             src={row.images[imageIndex].url}
                             className="w-full h-full rounded-lg"
@@ -403,8 +403,8 @@ export default function EnhancedTable({ rows_ }) {
                                 return (
                                   <div
                                     style={{
-                                      top: `${box.yCenter * 100}%`,
-                                      left: `${box.xCenter * 100}%`,
+                                      top: `${(box.yCenter - box.height/2)  * 100}%`,
+                                      left: `${(box.xCenter - box.width/2) * 100}%`,
                                       width: `${box.width * 100}%`,
                                       height: `${box.height * 100}%`,
                                     }}

@@ -226,7 +226,7 @@ class Pipeline():
             
             #TODO: envoyer un dossier à la place d'une image, car on a 5 images par piece
             result_data = {
-                'resultat': solder_defect, 'url': self._captured_image_collection_path+'/images/', 'boundingbox': self._captured_image_collection_path + f'/bounding_boxes/','erreurSoudure':'1'
+                'resultat': solder_defect, 'url': '/home/dofa/Documents'+self._captured_image_collection_path+'/images/', 'boundingbox': '/home/dofa/Documents'+self._captured_image_collection_path + f'/bounding_boxes/','erreurSoudure':'1'
                 }
             
             self.print("Finished detection")
@@ -235,7 +235,7 @@ class Pipeline():
         else:
             self.print("No image found")
             return {
-                'resultat': solder_defect, 'url': self._captured_image_collection_path+'/images/', 'boundingbox': 'N/A','erreurSoudure':'0'
+                'resultat': solder_defect, 'url': '/home/dofa/Documents'+self._captured_image_collection_path+'/images/', 'boundingbox': 'N/A','erreurSoudure':'0'
             }
         
     def _count_folders(self, directory):
@@ -259,7 +259,7 @@ class Pipeline():
                 width = (x_max - x_min) / img_width
                 height = (y_max - y_min) / img_height
 
-                f.write(f"{x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
+                f.write(f"{0} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
 
     def _unsupervised_defect_detection(self, i: int, segmented_image_collection):
         """
@@ -331,7 +331,7 @@ class Pipeline():
         os.makedirs(self._captured_image_collection_path + f"/bounding_boxes/", exist_ok=True)
         # crop images with bounding box
         for i, result in enumerate(results):
-            self._write_yolo_bounding_boxes(result, 640, 640, self._captured_image_collection_path + f"/bounding_boxes/img_{img_id}.txt")
+            self._write_yolo_bounding_boxes(result, 3840, 3104, self._captured_image_collection_path + f"/bounding_boxes/img_{img_id}.txt")
             for boxe in result.boxes:
                 image = img.crop(boxe)
                 imgCollection.add(image)
