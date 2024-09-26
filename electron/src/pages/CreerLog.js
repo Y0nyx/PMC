@@ -48,9 +48,7 @@ export default function CreerLog() {
     ipcRenderer.send("fetchClients");
   }
 
-  ipcRenderer.on("receiveClients", async (event, _client) => {
-    setListClient(_client);
-  });
+
 
   function handleClick() {
     createLog();
@@ -81,7 +79,14 @@ export default function CreerLog() {
   }
 
   useEffect(() => {
+    ipcRenderer.on("receiveClients", async (event, _client) => {
+      setListClient(_client);
+    });
     fetchClients();
+
+    return () => {
+      ipcRenderer.removeAllListeners('receiveClients');
+    };
   }, []);
 
   return (

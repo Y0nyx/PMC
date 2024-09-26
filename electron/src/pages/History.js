@@ -13,19 +13,23 @@ export default function History() {
   const navigate = useNavigate();
   const [pieces, setPieces] = useState([]);
 
-  console.log(uicontext.ref_client.current);
-  ipcRenderer.on("receivePieces", async (event, message) => {
-    setPieces(await piecesParser(message));
-  });
+
 
   useEffect(() => {
+
+    ipcRenderer.on("receivePieces", async (event, message) => {
+      setPieces(await piecesParser(message));
+    });
+  
     ipcRenderer.send(
       "fetchPieces",
       uicontext.ref_client.current.id,
       uicontext.ref_log.current.id
     );
 
-    // Clean up the IPC event listener when the component unmounts
+    return () => {
+      ipcRenderer.removeAllListeners('receivePieces');
+    };
   }, []); // Empty dependency array ensures the effect runs once on mount
 
   function back() {

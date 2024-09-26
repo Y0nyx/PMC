@@ -306,7 +306,7 @@ export default function EnhancedTable({ rows_ }) {
 
   const handleDelete = () => {
     setRows(rows.filter((element) => !selected.includes(element.id)));
-    ipcRenderer.send("deletePiece", [selected]);
+    ipcRenderer.send("deletePiece", selected);
     setSelected([]);
   };
   const isSelected = (name) => selected.indexOf(name) !== -1;

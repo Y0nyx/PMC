@@ -88,6 +88,7 @@ function apiFrontend(mainWindow, configReact) {
     return _client;
   });
   ipcMain.handle("createPiece", async (event, piece) => {
+
     let uuid = generateUUID();
     let currentDate = new Date()
       .toISOString()
@@ -150,7 +151,7 @@ function apiFrontend(mainWindow, configReact) {
   });
 
   ipcMain.on("restart", async (event, id) => {
-    await query.deletePiece(id);
+    await query.deletePiece([id]);
     writeToPython({ code: "start", data: "" });
   });
 

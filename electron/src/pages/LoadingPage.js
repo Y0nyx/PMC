@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import UIStateContext from "../Context/context";
 import Loading from "../components/Loading";
 import { useNavigate } from "react-router-dom";
@@ -7,19 +7,25 @@ export default function LoadingPage() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   let navigate = useNavigate();
    const uicontext = useContext(UIStateContext);
- console.log("loading page")
-  ipcRenderer.on("start", () => {
-    console.log("start");
-    uicontext.setState(protocol.state.analyseInProgress)
-    navigate("/analyse");
-  })
 
-  ipcRenderer.on("stop", () => {
-    uicontext.setState(protocol.state.idle)
-    console.log("stop");
-    navigate("/");
-  })
-
+   useEffect(()=>{
+    ipcRenderer.on("start", () => {
+      console.log("start");
+      uicontext.setState(protocol.state.analyseInProgress)
+      navigate("/analyse");
+    })
+  
+    ipcRenderer.on("stop", () => {
+      uicontext.setState(protocol.state.idle)
+      console.log("stop");
+      navigate("/");
+    })
+  
+    return () => {
+      ipcRenderer.removeAllListeners('stop');
+      ipcRenderer.removeAllListeners('start');
+    };
+   },[])
 
   return (
     <div className="w-screen h-screen overflow-hidden">

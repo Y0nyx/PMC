@@ -10,8 +10,8 @@ function apiAi(mainWindow)
       console.log('Client connected');
 
       ws.on('message', data => {
-          const receivedData = JSON.parse(data.toString());
-
+          let receivedData = JSON.parse(data.toString());
+          
           switch (receivedData.code) {
               case 'start':
                 mainWindow.webContents.send("start");
@@ -35,13 +35,14 @@ function apiAi(mainWindow)
                   break;
               case 'resultat':
                 mainWindow.webContents.send("resultat",receivedData.data);
-                console.log("resultat received");
-                console.log(receivedData.data)
+                console.log("resultat received",receivedData)
                   break;
               default:
                 console.log("Message inconnu received: ", receivedData);
                   break;
           }
+
+          receivedData = undefined
       });
 
       ws.on('close', () => {

@@ -15,23 +15,29 @@ export default function PagePiece() {
   const [piece, setPiece] = React.useState();
   const navigate = useNavigate();
 
-  ipcRenderer.on("receivePiece", async (event, message) => {
-    let parser = await pieceParser(message);
-    console.log(parser);
-    if (parser.result == "succès") {
-      setImageSelected(0);
-    } else {
-      let index = parser.images.findIndex(
-        (image) => image.boundingBox != undefined
-      );
-
-      setImageSelected(index);
-    }
-    setPiece(parser);
-  });
+ 
 
   useEffect(() => {
+    ipcRenderer.on("receivePiece", async (event, message) => {
+      let parser = await pieceParser(message);
+      console.log(parser);
+      if (parser.result == "succès") {
+        setImageSelected(0);
+      } else {
+        let index = parser.images.findIndex(
+          (image) => image.boundingBox != undefined
+        );
+  
+        setImageSelected(index);
+      }
+      setPiece(parser);
+    });
     ipcRenderer.send("fetchPiece", id);
+
+
+    return () => {
+      ipcRenderer.removeAllListeners('receivePiece');
+    };
   }, []);
 
   function back() {

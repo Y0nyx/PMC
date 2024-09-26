@@ -101,9 +101,10 @@ class NetworkManager():
                 code = received_json['code']
                 self.print(f'Received code ({service_name}): {code}')
 
-                if self.future and self.future.done():
-                    await self._send_message(service_name, self.future.result())
-                    self.future = None
+                # if self.future and self.future.done():
+                #     print("CHARLES EST BS")
+                #     await self._send_message(service_name, self.future.result())
+                #     self.future = None
 
                 if code == "start":
                     await self._send_message(service_name, {'code': 'start'})

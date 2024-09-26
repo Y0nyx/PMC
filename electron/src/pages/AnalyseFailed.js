@@ -17,19 +17,24 @@ export default function AnalyseFailed() {
   const { id } = useParams();
   const [piece, setPiece] = React.useState();
   const navigate = useNavigate();
-  ipcRenderer.on("receivePiece", async (event, message) => {
-    let parser = await pieceParser(message);
-    setPiece(parser);
-
-    let index = parser.images.findIndex(
-      (image) => image.boundingBox != undefined
-    );
-
-    setImageSelected(index);
-  });
+ 
 
   useEffect(() => {
+    ipcRenderer.on("receivePiece", async (event, message) => {
+      let parser = await pieceParser(message);
+      setPiece(parser);
+  
+      let index = parser.images.findIndex(
+        (image) => image.boundingBox != undefined
+      );
+  
+      setImageSelected(index);
+    });
     ipcRenderer.send("fetchPiece", id);
+
+    return () => {
+      ipcRenderer.removeAllListeners('receivePiece');
+    };
   }, []);
 
   function RestartCommand() {

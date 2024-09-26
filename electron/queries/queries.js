@@ -5,9 +5,14 @@ const config = require(path.join(appPath, "configElectron.js"));
 // Create a new PostgreSQL client
 
 async function deletePiece(selected) {
-  let table = "piece";
-  let query = `DELETE FROM ${table} WHERE id IN (${selected.join(",")});;`;
 
+  let id ;
+  if(selected.length > 1)  id = selected.map(item => `'${item}'`).join(',');
+  else id = `'${selected[0]}'`
+  let table = "piece";
+  let query = `DELETE FROM ${table} WHERE id IN (${id});`;
+
+  console.log(query)
   await makeQuery(query);
 }
 

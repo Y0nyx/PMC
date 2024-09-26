@@ -17,12 +17,20 @@ export default function Home() {
   const { resultat } = state || {};
 
   useEffect(() => {
-    if (uicontext.ref_dev.current) uicontext.setState(protocol.state.idle);
-  }, []); // Empty dependency array ensures the effect runs once on mount
+
 
   ipcRenderer.on("init", () => {
     uicontext.setState(protocol.state.idle);
   });
+
+    if (uicontext.ref_dev.current) uicontext.setState(protocol.state.idle);
+
+
+    return () => {
+      ipcRenderer.removeAllListeners('init');
+    };
+  }, []); // Empty dependency array ensures the effect runs once on mount
+
 
   return (
     <div className="w-screen h-screen overflow-scroll">

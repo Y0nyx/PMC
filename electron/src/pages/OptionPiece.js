@@ -35,22 +35,33 @@ export default function OptionPiece() {
     ipcRenderer.send("fetchLogs", client_id);
   }
 
-  ipcRenderer.on("receiveClients", async (event, _client) => {
-    setListClient(_client);
-  });
 
-  ipcRenderer.on("receivelogs", async (event, _logs) => {
-    setListLogs(_logs);
-  });
-
-  ipcRenderer.on("receiveTypesPiece", async (event, _typesPiece) => {
-    setTypesPiece(_typesPiece);
-  });
 
   useEffect(() => {
+
+    ipcRenderer.on("receiveClients", async (event, _client) => {
+      setListClient(_client);
+    });
+  
+    ipcRenderer.on("receivelogs", async (event, _logs) => {
+      setListLogs(_logs);
+    });
+  
+    ipcRenderer.on("receiveTypesPiece", async (event, _typesPiece) => {
+      setTypesPiece(_typesPiece);
+    });
+  
+
     fetchClient();
     fetchLogs(uicontext.state_client.id);
     fetchTypePiece();
+
+
+    return () => {
+      ipcRenderer.removeAllListeners('receiveClients');
+      ipcRenderer.removeAllListeners('receivelogs');
+      ipcRenderer.removeAllListeners('receiveTypesPiece');
+    };
   }, []);
   function back() {
     if (uicontext.state_client.id && uicontext.state_log) {
