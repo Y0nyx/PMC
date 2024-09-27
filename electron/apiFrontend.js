@@ -16,7 +16,7 @@ if (!isDev) {
 } else {
   sqlPath = "../sql/generateDatabase.sql";
 
-  dockerComposePath = "../docker-composeUI.yml";
+  dockerComposePath = "../docker-composeDev.yml";
 }
 
 //API avec Frontend
@@ -223,6 +223,7 @@ function apiFrontend(mainWindow, configReact) {
         console.log(stdout);
         let connection = false;
         let sql = fs.readFileSync(sqlPath, "utf8");
+
         console.log("REGENERATING DATABASE");
         while (!connection) {
           try {

@@ -14,7 +14,7 @@ RUN apt upgrade --no-install-recommends -y openssl tar
 WORKDIR /PMC
 
 # Copy the requirements file into the container
-COPY unsupervised_docker_requirements.txt .
+COPY ./Ai/unsupervised_docker_requirements.txt .
 
 # Install the Python dependencies
 RUN pip install -r unsupervised_docker_requirements.txt

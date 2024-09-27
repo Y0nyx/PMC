@@ -95,6 +95,22 @@
       {
         "from": "../docker-compose.yml",
         "to": "./resources/docker-compose.yml"
+      },
+      {
+        "from": "../Dockerfile.pipelines",
+        "to": "./resources/Dockerfile.pipelines"
+      },
+      {
+        "from": "../Dockerfile.supervised",
+        "to": "./resources/Dockerfile.supervised"
+      },
+      {
+        "from": "../Dockerfile.unsupervised",
+        "to": "./resources/Dockerfile.unsupervised"
+      },
+      {
+        "from": "../Ai",
+        "to": "./resources/Ai"
       }
     ]
   }
