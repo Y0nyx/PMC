@@ -25,7 +25,7 @@ export default function AnalyseFailed() {
       let index = parser.images.findIndex(
         (image) => image.boundingBox != undefined
       );
-
+      if (index < 0) index = 0;
       setImageSelected(index);
     });
     ipcRenderer.send("fetchPiece", id);

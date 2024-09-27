@@ -229,8 +229,8 @@ export default function EnhancedTable({ rows_ }) {
   const [orderBy, setOrderBy] = React.useState("id");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [dense, setDense] = React.useState(true);
+  const [rowsPerPage, setRowsPerPage] = React.useState(4);
 
   const navigate = useNavigate();
   const ipcRenderer = window.require("electron").ipcRenderer;
@@ -313,7 +313,7 @@ export default function EnhancedTable({ rows_ }) {
 
   return (
     <Box sx={{ width: "90%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper sx={{ width: "100%", mb: 0, color: "" }}>
         <EnhancedTableToolbar
           numSelected={selected.length}
           onDelete={handleDelete}
@@ -323,6 +323,7 @@ export default function EnhancedTable({ rows_ }) {
             stickyHeader
             aria-labelledby="tableTitle"
             size={dense ? "small" : "medium"}
+            className="text-2xl"
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -331,6 +332,7 @@ export default function EnhancedTable({ rows_ }) {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              className="text-2xl"
             />
             <TableBody className="bg-gray-100">
               {visibleRows.map((row, index) => {
@@ -342,6 +344,8 @@ export default function EnhancedTable({ rows_ }) {
                   imageIndex = row.images.findIndex(
                     (image) => image.boundingBox != undefined
                   );
+                  console.log(imageIndex);
+                  if (imageIndex < 0) imageIndex = 0;
                 }
 
                 return (
@@ -403,8 +407,12 @@ export default function EnhancedTable({ rows_ }) {
                                 return (
                                   <div
                                     style={{
-                                      top: `${(box.yCenter - box.height/2)  * 100}%`,
-                                      left: `${(box.xCenter - box.width/2) * 100}%`,
+                                      top: `${
+                                        (box.yCenter - box.height / 2) * 100
+                                      }%`,
+                                      left: `${
+                                        (box.xCenter - box.width / 2) * 100
+                                      }%`,
                                       width: `${box.width * 100}%`,
                                       height: `${box.height * 100}%`,
                                     }}
@@ -469,18 +477,20 @@ export default function EnhancedTable({ rows_ }) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[4, 10, 25, 50]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          className="text-2xl"
         />
       </Paper>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
+        className="text-2xl"
       />
     </Box>
   );

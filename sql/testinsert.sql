@@ -4,12 +4,6 @@ INSERT INTO Erreur_Soudure (ID, Nom, Description) VALUES
 ('2', 'Error2', 'Description 2'),
 ('3', 'Error3', 'Description 3');
 
--- Insertion de données de test dans la table Type de piece
-INSERT INTO type_piece (ID, Nom, Description) VALUES
-('1', 'Piece 1', 'Description 1'),
-('2', 'Piece 2', 'Description 2'),
-('3', 'Piece 3', 'Description 3');
-
 -- Insertion de données de test dans la table Client
 INSERT INTO Client (ID, Nom, Email, Telephone) VALUES
 ('1', 'Client1', 'client1@example.com', '1234567890'),
