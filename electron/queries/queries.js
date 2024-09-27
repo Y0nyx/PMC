@@ -2,18 +2,31 @@ const { Client } = require("pg");
 const path = require("path");
 let appPath = global.appPath;
 const config = require(path.join(appPath, "configElectron.js"));
+
 // Create a new PostgreSQL client
 
-async function deletePiece(selected) {
+async function generateDatabase(sql) {
+  await makeQuery(sql);
+}
 
-  let id ;
-  if(selected.length > 1)  id = selected.map(item => `'${item}'`).join(',');
-  else id = `'${selected[0]}'`
+async function deletePiece(selected) {
+  let id;
+  if (selected.length > 1) id = selected.map((item) => `'${item}'`).join(",");
+  else id = `'${selected[0]}'`;
   let table = "piece";
   let query = `DELETE FROM ${table} WHERE id IN (${id});`;
 
-  console.log(query)
+  console.log(query);
   await makeQuery(query);
+}
+
+async function getAllimages() {
+  let table = "piece";
+  let query = `SELECT photo,boundingbox from ${table};`;
+
+  let result = await makeQuery(query);
+
+  return result;
 }
 
 async function createPiece(piece) {
@@ -162,9 +175,11 @@ async function resetData() {
 }
 
 module.exports = {
+  generateDatabase,
   fetchPieces,
   fetchPiece,
   deletePiece,
+  getAllimages,
   fetchClients,
   fetchLogs,
   fetchTypesPiece,
