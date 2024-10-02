@@ -2,40 +2,51 @@ const ipcRenderer = window.require("electron").ipcRenderer;
 
 export async function pieceParser(piece) {
   let images = [];
-  let base64Images = await ipcRenderer.invoke("readImages", piece.photo);
-  let boundingBox = await ipcRenderer.invoke(
-    "readBoundingBox",
-    piece.boundingbox
-  );
 
+  console.log(`Processing piece: ${piece.photo}`);
 
-  for (let image of base64Images){
+  // Run both IPC calls in parallel
+  const [base64Images, boundingBox] = await Promise.all([
+    ipcRenderer.invoke("readImages", piece.photo),
+    ipcRenderer.invoke("readBoundingBox", piece.boundingbox),
+  ]);
+
+  for (let image of base64Images) {
     if (image) {
-      const imageFileNameWithoutExt = image.fileName.split('.').slice(0, -1).join('.');
+      const imageFileNameWithoutExt = image.fileName
+        .split(".")
+        .slice(0, -1)
+        .join(".");
 
-    // Find the matching bounding box based on the filename (ignoring the extension)
-    const matchedBoundingBox = boundingBox.find(box => {
-      const boxFileNameWithoutExt = box.fileName.split('.').slice(0, -1).join('.');
-      return imageFileNameWithoutExt === boxFileNameWithoutExt;
-    });
+      // Find the matching bounding box based on the filename (ignoring the extension)
+      const matchedBoundingBox = boundingBox.find((box) => {
+        const boxFileNameWithoutExt = box.fileName
+          .split(".")
+          .slice(0, -1)
+          .join(".");
+        return imageFileNameWithoutExt === boxFileNameWithoutExt;
+      });
 
-      images.push({url:`data:image/jpeg;base64,${image.base64Image}` , boundingBox: matchedBoundingBox});
+      images.push({
+        url: `data:image/jpeg;base64,${image.base64Image}`,
+        boundingBox: matchedBoundingBox,
+      });
     } else {
       console.error("No image content received.");
     }
   }
 
+  // Process the date and result
   let date = new Date(piece.date);
-
   let result = piece.resultat == "1" ? "succès" : "échec";
+  let type = result === "échec" ? piece.nom_erreur_soudure : "";
 
-  let type = result ? piece.nom_erreur_soudure : "";
-
+  // Construct the row object
   let row = {
     id: piece.id,
     images: images,
     date: date.toISOString().split("T")[0],
-    hour: date.getHours() + ":" + date.getMinutes(),
+    hour: `${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`,
     result: result,
     errorType: type,
     errorDescription: piece.description_erreur_soudure,
@@ -45,7 +56,6 @@ export async function pieceParser(piece) {
     id_log: piece.id_log,
   };
 
-  console.log(row)
   return row;
 }
 
@@ -54,11 +64,14 @@ export function idSubstring(id) {
 }
 
 export async function piecesParser(array) {
-  let rows = [];
+  console.log("START");
 
-  for (let i = 0; i < array.length; i++) {
-    let row = await pieceParser(array[i]);
-    rows.push(row);
-  }
+  // Map each item to a promise
+  const promises = array.map((item) => pieceParser(item));
+
+  // Wait for all promises to resolve
+  const rows = await Promise.all(promises);
+
+  console.log("STOP");
   return rows;
 }

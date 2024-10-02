@@ -9,10 +9,10 @@
   },
   "homepage": "./",
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.13.7",
-    "@mui/material": "^5.13.7",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.7",
+    "@mui/material": "^5.16.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -78,7 +78,6 @@
       "queries/**/*",
       "package.json",
       "protocol.json"
-      
     ],
     "extraFiles": [
       {
@@ -88,6 +87,30 @@
       {
         "from": "configReact.js",
         "to": "./resources/configReact.js"
+      },
+      {
+        "from": "../sql/generateDatabase.sql",
+        "to": "./resources/generateDatabase.sql"
+      },
+      {
+        "from": "../docker-compose.yml",
+        "to": "./resources/docker-compose.yml"
+      },
+      {
+        "from": "../Dockerfile.pipelines",
+        "to": "./resources/Dockerfile.pipelines"
+      },
+      {
+        "from": "../Dockerfile.supervised",
+        "to": "./resources/Dockerfile.supervised"
+      },
+      {
+        "from": "../Dockerfile.unsupervised",
+        "to": "./resources/Dockerfile.unsupervised"
+      },
+      {
+        "from": "../Ai",
+        "to": "./resources/Ai"
       }
     ]
   }

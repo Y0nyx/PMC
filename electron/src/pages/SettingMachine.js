@@ -11,13 +11,13 @@ import {
   DialogTitle,
 } from "@mui/material";
 
-
 export default function SettingMachine() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const uicontext = useContext(UIStateContext);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [reboot, setReboot] = useState(false);
   const powerOffMachine = () => {
     ipcRenderer.send("powerOffMachine");
   };
@@ -99,9 +99,7 @@ export default function SettingMachine() {
                       top: 8,
                     }}
                   >
-                    <div
-                      className="flex justify-center items-center w-full"
-                    >
+                    <div className="flex justify-center items-center w-full">
                       <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
                     </div>
                   </IconButton>
@@ -109,14 +107,14 @@ export default function SettingMachine() {
                 <DialogContent>
                   <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
                     <p className="text-justify  font-Cairo leading-normal text-3xl">
-                      Vous êtes sur le point de réinitialiser  les données
-                      de la machine (Client,log,historique). Êtes-vous sûr de
-                      vouloir continuer ?
+                      Vous êtes sur le point de réinitialiser les données de la
+                      machine (Client,log,historique). Êtes-vous sûr de vouloir
+                      continuer ?
                     </p>
                     <div
                       className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 "
                       onClick={() => {
-                        setOpen(true);
+                        setOpen(false);
                         resetData();
                       }}
                     >
@@ -127,7 +125,9 @@ export default function SettingMachine() {
               </Dialog>
               <div
                 className=" flex mx-6 font-bold justify-center items-center font-normal text-3xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 my-2 "
-                onClick={()=>{setOpen2(true)}}
+                onClick={() => {
+                  setOpen2(true);
+                }}
               >
                 <span>RÉINITIALISER LA MACHINE</span>
               </div>
@@ -146,30 +146,37 @@ export default function SettingMachine() {
                       top: 8,
                     }}
                   >
-                    <div
-                      className="flex justify-center items-center w-full"
-                    >
+                    <div className="flex justify-center items-center w-full">
                       <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
                     </div>
                   </IconButton>
                 </DialogTitle>
                 <DialogContent>
-                  <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
-                    <p className="text-justify  font-Cairo leading-normal text-3xl">
-                      Vous êtes sur le point de réinitialiser la machine.
-                      À utiliser seulement si la machine ne fonctionne
-                      plus. Êtes-vous sûr de vouloir continuer ?
-                    </p>
-                    <div
-                      className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 "
-                      onClick={() => {
-                        setOpen2(true);
-                        resetAll();
-                      }}
-                    >
-                      <span>RÉINITIALISER LA MACHINE</span>
+                  {!reboot && (
+                    <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+                      <p className="text-justify  font-Cairo leading-normal text-3xl">
+                        Vous êtes sur le point de réinitialiser la machine. À
+                        utiliser seulement si la machine ne fonctionne plus.
+                        Êtes-vous sûr de vouloir continuer ?
+                      </p>
+                      <div
+                        className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 "
+                        onClick={() => {
+                          setReboot(true);
+                          resetAll();
+                        }}
+                      >
+                        <span>RÉINITIALISER LA MACHINE</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {reboot && (
+                    <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+                      <p className="text-justify  font-Cairo leading-normal text-3xl">
+                        REBOOT...
+                      </p>
+                    </div>
+                  )}
                 </DialogContent>
               </Dialog>
             </div>

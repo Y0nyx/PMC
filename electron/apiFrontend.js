@@ -3,7 +3,21 @@ const fs = require("fs");
 const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
 const { exec } = require("child_process");
-const path = require('path');
+const path = require("path");
+
+let appPath = global.appPath;
+let sqlPath;
+let dockerComposePath;
+const isDev = process.defaultApp;
+
+if (!isDev) {
+  sqlPath = path.join(appPath, "generateDatabase.sql");
+  dockerComposePath = path.join(appPath, "docker-compose.yml");
+} else {
+  sqlPath = "../sql/generateDatabase.sql";
+
+  dockerComposePath = "../docker-composeDev.yml";
+}
 
 //API avec Frontend
 const query = require("./queries/queries");
@@ -17,16 +31,16 @@ function apiFrontend(mainWindow, configReact) {
     try {
       // Read all files in the folder
       const files = fs.readdirSync(folderPath);
-  
+
       // Map through all files, read each image, and convert to base64
-      const base64Images = files.map(file => {
+      const base64Images = files.map((file) => {
         const filePath = path.join(folderPath, file);
         const imageBuffer = fs.readFileSync(filePath);
         const base64Image = Buffer.from(imageBuffer).toString("base64");
-  
+
         return { fileName: file, base64Image };
       });
-  
+
       return base64Images; // Return the list of base64 images
     } catch (error) {
       console.error("Error reading images from folder:", error);
@@ -38,35 +52,38 @@ function apiFrontend(mainWindow, configReact) {
     try {
       // Read all files in the folder
       const files = fs.readdirSync(folderPath);
-  
+
       // Map through all files and read bounding boxes from each
-      const boundingBoxes = files.map(file => {
+      const boundingBoxes = files.map((file) => {
         const filePath = path.join(folderPath, file);
         const data = fs.readFileSync(filePath, "utf8");
-  
+
         // Split the file data by lines, each line is a bounding box
-        const boxes = data.trim().split("\n").map(line => {
-          const [classId, xCenter, yCenter, width, height, confidence] = line
-            .trim()
-            .split(" ")
-            .map(Number);
-  
-          return {
-            classId,
-            xCenter,
-            yCenter,
-            width,
-            height,
-            confidence,
-          };
-        });
-  
+        const boxes = data
+          .trim()
+          .split("\n")
+          .map((line) => {
+            const [classId, xCenter, yCenter, width, height, confidence] = line
+              .trim()
+              .split(" ")
+              .map(Number);
+
+            return {
+              classId,
+              xCenter,
+              yCenter,
+              width,
+              height,
+              confidence,
+            };
+          });
+
         return {
           fileName: file,
           box: boxes,
         };
       });
-  
+
       return boundingBoxes; // Return the list of bounding boxes for each file
     } catch (error) {
       console.error("Error reading bounding boxes from folder:", error);
@@ -88,7 +105,6 @@ function apiFrontend(mainWindow, configReact) {
     return _client;
   });
   ipcMain.handle("createPiece", async (event, piece) => {
-
     let uuid = generateUUID();
     let currentDate = new Date()
       .toISOString()
@@ -173,18 +189,55 @@ function apiFrontend(mainWindow, configReact) {
     });
   });
 
+  async function deleteAllimages() {
+    try {
+      let directories = await query.getAllimages(); // Assuming this returns an array of directory paths
+
+      for (const dir of directories) {
+        await fs.rmSync(dir.photo, { recursive: true, force: true });
+        await fs.rmSync(dir.boundingbox, { recursive: true, force: true });
+      }
+
+      console.log("All directories deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting directories:", error);
+    }
+  }
+
   ipcMain.on("resetData", async () => {
-    let result = await query.resetData();
+    await deleteAllimages();
+    await query.resetData();
   });
 
   ipcMain.on("resetAll", async () => {
+    //await deleteAllimages();
+
     exec(
-      "sudo docker stop $(sudo docker ps -q) && sudo docker rm $(sudo docker ps -aq) && sudo docker volume rm $(sudo docker volume ls -q) && sudo docker-compose -f ../docker/docker-compose.yml up -d",
-      (error, stdout, stderr) => {
+      `sudo docker stop $(sudo docker ps -q) && sudo docker rm $(sudo docker ps -aq) && sudo docker volume rm $(sudo docker volume ls -q) && sudo docker-compose -f ${dockerComposePath} up -d`,
+      async (error, stdout, stderr) => {
+        console.log("EXEC");
         if (error || stderr) {
           console.log(error);
-          return;
+          console.log(stderr);
         }
+        console.log(stdout);
+        let connection = false;
+        let sql = fs.readFileSync(sqlPath, "utf8");
+
+        console.log("REGENERATING DATABASE");
+        while (!connection) {
+          try {
+            await query.generateDatabase(sql);
+            connection = true;
+            console.log("DATABASE CREATED ! ");
+          } catch {
+            console.log("ATTEMPT TO CONNECT...");
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+          }
+        }
+
+        console.log("REBOOT...");
+        if (!isDev) exec("sudo reboot");
       }
     );
   });
