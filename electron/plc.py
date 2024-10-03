@@ -4,7 +4,6 @@ import pyftdi.serialext
 import asyncio
 import websockets
 import json
-
 class PCtoPLC:
 
     def __init__(self, url='ftdi:///1', baudrate=9600):
@@ -14,6 +13,7 @@ class PCtoPLC:
         self.eeprom.connect(self.ftdi)
         self.ftdi.set_cbus_direction(0b1111, 0b1111)
         self.port = pyftdi.serialext.serial_for_url(url, baudrate=baudrate)
+        self.port.timeout = 0.05
         self.data = ''
 
     def write_to_plc(self, message):
@@ -51,17 +51,16 @@ async def send_receive(plc,websocket):
         deserialized_data = json.loads(received_data)
         print('Received:', deserialized_data)
 
-        if deserialized_data.code == "start":
-            plc.write_to_plc("start")
-        
-        elif deserialized_data.code == "stop":
-            plc.write_to_plc("stop")
+        if deserialized_data.code == "forward":
 
-        elif deserialized_data.code == "error":
-            plc.write_to_plc("error")
-        
-        
+            #when sent G, plc read 17920
+            plc.write_to_plc(b'F') 
 
+        elif deserialized_data.code == "backward":
+            
+            #when sent S, plc read 16896
+            plc.write_to_plc(b'B') #stop
+        
 
 async def python_plc(plc,websocket):
 
@@ -69,9 +68,20 @@ async def python_plc(plc,websocket):
         plc.read_from_plc()
         #envoie moi le bon code mais a titre d'exemple
         # Define a sample object to send
-        data_to_send = {'code': 'start', 'data': {}}
-        serialized_data = json.dumps(data_to_send)
-        await websocket.send(serialized_data)
+        data = {}
+        if plc.data != b'':
+            print(plc.data)
+            if plc.data == 'R': 
+                data = 'ready'
+            
+            elif plc.data == 'E': 
+                data = 'error'
+        
+            data_to_send = {'code': 'start', 'data': data}
+            serialized_data = json.dumps(data_to_send)
+            await websocket.send(serialized_data)
+
+
 
 
 async def main():
