@@ -10,9 +10,8 @@ export default function StartButton() {
   let navigate = useNavigate();
 
   function startCommand() {
-    ipcRenderer.send("command",{"code":"start",data:""});
     uicontext.setState(protocol.state.loading);
-    navigate("/loading")
+    navigate("/loading",{ state: { command: "forward" } })
   }
   return (
     <div

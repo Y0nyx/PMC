@@ -1,4 +1,5 @@
 const path = require("path");
+//const { spawn } = require("child_process");
 const { app, BrowserWindow, Menu } = require("electron");
 isDevelopment = require.main.filename.indexOf("app.asar") === -1; // Use require.main instead of process.mainModule
 global.appPath = isDevelopment
@@ -7,6 +8,7 @@ global.appPath = isDevelopment
 
 const {apiFrontend} = require("./apiFrontend");
 const {apiAi} = require("./apiAi");
+const { apiPLC } = require("./apiPLC");
 
 
 
@@ -48,6 +50,7 @@ function createMainWindow() {
 app.whenReady().then(() => {
 
   configReact = require(path.join(appPath, "configReact.js"));
+ // plcPythonPath = require(path.join(appPath, "plc.py"));
   createMainWindow();
 
 
@@ -59,6 +62,8 @@ app.whenReady().then(() => {
 
   apiFrontend(mainWindow,configReact);
   apiAi(mainWindow);
+  apiPLC(mainWindow);
+
 });
 
 app.on("window-all-closed", () => {

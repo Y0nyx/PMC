@@ -27,3 +27,22 @@
     "setting": data {setting:[]}
     "init": data {}
 
+
+
+
+///////// PROTOCOL PLC /////////////////
+
+ "code":{
+        "forward"
+        "backward"
+        "ready"
+        "error"
+    }
+
+
+/////// Data object //////////////////
+    forward : data {}
+    backward : data {}
+    ready : data {}
+    error : data {message : "erreur de ...."}
+

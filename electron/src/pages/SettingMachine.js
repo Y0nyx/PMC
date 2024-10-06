@@ -1,10 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import UIStateContext from "../Context/context";
 import BackButton from "../components/BackButton";
-import CancelIcon from "@mui/icons-material/Cancel";
 import { useNavigate } from "react-router-dom";
+import CancelIcon from "@mui/icons-material/Cancel";
 import {
-  Button,
   IconButton,
   Dialog,
   DialogContent,
@@ -18,6 +17,22 @@ export default function SettingMachine() {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [reboot, setReboot] = useState(false);
+  const [openError,setOpenError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState();
+
+  
+  useEffect(() => {
+    ipcRenderer.on("error", (event,error) => {
+      console.log(error)
+      setErrorMessage(error);
+      setOpenError(true)
+    });
+
+    return () => {
+      ipcRenderer.removeAllListeners("error");
+    };
+  }, []);
+
   const powerOffMachine = () => {
     ipcRenderer.send("powerOffMachine");
   };
@@ -183,6 +198,34 @@ export default function SettingMachine() {
           </div>
         </div>
       </div>
+      <Dialog
+        open={openError}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+          ERREUR
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpenError(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <div className="flex justify-center items-center w-full">
+              <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+            </div>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+            <p className="text-justify  font-Cairo leading-normal text-3xl">
+              {errorMessage}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

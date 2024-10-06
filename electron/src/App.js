@@ -14,9 +14,11 @@ import CreerLog from "./pages/CreerLog";
 import { StyledEngineProvider } from "@mui/material/styles";
 import LoadingPage from "./pages/LoadingPage";
 import SettingMachine from "./pages/SettingMachine";
+import { useEffect, useState } from "react";
+
 function App() {
   const uiState = useUIState();
-
+  
   return (
     <StyledEngineProvider injectFirst>
       <uiContext.Provider value={uiState}>

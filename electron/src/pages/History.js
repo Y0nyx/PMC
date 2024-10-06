@@ -6,16 +6,26 @@ import HistoryTable from "../components/HistoryTable";
 import { piecesParser } from "../utils/utils";
 import BackButton from "../components/BackButton";
 import Loading from "../components/Loading";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 export default function History() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const uicontext = useContext(UIStateContext);
   const navigate = useNavigate();
   const [pieces, setPieces] = useState([]);
-
+  const [openError,setOpenError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
+    ipcRenderer.on("error", (event,error) => {
+      console.log(error)
+      setErrorMessage(error);
+      setOpenError(true)
+    });
+
     ipcRenderer.on("receivePieces", async (event, message) => {
       setPieces(await piecesParser(message));
       setLoading(false);
@@ -29,6 +39,7 @@ export default function History() {
 
     return () => {
       ipcRenderer.removeAllListeners("receivePieces");
+      ipcRenderer.removeAllListeners("error");
     };
   }, []); // Empty dependency array ensures the effect runs once on mount
 
@@ -59,6 +70,34 @@ export default function History() {
           {pieces.length > 0 && <HistoryTable rows_={pieces}></HistoryTable>}
         </div>
       )}
+       <Dialog
+        open={openError}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+          ERREUR
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpenError(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <div className="flex justify-center items-center w-full">
+              <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+            </div>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+            <p className="text-justify  font-Cairo leading-normal text-3xl">
+              {errorMessage}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

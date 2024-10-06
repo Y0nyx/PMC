@@ -74,6 +74,7 @@
       "index.js",
       "apiAi.js",
       "apiFrontend.js",
+      "apiPLC.js",
       "utils.js",
       "queries/**/*",
       "package.json",
@@ -112,6 +113,7 @@
         "from": "../Ai",
         "to": "./resources/Ai"
       }
+
     ]
   }
 }

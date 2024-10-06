@@ -2,6 +2,7 @@ const { ipcMain } = require("electron");
 const fs = require("fs");
 const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
+const {writeToPLC}   = require("./apiPLC")
 const { exec } = require("child_process");
 const path = require("path");
 
@@ -242,10 +243,31 @@ function apiFrontend(mainWindow, configReact) {
     );
   });
 
+
+  ipcMain.on("forward",() => {
+    writeToPLC({ code: "forward", data: "" });
+  })
+
+  ipcMain.on("backward",() => {
+    writeToPLC({ code: "backward", data: "" });
+  })
+
+
+
   ipcMain.on("command", (event, req) => {
     console.log(`${req.code} command send`);
-    writeToPython(req);
+
+    if(req.code == "start")
+    {
+      writeToPython(req);
+    }
+    if(req.code == "stop")
+      {
+        writeToPython(req);
+      }
+    
   });
+
 }
 
 module.exports = {

@@ -9,9 +9,8 @@ export default function StopButton() {
   let navigate = useNavigate();
 
   function stopCommand() {
-    ipcRenderer.send("command",{"code":"stop",data:""});
     uicontext.setState(protocol.state.loading);
-    navigate("/loading")
+    navigate("/loading",{ state: { command: "backward" } })
   }
 
   return (

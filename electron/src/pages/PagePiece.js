@@ -7,15 +7,22 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import BackButton from "../components/BackButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
+import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
 export default function PagePiece() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const { id } = useParams();
   const [imageSelected, setImageSelected] = useState(0);
   const [piece, setPiece] = React.useState();
+  const [openError,setOpenError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
+    ipcRenderer.on("error", (event,error) => {
+      console.log(error)
+      setErrorMessage(error);
+      setOpenError(true)
+    });
     ipcRenderer.on("receivePiece", async (event, message) => {
       let parser = await pieceParser(message);
 
@@ -34,6 +41,7 @@ export default function PagePiece() {
 
     return () => {
       ipcRenderer.removeAllListeners("receivePiece");
+      ipcRenderer.removeAllListeners("error");
     };
   }, []);
 
@@ -161,6 +169,34 @@ export default function PagePiece() {
           </div>
         )}
       </div>
+      <Dialog
+        open={openError}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+          ERREUR
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpenError(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <div className="flex justify-center items-center w-full">
+              <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+            </div>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+            <p className="text-justify  font-Cairo leading-normal text-3xl">
+              {errorMessage}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

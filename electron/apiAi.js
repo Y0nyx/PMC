@@ -30,8 +30,8 @@ function apiAi(mainWindow)
                 console.log("init received");
                   break;
               case 'error':
-                mainWindow.webContents.send("error",receivedData.data);
-                console.log("error received");
+                mainWindow.webContents.send("error",receivedData.data.message);
+                console.log(`error ${receivedData.data.message}`);
                   break;
               case 'resultat':
                 mainWindow.webContents.send("resultat",receivedData.data);
