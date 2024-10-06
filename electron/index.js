@@ -55,7 +55,7 @@ app.whenReady().then(() => {
   });
 
   plcPythonPath = path.join(appPath, "plc.py");
-  pythonProcess = spawn("python", [plcPythonPath]);
+  pythonProcess = spawn("python3", [plcPythonPath]);
   pythonProcess.stdout.on("data", (data) => {
     console.log(`Python stdout: ${data}`);
     // You can send this data to the frontend using mainWindow.webContents.send if needed
