@@ -42,7 +42,8 @@ CSV_FILE_NAME = SAVE_PATH / "results.csv"
 
 UNSUPERVISED_MODEL_REF = "simple_cae_blackout_model"
 SEGMENTATION_MODEL_REF = "segmentation_v3"
-SUPERVISED_DETECTION_MODEL_REF = "TEMP VALUE"
+SUPERVISED_DETECTION_MODEL_REF = "supervised_detection"
 
 SEGMENTATION_MODEL_PATH = "./ai_models/segmentation/"
+SUPERVISED_DETECTION_MODEL_PATH = "./ai_models/detection/"
 SAVE_RESULT = Path("/pipeline_analysis/")

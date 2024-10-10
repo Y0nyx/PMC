@@ -61,8 +61,8 @@ services:
     environment:
       - MKL_THREADING_LAYER=GNU
     volumes:
-      - ./PMC:/PMC
-      - ./Datasets:/Datasets
+      - ./Ai:/PMC
+      - ./../Datasets:/Datasets
     network_mode: "host"
     ports:
       - "8003:8003"

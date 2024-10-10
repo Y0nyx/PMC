@@ -1,6 +1,6 @@
 from datetime import datetime
 import matplotlib.pyplot as plt
-#import tensorflow as tf
+import tensorflow as tf
 #from tensorflow.keras.models import load_model
 from PIL import Image as Img
 import numpy as np
@@ -11,6 +11,7 @@ from pathlib import Path
 import json
 import re
 import subprocess
+import cv2
 #from clearml import Task
 
 from pipeline.models.Model import YoloModel
@@ -178,7 +179,7 @@ class Pipeline():
             import clearml
             clearml.browser_login()
 
-            task = clearml.Task.init(project_name="PMC", task_name=f"{yolo_model} task")
+            task = clearml.Task.init(project_name="PMC", task_name=f"{yolo_model} detection task 2")
             task.set_parameter("model_variant", yolo_model)
             task.connect(args)
 
@@ -213,9 +214,9 @@ class Pipeline():
 
                 #Check if stopped was received
                 if not self.stop_flag.is_set():
-
                     #Find the welds in the capture image
-                    segmented_image_collection, boxes = self._segmentation_image(captured_image, i, show, save_seg, conf)
+                    #segmented_image_collection, boxes = self._segmentation_image(captured_image, i, show, save_seg, conf) #TODO: Ajouter un check qui valide que ya des soudures
+                    supervised_detection_image_collection, boxes = self._supervised_detection(captured_image, i, show, save_seg, conf) 
                     # TODO Integrate supervised model
                     
                 else:
@@ -338,20 +339,20 @@ class Pipeline():
 
         return imgCollection, results
     
-    def _supervised_detection(self, imgCol: ImageCollection, save: bool, show: bool, conf: float):
-        imgCollection = ImageCollection([])
-        model = self._supervised_detection_model
+    def _supervised_detection(self, img: Image, img_id: int, save: bool, show: bool, conf: float):
+        #TODO: Rename la fonction poru get
+        imgCollection = ImageCollection()
+        model = self.supervised_detection_model
+        results = model.predict(source=cv2.cvtColor(cv2.cvtColor(img.value, cv2.COLOR_BGR2GRAY), cv2.COLOR_GRAY2BGR), show=show, conf=conf, save=save)
+        os.makedirs(self._captured_image_collection_path + f"/bounding_boxes/", exist_ok=True)
+        # crop images with bounding box
+        for i, result in enumerate(results):
+            self._write_yolo_bounding_boxes(result, 3840, 3104, self._captured_image_collection_path + f"/bounding_boxes/img_{img_id}.txt")
+            for boxe in result.boxes:
+                image = img.crop(boxe)
+                imgCollection.add(image)
 
-        for img in imgCol:
-            results = model.predict(source=img.value, show=False, conf=conf, save=False)
-            # crop images with bounding box
-            for i, result in enumerate(results):
-                for j, boxe in enumerate(result.boxes):
-                    print(img.shape)
-                    print(boxe)
-                    image = img.crop(boxe)
-                    image.save(f"{SAVE_PATH}/result_{i}_box_{j}_detection.png")
-                    imgCollection.add(image)
+        return imgCollection, results
 
     def print(self, string):
         if self.verbose:
@@ -437,12 +438,17 @@ def path_initialization():
 
 if __name__ == "__main__":
     #supervised_models = [YoloModel(Path("./ia/segmentation/v1.pt"))]
+    segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
+
+    #supervised_models = [YoloModel(Path(segmentation_model_path))]
+    #unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
+
     # TRAINING
-    # pipeline = Pipeline(supervised_models=[], unsupervised_models=[], State=PipelineState.TRAINING)
+    pipeline = Pipeline(segmentation_model=None, supervised_detection_model=None, unsupervised_model=None, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
 
 
-    # data_path = "../../Datasets/default-detection-format-v3/data.yaml"
-    # pipeline.train(data_path, "yolov8l", epochs=350, batch=-1, workers=0)
+    data_path = "v21/data.yaml"
+    pipeline.train(data_path, "yolov8l", epochs=200, batch=25, workers=0, single_cls=True)
 
     segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
 

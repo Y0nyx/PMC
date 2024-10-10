@@ -14,7 +14,7 @@ RUN apt upgrade --no-install-recommends -y openssl tar
 WORKDIR /PMC
 
 # Copy source code from host machine to Docker image
-COPY /Ai/src/ src/
+COPY /Ai/ /PMC
 
 # Run exports to AutoInstall packages
 # Edge TPU export fails the first time so is run twice here
@@ -27,7 +27,8 @@ RUN pip install --no-cache numpy==1.23.5
 # Remove exported models
 RUN rm -rf tmp
 
+RUN pip install -r requirements.txt
+
 # Get right version of pytorch (GPU)
-#RUN pip install torch torchvision torchaudio --upgrade\
-# --index-url https://download.pytorch.org/whl/cu121 -U
+RUN pip install torch torchvision torchaudio --upgrade --index-url https://download.pytorch.org/whl/cu121 -U
 

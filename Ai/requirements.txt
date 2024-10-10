@@ -1,7 +1,7 @@
 numpy==1.25.0
-torch~=2.0.1
-torchvision~=0.15.2
+tensorflow
 PyYAML~=6.0
+clearml
 websockets
 scikit-image
 scikit-learn
@@ -11,3 +11,10 @@ tqdm
 coverage
 pytest
 pytest-cov
+
+-i https://download.pytorch.org/whl/cu121
+
+torch
+torchvision
+torchaudio
+
