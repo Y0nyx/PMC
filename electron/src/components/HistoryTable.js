@@ -344,7 +344,6 @@ export default function EnhancedTable({ rows_ }) {
                   imageIndex = row.images.findIndex(
                     (image) => image.boundingBox != undefined
                   );
-                  console.log(imageIndex);
                   if (imageIndex < 0) imageIndex = 0;
                 }
 
@@ -398,7 +397,7 @@ export default function EnhancedTable({ rows_ }) {
                         <div className="overflow-hidden  relative w-48 h-48 rounded-lg">
                           <img
                             src={row.images[imageIndex].url}
-                            className="w-full h-full rounded-lg"
+                            className="object-cover w-full h-full rounded-lg"
                           />
 
                           {row.images[imageIndex].boundingBox &&
