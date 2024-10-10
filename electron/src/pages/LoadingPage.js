@@ -18,24 +18,31 @@ export default function LoadingPage() {
   useEffect(() => {
     if (command == "forward") {
       ipcRenderer.send("forward");
-      uicontext.ref_plc_ready = false
+      uicontext.ref_plc_ready = false;
     }
 
-    if (command == "backward") {
+    if (command == "stop") {
+      ipcRenderer.send("stop");
+    }
+
+    ipcRenderer.on("stop", () => {
+      uicontext.ref_plc_ready = false;
       ipcRenderer.send("backward");
-      uicontext.ref_plc_ready = false
-    }
+    });
 
-    ipcRenderer.on("ready",()=>{
-      uicontext.ref_plc_ready = true
+    ipcRenderer.on("ready", () => {
+      uicontext.ref_plc_ready = true;
       if (command == "forward") {
         ipcRenderer.send("start");
       }
-  
-      if (command == "backward") {
-        ipcRenderer.send("stop");
+
+      if (command == "stop") {
+        uicontext.setState(protocol.state.idle);
+        console.log("stop");
+        navigate("/");
       }
-    })
+    });
+
     ipcRenderer.on("error", (event, error) => {
       console.log(error);
       setErrorMessage(error);
@@ -45,12 +52,6 @@ export default function LoadingPage() {
       console.log("start");
       uicontext.setState(protocol.state.analyseInProgress);
       navigate("/analyse");
-    });
-
-    ipcRenderer.on("stop", () => {
-      uicontext.setState(protocol.state.idle);
-      console.log("stop");
-      navigate("/");
     });
 
     return () => {
