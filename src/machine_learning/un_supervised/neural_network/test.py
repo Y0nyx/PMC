@@ -15,10 +15,10 @@ import os
 import pandas as pd
 import re
 
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import mean_absolute_error
-from skimage.metrics import peak_signal_noise_ratio as psnr
-from skimage.metrics import structural_similarity as ssim
+from sklearn.metrics import mean_squared_error, mean_absolute_error, root_mean_squared_error
+from skimage.metrics import peak_signal_noise_ratio, structural_similarity
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import roc_curve, precision_score
 
 import data_processing as dp
 import model as mod
@@ -191,6 +191,203 @@ def get_subdivise_images():
             for i, small_img in enumerate(img_subdivise, start=1):
                 cv2.imwrite(f'{result_path}/welding_subdivised_{i}.jpg', small_img)
 
+def calculate_pixelwise_mse(predicted_img, target_img):
+    """
+    Calculate the mse value between the prediction and the target image pixel wise
+    Inputs - predicted_img: The output of the neural network of dimension sample x row x column x channles
+           - target_img:    The target of the neural network of dimension sample x row x column x channles
+    Output - pixel_wise_mse: The pixel wise mse between the prediction and the target of dimension sample x row x column x channles
+    """
+    assert predicted_img.shape == target_img.shape, "The prediction and the target are not the same shape which mean there is an issue with these values in the code"
+
+    # Calculate the pixel-wise MSE
+    mse_map = np.square(predicted_img - target_img)
+
+    return mse_map
+
+
+def calculate_pixelwise_rmse(predicted_img, target_img):
+    """
+    #TODO Maybe rename this to absolute error, because we are not doing any mean here?
+    Calculate the mse value between the prediction and the target image pixel wise
+    Inputs - predicted_img: The output of the neural network of dimension sample x row x column x channles
+           - target_img:    The target of the neural network of dimension sample x row x column x channles
+    Output - pixel_wise_mae: The pixel wise rmse between the prediction and the target of dimension sample x row x column x channles
+    """
+    assert predicted_img.shape == target_img.shape, "The prediction and the target are not the same shape which mean there is an issue with these values in the code"
+
+    # Calculate the pixel-wise rmse
+    rmse_map = np.sqrt(np.square(predicted_img - target_img))
+
+    return rmse_map
+
+
+def calculate_pixelwise_mae(predicted_img, target_img):
+    """
+    #TODO Maybe rename this to absolute error, because we are not doing any mean here?
+    Calculate the mse value between the prediction and the target image pixel wise
+    Inputs - predicted_img: The output of the neural network of dimension sample x row x column x channles
+           - target_img:    The target of the neural network of dimension sample x row x column x channles
+    Output - pixel_wise_mae: The pixel wise mae between the prediction and the target of dimension sample x row x column x channles
+    """
+    assert predicted_img.shape == target_img.shape, "The prediction and the target are not the same shape which mean there is an issue with these values in the code"
+
+    # Calculate the pixel-wise MAE
+    mae_map = np.abs(predicted_img - target_img)
+
+    return mae_map
+
+
+def classify_pixels_with_confidence(Map, thr, scale_factor=10):
+    """
+    Inputs:
+    - Map: The error map for each pixel of the prediction (sample x row x column x channels).
+    - thr: The threshold value for the MAE to consider if there is an error in the welding piece or not.
+    - scale_factor: A factor to control how sharply the confidence transitions from 0 to 1. Higher values make the confidence more binary, lower values make it smoother.
+    
+    Output:
+    - confidence_map: A map where values between 0 and 1 represent the confidence of an error in each pixel.
+    """
+    # Calculate confidence as a function of how much the error exceeds the threshold
+    # Use a sigmoid transformation to get smooth values between 0 and 1
+    confidence_map = 1 / (1 + np.exp(-scale_factor * (Map - thr)))
+
+    return confidence_map
+
+
+def binary_classification_analysis(binary_map, target):
+    """
+    Calculate the number of true possitif, false possitif, true negatif, false negatif for every pixel in every predicted images
+    Inputs - binary_map: A binary map where 0 represent no error in the pixel (value smaller than the threshold)
+                          and 1 represent an error in the pixel (value bigger than the threshold)  Dimensions: sample x row x column x channles
+    Output - true_possirif  : Number of True possitif predictions
+             false_possitif : Number of False possitifs predictions
+             true_negatif   : Number of True Negatif predictions
+             false_negatif  : Number of False Negatif predictions
+    """
+    # There are three channels in the binary map associate with the same target. 
+    target_replicated = np.repeat(target[:, :, :, np.newaxis], binary_map.shape[3], axis=3)
+    # Flatten the data to allow simple operation to do the comparaison
+    binary_map_fn = binary_map.flatten()
+    target_fn = target_replicated.flatten()
+
+    tp = np.sum((binary_map_fn == 1) & (target_fn == 1))
+    fp = np.sum((binary_map_fn == 1) & (target_fn == 0))
+    tn = np.sum((binary_map_fn == 0) & (target_fn == 0))
+    fn = np.sum((binary_map_fn == 0) & (target_fn == 1))
+
+    return tp, fp, tn, fn
+
+
+def precision(tp, fp):
+    """
+    Calculate the precision of the predictions
+    Inputs : tp  : Number of True possitif predictions
+             fp : Number of False possitifs predictions
+    Output : precision : The precision of the neural network
+    """
+    if tp + fp == 0:
+        return 0
+    precision = tp / (tp + fp)
+
+    return precision
+
+
+def recall(tp, fn):
+    """
+    Calculate the recall of the predictions
+    Inputs : tp  : Number of True possitif predictions
+             fn  : Number of False Negatif predictions
+    Output : recall : The recall of the neural network
+    """
+    if tp + fn == 0:
+        return 0
+    recall = tp / (tp+fn)
+
+    return recall 
+
+
+def accuracy(tp, fp, tn, fn):
+    """
+    Calculate the accuracy of the predictions
+    Inputs - tp  : Number of True possitif predictions
+             fp : Number of False possitifs predictions
+             tn   : Number of True Negatif predictions
+             fn  : Number of False Negatif predictions
+    Output - accuracy: The accuracy of the neural network 
+    """
+    if tp + fp + tn + fn == 0:
+        return 0
+    accuracy = (tp + tn) / (tp+fp+tn+fn)
+
+    return accuracy
+
+
+def f1score(precision, recall):
+    """
+    Calculate the f1 score of the predictions
+    Inputs - precision : The precision of the neural network 
+             recall : The recall of the neural network
+    Output - f1score : The F1 score
+    """
+    if precision+recall == 0:
+        return 0
+    f1_score = 2* ((precision*recall) / (precision+recall))
+
+    return f1_score
+
+def find_optimal_threshold_and_plot_roc(probabilities, target, path_results):
+    """
+    Find the optimal threshold based on the ROC curve and plot the ROC curve.
+    
+    Inputs:
+    - probabilities: The output probabilities from the model (sample x row x column x channels).
+    - target: The ground truth binary values (sample x row x column), 1 channel.
+    
+    Outputs:
+    - optimal_threshold: The threshold that gives the best trade-off between TPR and FPR.
+    """
+    # Ensure target is binary (0 or 1)
+    assert np.array_equal(np.unique(target), [0, 1]), "Target must be binary (0 or 1)."
+
+    # Option 1: Average probabilities across channels to reduce to single channel
+    probabilities_avg = np.mean(probabilities, axis=-1)  # Shape: (sample, row, column)
+
+    # Option 2: Alternatively, you can use max probabilities across channels
+    # probabilities_avg = np.max(probabilities, axis=-1)  # Shape: (sample, row, column)
+
+    # Flatten both the averaged probabilities and the target
+    probabilities_flat = probabilities_avg.flatten()
+    target_flat = target.flatten()
+
+    # Calculate the ROC curve
+    fpr, tpr, thresholds = roc_curve(target_flat, probabilities_flat)
+
+    # Plot the ROC curve
+    plt.figure(figsize=(8, 6))
+    plt.plot(fpr, tpr, label='ROC curve')
+    plt.plot([0, 1], [0, 1], 'k--', label='Random classifier')
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel('False Positive Rate (FPR)')
+    plt.ylabel('True Positive Rate (Recall)')
+    plt.title('ROC Curve')
+    plt.legend(loc="lower right")
+    plt.grid(True)
+
+    # Create directory if it doesn't exist and save the plot
+    dir = f'{path_results}/image'
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+    plt.savefig(f'{dir}/result_roc_curve.png')
+    
+    # Find the threshold closest to the top-left corner (maximizing TPR - FPR)
+    optimal_idx = np.argmax(tpr - fpr)
+    optimal_threshold = thresholds[optimal_idx]
+    
+    return optimal_threshold
+
+
 def custom_sort_key(filename):
     match = re.match(r'(\d+)([a-z]+)_.*', filename)
     if match:
@@ -235,6 +432,17 @@ def custom_sort_key5(filename):
     else:
         # If no match, return a large number to put the filename last
         return float('inf')
+    
+def box_plot(metrics, name_metric):
+    plt.figure(figsize=(18, 12))
+    plt.boxplot(metrics, labels=['no_defects', 'defects'])
+    plt.title(f'Test set performances for the {name_metric} for non defect and defect images, without considering the defect location.')
+    plt.ylabel('Error value')
+    dir1 = f'{path_results}/image/boxPlot_metrics'
+    if not os.path.exists(dir1):
+        os.makedirs(dir1)
+    plt.savefig(f'{dir1}/boxpliot_{name_metric}.png')
+    plt.close()
 
 def argparser():
     parser = argparse.ArgumentParser(description='Argument used in the code passed by the bash file.')
@@ -276,10 +484,12 @@ if __name__ =='__main__':
     sub_width = args.SUB_WIDTH
     sub_height = args.SUB_HEIGHT
 
-    test = False
-    if not test:
+    regression = False
+    classification = True
+
+    if regression:
         data_processing = dp.DataProcessing(sub_width, sub_height)
-        test_input_no_defects, test_input_defects = data_processing.get_data_processing_stain_PMC860_test(data_path, max_pixel_value) #Put test to True later...  , defaut_images_norm
+        test_input_no_defects, test_input_defects = data_processing.get_data_processing_stain_PMC860_test(data_path, max_pixel_value)
 
         _, row, column, channels = test_input_no_defects.shape
         image_dimentions = (row, column, channels)
@@ -342,107 +552,148 @@ if __name__ =='__main__':
         print('The testing of the Neural Network has been done corectly!')
 
     #If we want to see if there is a welding error in a piece. 
-    else:
-        #Define a threshold
-        ssim_treshold = 0.80
-        direct = '/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/aes_defect_detection/4k_images_stain_01/image/subdivised'
-
-        #Data processing and split the data into set (Train, test, valid).
+    elif classification:
+        # Loading the non defect and defect test data. 
         data_processing = dp.DataProcessing(sub_width, sub_height)
-        test_input, defaut_images = data_processing.get_data_processing_stain(data_path, max_pixel_value, test=True)
-
-        #Concatenate defect with non defect test images. 
-        test_images = np.concatenate((defaut_images, test_input), axis=0)
-        print(f'The shape of the defaut {defaut_images.shape}')
-        print(f'The shape of the test_input {test_input.shape}')
-        print(f'{test_images.shape}')
-        del defaut_images
-        del test_input
-
-        #Get the hp values
+        test_input_no_defects, test_input_defects = data_processing.get_data_processing_stain_PMC860_test_classification(data_path, max_pixel_value)
+        
+        # Creating the deep learning model architecture
+        _, row, column, channels = test_input_no_defects.shape
+        image_dimentions = (row, column, channels-1) # Excluding the last channel, because it represent the label (i.e. defect or not)
+        # Selecting the best HPs and the selected model
         data_frame = pd.read_csv(f'{path_results}/hp_search_results.csv')
-        #List all the hp used during training. 
         learning_rate = data_frame['lr']
-        #Selected model
-        j = 0
-
-        #Create the model that will be used
-        image_dimentions = (256, 256, 3) #TODO eventually change the hardcoded value
-        model = mod.AeModels(float(learning_rate.iloc[j]), monitor_loss, monitor_metric, image_dimentions)
-        build_model = model.aes_defect_detection()
-        name = f"model{j+1}"
+        model = mod.AeModels(float(learning_rate.iloc[0]), monitor_loss, monitor_metric, image_dimentions)
+        build_model = model.aes_defect_detection()   #Change this line if the model change. 
+        # Building the selected model. 
+        name = f"model1"
         build_model.load_weights(f'{filepath_weights}/search_{name}')
 
-        do_data_processing = False
-        if do_data_processing: 
-            #Get the segmented images.
-            segmented_images = get_segmented_images(test_images, path_results)
-            #Get the subdivised images. 
-            get_subdivise_images()
+        # Doing inference with the network (Regenerating the image from the input, i.e. regression)
+        result_no_defects_norm = prediction(build_model, test_input_no_defects[:, :, :, :3]) # Excluding channel 4 because it is the label. 
+        result_defects_norm = prediction(build_model, test_input_defects[:, :, :, :3])
+        # Creating a label for these predictions
+        no_defect_label = test_input_no_defects[:, :, :, 3]
+        defect_label = test_input_defects[:, :, :, 3]
 
-        #Main loop to predict if there is a defect or not
-        sorted_folder = sorted(os.listdir(direct), key=custom_sort_key3)
+        # Un-standardizing the data, to get the original input data format. 
+        test_no_defects_denorm, result_no_defects_denorm, difference_no_defects_reshaped = data_processing.de_normalize(test_input_no_defects[:, :, :, :3], result_no_defects_norm, max_pixel_value)
+        test_defects_denorm, result_defects_denorm, difference_defects_reshaped = data_processing.de_normalize(test_input_defects[:, :, :, :3], result_defects_norm, max_pixel_value)
 
-        for image, folder in enumerate(sorted_folder):
-            print(f'The folder is {folder}')
+        # Putting the no_defect and defect data together #TODO do this operation at the beginning of the code. 
+        test_data = np.concatenate((test_no_defects_denorm, test_defects_denorm), axis=0)
+        test_target_regression = np.concatenate((result_no_defects_denorm, result_defects_denorm), axis=0)
+        test_target_classification = np.concatenate((no_defect_label, defect_label), axis=0)
+        
+        # Calculating the MAE, MSE and RMSE a for each pixel for the prediciton
+        test_maeMap = calculate_pixelwise_mae(test_data, test_target_regression)
+        test_mseMap = calculate_pixelwise_mse(test_data, test_target_regression)
+        test_rmseMap = calculate_pixelwise_rmse(test_data, test_target_regression)
 
-            camera_directory = f'{direct}/{folder}'
-            sorted_folder_cam = sorted(os.listdir(camera_directory), key=custom_sort_key4)
+        # Defining a threshold for every metrics to define an error in the welding piece
+        mae_thr = 40 #TODO do not define arbitrary values, define a threshold based on the performance of the validation data metrics. 
+        mse_thr = 0.4 #TODO Ibid.
+        rmse_thr = 0.4 #TODO Ibid.
 
-            for view, camera_view in enumerate(sorted_folder_cam):
-                print(f'The camera_view is {camera_view}')
+        # Classificatin section _______________________________________________________________________________________________________
+        
+        # Assign classes to each pixels in the prdiction
+        # Assign the class 0 if the prediction is smaller than the threshold, else (value is bigger than threshold) assign 1 which mean there is an error
+        binary_classified_map_mae = classify_pixels_with_confidence(test_maeMap, mae_thr)
+        binary_classified_map_mse = classify_pixels_with_confidence(test_mseMap, mse_thr)
+        binary_classified_map_rmse = classify_pixels_with_confidence(test_rmseMap, rmse_thr)
 
-                welding_dir = f'{direct}/{folder}/{camera_view}'
-                sorted_folder_welding = sorted(os.listdir(welding_dir), key=custom_sort_key5)
+        # # Calculer les performances de la classification _________________________________
+        # # Calculate TP = True possitif, FP = False possitif, TN = True Negatif, FN = False Negatif
+        # tp, fp, tn, fn = binary_classification_analysis(binary_classified_map_mae, test_target_classification)
+        # # Calculate precision, recall, accuracy and F1 score
+        # precision_classification = precision(tp, fp)
+        # recall_classification = recall(tp, fn)
+        # accuracy_classification = accuracy(tp, fp, tn, fn)
+        # f1_score_classification = f1score(precision_classification, recall_classification)
+        # print(f'The classificaton performances are as follow: \n')
+        # print(f'The precision is : {precision_classification}\nThe recall is : {recall_classification}\nThe accuracy is : {accuracy_classification}')
+        # print(f'The f1 score is : {f1_score_classification}\n')
 
-                for weld_num, welding in enumerate(sorted_folder_welding):
-                    print(f'The camera_view is {welding}')
+        # Calculer les performances de la classification _________________________________
+        # Create ROC graph
+        find_optimal_threshold_and_plot_roc(binary_classified_map_mae, test_target_classification, path_results)
 
-                    final_path = f'{direct}/{folder}/{camera_view}/{welding}'
-                    sorted_filenames = sorted(os.listdir(final_path), key=custom_sort_key2)
-            
-                    #Data loading
-                    images = []
 
-                    for filename in sorted_filenames:
-                        if filename.endswith(".jpg"):
-                            img = cv2.imread(f'{final_path}/{filename}')
-                            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                            images.append(img)
 
-                    for i, img in enumerate(images):
-                        #Normalize the input data
-                        image_normalize = data_processing.normalize(img, max_pixel_value)
-                        image_normalize_expand = np.expand_dims(image_normalize, axis=0)
-                        #Predict on the trained model
-                        result_norm = prediction(build_model, image_normalize_expand)
-                        #Evaluate the performances of the model
-                        test_loss, test_metric = build_model.evaluate(result_norm, result_norm)
 
-                        #Denormalize the data 
-                        input_test_denorm, result_test_denorm, difference_reshaped_denorm = data_processing.de_normalize(image_normalize_expand, result_norm, max_pixel_value)
-                        result_test_denorm = result_test_denorm.squeeze()
-                        difference_reshaped_denorm = difference_reshaped_denorm.squeeze()
 
-                        #Save the predicted image
-                        path_results = f'{final_path}/prediction/'
-                        os.makedirs(path_results, exist_ok=True)
-                        new_path_results = f'{path_results}/{sorted_filenames[i]}'
 
-                        createPredImg2(img, result_test_denorm, difference_reshaped_denorm, new_path_results)
+        # # Calculating metrics for the quality of the image regeneration (Global metrics, i.e for the whole image) for non defect images. 
+        # mse_no_defects_global = []
+        # rmse_no_defects_global = []
+        # mae_no_defects_global = []
+        # psnr_no_defects_global = []
+        # ssim_no_defects_global = []
 
-                        #Calculate error image metrics
-                        print(f'The shape of the image is: {img.shape}')
-                        psnr_value = psnr(img, result_test_denorm, data_range=255)
-                        ssim_value = ssim(img, result_test_denorm, data_range=255, channel_axis=-1)
-                        print(f'The psnr value is {psnr_value}')
-                        print(f'Tje ssim value is {ssim_value}')
+        # for (predict, target) in zip(result_no_defects_denorm, test_no_defects_denorm):
+        #     # Calculating the metrics on the predict image. 
+        #     mask = target != 0
+        #     masked_predict = predict[mask]
+        #     masked_target = target[mask]
 
-                        #Taking decision if defect or not
-                        if ssim_value <= ssim_treshold:
-                            error = 1
-                        else:
-                            error = 0
+        #     mse_no_defects_global.append(mean_squared_error(masked_target, masked_predict))
+        #     rmse_no_defects_global.append(root_mean_squared_error(masked_target, masked_predict))
+        #     mae_no_defects_global.append(mean_absolute_error(masked_target, masked_predict))
 
-                        #Write the information to a csv file
-                        write_error_csv(test_loss, psnr_value, ssim_value, ssim_treshold, error, direct, image, view, weld_num, i)
+        #     psnr_no_defects_global.append(peak_signal_noise_ratio(target, predict))
+
+        #     data_range = max(np.max(target), np.max(predict)) - min(np.min(target), np.min(predict))
+        #     ssim_no_defects_global.append(structural_similarity(target, predict, data_range=data_range, channel_axis=2))
+        
+        # # Calculate the mean value for each metrics
+        # mean_mse_no_defects_global = np.mean(np.array(mse_no_defects_global))
+        # mean_rmse_no_defects_global = np.mean(np.array(rmse_no_defects_global))
+        # mean_mae_no_defects_global = np.mean(np.array(mae_no_defects_global))
+        # mean_psnr_no_defects_global = np.mean(np.array(psnr_no_defects_global))
+        # mean_ssim_no_defects_global = np.mean(np.array(ssim_no_defects_global))
+
+        # print(f'The average metrics for the whole dataset for the images without defect are: ')
+        # print(f'mse: {mean_mse_no_defects_global}\nrmse: {mean_rmse_no_defects_global}\nmae: {mean_mae_no_defects_global}')
+        # print(f'psnr: {mean_psnr_no_defects_global}\nssim: {mean_ssim_no_defects_global}\n\n')
+
+        # # Calculating metrics for the quality of the image regeneration (Global metrics, i.e for the whole image) for defect images without considering the defect position. 
+        # mse_defects_global = []
+        # rmse_defects_global = []
+        # mae_defects_global = []
+        # psnr_defects_global = []
+        # ssim_defects_global = []
+
+        # for (predict, target) in zip(result_defects_denorm, test_defects_denorm):
+        #     # Calculating the metrics on the predict image. 
+        #     mask = target != 0
+        #     masked_predict = predict[mask]
+        #     masked_target = target[mask]
+
+        #     mse_defects_global.append(mean_squared_error(masked_target, masked_predict))
+        #     rmse_defects_global.append(root_mean_squared_error(masked_target, masked_predict))
+        #     mae_defects_global.append(mean_absolute_error(masked_target, masked_predict))
+
+        #     psnr_defects_global.append(peak_signal_noise_ratio(target, predict))
+
+        #     min_predict = min(np.min(target), np.min(predict))
+        #     max_predict = max(np.max(target), np.max(predict))
+        #     data_range = max_predict - min_predict
+        #     ssim_defects_global.append(structural_similarity(target, predict, data_range=data_range, channel_axis=2))
+        
+        # # Calculate the mean value for each metrics
+        # mean_mse_defects_global = np.mean(np.array(mse_defects_global))
+        # mean_rmse_defects_global = np.mean(np.array(rmse_defects_global))
+        # mean_mae_defects_global = np.mean(np.array(mae_defects_global))
+        # mean_psnr_defects_global = np.mean(np.array(psnr_defects_global))
+        # mean_ssim_defects_global = np.mean(np.array(ssim_defects_global))
+
+        # print(f'The average metrics for the whole dataset for the images with defect are: ')
+        # print(f'mse: {mean_mse_defects_global}\nrmse: {mean_rmse_defects_global}\nmae: {mean_mae_defects_global}')
+        # print(f'psnr: {mean_psnr_defects_global}\nssim: {mean_ssim_defects_global}\n\n')
+
+        # # Creating boxplots for every metrics for the whole image, without taking in consideration where the defect are located:
+        # metrics = [[mse_no_defects_global, mse_defects_global], [rmse_no_defects_global, rmse_defects_global], [mae_no_defects_global, mae_defects_global], [psnr_no_defects_global, psnr_defects_global], [ssim_no_defects_global, ssim_defects_global]]
+        # name_metrics = ['mse', 'rmse', 'mae', 'psnr', 'ssim']
+        # for (metric, name_metric) in zip(metrics, name_metrics):
+        #     box_plot(metric, name_metric)

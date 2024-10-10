@@ -230,6 +230,16 @@ class DataProcessing():
         """
         return data.astype('float32') / float(max_pixel_value)
     
+    def normalize_classification(self, data, max_pixel_value):
+        """
+        Data domain will be between 0 and 1. 
+        Used when normalizing the classification data, there are 4 channels in this case, 
+        with one channel representing the defect position which will not be normalized.
+        """
+        # Select only the three first channels, the data is in the format: [sample, width, length, channel]
+        data[:, :, :, :3] = data[:, :, :, :3].astype('float32') / float(max_pixel_value)
+        return data
+    
     def de_normalize(self, input_test, result_test, max_pixel_value):
         difference_abs = np.abs(input_test - result_test)
 
@@ -339,6 +349,31 @@ class DataProcessing():
 
             return non_defauts_images, defauts_images
         
+    def segment_PMC860(self, data_path, type, dataset, output_path):
+        """
+        segment the dataset into the desired dimension from the original image
+        """
+        # Loading the data to segment
+        data_path = f'{data_path}/{dataset}/segmentation/{type}'
+        input_train = []
+        filenames = []
+
+        for i, filename in enumerate(os.listdir(data_path)):
+            print(f'Loading image: {i+1}')
+            if i <= 200:
+                if filename.endswith(".jpg"):
+                    input_train.append(cv2.imread(f'{data_path}/{filename}'))
+                    filenames.append(filename)
+
+        # Segmenting the training and validation data.
+        for i, (image_training, filename) in enumerate(zip(input_train, filenames)):
+            print(f'Segmenting image: {i+1}')
+            seg_images = self.subdivise(image_training)
+            for i, img in enumerate(seg_images):
+                if not np.all(img == 0):
+                    cv2.imwrite(f'{output_path}/{filename}_{i}', img)
+        
+
     def get_data_processing_stain_PMC860(self, data_path, max_pixel_value, test=False):
         """
         Data processing to obtain stain on the data and normalize the data between 0 and 1. 
@@ -459,6 +494,7 @@ class DataProcessing():
         Data processing to obtain stain on the data and normalize the data between 0 and 1. 
         Called PMC860, because this dataprocessing is done using the new dataset nammed: "Datasets_segmentation_grayscale"
         Used when testing the model with test data. 
+        Using when doing the regression (Image regeneration) in test.py. 
         """
         print("You are currently doing the data processing with stain for dataset: Datasets_segmentation_grayscale")
         # Loading the training data
@@ -480,22 +516,6 @@ class DataProcessing():
             print(f'Loading image: {i}')
             if filename.endswith(".jpg") and i <= 300:
                 test_defects.append(cv2.imread(f'{input_test_defects}/{filename}'))
-
-        # # Segmenting the training and validation data.
-        # seg_images_defects = []
-        # seg_images_validation = []
-
-        # print(f'Image segmentation for training data')
-        # for image_training in test_no_defects:
-        #     seg_images_defects.extend(self.segment(image_training))
-        # test_no_defects = seg_images_defects
-        # print(f'There are: {len(test_no_defects)} elements in image segmentation without defects')
-        
-        # print(f'Image segmentation for validation data\n')
-        # for image_validation in test_defects:
-        #     seg_images_validation.extend(self.segment(image_validation))
-        # test_defects = seg_images_validation
-        # print(f'There are: {len(test_defects)} elements in image segmentation with defects')
 
         # Subdivise the training and validation data. 
         sub_images_no_defects = []
@@ -550,6 +570,174 @@ class DataProcessing():
         print(f'There are: {len(filtered_defects)} images with defects after deleting black images')
             
         return np.array(filtered_no_defects), np.array(filtered_defects)
+
+
+    def get_data_processing_stain_PMC860_test_classification(self, data_path, max_pixel_value):
+        """
+        Data processing to obtain stain on the data and normalize the data between 0 and 1. 
+        Called PMC860, because this dataprocessing is done using the new dataset nammed: "Datasets_segmentation_grayscale"
+        Used when testing the model with test data. 
+        Used when doing the classification in test.py. 
+        """
+        print("You are currently doing the data processing with stain for dataset: Datasets_segmentation_grayscale")
+        # Loading the test data without defects
+        print(f'Loading the testing without defect data')
+        input_test_no_defects = f'{data_path}/test/segmentation/as_no_default'
+        test_no_defects = []
+        image_nb = 30 # This is a limit to not bust the memory when running on local computer i <= 300
+
+        for i, filename in enumerate(sorted(os.listdir(input_test_no_defects), key=self.custom_sort_key2)):
+            print(f'Loading image: {i}, nammed: {filename}')
+            if filename.endswith(".jpg") and i <= image_nb:
+                no_defect_img = cv2.imread(f'{input_test_no_defects}/{filename}')
+                print(f'The shape of the image is: {no_defect_img.shape}')
+                # Add a 0 channel (To know where the defect are) 
+                # i.e. since we are doing no defect images, we just add a channel with 0 to every pixels. 
+                zero_array_shape = list(no_defect_img.shape)
+                zero_array_shape[2] = 1
+                zero_channel = np.zeros(zero_array_shape)
+                print(f'The shape of the zero_channel is: {zero_channel.shape}')
+                no_defect_annotated = np.concatenate((no_defect_img, zero_channel), axis=-1)
+                # # Test if the last channel are all 0, maybe unittest later?. 
+                # print(f'The shape of the no_defect_annotated is: {no_defect_annotated.shape}')
+                # if not np.all(no_defect_annotated[:, :, -1] == 0):
+                #     print(f'The 0s channels are not all 0.')
+                # else:
+                #     print(f'The 0s channel are all 0.')
+                print(f'\n\n The data shape without defect is: {no_defect_annotated.shape}\n\n')
+                test_no_defects.append(no_defect_annotated)
+        
+
+        # Loading the test data with defects
+        print(f'Loading the testing with defect data')
+        input_test_defects = f'{data_path}/test/segmentation/as_default'
+        test_defects = []
+        lacalisation_defect = []
+
+        for i, filename in enumerate(sorted(os.listdir(input_test_defects), key=self.custom_sort_key2)):
+            print(f'Loading image: {i}, nammed: {filename}')
+            # Loading the defect image
+            if filename.endswith(".jpg") and i <= image_nb: 
+                defect_img = cv2.imread(f'{input_test_defects}/{filename}')
+            # Loading the localisation of the defect
+            elif filename.endswith(".txt") and i <= image_nb:
+                # Read the information to detect the defect position
+                file = open(f'{input_test_defects}/{filename}', 'r')
+                content = file.readline()
+                # print(f'The content of the file is: {content} and of type: {type(content)}')
+                data_list = content.split()
+                content_float = [float(i) for i in data_list]
+                # print(f'The content of the file is: {content_float} and of type: {type(content_float)}')
+                file.close()
+                lacalisation_defect.append(content_float)
+
+                # Create the matrix to know the exact defect position
+                # Start by creating a matrix full with 0s
+                zero_array_shape = list(defect_img.shape)
+                zero_array_shape[2] = 1
+                zero_channel = np.zeros(zero_array_shape)
+
+                # Find the pixel position for the defect in the image
+                x_center_norm = content_float[1]
+                y_center_norm = content_float[2]
+                width_defect_norm = content_float[3]
+                heigth_defect_norm = content_float[4]
+                # Set the width and heigth of the image
+                width_img, heigth_img, _ = defect_img.shape
+                # Denormalize the position to detect the defect
+                x_center = x_center_norm * width_img
+                y_center = y_center_norm * heigth_img
+                width_defect = width_defect_norm * width_img
+                heigth_defect = heigth_defect_norm * heigth_img
+                # Calculate the pixel coordinates of the defects bounding box
+                pixel1_defect_x = int(x_center - (0.5*width_defect))
+                pixel1_defect_y = int(y_center + (0.5*heigth_defect))
+
+                pixel2_defect_x = int(x_center + (0.5*width_defect))
+                pixel2_defect_y = int(y_center + (0.5*heigth_defect))
+
+                pixel3_defect_x = int(x_center - (0.5*width_defect))
+                pixel3_defect_y = int(y_center - (0.5*heigth_defect))
+
+                pixel4_defect_x = int(x_center + (0.5*width_defect))
+                pixel4_defect_y = int(y_center - (0.5*heigth_defect))
+                # Find the min and max x and y coordinate where the defect is located
+                min_x = min(pixel1_defect_x, pixel2_defect_x, pixel3_defect_x, pixel4_defect_x)
+                max_x = max(pixel1_defect_x, pixel2_defect_x, pixel3_defect_x, pixel4_defect_x)
+
+                min_y = min(pixel1_defect_y, pixel2_defect_y, pixel3_defect_y, pixel4_defect_y)
+                max_y = max(pixel1_defect_y, pixel2_defect_y, pixel3_defect_y, pixel4_defect_y)
+                # Put 1 where the defect is located
+                zero_channel[min_y:max_y +1, min_x:max_x +1] = 1
+
+                #Concatenate the original image with the defect location 
+                defect_annotated = np.concatenate((defect_img, zero_channel), axis = -1)
+                print(f'\n\nThe data shape with defect is: {defect_annotated.shape}\n\n')
+                test_defects.append(defect_annotated)
+
+        # Subdivise the original images for the non defect and defect. 
+        sub_images_no_defects = []
+        sub_images_defects = []
+
+        print(f'Subdivising the no defect images')
+        for images_training in test_no_defects:
+            if not np.all(images_training == 0):
+                sub_images_no_defects.extend(self.subdivise(images_training))
+        test_no_defects = sub_images_no_defects
+        print(f'\n\nThere are: {len(test_no_defects)} subdivised images without any defect that are not all 0s (black pixels)\n\n')
+
+        print(f'Subdivising the defect images\n')
+        for images_validating in test_defects:
+            if not np.all(images_validating == 0):
+                sub_images_defects.extend(self.subdivise(images_validating))
+        test_defects = sub_images_defects
+        print(f'\n\nThere are: {len(test_defects)} subdivised images with defect that are not all 0s (black pixels)\n\n')
+
+        test_no_defects = np.array(test_no_defects)
+        test_defects = np.array(test_defects)
+        print(f'\n\nThe shape for test_no_defects is: {test_no_defects.shape} amd the shape for test_defects is: {test_defects.shape}\n\n')
+
+        # Normalizing the input data in range 0 to 1. 
+        print(f'Normalizing the data')
+        train_no_defects_loss_norm = self.normalize_classification(test_no_defects, max_pixel_value)
+        valid_defects_loss_norm = self.normalize_classification(test_defects, max_pixel_value)
+        print(f'The shape after the normalization is: {train_no_defects_loss_norm.shape} without defects')
+        print(f'The shape after the normalization is: {valid_defects_loss_norm.shape} with defects')
+
+        # Delete images that have all pixels equals to 0. 
+        print(f'Deleting black images')
+        filtered_no_defects = []
+        cptr = 0
+
+        for i, testing_no_defects in enumerate(train_no_defects_loss_norm):
+            # Excluding the channel where the defect are located, because it is possible and normal for them to be 
+            # attribuate a 0 value if there are no defect in the analyzed image. 
+            if not np.all(testing_no_defects[:, :, :3] == 0):
+                filtered_no_defects.append(testing_no_defects)
+            else:
+                cptr += 1
+        print(f'We removed: {cptr} no defects images')
+        print(f'There are: {len(filtered_no_defects)} images without defects after deleting black images')
+                
+        filtered_defects = []
+        cptr = 0 
+
+        for i, testing_defects in enumerate(valid_defects_loss_norm):
+            # Excluding the channel where the defect are located, because it is possible and normal for them to be 
+            # attribuate a 0 value if there are no defect in the analyzed image. 
+            if not np.all(testing_defects[:, :, :3] == 0):
+                filtered_defects.append(testing_defects)
+            else:
+                cptr += 1
+        print(f'We removed: {cptr} defects images')
+        print(f'There are: {len(filtered_defects)} images with defects after deleting black images')
+
+        filtered_no_defects = np.array(filtered_no_defects)
+        filtered_defects = np.array(filtered_defects)
+        print(f'The shape for filtered_no_defects is: {filtered_no_defects.shape} and for filtered_defects is: {filtered_defects.shape}')
+
+            
+        return filtered_no_defects, filtered_defects 
 
 
     def resize(self, image):
@@ -622,3 +810,10 @@ class DataProcessing():
         else:
             # If no match, return a tuple that puts the filename last
             return (float('inf'), filename)  
+        
+    def custom_sort_key2(self, filename):
+        match = re.match(r'(\d+)_.*', filename)
+        if match:
+            return (int(match.group(1)), filename)
+        else:
+            return (float('inf'), filename)

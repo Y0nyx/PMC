@@ -19,7 +19,7 @@ readonly TEST_NAME='pmc860_grayscale_dataset'
 readonly MONITOR_LOSS='mean_absolute_error'
 readonly MONITOR_METRIC='mean_squared_error'
 readonly MODE_METRIC='min'
-readonly VERBOSE=TRUE #If false remove --VERBOSE from line 40
+readonly VERBOSE=True #If false remove --VERBOSE from line 40
 #Variable for HP search 
 readonly DO_HP_SEARCH=True #If false remove --DO_HP_SEARCH from line 40
 readonly EPOCHS_HP=40

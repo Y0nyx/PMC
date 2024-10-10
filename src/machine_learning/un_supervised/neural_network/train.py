@@ -213,60 +213,23 @@ if __name__ == '__main__':
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
     data_processing = dp.DataProcessing(sub_width, sub_height)
-    train_input, train_input_loss, valid_input, valid_input_loss = data_processing.get_data_processing_stain_PMC860(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+    # Doing the segmentation for the dataset (Do this only one time, it will be saved in the files)
+    data_processing.segment_PMC860(data_path='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale',
+                                   type='as_no_default', dataset='train', 
+                                   output_path='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale/train/segmentation/as_no_default_segmented')
 
-    # # TEST: Displaying the images results to see if it was well executed. 
-    # # Displaying the training input and target images
-    # print(f'Testing the input and target train')
-    # for i, (img_train_input, img_train_target) in enumerate(zip(train_input, train_input_loss)):
-    #     if i < 100:
-    #         # Denormalizing data
-    #         img_train_input = (img_train_input * max_pixel_value).astype('uint8')
-    #         img_train_target = (img_train_target * max_pixel_value).astype('uint8')
+    #train_input, train_input_loss, valid_input, valid_input_loss = data_processing.get_data_processing_stain_PMC860(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
-    #         fig, axes = plt.subplots(1, 2)
-    #         fig.suptitle('Input vs Target for training set')
+    # #DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
+    # _, row, column, channels = train_input.shape
+    # image_dimentions = (row, column, channels)
 
-    #         axes[0].set_title('Input')
-    #         axes[0].imshow(img_train_input)
-    #         axes[1].set_title('Target')
-    #         axes[1].imshow(img_train_target)
+    # train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input_loss, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
+    # if do_hp_search:
+    #    print(f'We are doing a hp search')
+    #    history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search, strategy)
+    # else:
+    #    print(f'We are only training the model without hp search')
+    #    history = train_model.train_normal(epochs, batch_size, learning_rate, path_results, strategy)
 
-    #         plt.savefig(f'/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/PMC860/training_data_processing/train_{i+1}.png')
-    #         plt.close(fig)
-    #     else:
-    #         break
-
-    # print(f'Testing the input and target valid')
-    # for i, (img_valid_input, img_valid_target) in enumerate(zip(valid_input, valid_input_loss)):
-    #     if i < 100:
-    #         # Denormalizing data
-    #         img_valid_input = (img_valid_input * max_pixel_value).astype('uint8')
-    #         img_valid_target = (img_valid_target * max_pixel_value).astype('uint8')
-
-    #         fig, axes = plt.subplots(1, 2)
-    #         fig.suptitle('Input vs Target for validation set')
-
-    #         axes[0].set_title('Input')
-    #         axes[0].imshow(img_valid_input)
-    #         axes[1].set_title('Target')
-    #         axes[1].imshow(img_valid_target)
-
-    #         plt.savefig(f'/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/PMC860/validating_data_processing/valid_{i+1}.png')
-    #         plt.close(fig)
-    #     else:
-    #         break
-
-    #DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
-    _, row, column, channels = train_input.shape
-    image_dimentions = (row, column, channels)
-
-    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input_loss, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
-    if do_hp_search:
-       print(f'We are doing a hp search')
-       history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search, strategy)
-    else:
-       print(f'We are only training the model without hp search')
-       history = train_model.train_normal(epochs, batch_size, learning_rate, path_results, strategy)
-
-    print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
+    # print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
