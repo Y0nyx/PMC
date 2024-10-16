@@ -112,6 +112,10 @@
       {
         "from": "../Ai",
         "to": "./resources/Ai"
+      },
+      {
+        "from": "plc.py",
+        "to": "./resources/plc.py"
       }
 
     ]

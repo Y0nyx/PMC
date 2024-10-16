@@ -13,15 +13,15 @@ export default function PagePiece() {
   const { id } = useParams();
   const [imageSelected, setImageSelected] = useState(0);
   const [piece, setPiece] = React.useState();
-  const [openError,setOpenError] = useState(false)
+  const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    ipcRenderer.on("error", (event,error) => {
-      console.log(error)
+    ipcRenderer.on("error", (event, error) => {
+      console.log(error);
       setErrorMessage(error);
-      setOpenError(true)
+      setOpenError(true);
     });
     ipcRenderer.on("receivePiece", async (event, message) => {
       let parser = await pieceParser(message);
@@ -73,7 +73,7 @@ export default function PagePiece() {
                 <div className="overflow-hidden relative flex justify-center items-center w-full h-full">
                   <img
                     src={piece.images[imageSelected].url}
-                    className="object-contain w-full h-full"
+                    className="object-cover w-full h-full"
                   />
 
                   {piece.images[imageSelected].boundingBox &&
@@ -156,7 +156,7 @@ export default function PagePiece() {
                 </span>
               </div>
 
-              <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
+              {/*        <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
                 <span>{"Erreur:"}</span>
                 <span>{piece.errorType}</span>
               </div>
@@ -164,7 +164,7 @@ export default function PagePiece() {
               <div className=" flex justify-between items-center w-full bg-white m-1 rounded-lg p-4 text-xl text-gray-800  font-normal">
                 <span>{"Description de l'erreur:"}</span>
                 <span>{piece.errorDescription}</span>
-              </div>
+              </div> */}
             </div>
           </div>
         )}

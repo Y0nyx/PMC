@@ -10,7 +10,7 @@ export default function StopButton() {
 
   function stopCommand() {
     uicontext.setState(protocol.state.loading);
-    navigate("/loading",{ state: { command: "backward" } })
+    navigate("/loading", { state: { command: "stop" } });
   }
 
   return (
