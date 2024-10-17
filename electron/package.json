@@ -33,6 +33,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "npm run build && electron .",
+    "electron-root": "npm run build && electron . --no-sandbox --in-process-gpu",
     "dist": "npm run build && electron-builder"
   },
   "eslintConfig": {

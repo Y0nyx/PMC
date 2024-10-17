@@ -4,7 +4,7 @@ const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
 const {writeToPLC}   = require("./apiPLC")
 const { exec } = require("child_process");
-const { Transform } = require('json2csv');
+const {parse} = require('json2csv')
 const path = require("path");
 
 let appPath = global.appPath;
@@ -165,38 +165,26 @@ function apiFrontend(mainWindow, configReact) {
   });
 
 
-  function writeCsvSection(outputFile,fields, data, sectionHeader) {
-    // Write the section header (if needed)
-    outputFile.write(sectionHeader + '\n');
-    
-    // Write the field headers
-    outputFile.write(fields.join(',') + '\n');
-  
-    // Create a json2csv transform stream
-    const json2csv = new Transform({ fields });
-  
-    // Pipe the JSON data into the CSV stream
-    data.forEach((row) => {
-      json2csv.write(row);
-    });
-    
-    json2csv.pipe(outputFile, { end: false });
-    json2csv.end();
-    
-    // Write a blank line or separator between sections (optional)
-    outputFile.write('\n');
-  }
-
 // Function to find the USB drive path dynamically
 function findUsbDrivePath() {
-  const mediaDir = '/media';
+  const mediaDir = '/media/dofa';
   const usbDrives = fs.readdirSync(mediaDir); // Read directories in /media
 
   for (const drive of usbDrives) {
     const drivePath = path.join(mediaDir, drive);
-    // Check if it's a directory and has write permissions
-    if (fs.statSync(drivePath).isDirectory()) {
-      return drivePath; // Return the first found USB drive
+    try {
+      const stats = fs.statSync(drivePath);
+
+      // Check if it's a directory
+      if (stats.isDirectory()) {
+        // Check if it's writable
+        fs.accessSync(drivePath, fs.constants.W_OK);
+        console.log(drivePath, "found");
+        return drivePath; // Return the first found USB drive
+      }
+    } catch (err) {
+      // Handle the error (like logging it)
+      console.error(`Error accessing ${drivePath}: ${err.message}`);
     }
   }
 
@@ -208,27 +196,40 @@ function findUsbDrivePath() {
     let log = await query.exportLog()
     let piece = await query.exportPiece();
 
-
+    
     let usb = findUsbDrivePath()
     if(usb == 0) {
-      mainWindow.webContents.send("noUSB");
+      mainWindow.webContents.send("error","No USB Found");
+      console.log("No USB found")
       return
     }
-
+    
 
     // Get the current date
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 10); // Format: YYYY-MM-DD
     // Create a file name with the current date
-    const outputFileName = `output_${formattedDate}.csv`;
+    const outputDir = `${formattedDate}`;
     // Full path to the output file on the USB drive
-    const outputFilePath = path.join(usb, outputFileName);
-    const outputFile = fs.createWriteStream(outputFilePath);
+    const outputFilePath = path.join(usb, outputDir);
 
+    if(!fs.existsSync(outputFilePath)){
+      fs.mkdirSync(outputFilePath)
+    }
+    
+    const outputClient = path.join(outputFilePath, `client_${formattedDate}.csv`);
+    const outputLog = path.join(outputFilePath, `log_${formattedDate}.csv`);
+    const outputPiece = path.join(outputFilePath, `piece_${formattedDate}.csv`);
 
-    const clientFields = ['ID', 'Nom', 'Email', 'Telephone'];
-    const logFields = ['ID', 'ID_client', 'Nom'];
-    const pieceFields = [
+    const csvClient = parse(client)
+    const csvLog = parse(log)
+    let csvPiece
+    if(piece.lentgh > 0){
+      csvPiece = parse(piece)
+    }
+    else{
+      
+      csvPiece =  [
       'ID', 
       'Date', 
       'Photo', 
@@ -238,22 +239,19 @@ function findUsbDrivePath() {
       'ID_log', 
       'ID_type_piece', 
       'ID_erreur_Soudure'
-    ];
+    ].map(item => `"${item}"`).join(", ");
+    }
 
-    // Write Client Data
-    writeCsvSection(outputFile,clientFields, client, 'Client Table');
-
-    // Write Log Data
-    writeCsvSection(outputFile,logFields, log, 'Log Table');
-
-    // Write Log Data
-    writeCsvSection(outputFile,pieceFields, piece, 'Log Table');
-
-
-    outputFile.end(() => {
-      console.log('CSV file with multiple tables has been generated.');
-    });
-    
+    try{
+      fs.writeFileSync(outputClient,csvClient)
+      fs.writeFileSync(outputLog,csvLog)
+      fs.writeFileSync(outputPiece,csvPiece)
+      console.log("CSV generated ! ", outputFilePath)
+    } catch(err) {
+      console.log(err.message)
+      mainWindow.webContents.send("error",err.message)
+    }
+   
 
     mainWindow.webContents.send("exportFinish");
   });
