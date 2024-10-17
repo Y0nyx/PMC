@@ -4,6 +4,7 @@ const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
 const {writeToPLC}   = require("./apiPLC")
 const { exec } = require("child_process");
+const { Transform } = require('json2csv');
 const path = require("path");
 
 let appPath = global.appPath;
@@ -162,6 +163,102 @@ function apiFrontend(mainWindow, configReact) {
     let result = await query.fetchTypesPiece();
     mainWindow.webContents.send("receiveTypesPiece", result);
   });
+
+
+  function writeCsvSection(outputFile,fields, data, sectionHeader) {
+    // Write the section header (if needed)
+    outputFile.write(sectionHeader + '\n');
+    
+    // Write the field headers
+    outputFile.write(fields.join(',') + '\n');
+  
+    // Create a json2csv transform stream
+    const json2csv = new Transform({ fields });
+  
+    // Pipe the JSON data into the CSV stream
+    data.forEach((row) => {
+      json2csv.write(row);
+    });
+    
+    json2csv.pipe(outputFile, { end: false });
+    json2csv.end();
+    
+    // Write a blank line or separator between sections (optional)
+    outputFile.write('\n');
+  }
+
+// Function to find the USB drive path dynamically
+function findUsbDrivePath() {
+  const mediaDir = '/media';
+  const usbDrives = fs.readdirSync(mediaDir); // Read directories in /media
+
+  for (const drive of usbDrives) {
+    const drivePath = path.join(mediaDir, drive);
+    // Check if it's a directory and has write permissions
+    if (fs.statSync(drivePath).isDirectory()) {
+      return drivePath; // Return the first found USB drive
+    }
+  }
+
+  return 0
+}
+
+  ipcMain.on("exportData", async (event) => {
+    let client = await query.exportClient();
+    let log = await query.exportLog()
+    let piece = await query.exportPiece();
+
+
+    let usb = findUsbDrivePath()
+    if(usb == 0) {
+      mainWindow.webContents.send("noUSB");
+      return
+    }
+
+
+    // Get the current date
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().slice(0, 10); // Format: YYYY-MM-DD
+    // Create a file name with the current date
+    const outputFileName = `output_${formattedDate}.csv`;
+    // Full path to the output file on the USB drive
+    const outputFilePath = path.join(usb, outputFileName);
+    const outputFile = fs.createWriteStream(outputFilePath);
+
+
+    const clientFields = ['ID', 'Nom', 'Email', 'Telephone'];
+    const logFields = ['ID', 'ID_client', 'Nom'];
+    const pieceFields = [
+      'ID', 
+      'Date', 
+      'Photo', 
+      'BoundingBox', 
+      'Resultat', 
+      'ID_client', 
+      'ID_log', 
+      'ID_type_piece', 
+      'ID_erreur_Soudure'
+    ];
+
+    // Write Client Data
+    writeCsvSection(outputFile,clientFields, client, 'Client Table');
+
+    // Write Log Data
+    writeCsvSection(outputFile,logFields, log, 'Log Table');
+
+    // Write Log Data
+    writeCsvSection(outputFile,pieceFields, piece, 'Log Table');
+
+
+    outputFile.end(() => {
+      console.log('CSV file with multiple tables has been generated.');
+    });
+    
+
+    mainWindow.webContents.send("exportFinish");
+  });
+
+
 
   ipcMain.on("deletePiece", async (event, selected) => {
     await query.deletePiece(selected);

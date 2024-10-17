@@ -19,8 +19,8 @@ export default function SettingMachine() {
   const [reboot, setReboot] = useState(false);
   const [openError,setOpenError] = useState(false)
   const [errorMessage, setErrorMessage] = useState();
+  const [exportLoading,setExportLoading] = useState(false)
 
-  
   useEffect(() => {
     ipcRenderer.on("error", (event,error) => {
       console.log(error)
@@ -28,8 +28,18 @@ export default function SettingMachine() {
       setOpenError(true)
     });
 
+    ipcRenderer.on("noUSB",()=>{
+      setExportLoading(false)
+      setErrorMessage("Aucune clé USB détecté")
+    })
+   
+    ipcRenderer.on("exportData",()=>{
+      setExportLoading(false)
+    })
+
     return () => {
       ipcRenderer.removeAllListeners("error");
+      ipcRenderer.removeAllListeners("noUSB")
     };
   }, []);
 
@@ -49,6 +59,11 @@ export default function SettingMachine() {
     ipcRenderer.send("resetAll");
   };
 
+  const exportData = () => {
+    setExportLoading(true)
+    ipcRenderer.send("export Data");
+  };
+  
   function back() {
     navigate("/");
   }
@@ -83,6 +98,13 @@ export default function SettingMachine() {
               >
                 <span>REDÉMARRER LA MACHINE</span>
               </div>
+              <div
+                className=" flex mx-6 font-bold justify-center items-center font-normal text-3xl text-white hover:scale-110 bg-black rounded-lg hover:bg-white w-96 h-64 "
+                onClick={exportData}
+              >
+                <span>Exporter les données sur USB</span>
+              </div>
+              
             </div>
           </div>
 
@@ -222,6 +244,36 @@ export default function SettingMachine() {
           <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
             <p className="text-justify  font-Cairo leading-normal text-3xl">
               {errorMessage}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+
+      <Dialog
+        open={exportLoading}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+          Exporter sur clé USB
+          <IconButton
+            aria-label="close"
+            onClick={() => setExportLoading(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <div className="flex justify-center items-center w-full">
+              <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+            </div>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+            <p className="text-justify  font-Cairo leading-normal text-3xl">
+              Exportation en cours....
             </p>
           </div>
         </DialogContent>
