@@ -216,18 +216,23 @@ class Pipeline():
                 if not self.stop_flag.is_set():
                     #Find the welds in the capture image
                     #segmented_image_collection, boxes = self._segmentation_image(captured_image, i, show, save_seg, conf) #TODO: Ajouter un check qui valide que ya des soudures
-                    supervised_detection_image_collection, boxes = self._supervised_detection(captured_image, i, show, save_seg, conf) 
+                    supervised_detection_image_collection, defect_count = self._supervised_detection(captured_image, i, show, save_seg, conf) 
                     # TODO Integrate supervised model
                     
                 else:
                     return
                     
             solder_defect = False
+            erreurSoudure = 1
+            if defect_count == 0:
+                solder_defect = True
+                erreurSoudure = 0
+        
             subprocess.run(['chmod', '-R', '775', "/pipeline_analysis"], check=True) # pour gérer les permissions
             
             #TODO: envoyer un dossier à la place d'une image, car on a 5 images par piece
             result_data = {
-                'resultat': solder_defect, 'url': '/home/dofa/Documents'+self._captured_image_collection_path+'/images/', 'boundingbox': '/home/dofa/Documents'+self._captured_image_collection_path + f'/bounding_boxes/','erreurSoudure':'1'
+                'resultat': solder_defect, 'url': '/home/dofa/Documents'+self._captured_image_collection_path+'/images/', 'boundingbox': '/home/dofa/Documents'+self._captured_image_collection_path + f'/bounding_boxes/','erreurSoudure':erreurSoudure
                 }
             
             self.print("Finished detection")
@@ -252,6 +257,7 @@ class Pipeline():
             img_height: The height of the image.
             output_file: Path to the output .txt file.
         """
+        if len(result.boxes) == 0: return
         with open(output_file, 'w') as f:
             for box in result.boxes:
                 x_min, y_min, x_max, y_max = box.xyxy.tolist()[0]
@@ -342,6 +348,7 @@ class Pipeline():
     def _supervised_detection(self, img: Image, img_id: int, save: bool, show: bool, conf: float):
         #TODO: Rename la fonction poru get
         imgCollection = ImageCollection()
+        defect_count = 0
         model = self.supervised_detection_model
         results = model.predict(source=cv2.cvtColor(cv2.cvtColor(img.value, cv2.COLOR_BGR2GRAY), cv2.COLOR_GRAY2BGR), show=show, conf=conf, save=save)
         os.makedirs(self._captured_image_collection_path + f"/bounding_boxes/", exist_ok=True)
@@ -351,8 +358,9 @@ class Pipeline():
             for boxe in result.boxes:
                 image = img.crop(boxe)
                 imgCollection.add(image)
+                defect_count = defect_count + 1
 
-        return imgCollection, results
+        return imgCollection, defect_count
 
     def print(self, string):
         if self.verbose:
@@ -445,16 +453,16 @@ if __name__ == "__main__":
 
     # TRAINING
     pipeline = Pipeline(segmentation_model=None, supervised_detection_model=None, unsupervised_model=None, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
-
-
+    models = ["yolov10l","yolo11m", "yolo11l", "yolov8l"]
     data_path = "v21/data.yaml"
-    pipeline.train(data_path, "yolov8l", epochs=200, batch=25, workers=0, single_cls=True)
+    for model in models:
+        pipeline.train(data_path, model, epochs=250, batch=-1, workers=0, single_cls=True)
 
-    segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
+    #segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
 
-    supervised_models = [YoloModel(Path(segmentation_model_path))]
-    unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
+    #supervised_models = [YoloModel(Path(segmentation_model_path))]
+    #unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
 
-    pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
+    #pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
 
     

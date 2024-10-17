@@ -27,7 +27,12 @@ RUN pip install --no-cache numpy==1.23.5
 # Remove exported models
 RUN rm -rf tmp
 
-RUN pip install -r requirements.txt
+# Copy the requirements file into the container
+COPY ./Ai/requirements.txt PMC/Ai/
+
+# Install the Python dependencies
+#RUN pip install -r PMC/Ai/requirements.txt
+#RUN pip install clearml
 
 # Get right version of pytorch (GPU)
 RUN pip install torch torchvision torchaudio --upgrade --index-url https://download.pytorch.org/whl/cu121 -U

@@ -27,5 +27,7 @@ RUN pip install tensorflow
 # Fix error: `np.bool` was a deprecated alias for the builtin `bool` segmentation error in Tests
 RUN pip install --no-cache numpy==1.23.5
 
-RUN python3 /Ai/src/main.py
+WORKDIR /PMC/Ai/src
+
+ENTRYPOINT ["python3", "main.py"]
 

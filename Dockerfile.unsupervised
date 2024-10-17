@@ -13,11 +13,13 @@ RUN apt upgrade --no-install-recommends -y openssl tar
 # Change the working directory to the cloned repository
 WORKDIR /PMC
 
+RUN apt-get install -y python3-pip
+
 # Copy the requirements file into the container
-COPY ./Ai/unsupervised_docker_requirements.txt .
+COPY ./Ai/unsupervised_docker_requirements.txt PMC/Ai/
 
 # Install the Python dependencies
-RUN pip install -r unsupervised_docker_requirements.txt
+RUN pip install -r PMC/Ai/unsupervised_docker_requirements.txt
 
 # Copy source code from host machine to Docker image
 COPY /Ai/src/ src/

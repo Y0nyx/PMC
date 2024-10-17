@@ -2,7 +2,6 @@ from pipeline.models.Model import YoloModel
 from NetworkManager import NetworkManager
 from Pipeline import Pipeline
 from common.Constants import *
-import tensorflow as tf
 
 
 def path_initialization():
