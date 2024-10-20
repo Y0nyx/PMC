@@ -583,7 +583,7 @@ class DataProcessing():
         print("You are currently doing the data processing with stain for dataset: Datasets_segmentation_grayscale")
         # Loading the test data without defects
         print(f'Loading the testing without defect data')
-        no_defect_type = 'no_defect_type_I'
+        no_defect_type = 'no_defect_type_II'
         input_test_no_defects = f'{data_path}/{no_defect_type}/a_original_data'
         test_no_defects = []
         image_nb = 100 # This is a limit to not bust the memory when running on local computer i <= 300
@@ -618,57 +618,61 @@ class DataProcessing():
         lacalisation_defect = []
 
         for i, filename in enumerate(sorted(os.listdir(input_test_defects), key=self.custom_sort_key2)):
-            print(f'Loading image: {i}, nammed: {filename}')
+            print(f'Loading image: {i}, named: {filename}')
+            
             # Loading the defect image
-            if filename.endswith(".jpg") and i <= image_nb: 
+            if filename.endswith(".jpg") and i <= image_nb:
                 defect_img = cv2.imread(f'{input_test_defects}/{filename}')
-            # Loading the localisation of the defect
-            elif filename.endswith(".txt") and i <= image_nb:
-                # Read the information to detect the defect position
-                file = open(f'{input_test_defects}/{filename}', 'r')
-                content = file.readline()
-                # print(f'The content of the file is: {content} and of type: {type(content)}')
-                data_list = content.split()
-                content_float = [float(i) for i in data_list]
-                # print(f'The content of the file is: {content_float} and of type: {type(content_float)}')
-                file.close()
-                lacalisation_defect.append(content_float)
+                img_name, _ = os.path.splitext(filename)
+            
+                # Read the information to detect the defect positions (possibly multiple defects)
+                with open(f'{input_test_defects}/{img_name}.txt', 'r') as file:
+                    contents = file.readlines()  # Read all lines to handle multiple defects
+                    print(contents)
+                    
+                for content in contents:
+                    data_list = content.split()
+                    content_float = [float(i) for i in data_list]
+                    lacalisation_defect.append(content_float)
 
-                # Create the matrix to know the exact defect position
-                # Start by creating a matrix full with 0s
-                zero_array_shape = list(defect_img.shape)
-                zero_array_shape[2] = 1
-                zero_channel = np.zeros(zero_array_shape)
+                    # Create the matrix to know the exact defect position
+                    # Start by creating a matrix full with 0s (this is done once)
+                    zero_array_shape = list(defect_img.shape)
+                    zero_array_shape[2] = 1
+                    zero_channel = np.zeros(zero_array_shape)
 
-                # Find the pixel position for the defect in the image
-                x_center_norm = content_float[1]
-                y_center_norm = content_float[2]
-                width_defect_norm = content_float[3]
-                heigth_defect_norm = content_float[4]
-                # Set the width and heigth of the image
-                height_img, width_img, _ = defect_img.shape
-                # Denormalize the position to detect the defect
-                x_center = x_center_norm * width_img
-                y_center = y_center_norm * height_img
-                width_defect = width_defect_norm * width_img
-                height_defect = heigth_defect_norm * height_img
-                # Calculate bounding box coordinates
-                x_min = int(x_center - width_defect / 2)
-                x_max = int(x_center + width_defect / 2)
-                y_min = int(y_center - height_defect / 2)
-                y_max = int(y_center + height_defect / 2)
-                
-                # Ensure the coordinates are within image bounds
-                x_min = max(0, x_min)
-                y_min = max(0, y_min)
-                x_max = min(width_img, x_max)
-                y_max = min(height_img, y_max)
+                    # Find the pixel position for each defect in the image
+                    x_center_norm = content_float[1]
+                    y_center_norm = content_float[2]
+                    width_defect_norm = content_float[3]
+                    height_defect_norm = content_float[4]
 
-                # Put 1 where the defect is located
-                zero_channel[y_min:y_max, x_min:x_max] = 1
+                    # Set the width and height of the image
+                    height_img, width_img, _ = defect_img.shape
+                    
+                    # Denormalize the position to detect the defect
+                    x_center = x_center_norm * width_img
+                    y_center = y_center_norm * height_img
+                    width_defect = width_defect_norm * width_img
+                    height_defect = height_defect_norm * height_img
 
-                #Concatenate the original image with the defect location 
-                defect_annotated = np.concatenate((defect_img, zero_channel), axis = -1)
+                    # Calculate bounding box coordinates
+                    x_min = int(x_center - width_defect / 2)
+                    x_max = int(x_center + width_defect / 2)
+                    y_min = int(y_center - height_defect / 2)
+                    y_max = int(y_center + height_defect / 2)
+
+                    # Ensure the coordinates are within image bounds
+                    x_min = max(0, x_min)
+                    y_min = max(0, y_min)
+                    x_max = min(width_img, x_max)
+                    y_max = min(height_img, y_max)
+
+                    # Add 1 to the defect axis where the defect is located
+                    zero_channel[y_min:y_max, x_min:x_max] += 1  # Accumulate 1s for multiple defects
+
+                # Concatenate the original image with the defect location
+                defect_annotated = np.concatenate((defect_img, zero_channel), axis=-1)
                 print(f'\n\nThe data shape with defect is: {defect_annotated.shape}\n\n')
                 test_defects.append(defect_annotated)
 
@@ -852,11 +856,11 @@ class DataProcessing():
 
         # Save the image with a red bounding box where is supposed to be located the defect. 
         defect_img_anotation = []
-        for i, img in enumerate(filtered_no_defects):
+        for i, images in enumerate(filtered_defects):
             # Extract the first 3 channles (color channels)
-            img = img_array[:, :, :3].astype(np.uint8)
+            img = images[:, :, :3].astype(np.uint8)
             # Extract the forth channle (labbel channel)
-            label_channel = img_array[:, :, 3]
+            label_channel = images[:, :, 3]
             # Find the contours in the label channel where the value is 1 (Defect area)
             contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -869,10 +873,10 @@ class DataProcessing():
                 defect_img_anotation.append(img)
 
         # Save the image to analyze where is located the defect
-        for i, img in enumerate(defect_img_anotation):
-            img = np.array(img)
-            img_path = os.path.join(f'{data_path}/{defect_type}/test_e_image_defect_location', f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
+        for i, images in enumerate(defect_img_anotation):
+            images = np.array(images)
+            img_path = os.path.join(f'{data_path}/{defect_type}/test_e_defect_location', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, images)
 
 
         # Normalizing the input data in range 0 to 1 ________________________________________________________
