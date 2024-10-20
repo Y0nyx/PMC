@@ -256,6 +256,7 @@ class DataProcessing():
         result_test = (result_test * max_pixel_value).astype('uint8')
 
         return input_test, result_test, difference_reshaped
+
     
     def get_data_processing_standard(self, data_path, max_pixel_value, test=False):
         """
@@ -582,9 +583,10 @@ class DataProcessing():
         print("You are currently doing the data processing with stain for dataset: Datasets_segmentation_grayscale")
         # Loading the test data without defects
         print(f'Loading the testing without defect data')
-        input_test_no_defects = f'{data_path}/test/segmentation/as_no_default'
+        no_defect_type = 'no_defect_type_I'
+        input_test_no_defects = f'{data_path}/{no_defect_type}/a_original_data'
         test_no_defects = []
-        image_nb = 30 # This is a limit to not bust the memory when running on local computer i <= 300
+        image_nb = 100 # This is a limit to not bust the memory when running on local computer i <= 300
 
         for i, filename in enumerate(sorted(os.listdir(input_test_no_defects), key=self.custom_sort_key2)):
             print(f'Loading image: {i}, nammed: {filename}')
@@ -610,7 +612,8 @@ class DataProcessing():
 
         # Loading the test data with defects
         print(f'Loading the testing with defect data')
-        input_test_defects = f'{data_path}/test/segmentation/as_default'
+        defect_type = 'defect_type_I'
+        input_test_defects = f'{data_path}/{defect_type}/a_original_data'
         test_defects = []
         lacalisation_defect = []
 
@@ -643,92 +646,192 @@ class DataProcessing():
                 width_defect_norm = content_float[3]
                 heigth_defect_norm = content_float[4]
                 # Set the width and heigth of the image
-                width_img, heigth_img, _ = defect_img.shape
+                height_img, width_img, _ = defect_img.shape
                 # Denormalize the position to detect the defect
                 x_center = x_center_norm * width_img
-                y_center = y_center_norm * heigth_img
+                y_center = y_center_norm * height_img
                 width_defect = width_defect_norm * width_img
-                heigth_defect = heigth_defect_norm * heigth_img
-                # Calculate the pixel coordinates of the defects bounding box
-                pixel1_defect_x = int(x_center - (0.5*width_defect))
-                pixel1_defect_y = int(y_center + (0.5*heigth_defect))
+                height_defect = heigth_defect_norm * height_img
+                # Calculate bounding box coordinates
+                x_min = int(x_center - width_defect / 2)
+                x_max = int(x_center + width_defect / 2)
+                y_min = int(y_center - height_defect / 2)
+                y_max = int(y_center + height_defect / 2)
+                
+                # Ensure the coordinates are within image bounds
+                x_min = max(0, x_min)
+                y_min = max(0, y_min)
+                x_max = min(width_img, x_max)
+                y_max = min(height_img, y_max)
 
-                pixel2_defect_x = int(x_center + (0.5*width_defect))
-                pixel2_defect_y = int(y_center + (0.5*heigth_defect))
-
-                pixel3_defect_x = int(x_center - (0.5*width_defect))
-                pixel3_defect_y = int(y_center - (0.5*heigth_defect))
-
-                pixel4_defect_x = int(x_center + (0.5*width_defect))
-                pixel4_defect_y = int(y_center - (0.5*heigth_defect))
-                # Find the min and max x and y coordinate where the defect is located
-                min_x = min(pixel1_defect_x, pixel2_defect_x, pixel3_defect_x, pixel4_defect_x)
-                max_x = max(pixel1_defect_x, pixel2_defect_x, pixel3_defect_x, pixel4_defect_x)
-
-                min_y = min(pixel1_defect_y, pixel2_defect_y, pixel3_defect_y, pixel4_defect_y)
-                max_y = max(pixel1_defect_y, pixel2_defect_y, pixel3_defect_y, pixel4_defect_y)
                 # Put 1 where the defect is located
-                zero_channel[min_y:max_y +1, min_x:max_x +1] = 1
+                zero_channel[y_min:y_max, x_min:x_max] = 1
 
                 #Concatenate the original image with the defect location 
                 defect_annotated = np.concatenate((defect_img, zero_channel), axis = -1)
                 print(f'\n\nThe data shape with defect is: {defect_annotated.shape}\n\n')
                 test_defects.append(defect_annotated)
 
-        # Subdivise the original images for the non defect and defect. 
+        # Save the image with a red bounding box where is supposed to be located the defect. 
+        defect_img_anotation = []
+        for i, img in enumerate(test_defects):
+            img_array = np.array(img)
+            # Extract the first 3 channles (color channels)
+            img = img_array[:, :, :3].astype(np.uint8)
+            # Extract the forth channle (labbel channel)
+            label_channel = img_array[:, :, 3]
+            # Find the contours in the label channel where the value is 1 (Defect area)
+            contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            # Draw a red rectangle around the defected defects
+            for contour in contours:
+                # Get the bounding box for each contour
+                x, y, w, h = cv2.boundingRect(contour)
+                # Draw the rectangle on the image (in red, with thickness of 2)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                defect_img_anotation.append(img)
+
+        # Save the image to analyze where is located the defect
+        for i, img in enumerate(defect_img_anotation):
+            img = np.array(img)
+            img_path = os.path.join(f'{data_path}/{defect_type}/test_a_original_image_defect_location', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+
+        # Segment the images to keep only the welding from the original images ________________________________________________________
+        segment_images_no_defects = []
+        segment_images_defects = []
+        images_bounding_boxes_no_defects = []
+        images_bounding_boxes_defects = []
+        test_no_defects = np.array(test_no_defects)
+        test_defects = np.array(test_defects)
+
+        for i, image in enumerate(test_no_defects):
+            print(f'Analysing image {i+1}')
+            # Segment the original image
+            bounding_boxes = self.segment_welds_opencv(image[:, :, :3])
+            # Add the bounding box to the original image
+            image_bounding_boxes = self.draw_bounding_boxes(image[:, :, :3], bounding_boxes)
+            print(f'The shape for the bounding box is: {image_bounding_boxes.shape}')
+            images_bounding_boxes_no_defects.append(image_bounding_boxes)
+
+            # Crop the original image
+            cropped_images = self.crop_weld_sections(image, bounding_boxes)
+            segment_images_no_defects.extend(cropped_images)
+
+        print(f'There are: {len(segment_images_no_defects)} images.')
+        
+        for i, image in enumerate(test_defects):
+            print(f'Analyzing image {i+1}')
+            # Segment the original image
+            bounding_boxes = self.segment_welds_opencv(image[:, :, :3])
+            # Add the bounding box to the original image
+            image_bounding_boxes = self.draw_bounding_boxes(image[:, :, :3], bounding_boxes)
+            print(f'The shape for the bounding box is: {image_bounding_boxes.shape}')
+            images_bounding_boxes_defects.append(image_bounding_boxes)
+
+            # Crop the original image
+            cropped_images = self.crop_weld_sections(image, bounding_boxes)
+            segment_images_defects.extend(cropped_images)
+
+        print(f'There are: {len(segment_images_defects)} images.')
+
+        # Save the images to see what the bounding boxes looks like
+        for i, img in enumerate(images_bounding_boxes_no_defects):
+            img = img[:, :, :3]
+            img_path = os.path.join(f'{data_path}/{no_defect_type}/b_bounding_boxes', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+        for i, img in enumerate(images_bounding_boxes_defects):
+            img = img[:, :, :3]
+            img_path = os.path.join(f'{data_path}/{defect_type}/b_bounding_boxes', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+
+        # Save the images to see if the cropping works
+        for i, img in enumerate(segment_images_no_defects):
+            img = np.array(img)
+            img = img[:, :, :3]
+            img_path = os.path.join(f'{data_path}/{no_defect_type}/c_cropping', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+        for i, img in enumerate(segment_images_defects):
+            img = np.array(img)
+            img = img[:, :, :3]
+            img_path = os.path.join(f'{data_path}/{defect_type}/c_cropping', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+
+
+        # Subdivise the original images for the non defect and defect. ________________________________________________________
         sub_images_no_defects = []
         sub_images_defects = []
 
         print(f'Subdivising the no defect images')
-        for images_training in test_no_defects:
-            if not np.all(images_training == 0):
+        for images_training in segment_images_no_defects:
+            if not np.all(images_training[:, :, :3] == 0):
                 sub_images_no_defects.extend(self.subdivise(images_training))
         test_no_defects = sub_images_no_defects
         print(f'\n\nThere are: {len(test_no_defects)} subdivised images without any defect that are not all 0s (black pixels)\n\n')
 
-        print(f'Subdivising the defect images\n')
-        for images_validating in test_defects:
-            if not np.all(images_validating == 0):
+        print(f'Subdivising the defect images')
+        for images_validating in segment_images_defects:
+            if not np.all(images_validating[:, :, :3] == 0):
                 sub_images_defects.extend(self.subdivise(images_validating))
         test_defects = sub_images_defects
         print(f'\n\nThere are: {len(test_defects)} subdivised images with defect that are not all 0s (black pixels)\n\n')
+
+        # Save the images to see if the cropping works
+        for i, img in enumerate(test_no_defects):
+            img = np.array(img)
+            print(f'The image shape is: {img.shape}')
+            img = img[:, :, :3]
+            img_path = os.path.join(f'{data_path}/{no_defect_type}/d_subdivise', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+        for i, img in enumerate(test_defects):
+            img = np.array(img)
+            img = img[:, :, :3]
+            img_path = os.path.join(f'{data_path}/{defect_type}/d_subdivise', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
 
         test_no_defects = np.array(test_no_defects)
         test_defects = np.array(test_defects)
         print(f'\n\nThe shape for test_no_defects is: {test_no_defects.shape} amd the shape for test_defects is: {test_defects.shape}\n\n')
 
-        # Normalizing the input data in range 0 to 1. 
-        print(f'Normalizing the data')
-        train_no_defects_loss_norm = self.normalize_classification(test_no_defects, max_pixel_value)
-        valid_defects_loss_norm = self.normalize_classification(test_defects, max_pixel_value)
-        print(f'The shape after the normalization is: {train_no_defects_loss_norm.shape} without defects')
-        print(f'The shape after the normalization is: {valid_defects_loss_norm.shape} with defects')
 
-        # Delete images that have all pixels equals to 0. 
+        # Delete images that have all pixels equals to 0 ________________________________________________________
         print(f'Deleting black images')
         filtered_no_defects = []
         cptr = 0
+        threshold = 0.65 
 
-        for i, testing_no_defects in enumerate(train_no_defects_loss_norm):
-            # Excluding the channel where the defect are located, because it is possible and normal for them to be 
-            # attribuate a 0 value if there are no defect in the analyzed image. 
-            if not np.all(testing_no_defects[:, :, :3] == 0):
+        for i, testing_no_defects in enumerate(test_no_defects):
+            # Flattening the first 3 channels (ignoring the defect channel)
+            pixel_count = np.prod(testing_no_defects[:, :, :3].shape)
+            # Count the number of zero pixels in the first 3 channels
+            zero_count = np.sum(testing_no_defects[:, :, :3] == 0)
+            # Calculate the percentage of zero pixels
+            zero_percentage = zero_count / pixel_count
+            # If less than threshold, keep the image
+            if zero_percentage <= threshold:
                 filtered_no_defects.append(testing_no_defects)
             else:
                 cptr += 1
+
         print(f'We removed: {cptr} no defects images')
         print(f'There are: {len(filtered_no_defects)} images without defects after deleting black images')
                 
         filtered_defects = []
         cptr = 0 
 
-        for i, testing_defects in enumerate(valid_defects_loss_norm):
-            # Excluding the channel where the defect are located, because it is possible and normal for them to be 
-            # attribuate a 0 value if there are no defect in the analyzed image. 
-            if not np.all(testing_defects[:, :, :3] == 0):
+        for i, testing_defects in enumerate(test_defects):
+            # Flattening the first 3 channels (ignoring the defect channel)
+            pixel_count = np.prod(testing_defects[:, :, :3].shape)
+            # Count the number of zero pixels in the first 3 channels
+            zero_count = np.sum(testing_defects[:, :, :3] == 0)
+            # Calculate the percentage of zero pixels
+            zero_percentage = zero_count / pixel_count
+            # If less than 80% of pixels are zeros, keep the image
+            if zero_percentage <= threshold:
                 filtered_defects.append(testing_defects)
             else:
                 cptr += 1
+
         print(f'We removed: {cptr} defects images')
         print(f'There are: {len(filtered_defects)} images with defects after deleting black images')
 
@@ -736,48 +839,152 @@ class DataProcessing():
         filtered_defects = np.array(filtered_defects)
         print(f'The shape for filtered_no_defects is: {filtered_no_defects.shape} and for filtered_defects is: {filtered_defects.shape}')
 
+        # Save the images to see if the cropping works
+        for i, img in enumerate(filtered_no_defects):
+            img = img[:, :, :3]
+            img_path = os.path.join(f'{data_path}/{no_defect_type}/e_delete_0s', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+        for i, img in enumerate(filtered_defects):
+            img = np.array(img)
+            img = img[:, :, :3]
+            img_path = os.path.join(f'{data_path}/{defect_type}/e_delete_0s', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+
+        # Save the image with a red bounding box where is supposed to be located the defect. 
+        defect_img_anotation = []
+        for i, img in enumerate(filtered_no_defects):
+            # Extract the first 3 channles (color channels)
+            img = img_array[:, :, :3].astype(np.uint8)
+            # Extract the forth channle (labbel channel)
+            label_channel = img_array[:, :, 3]
+            # Find the contours in the label channel where the value is 1 (Defect area)
+            contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+            # Draw a red rectangle around the defected defects
+            for contour in contours:
+                # Get the bounding box for each contour
+                x, y, w, h = cv2.boundingRect(contour)
+                # Draw the rectangle on the image (in red, with thickness of 2)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                defect_img_anotation.append(img)
+
+        # Save the image to analyze where is located the defect
+        for i, img in enumerate(defect_img_anotation):
+            img = np.array(img)
+            img_path = os.path.join(f'{data_path}/{defect_type}/test_e_image_defect_location', f'weld_{i+1}.png')
+            cv2.imwrite(img_path, img)
+
+
+        # Normalizing the input data in range 0 to 1 ________________________________________________________
+        print(f'Normalizing the data')
+        train_no_defects_loss_norm = self.normalize_classification(filtered_no_defects, max_pixel_value)
+        valid_defects_loss_norm = self.normalize_classification(filtered_defects, max_pixel_value)
+        print(f'The shape after the normalization is: {train_no_defects_loss_norm.shape} without defects')
+        print(f'The shape after the normalization is: {valid_defects_loss_norm.shape} with defects')
             
-        return filtered_no_defects, filtered_defects 
+        return train_no_defects_loss_norm, valid_defects_loss_norm 
 
 
-    def resize(self, image):
-        closest_width = int(np.ceil(image.shape[1] / self.width ) * self.width )
-        closest_height = int(np.ceil(image.shape[0] / self.height) * self.height)
-        print("width", self.width)
-        print("width closest", closest_width)
-        return cv2.resize(image, (closest_width, closest_height))
-    
-    def subdivise(self, image):
-        print("sub_func")
+    def subdivise(self, image, overlap_percent=0.40):
+        height, width = image.shape[:2]
+        print(f"Original dimensions: ({width}, {height})")
+
+        overlap_width = int(self.width * overlap_percent)
+        overlap_height = int(self.height * overlap_percent)
+        step_width = self.width - overlap_width
+        step_height = self.height - overlap_height
+
         sub_images = []
-        # Get the dimensions of the original image
+        for i in range(0, width, step_width):
+            for j in range(0, height, step_height):
+                left = i
+                right = min(i + self.width, width)
+                top = j
+                bottom = min(j + self.height, height)
 
-        self.resize(image)
-        print("resized")
+                # Create a black canvas of size 256x256
+                img_sub = np.zeros((self.height, self.width, image.shape[2]), dtype=image.dtype)
+                
+                # Calculate the size of the actual image content
+                content_height = bottom - top
+                content_width = right - left
+                
+                # Copy the image content onto the black canvas
+                img_sub[:content_height, :content_width] = image[top:bottom, left:right]
 
-        width, height, channels = image.shape
+                print(f'The shape of the sub image at ({i}, {j}) is: {img_sub.shape}')
+                sub_images.append(img_sub)
 
-        # Calculate the number of sub-images in both dimensions
-        self._nb_x_sub = width // self.width
-        self._nb_y_sub = height // self.height
-        print("Sub x: ",self._nb_x_sub)
-        print("Sub y: ",self._nb_y_sub)
-
-        # Iterate over the sub-images and save each one with overlap
-        for i in range(self._nb_x_sub):
-            for j in range(self._nb_y_sub):
-                left = i * self.width
-                top = j * self.height
-                right = left + self.width
-                bottom = top + self.height
-
-                # TODO: Add overlap code
-                # left, top, right, bottom = add_overlap(left, top, right, bottom, width, height, overlap_size)
-
-                # Crop the sub-image using NumPy array slicing
-                sub_images.append(image[left:right, top:bottom, :])
         return sub_images
+
+
+
+    def segment_welds_opencv(self, image):
+        """
+        Take an input image which is a welding piece with a black background. 
+        Create a bounding box around the welding present in the original image.
+        input - image: A gray scale image of the original welding piece (4 channels, 3 channels for color and 1 channel for label)
+        output - bounding_boxes: An array representing the location of the bounding box: x, y, width, height
+        """
+        # Put the image in unint8 format:
+        image = (255 * image / np.max(image)).astype(np.uint8)
+        # Convert the image to grayscale with only one channel
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        # Apply thresholding to create a binary image
+        _, binary_image = cv2.threshold(gray_image, 1, 255, cv2.THRESH_BINARY)
+
+        # Find contours in the binary image
+        contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        # Filter the bounding boxes that are too small
+        min_area = 60
+        filtered_contours = [contour for contour in contours if cv2.contourArea(contour) > min_area]
+
+        # Create bounding boxes for each contour 
+        bounding_boxes = []
+        for contour in filtered_contours:
+            x, y, w, h = cv2.boundingRect(contour)
+            bounding_boxes.append((x, y, w, h))
+
+        return bounding_boxes
+
+
+    def draw_bounding_boxes(self, image, bounding_boxes):
+        """
+        Used only to test. 
+        Visual representation of where the bounding boxes are located.
+        Input- image: the original image
+               bounding_boxes: The bounding box find by the algorithm
+        output- img: An array of the original image with a green box representing where each box got found in the original image. 
+        """
+        # Convert the image in uint8:
+        image = np.uint8(255 * image / np.max(image))
+        # Draw each bounding box on the image
+        for (x, y, w, h) in bounding_boxes:
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Green box with 2px thickness
+
+        return image
+
+
+    def crop_weld_sections(self, image, bounding_boxes):
+        """
+        Crop the image from the bounding boxes where the welding piece are. 
+        input - Image: the original image
+            - bounding_boxes: The bounding boxes where the welding piece are
+        output - cropped_image: A cropped image with the welding piece
+        """
+        cropped_images = []
+        for box in bounding_boxes:
+            x, y, w, h = box
+            cropped_image = image[y:y+h, x:x+w]
+            cropped_images.append(cropped_image)
+        
+        print(f'There are : {len(cropped_images)} elements in the welding piece')
+
+        return cropped_images
     
+
     def rotate(self, image):
         rotated_images = [image]
         for _ in range(3):
@@ -785,6 +992,7 @@ class DataProcessing():
             rotated_images.append(image)
         return rotated_images
     
+
     def segment(self, image):
         imgCollection = []
         
@@ -796,12 +1004,14 @@ class DataProcessing():
 
         return imgCollection
     
+
     def crop(self, boxes, image):
         image = Img.fromarray(image, 'RGB')
         cropped_image = image.crop(boxes.xyxy.tolist()[0])
         cropped_image = np.array(cropped_image)
         return cropped_image
     
+
     def custom_sort_key(self, filename):
         match = re.match(r'(\d+)([a-z]+)_.*', filename)
         if match:
@@ -811,9 +1021,11 @@ class DataProcessing():
             # If no match, return a tuple that puts the filename last
             return (float('inf'), filename)  
         
+
     def custom_sort_key2(self, filename):
         match = re.match(r'(\d+)_.*', filename)
         if match:
             return (int(match.group(1)), filename)
         else:
             return (float('inf'), filename)
+        

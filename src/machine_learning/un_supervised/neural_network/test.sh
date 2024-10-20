@@ -9,7 +9,7 @@ readonly PATH_NN='/home/jean-sebastien/Documents/s7/PMC/PMC/src/machine_learning
 readonly PATH_VE='/home/jean-sebastien/Documents/s7/PMC/venv/bin/activate'
 readonly SCRIPT_NAME='test.py'
 
-readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale' #/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc #'../../../../../Datasets/grosse_piece_seg_1'   #TODO convert for docker     #same as train.sh
+readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale/test/segmentation/individual_piece' #/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc #'../../../../../Datasets/grosse_piece_seg_1'   #TODO convert for docker     #same as train.sh
 readonly MODEL='aes_defect_detection'                                                     #same as train.sh
 readonly TEST_NAME='pmc860_grayscale_dataset'                                             #same as train.sh
 readonly NBEST=1                                                                          #same as train.sh
