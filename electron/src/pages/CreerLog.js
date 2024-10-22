@@ -10,17 +10,31 @@ import Select from "@mui/material/Select";
 import UIStateContext from "../Context/context";
 import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 export default function CreerLog() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const uicontext = useContext(UIStateContext);
   const [nom, setNom] = React.useState("");
   const [listClient, setListClient] = React.useState([]);
+  const [openError,setOpenError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState();
   const [selectedClient, setSelectedClient] = React.useState(
     uicontext.state_client
   );
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  useEffect(() => {
+    ipcRenderer.on("error", (event,error) => {
+      console.log(error)
+      setErrorMessage(error);
+      setOpenError(true)
+    });
 
+    return () => {
+      ipcRenderer.removeAllListeners("error");
+    };
+  }, []);
 
     // Create refs for the input fields
     const nomRef = useRef(null);
@@ -164,6 +178,34 @@ export default function CreerLog() {
               </div>
     
             )}
+             <Dialog
+        open={openError}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+          ERREUR
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpenError(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <div className="flex justify-center items-center w-full">
+              <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+            </div>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+            <p className="text-justify  font-Cairo leading-normal text-3xl">
+              {errorMessage}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

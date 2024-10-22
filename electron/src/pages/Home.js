@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import StartButton from "../components/StartButton";
 import HistoryButton from "../components/HistoryButton";
 import OptionPieceButton from "../components/OptionPieceButton";
@@ -10,27 +10,43 @@ import { useLocation } from "react-router-dom";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { idSubstring } from "../utils/utils";
 import SettingButton from "../components/SettingButton";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
 export default function Home() {
   const uicontext = useContext(UIStateContext);
   const ipcRenderer = window.require("electron").ipcRenderer;
   const { state } = useLocation();
   const { resultat } = state || {};
-
+  const initAi = useRef(false);
+  const [openError,setOpenError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState();
+  
   useEffect(() => {
+    ipcRenderer.on("error", (event,error) => {
+      console.log(error)
+      setErrorMessage(error);
+      setOpenError(true)
+    });
 
+    ipcRenderer.on("init", () => {
+      initAi.current = true;
+      ipcRenderer.send({ code: "ready", data: {} });
+    });
 
-  ipcRenderer.on("init", () => {
-    uicontext.setState(protocol.state.idle);
-  });
+    ipcRenderer.on("ready", () => {
+      uicontext.ref_plc_ready.current = true;
+      uicontext.setState(protocol.state.idle);
+    });
 
     if (uicontext.ref_dev.current) uicontext.setState(protocol.state.idle);
-
+  
 
     return () => {
-      ipcRenderer.removeAllListeners('init');
+      ipcRenderer.removeAllListeners("initPLC");
+      ipcRenderer.removeAllListeners("init");
+      ipcRenderer.removeAllListeners("error");
     };
   }, []); // Empty dependency array ensures the effect runs once on mount
-
 
   return (
     <div className="w-screen h-screen overflow-scroll">
@@ -94,6 +110,34 @@ export default function Home() {
           <Loading></Loading>
         </div>
       )}
+      <Dialog
+        open={openError}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+          ERREUR
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpenError(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <div className="flex justify-center items-center w-full">
+              <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+            </div>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+            <p className="text-justify  font-Cairo leading-normal text-3xl">
+              {errorMessage}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

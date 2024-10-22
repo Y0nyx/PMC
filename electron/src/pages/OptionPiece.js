@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect,useState } from "react";
 import UIStateContext from "../Context/context";
 import BackButton from "../components/BackButton";
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,14 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
+import CancelIcon from "@mui/icons-material/Cancel";
+import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
 
 export default function OptionPiece() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const uicontext = useContext(UIStateContext);
+  const [openError,setOpenError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState();
   const navigate = useNavigate();
 
   const [listClient, setListClient] = React.useState([]);
@@ -38,6 +41,11 @@ export default function OptionPiece() {
 
 
   useEffect(() => {
+    ipcRenderer.on("error", (event,error) => {
+      console.log(error)
+      setErrorMessage(error);
+      setOpenError(true)
+    });
 
     ipcRenderer.on("receiveClients", async (event, _client) => {
       setListClient(_client);
@@ -61,6 +69,7 @@ export default function OptionPiece() {
       ipcRenderer.removeAllListeners('receiveClients');
       ipcRenderer.removeAllListeners('receivelogs');
       ipcRenderer.removeAllListeners('receiveTypesPiece');
+      ipcRenderer.removeAllListeners("error");
     };
   }, []);
   function back() {
@@ -189,6 +198,34 @@ export default function OptionPiece() {
           </div>
         </div>
       </div>
+      <Dialog
+        open={openError}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+          ERREUR
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpenError(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <div className="flex justify-center items-center w-full">
+              <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+            </div>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+            <p className="text-justify  font-Cairo leading-normal text-3xl">
+              {errorMessage}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

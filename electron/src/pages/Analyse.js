@@ -5,15 +5,25 @@ import UIStateContext from "../Context/context";
 import protocol from "../Protocol/protocol";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
-
+import CancelIcon from "@mui/icons-material/Cancel";
+import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
 export default function Analyse() {
   const uicontext = useContext(UIStateContext);
   const [texte, setTexte] = useState("Analyse en cours ...");
   const ipcRenderer = window.require("electron").ipcRenderer;
   const navigate = useNavigate();
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState();
+  useEffect(() => {
+    ipcRenderer.on("error", (event, error) => {
+      console.log(error);
+      setErrorMessage(error);
+      setOpenError(true);
+    });
 
-  useEffect(()=>{
     ipcRenderer.on("resultat", async (event, data) => {
+
+      ipcRenderer.send("backward");
       const newPiece = {
         url: data.url,
         boundingbox: data.boundingbox,
@@ -23,9 +33,9 @@ export default function Analyse() {
         id_type_piece: uicontext.state_type_piece.id,
         id_erreur_soudure: data.erreurSoudure,
       };
-      
+
       let piece = await ipcRenderer.invoke("createPiece", newPiece);
-  
+
       if (data.resultat == true) {
         const resultat = piece;
         uicontext.setState(protocol.state.analysePass);
@@ -38,9 +48,10 @@ export default function Analyse() {
     });
 
     return () => {
-      ipcRenderer.removeAllListeners('resultat');
+      ipcRenderer.removeAllListeners("resultat");
+      ipcRenderer.removeAllListeners("error");
     };
-  },[])
+  }, []);
 
   useEffect(() => {
     // uicontext.setState(protocol.state.analysePass) // For testing verification pass
@@ -94,6 +105,34 @@ export default function Analyse() {
           <div className="w-1/5 h-full"></div>
         </div>
       </div>
+      <Dialog
+        open={openError}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle className="font-normal font-bold text-lg text-red-500 ">
+          ERREUR
+          <IconButton
+            aria-label="close"
+            onClick={() => setOpenError(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+            }}
+          >
+            <div className="flex justify-center items-center w-full">
+              <CancelIcon className="text-red-500 text-6xl hover:scale-105" />
+            </div>
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <div className="flex flex-col p-2 justify-center items-center text-gray-400 font-normal font-bold ">
+            <p className="text-justify  font-Cairo leading-normal text-3xl">
+              {errorMessage}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
