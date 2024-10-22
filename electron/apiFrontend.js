@@ -4,6 +4,7 @@ const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
 const {writeToPLC}   = require("./apiPLC")
 const { exec } = require("child_process");
+const {parse} = require('json2csv')
 const path = require("path");
 
 let appPath = global.appPath;
@@ -162,6 +163,100 @@ function apiFrontend(mainWindow, configReact) {
     let result = await query.fetchTypesPiece();
     mainWindow.webContents.send("receiveTypesPiece", result);
   });
+
+
+// Function to find the USB drive path dynamically
+function findUsbDrivePath() {
+  const mediaDir = '/media/dofa';
+  const usbDrives = fs.readdirSync(mediaDir); // Read directories in /media
+
+  for (const drive of usbDrives) {
+    const drivePath = path.join(mediaDir, drive);
+    try {
+      const stats = fs.statSync(drivePath);
+
+      // Check if it's a directory
+      if (stats.isDirectory()) {
+        // Check if it's writable
+        fs.accessSync(drivePath, fs.constants.W_OK);
+        console.log(drivePath, "found");
+        return drivePath; // Return the first found USB drive
+      }
+    } catch (err) {
+      // Handle the error (like logging it)
+      console.error(`Error accessing ${drivePath}: ${err.message}`);
+    }
+  }
+
+  return 0
+}
+
+  ipcMain.on("exportData", async (event) => {
+    let client = await query.exportClient();
+    let log = await query.exportLog()
+    let piece = await query.exportPiece();
+
+    
+    let usb = findUsbDrivePath()
+    if(usb == 0) {
+      mainWindow.webContents.send("error","No USB Found");
+      console.log("No USB found")
+      return
+    }
+    
+
+    // Get the current date
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().slice(0, 10); // Format: YYYY-MM-DD
+    // Create a file name with the current date
+    const outputDir = `${formattedDate}`;
+    // Full path to the output file on the USB drive
+    const outputFilePath = path.join(usb, outputDir);
+
+    if(!fs.existsSync(outputFilePath)){
+      fs.mkdirSync(outputFilePath)
+    }
+    
+    const outputClient = path.join(outputFilePath, `client_${formattedDate}.csv`);
+    const outputLog = path.join(outputFilePath, `log_${formattedDate}.csv`);
+    const outputPiece = path.join(outputFilePath, `piece_${formattedDate}.csv`);
+
+    const csvClient = parse(client)
+    const csvLog = parse(log)
+    let csvPiece
+    if(piece.lentgh > 0){
+      csvPiece = parse(piece)
+    }
+    else{
+      
+      csvPiece =  [
+      'ID', 
+      'Date', 
+      'Photo', 
+      'BoundingBox', 
+      'Resultat', 
+      'ID_client', 
+      'ID_log', 
+      'ID_type_piece', 
+      'ID_erreur_Soudure'
+    ].map(item => `"${item}"`).join(", ");
+    }
+
+    try{
+      fs.writeFileSync(outputClient,csvClient)
+      fs.writeFileSync(outputLog,csvLog)
+      fs.writeFileSync(outputPiece,csvPiece)
+      console.log("CSV generated ! ", outputFilePath)
+    } catch(err) {
+      console.log(err.message)
+      mainWindow.webContents.send("error",err.message)
+    }
+   
+
+    mainWindow.webContents.send("exportFinish");
+  });
+
+
 
   ipcMain.on("deletePiece", async (event, selected) => {
     await query.deletePiece(selected);

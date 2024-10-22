@@ -17,6 +17,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "dotenv": "^16.3.1",
+    "json2csv": "^6.0.0-alpha.2",
     "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,6 +33,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "npm run build && electron .",
+    "electron-root": "npm run build && electron . --no-sandbox --in-process-gpu",
     "dist": "npm run build && electron-builder"
   },
   "eslintConfig": {
@@ -117,7 +119,6 @@
         "from": "plc.py",
         "to": "./resources/plc.py"
       }
-
     ]
   }
 }

@@ -174,6 +174,24 @@ async function resetData() {
   await makeQuery(query);
 }
 
+
+async function exportClient(){
+  let query = `SELECT * FROM client`;
+  return await makeQuery(query)
+}
+
+
+async function exportLog(){
+  let query = `SELECT * FROM log`;
+  return await makeQuery(query)
+}
+
+
+async function exportPiece(){
+  let query = `SELECT * FROM piece`;
+  return await makeQuery(query)
+}
+
 module.exports = {
   generateDatabase,
   fetchPieces,
@@ -187,4 +205,7 @@ module.exports = {
   createPiece,
   createLog,
   resetData,
+  exportClient,
+  exportLog,
+  exportPiece
 };

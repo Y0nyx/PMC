@@ -34,7 +34,7 @@ function useUIState() {
   const ref_log = useRef({ id: "0", id_client: "0", nom: "default" });
 
   const ref_type_piece = useRef({ id: "1", nom: "1", description: "" });
-  const ref_dev = useRef(false);
+  const ref_dev = useRef(true);
   const ref_plc_ready = useRef(false);
   ipcRenderer.send("fetchConfig");
   ipcRenderer.on("ReceiveConfig", (event, config) => {
