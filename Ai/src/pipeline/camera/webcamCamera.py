@@ -20,6 +20,7 @@ class WebcamCamera(CameraSensor):
             self.set_capture_resolution()
             time.sleep(1)
             self.print("Capturing image")
+            self.print("calisse")
             if self.cap.isOpened():
                 _, frame = self.cap.read()
                 for i in range(frames_to_skip):

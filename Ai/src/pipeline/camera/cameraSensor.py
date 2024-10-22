@@ -4,6 +4,7 @@ import warnings
 from common.image.Image import Image
 from pipeline.camera.sensorState import SensorState
 from abc import ABC, abstractmethod
+import time
 
 
 class CameraSensor(ABC):
@@ -34,7 +35,15 @@ class CameraSensor(ABC):
                 # cv2.CAP_V4L
                 self.cap = cv2.VideoCapture(self.camera_id)
 
+            self.set_capture_resolution()
+            time.sleep(10)
+            for i in range(5):
+                _, frame = self.cap.read()
             # Set resolution
+            self.print(self.cap.get(cv2.CAP_PROP_EXPOSURE))
+            self.cap.set(cv2.CAP_PROP_EXPOSURE, -5)
+            self.cap.set(cv2.CAP_PROP_AUTOFOCUS, 0)
+            self.cap.set(cv2.CAP_PROP_FOCUS, 300)
             self.set_standby_resolution()
 
             # Set frames per second (fps)
@@ -42,6 +51,7 @@ class CameraSensor(ABC):
 
             self.is_active = True
             self.state = SensorState.INIT
+
             self.print(f"Finish Init camera : {self.camera_id}")
         except Exception:
             warnings.warn("Erreur : La caméra n'est pas activée.")

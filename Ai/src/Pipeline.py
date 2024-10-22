@@ -225,7 +225,7 @@ class Pipeline():
             solder_defect = False
             erreurSoudure = 1
             if defect_count == 0:
-                solder_defect = True
+                solder_defect = False
                 erreurSoudure = 0
         
             subprocess.run(['chmod', '-R', '775', "/pipeline_analysis"], check=True) # pour gérer les permissions
@@ -453,10 +453,12 @@ if __name__ == "__main__":
 
     # TRAINING
     pipeline = Pipeline(segmentation_model=None, supervised_detection_model=None, unsupervised_model=None, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
-    models = ["yolov10l","yolo11m", "yolo11l", "yolov8l"]
-    data_path = "v21/data.yaml"
-    for model in models:
-        pipeline.train(data_path, model, epochs=250, batch=-1, workers=0, single_cls=True)
+    # models = ["yolov10l","yolo11m", "yolo11l", "yolov8l"]
+    # data_path = "v21/data.yaml"
+    # for model in models:
+    #     pipeline.train(data_path, model, epochs=250, batch=-1, workers=0, single_cls=True)
+
+    pipeline.get_dataset()
 
     #segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
 
