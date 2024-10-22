@@ -89,6 +89,10 @@ export default function CreerClient() {
                   className="w-full font-normal"
                   id="outlined-basic"
                   label="Nom"
+                  sx={{
+                    input: { fontSize: 24 },  // Change the text size of the input
+                    label: { fontSize: 18 },  // Change the text size of the label
+                  }}
                   value={nom}
                   variant="outlined"
                   inputRef={nomRef}
@@ -102,6 +106,10 @@ export default function CreerClient() {
                   className="w-full font-normal"
                   id="outlined-basic"
                   label="Téléphone"
+                  sx={{
+                    input: { fontSize: 24 },  // Change the text size of the input
+                    label: { fontSize: 18 },  // Change the text size of the label
+                  }}
                   value={telephone}
                   variant="outlined"
                   inputRef={telephoneRef}
@@ -115,6 +123,10 @@ export default function CreerClient() {
                   className="w-full font-normal"
                   id="outlined-basic"
                   label="Email"
+                  sx={{
+                    input: { fontSize: 24 },  // Change the text size of the input
+                    label: { fontSize: 18 },  // Change the text size of the label
+                  }}
                   value={email}
                   variant="outlined"
                   inputRef={emailRef}
@@ -138,6 +150,11 @@ export default function CreerClient() {
                           <Keyboard
                 onChange={onChange}
                 inputName={focus}
+                style={{
+                  ".hg-button": {
+                    fontSize: '28px', // Correct syntax for setting fontSize
+                  },
+                }}
                 onKeyPress={(button) => {
                   if (button === "{enter}") {
                     setKeyboardVisible(false);

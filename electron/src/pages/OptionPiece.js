@@ -113,14 +113,15 @@ export default function OptionPiece() {
                 {"ERROR : " + error}
               </div>
             )}
-            <div className="flex justify-between items-center w-full bg-white rounded-lg p-2 text-xl text-gray-800  font-normal m-1">
+            <div className="flex justify-between items-center w-full bg-white rounded-lg p-2 text-2xl text-gray-800  font-normal m-1">
               <span>{"Client:"}</span>
 
               <Box className="w-72 my-1 rounded-3 border-gray-400">
                 <FormControl fullWidth>
-                  <InputLabel id="Client">Client</InputLabel>
+                  <InputLabel className="text-2xl" id="Client">Client</InputLabel>
                   <Select
                     id="Client"
+                    className="w-full h-20 text-2xl"
                     value={
                       (listClient &&
                         listClient.find(
@@ -139,13 +140,14 @@ export default function OptionPiece() {
                 </FormControl>
               </Box>
             </div>
-            <div className=" flex justify-between items-center w-full bg-white rounded-lg p-2 text-xl text-gray-800  font-normal m-1">
+            <div className=" flex justify-between items-center w-full bg-white rounded-lg p-2 text-2xl text-gray-800  font-normal m-1">
               <span>{"#Log:"}</span>
               <Box className="w-72 my-2 rounded-3 border-gray-400">
                 <FormControl fullWidth>
-                  <InputLabel id="Log">#Log</InputLabel>
+                  <InputLabel className="text-2xl" id="Log">#Log</InputLabel>
                   <Select
                     id="Log"
+                    className="w-full h-20 text-2xl"
                     value={
                       (listLogs &&
                         listLogs.find(
@@ -164,13 +166,14 @@ export default function OptionPiece() {
                 </FormControl>
               </Box>
             </div>
-            <div className="flex justify-between items-center w-full bg-white m-1 rounded-lg p-2 text-xl text-gray-800  font-normal">
+            <div className="flex justify-between items-center w-full bg-white m-1 rounded-lg p-2 text-2xl text-gray-800  font-normal">
               <span>{"Type de Pièce: "}</span>
-              <Box className="w-72 my-2 rounded-3 border-gray-400">
+              <Box className="w-72 rounded-3 border-gray-400">
                 <FormControl fullWidth>
-                  <InputLabel id="Type de Pièce">Type de Pièce</InputLabel>
+                  <InputLabel className="text-2xl" id="Type de Pièce">Type de Pièce</InputLabel>
                   <Select
                     id="Type de Pièce"
+                    className="w-full h-20 text-2xl"
                     value={
                       (listTypesPiece &&
                         listTypesPiece.find(

@@ -15,7 +15,7 @@ export default function StopButton() {
 
   return (
     <div
-      className="mx-6 flex justify-center items-center font-bold text-3xl text-white font-normal bg-red-400 rounded-lg hover:bg-red-700 hover:scale-110 w-80 h-64 "
+      className="mx-6 flex justify-center items-center font-bold text-3xl text-black font-normal bg-red-400 rounded-lg hover:bg-red-700 hover:scale-110 w-80 h-64 "
       onClick={stopCommand}
     >
       <span>ARRÊTER</span>

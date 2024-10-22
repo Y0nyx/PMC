@@ -121,9 +121,10 @@ export default function CreerLog() {
 
               <Box className="w-1/2 my-5 rounded-3 border-gray-400">
                 <FormControl fullWidth>
-                  <InputLabel id="Client">Client</InputLabel>
+                  <InputLabel className="text-2xl" id="Client">Client</InputLabel>
                   <Select
                     id="Client"
+                    className="w-full h-20 text-2xl"
                     value={
                       (listClient &&
                         listClient.find((c) => c.id === selectedClient.id)) ||
@@ -142,11 +143,15 @@ export default function CreerLog() {
             </div>
             <div className="flex flex-col justify-around items-center my-2 w-full">
               <div className="flex flex-col justify-start items-start w-1/2 p-10">
-                <span className="font-normal text-lg">Nom du Log</span>
+                <span className="font-normal text-2xl">Nom du Log</span>
                 <TextField
-                  className="w-full font-normal"
+                  className="w-full h-20 font-normal"
                   id="outlined-basic"
                   label="Nom"
+                  sx={{
+                    input: { fontSize: 24 },  // Change the text size of the input
+                    label: { fontSize: 18 },  // Change the text size of the label
+                  }}
                   value={nom}
                   variant="outlined"
                   inputRef={nomRef}

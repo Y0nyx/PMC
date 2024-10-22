@@ -26,11 +26,11 @@ export default function PagePiece() {
     ipcRenderer.on("receivePiece", async (event, message) => {
       let parser = await pieceParser(message);
 
-      if (parser.result == "succès") {
+      if (parser.result === "succès") {
         setImageSelected(0);
       } else {
         let index = parser.images.findIndex(
-          (image) => image.boundingBox != undefined
+          (image) => image.boundingBox !== undefined
         );
         if (index < 0) index = 0;
         setImageSelected(index);
@@ -62,7 +62,7 @@ export default function PagePiece() {
         {piece && (
           <div className=" shadow-xl rounded-lg flex justify-center items-center p-5 w-5/6  border-gray-300 bg-gray-100">
             <div className="flex justify-center items-center flex-col w-7/12 h-full">
-              {piece.result == "succès" ? (
+              {piece.result === "succès" ? (
                 <div className=" box-border  flex justify-center items-center w-full h-full">
                   <img
                     className="box-border object-contain w-full h-full"
@@ -148,7 +148,7 @@ export default function PagePiece() {
                 <span>{"Résultat:"}</span>
                 <span className="flex justify-center items-center">
                   {piece.result}
-                  {piece.result == "succès" ? (
+                  {piece.result === "succès" ? (
                     <CheckCircleIcon className="text-green-500 text-3xl m-2" />
                   ) : (
                     <CancelIcon className="text-red-500 text-3xl m-2" />

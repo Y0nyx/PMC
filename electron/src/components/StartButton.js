@@ -15,7 +15,7 @@ export default function StartButton() {
   }
   return (
     <div
-      className=" flex mx-6 font-bold justify-center items-center font-normal text-3xl text-white hover:scale-110 bg-green-400 rounded-lg hover:bg-green-700 w-80 h-64 "
+      className=" flex mx-6 font-extrabold justify-center items-center font-normal text-4xl text-black hover:scale-110 bg-green-400 rounded-lg hover:bg-green-700 w-96 h-64 "
       onClick={startCommand}
     >
       <span>DÉMARRER</span>

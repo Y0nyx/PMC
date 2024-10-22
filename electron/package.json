@@ -96,6 +96,10 @@
         "to": "./resources/generateDatabase.sql"
       },
       {
+        "from": "../sql/defaultValues.sql",
+        "to": "./resources/defaultValues.sql"
+      },
+      {
         "from": "../docker-compose.yml",
         "to": "./resources/docker-compose.yml"
       },

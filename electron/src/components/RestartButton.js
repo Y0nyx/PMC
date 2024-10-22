@@ -10,7 +10,7 @@ export default function RestartButton() {
   }
   return (
     <div
-      className="flex justify-center items-center mx-6 font-bold font-normal text-3xl text-white text- hover:scale-110 bg-yellow-500 rounded-lg hover:bg-yellow-500 w-80 h-64 "
+      className="flex justify-center items-center mx-6 font-bold font-normal text-3xl text-black text- hover:scale-110 bg-yellow-500 rounded-lg hover:bg-yellow-500 w-80 h-64 "
       onClick={RestartCommand}
     >
       <span>RECOMMENCER</span>

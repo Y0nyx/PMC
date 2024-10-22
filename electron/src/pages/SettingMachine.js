@@ -84,19 +84,19 @@ export default function SettingMachine() {
 
             <div className="flex flex-col justify-around items-center h-full w-full  rounded-lg border-3 border-solid p-3">
               <div
-                className=" flex mx-6 font-bold justify-center items-center font-normal text-2xl text-white hover:scale-110 bg-black rounded-lg hover:bg-white w-96 h-44 p-2"
+                className=" flex mx-6 font-bold justify-center items-center font-normal text-2xl text-white hover:scale-110 bg-black rounded-lg hover:bg-white hover:text-black w-96 h-36 p-2"
                 onClick={powerOffMachine}
               >
                 <span>ÉTEINDRE LA MACHINE</span>
               </div>
               <div
-                className=" flex mx-6 font-bold justify-center items-center font-normal text-2xl text-white hover:scale-110 bg-black rounded-lg hover:bg-white w-96 h-44 p-2"
+                className=" flex mx-6 font-bold justify-center items-center font-normal text-2xl text-white hover:scale-110 bg-black rounded-lg hover:bg-white hover:text-black w-96 h-36 p-2"
                 onClick={rebootClick}
               >
                 <span>REDÉMARRER LA MACHINE</span>
               </div>
               <div
-                className=" flex mx-6 font-bold justify-center items-center font-normal text-2xl text-white hover:scale-110 bg-black rounded-lg hover:bg-white w-96 h-44 p-2"
+                className=" flex mx-6 font-bold justify-center items-center font-normal text-2xl text-white hover:scale-110 hover:text-black  bg-black rounded-lg hover:bg-white w-96 h-36 p-2"
                 onClick={exportData}
               >
                 <span>Exporter les données sur USB</span>
@@ -111,7 +111,7 @@ export default function SettingMachine() {
             </span>
             <div className="flex flex-col justify-around items-center w-full rounded-lg h-full border-3 p-3 border-solid border-red-500">
               <div
-                className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 my-2 p-2"
+                className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-3xl text-black hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 my-2"
                 onClick={() => {
                   setOpen(true);
                 }}
@@ -146,7 +146,7 @@ export default function SettingMachine() {
                       continuer ?
                     </p>
                     <div
-                      className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 p-2"
+                      className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-black hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 p-2"
                       onClick={() => {
                         setOpen(false);
                         resetData();
@@ -158,7 +158,7 @@ export default function SettingMachine() {
                 </DialogContent>
               </Dialog>
               <div
-                className=" flex mx-6 font-bold justify-center items-center font-normal text-3xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 my-2 "
+                className=" flex mx-6 font-bold justify-center items-center font-normal text-3xl text-black hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-96 h-64 my-2 "
                 onClick={() => {
                   setOpen2(true);
                 }}
@@ -194,7 +194,7 @@ export default function SettingMachine() {
                         Êtes-vous sûr de vouloir continuer ?
                       </p>
                       <div
-                        className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-white hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 "
+                        className=" flex mx-6 font-bold justify-center items-center font-normal text-center text-2xl text-black hover:scale-110 bg-red-400 rounded-lg hover:bg-red-700 w-80 h-56 "
                         onClick={() => {
                           setReboot(true);
                           resetAll();

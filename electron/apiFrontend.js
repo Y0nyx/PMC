@@ -9,15 +9,17 @@ const path = require("path");
 
 let appPath = global.appPath;
 let sqlPath;
+let sqlDefaultValuesPath;
 let dockerComposePath;
 const isDev = process.defaultApp;
 
 if (!isDev) {
   sqlPath = path.join(appPath, "generateDatabase.sql");
+  sqlDefaultValuesPath = path.join(appPath, "defaultValues.sql");
   dockerComposePath = path.join(appPath, "docker-compose.yml");
 } else {
   sqlPath = "../sql/generateDatabase.sql";
-
+  sqlDefaultValuesPath = "../sql/defaultValues.sql";
   dockerComposePath = "../docker-composeDev.yml";
 }
 
@@ -303,10 +305,24 @@ function findUsbDrivePath() {
   ipcMain.on("resetData", async () => {
     await deleteAllimages();
     await query.resetData();
+    let connection = false;
+        let sql = fs.readFileSync(sqlDefaultValuesPath, "utf8");
+
+        console.log("REGENERATING DATABASE");
+        while (!connection) {
+          try {
+            await query.generateDatabase(sql);
+            connection = true;
+            console.log("DATABASE CREATED ! ");
+          } catch {
+            console.log("ATTEMPT TO CONNECT...");
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+          }
+        }
   });
 
   ipcMain.on("resetAll", async () => {
-    //await deleteAllimages();
+    await deleteAllimages();
 
     exec(
       `sudo docker stop $(sudo docker ps -q) && sudo docker rm $(sudo docker ps -aq) && sudo docker volume rm $(sudo docker volume ls -q) && sudo docker-compose -f ${dockerComposePath} up -d`,

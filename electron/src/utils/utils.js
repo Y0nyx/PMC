@@ -38,7 +38,7 @@ export async function pieceParser(piece) {
 
   // Process the date and result
   let date = new Date(piece.date);
-  let result = piece.resultat == "1" ? "succès" : "échec";
+  let result = piece.resultat === "1" ? "succès" : "échec";
   let type = result === "échec" ? piece.nom_erreur_soudure : "";
 
   // Construct the row object

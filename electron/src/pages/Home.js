@@ -51,8 +51,8 @@ export default function Home() {
   return (
     <div className="w-screen h-screen overflow-scroll">
       {uicontext.state_state != protocol.state.init ? (
-        <div className="box-border flex flex-col justify-center items-center w-full h-full p-5 bg-gray-100">
-          <div className="flex justify-center items-center w-5/6 border-gray-200 bg-white rounded-lg p-5 my-4 h-24 shadow-sm">
+        <div className="box-border flex flex-col justify-center items-center w-full h-full p-1 bg-gray-100">
+          <div className="flex justify-center items-center w-11/12 border-gray-200 bg-white rounded-lg p-5 my-4 h-24 shadow-sm">
             <div className="flex justify-start items-center w-1/3 h-full">
               <OptionPieceButton></OptionPieceButton>
             </div>
@@ -63,7 +63,7 @@ export default function Home() {
               <SettingButton />
             </div>
           </div>
-          <div className="shadow-xl rounded-lg flex justify-around items-center w-5/6 h-full border-gray-300 bg-gray-100 p-5">
+          <div className="shadow-xl rounded-lg flex justify-around items-center w-11/12 h-full border-gray-300 bg-gray-100 p-5">
             <div className="flex flex-col justify-center items-center w-1/5 h-full">
               <div className="flex justify-between items-center w-5/6 bg-white rounded-lg p-4 text-xl text-gray-800  font-normal my-1 ">
                 <span>{"Client:"}</span>
