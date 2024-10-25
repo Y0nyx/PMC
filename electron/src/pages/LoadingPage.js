@@ -22,7 +22,7 @@ export default function LoadingPage() {
     }
 
     if (command == "stop") {
-      ipcRenderer.send("stop");
+      ipcRenderer.send("command", {code:"stop"});
     }
 
     ipcRenderer.on("stop", () => {
@@ -33,7 +33,7 @@ export default function LoadingPage() {
     ipcRenderer.on("ready", () => {
       uicontext.ref_plc_ready = true;
       if (command == "forward") {
-        ipcRenderer.send("start");
+        ipcRenderer.send("command", {code:"start"});
       }
 
       if (command == "stop") {

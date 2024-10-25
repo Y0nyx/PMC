@@ -369,9 +369,9 @@ function findUsbDrivePath() {
     console.log(`${req.code} command send`);
 
     if(req.code == "start")
-    {
-      writeToPython(req);
-    }
+      {
+        writeToPython(req);
+      }
     if(req.code == "stop")
       {
         writeToPython(req);
