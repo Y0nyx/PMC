@@ -38,7 +38,6 @@ export async function pieceParser(piece) {
 
   // Process the date and result
   let date = new Date(piece.date);
-  console.log(piece.resultat)
   let result = piece.resultat === 1 ? "succès" : "échec";
   let type = result === "échec" ? piece.nom_erreur_soudure : "";
 
@@ -57,7 +56,6 @@ export async function pieceParser(piece) {
     id_log: piece.id_log,
   };
 
-  console.log(row);
   return row;
 }
 
