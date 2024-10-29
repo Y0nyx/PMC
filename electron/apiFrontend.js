@@ -365,8 +365,8 @@ function findUsbDrivePath() {
   })
 
 
-  ipcMain.on("model",model,() =>{
-    writeToPython({code:"model",data:model})
+  ipcMain.on("model",(event, req) =>{
+    writeToPython({code:"model",data:req.model})
   })
 
 
