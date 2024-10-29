@@ -25,6 +25,7 @@ if (!isDev) {
 
 //API avec Frontend
 const query = require("./queries/queries");
+const { type } = require("os");
 
 function apiFrontend(mainWindow, configReact) {
   ipcMain.on("fetchConfig", (event) => {
@@ -363,6 +364,10 @@ function findUsbDrivePath() {
     writeToPLC({ code: "backward", data: "" });
   })
 
+
+  ipcMain.on("model",model,() =>{
+    writeToPython({code:"model",data:model})
+  })
 
 
   ipcMain.on("command", (event, req) => {

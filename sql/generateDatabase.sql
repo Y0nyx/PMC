@@ -62,6 +62,6 @@ INSERT INTO Log (ID, ID_client,Nom) VALUES
 
 -- Insertion de données de test dans la table Type de piece
 INSERT INTO type_piece (ID, Nom, Description) VALUES
-('1', 'Piece 1', 'Description 1'),
-('2', 'Piece 2', 'Description 2'),
-('3', 'Piece 3', 'Description 3');
+('1', 'Ancrage 4X4', 'Ancrage 4X4'),
+('2', 'Ancrage 10X8', 'Ancrage 10X8'),
+('3', 'Ancrage 10X12', 'Ancrage 10X12');

@@ -93,6 +93,7 @@ export default function OptionPiece() {
 
   function handleTypePiece(event) {
     uicontext.setTypePiece(event.target.value);
+    ipcRenderer.send("model",event.target.value)
   }
 
   return (
