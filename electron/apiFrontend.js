@@ -6,6 +6,7 @@ const {writeToPLC}   = require("./apiPLC")
 const { exec } = require("child_process");
 const {parse} = require('json2csv')
 const path = require("path");
+const diskusage = require('diskusage');
 
 let appPath = global.appPath;
 let sqlPath;
@@ -27,7 +28,13 @@ if (!isDev) {
 const query = require("./queries/queries");
 const { type } = require("os");
 
+
+
+
 function apiFrontend(mainWindow, configReact) {
+
+
+
   ipcMain.on("fetchConfig", (event) => {
     mainWindow.webContents.send("ReceiveConfig", configReact);
   });
@@ -52,6 +59,27 @@ function apiFrontend(mainWindow, configReact) {
       return null;
     }
   });
+
+
+  ipcMain.on("diskspace",()=> {
+    const drivePath=path.parse(__dirname).root
+    diskusage.check(drivePath, (err, info) => {
+      if (err) {
+          console.error("Error checking disk space:", err);
+          mainWindow.webContents.send("error", `Error checking disk space: ${err} `);
+      } else {
+
+          const availablePercentage = (info.available / info.total) * 100;
+          console.log("Available disk size:",availablePercentage)
+
+          if(availablePercentage < 5){
+            mainWindow.webContents.send("error", `le disque dur est presque plein, Veuillez dans les options pour réinitialiser les données`)
+          }
+   
+      }
+  });
+  })
+
 
   ipcMain.handle("readBoundingBox", (event, folderPath) => {
     try {
@@ -296,7 +324,7 @@ function findUsbDrivePath() {
         await fs.rmSync(dir.photo, { recursive: true, force: true });
         await fs.rmSync(dir.boundingbox, { recursive: true, force: true });
       }
-
+      await deleteAllimages();
       console.log("All directories deleted successfully.");
     } catch (error) {
       console.error("Error deleting directories:", error);

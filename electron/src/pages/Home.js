@@ -22,6 +22,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState();
   
   useEffect(() => {
+
     ipcRenderer.on("error", (event,error) => {
       console.log(error)
       setErrorMessage(error);
@@ -36,6 +37,7 @@ export default function Home() {
     ipcRenderer.on("ready", () => {
       uicontext.ref_plc_ready.current = true;
       uicontext.setState(protocol.state.idle);
+      ipcRenderer.send("diskspace");
     });
 
     if (uicontext.ref_dev.current) uicontext.setState(protocol.state.idle);
