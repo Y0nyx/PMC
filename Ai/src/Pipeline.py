@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 #from tensorflow.keras.models import load_model
 from PIL import Image as Img
-from roboflow import Roboflow
+#from roboflow import Roboflow
 import numpy as np
 import asyncio
 import os
@@ -187,7 +187,7 @@ class Pipeline():
 
         return results
 
-    def detect(self, show: bool = False, save_seg: bool = False, conf: float = 0.7):
+    def detect(self, show: bool = False, save_seg: bool = False, conf: float = 0.5):
         """
         Detection method, it calls all necessary sub methods to take the pictures, segment them and make a prediction on the wether there is a defect or not
         ::
@@ -208,6 +208,7 @@ class Pipeline():
         self._captured_image_collection_path = f"{capture_image_collection_base_path}detection_{detection_id}"
         
         captured_image_collection.save(self._captured_image_collection_path + "/images/")
+        defect_count = 0
 
         if captured_image_collection.img_count > 0:
             for i, captured_image in enumerate(captured_image_collection):
@@ -216,12 +217,13 @@ class Pipeline():
                 if not self.stop_flag.is_set():
                     #Find the welds in the capture image
                     #segmented_image_collection, boxes = self._segmentation_image(captured_image, i, show, save_seg, conf) #TODO: Ajouter un check qui valide que ya des soudures
-                    supervised_detection_image_collection, defect_count = self._supervised_detection(captured_image, i, show, save_seg, conf) 
+                    supervised_detection_image_collection, value = self._supervised_detection(captured_image, i, show, save_seg, conf) 
+                    defect_count += value
                     # TODO Integrate supervised model
                     
                 else:
                     return
-                    
+            print(defect_count)
             solder_defect = False
             erreurSoudure = 1
             if defect_count == 0:
@@ -257,7 +259,7 @@ class Pipeline():
             img_height: The height of the image.
             output_file: Path to the output .txt file.
         """
-        if len(result.boxes) == 0: return
+        if len(result.boxes) == 0: return 0
         with open(output_file, 'w') as f:
             for box in result.boxes:
                 x_min, y_min, x_max, y_max = box.xyxy.tolist()[0]
@@ -267,6 +269,7 @@ class Pipeline():
                 height = (y_max - y_min) / img_height
 
                 f.write(f"{0} {x_center:.6f} {y_center:.6f} {width:.6f} {height:.6f}\n")
+        return 1
 
     def _unsupervised_defect_detection(self, i: int, segmented_image_collection):
         """
@@ -354,11 +357,11 @@ class Pipeline():
         os.makedirs(self._captured_image_collection_path + f"/bounding_boxes/", exist_ok=True)
         # crop images with bounding box
         for i, result in enumerate(results):
-            self._write_yolo_bounding_boxes(result, 3840, 3104, self._captured_image_collection_path + f"/bounding_boxes/img_{img_id}.txt")
+            defect_cnt = self._write_yolo_bounding_boxes(result, 3840, 3104, self._captured_image_collection_path + f"/bounding_boxes/img_{img_id}.txt")
+            defect_count = defect_count + defect_cnt
             for boxe in result.boxes:
                 image = img.crop(boxe)
                 imgCollection.add(image)
-                defect_count = defect_count + 1
 
         return imgCollection, defect_count
 
@@ -451,15 +454,16 @@ if __name__ == "__main__":
     #supervised_models = [YoloModel(Path(segmentation_model_path))]
     #unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
 
-    rf = Roboflow(api_key="gAhR8llaFqtettgb7iDS")
-    project = rf.workspace("pmc").project("petites-pieces-final-av-defauts")
-    version = project.version(1)
-    dataset = version.download("yolov8")
+    #rf = Roboflow(api_key="gAhR8llaFqtettgb7iDS")
+    #project = rf.workspace("pmc").project("petites-pieces-final-av-defauts")
+    #version = project.version(1)
+    #dataset = version.download("yolov8")
 
     # TRAINING
     pipeline = Pipeline(segmentation_model=None, supervised_detection_model=None, unsupervised_model=None, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
     models = ["yolov8x"]
-    data_path = dataset.location + "/data.yaml"
+    #data_path = dataset.location + "/data.yaml"
+    data_path = "yolov8x"
     for model in models:
         pipeline.train(data_path, model, epochs=250, batch=-1, workers=0, single_cls=True)
 

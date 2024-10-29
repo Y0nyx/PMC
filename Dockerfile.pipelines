@@ -17,12 +17,7 @@ WORKDIR /PMC
 # Copy source code from host machine to Docker image
 COPY /Ai/src/ src/
 
-RUN pip install ultralytics
-RUN pip install websockets
-RUN pip install scikit-learn
-RUN pip install scikit-image
-RUN pip install clearml
-RUN pip install tensorflow
+RUN pip install ultralytics websockets scikit-learn scikit-image clearml tensorflow
 
 # Fix error: `np.bool` was a deprecated alias for the builtin `bool` segmentation error in Tests
 RUN pip install --no-cache numpy==1.23.5
