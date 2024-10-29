@@ -2,6 +2,7 @@ from pipeline.models.Model import YoloModel
 from NetworkManager import NetworkManager
 from Pipeline import Pipeline
 from common.Constants import *
+import time
 
 
 def path_initialization():
@@ -29,7 +30,10 @@ if __name__ == "__main__":
     print(supervised_detection_model_path)
     segmentation_model = YoloModel(Path(segmentation_model_path))
     supervised_detection_model = YoloModel(Path(supervised_detection_model_path))
-
+    print("tabarnak")
     pipeline = Pipeline(segmentation_model=segmentation_model, supervised_detection_model=supervised_detection_model, unsupervised_model=None, current_iteration_logging_path=current_iteration_logging_path)
+    print("calisse")
     networkManager = NetworkManager(pipeline, HOST, PORT, SUPERVISED_HOST, SUPERVISED_PORT, UNSUPERVISED_HOST, UNSUPERVISED_PORT, True)
     networkManager.start()
+
+

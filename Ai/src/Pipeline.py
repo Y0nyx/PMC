@@ -3,13 +3,12 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 #from tensorflow.keras.models import load_model
 from PIL import Image as Img
+from roboflow import Roboflow
 import numpy as np
 import asyncio
 import os
 import threading
 from pathlib import Path
-import json
-import re
 import subprocess
 import cv2
 #from clearml import Task
@@ -175,15 +174,16 @@ class Pipeline():
 
         args = dict(data=yaml_path, **kargs)
 
-        if self._state == PipelineState.TRAINING:
-            import clearml
-            clearml.browser_login()
+        import clearml
+        clearml.browser_login()
 
-            task = clearml.Task.init(project_name="PMC", task_name=f"{yolo_model} detection task 2")
-            task.set_parameter("model_variant", yolo_model)
-            task.connect(args)
+        task = clearml.Task.init(project_name="PMC", task_name=f"{yolo_model} detection task 2")
+        task.set_parameter("model_variant", yolo_model)
+        task.connect(args)
 
         results = model.train(**args)
+
+        task.close()
 
         return results
 
@@ -451,10 +451,15 @@ if __name__ == "__main__":
     #supervised_models = [YoloModel(Path(segmentation_model_path))]
     #unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
 
+    rf = Roboflow(api_key="gAhR8llaFqtettgb7iDS")
+    project = rf.workspace("pmc").project("petites-pieces-final-av-defauts")
+    version = project.version(1)
+    dataset = version.download("yolov8")
+
     # TRAINING
     pipeline = Pipeline(segmentation_model=None, supervised_detection_model=None, unsupervised_model=None, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
-    models = ["yolov10l","yolo11m", "yolo11l", "yolov8l"]
-    data_path = "v21/data.yaml"
+    models = ["yolov8x"]
+    data_path = dataset.location + "/data.yaml"
     for model in models:
         pipeline.train(data_path, model, epochs=250, batch=-1, workers=0, single_cls=True)
 
@@ -464,5 +469,3 @@ if __name__ == "__main__":
     #unsupervised_model = tf.keras.models.load_model(unsupervised_model_path)
 
     #pipeline = Pipeline(supervised_models=supervised_models, unsupervised_model=unsupervised_model, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
-
-    

@@ -28,76 +28,76 @@ services:
       - "host.docker.internal:host-gateway"
 
 
-  unsupervised_learning:
-    privileged: true
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile.unsupervised
-    volumes:
-      - ./PMC:/PMC
-      - ./Datasets:/Datasets
-    network_mode: "host"
-    ports:
-      - "8004:8004"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    command: bash -c "nvidia-smi && tail -F /dev/null"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
+  # unsupervised_learning:
+  #   privileged: true
+  #   restart: always
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.unsupervised
+  #   volumes:
+  #     - ./PMC:/PMC
+  #     - ./Datasets:/Datasets
+  #   network_mode: "host"
+  #   ports:
+  #     - "8004:8004"
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   command: bash -c "nvidia-smi && tail -F /dev/null"
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
 
 
-  supervised_learning:
-    restart: always
-    privileged: true
-    build:
-      context: .
-      dockerfile: Dockerfile.supervised
-    environment:
-      - MKL_THREADING_LAYER=GNU
-    volumes:
-      - ./Ai:/PMC
-      - ./../Datasets:/Datasets
-    network_mode: "host"
-    ports:
-      - "8003:8003"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    command: tail -F /dev/null
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
-  db:
-    container_name: postgres_container
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: JPL
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+  # supervised_learning:
+  #   restart: always
+  #   privileged: true
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.supervised
+  #   environment:
+  #     - MKL_THREADING_LAYER=GNU
+  #   volumes:
+  #     - ./Ai:/PMC
+  #     - ./../Datasets:/Datasets
+  #   network_mode: "host"
+  #   ports:
+  #     - "8003:8003"
+  #   extra_hosts:
+  #     - "host.docker.internal:host-gateway"
+  #   command: tail -F /dev/null
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [gpu]
+  # db:
+  #   container_name: postgres_container
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: root
+  #     POSTGRES_PASSWORD: root
+  #     POSTGRES_DB: JPL
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
 
-    ports:
-      - "5432:5432"
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5050:80"
+  #   ports:
+  #     - "5432:5432"
+  # pgadmin:
+  #   container_name: pgadmin4_container
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: root
+  #   ports:
+  #     - "5050:80"
 
 volumes:
   dataset:
