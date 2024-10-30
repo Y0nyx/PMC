@@ -538,57 +538,71 @@ class DataProcessing():
             input_valid = np.array(input_valid)
             print(f'\n\nThe shape for input_train is: {input_train.shape} amd the shape for input_valid is: {input_valid.shape}\n\n')
 
+            # --------------------------------------------------------------------------------------------------------------------
+            #                               4. DELETE THE IMAGES THAT HAVE ALL PIXELS EQUALS TO 0
+            # --------------------------------------------------------------------------------------------------------------------
+            print(f'Deleting black images')
+            filtered_input_train = []
+            cptr = 0
+            threshold = 0.65 
 
-        #     # --------------------------------------------------------------------------------------------------------------------
-        #     #                               4. DELETE THE IMAGES THAT HAVE ALL PIXELS EQUALS TO 0
-        #     # --------------------------------------------------------------------------------------------------------------------
-        #     print(f'Deleting black images')
-        #     filtered_train_input = []
-        #     filtered_train_target = []
-        #     cptr = 0
-        #     threshold = 0.65 
+            for i, train in enumerate(input_train):
+                # Flattening the first 3 channels (ignoring the defect channel)
+                pixel_count = np.prod(train.shape)
+                # Count the number of zero pixels in the first 3 channels
+                zero_count = np.sum(train == 0)
+                # Calculate the percentage of zero pixels
+                zero_percentage = zero_count / pixel_count
+                # If less than threshold, keep the image
+                if zero_percentage <= threshold:
+                    filtered_input_train.append(train)
+                else:
+                    cptr += 1
 
-        #     for i, (train_input, train_target) in enumerate(zip(images_stain_train, input_train)):
-        #         # Flattening the first 3 channels (ignoring the defect channel)
-        #         pixel_count = np.prod(train_target.shape)
-        #         # Count the number of zero pixels in the first 3 channels
-        #         zero_count = np.sum(train_target == 0)
-        #         # Calculate the percentage of zero pixels
-        #         zero_percentage = zero_count / pixel_count
-        #         # If less than threshold, keep the image
-        #         if zero_percentage <= threshold:
-        #             filtered_train_input.append(train_input)
-        #             filtered_train_target.append(train_target)
-        #         else:
-        #             cptr += 1
-
-        #     print(f'We removed: {cptr} input images')
-        #     print(f'There are: {len(filtered_train_input)} input images after deleting black images')
+            print(f'We removed: {cptr} no defects images')
+            print(f'There are: {len(filtered_input_train)} images without defects after deleting black images')
                     
-        #     filtered_valid_input = []
-        #     filtered_valid_target = []
-        #     cptr = 0 
+            filtered_input_valid = []
+            cptr = 0 
 
-        #     for i, (valid_input, valid_target) in enumerate(zip(images_stain_valid, input_valid)):
-        #         # Flattening the first 3 channels (ignoring the defect channel)
-        #         pixel_count = np.prod(valid_target.shape)
-        #         # Count the number of zero pixels in the first 3 channels
-        #         zero_count = np.sum(valid_target == 0)
-        #         # Calculate the percentage of zero pixels
-        #         zero_percentage = zero_count / pixel_count
-        #         # If less than threshold, keep the image
-        #         if zero_percentage <= threshold:
-        #             filtered_valid_input.append(valid_input)
-        #             filtered_valid_target.append(valid_target)
-        #         else:
-        #             cptr += 1
+            for i, test in enumerate(input_valid):
+                # Flattening the first 3 channels (ignoring the defect channel)
+                pixel_count = np.prod(test.shape)
+                # Count the number of zero pixels in the first 3 channels
+                zero_count = np.sum(test == 0)
+                # Calculate the percentage of zero pixels
+                zero_percentage = zero_count / pixel_count
+                # If less than 80% of pixels are zeros, keep the image
+                if zero_percentage <= threshold:
+                    filtered_input_valid.append(test)
+                else:
+                    cptr += 1
 
-        #     print(f'We removed: {cptr} validation images')
-        #     print(f'There are: {len(filtered_train_input)} validation images after deleting black images')
+            print(f'We removed: {cptr} defects images')
+            print(f'There are: {len(filtered_input_valid)} images with defects after deleting black images')
 
-        #     # **************************************************************************************************
-        #     # ********************************************** TEST **********************************************
-        #     # **************************************************************************************************
+            filtered_input_train = np.array(filtered_input_train)
+            filtered_input_valid = np.array(filtered_input_valid)
+            print(f'The shape for filtered_no_defects is: {filtered_input_train.shape} and for filtered_defects is: {filtered_input_valid.shape}')
+
+            # **************************************************************************************************
+            # ********************************************** TEST **********************************************
+            # **************************************************************************************************
+            if testing:
+                # Save the images to see if the cropping works
+                path = f'{data_path}/train/segmentation/d_delete_0s'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(filtered_input_train):
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
+                path = f'{data_path}/valid/segmentation/d_delete_0s'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(filtered_input_valid):
+                    img = np.array(img)
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
 
         #     # --------------------------------------------------------------------------------------------------------------------
         #     #                          5. ADDING PATCHES TO THE IMAGES
