@@ -84,6 +84,8 @@ def argparser():
                         help='Width of the image after the subtitution of the images')
     parser.add_argument('--SUB_HEIGHT', type=int, default=256,
                         help='Width of the image after the subtitution of the images')
+    parser.add_argument('--TESTING', action='store_true', default=True, 
+                        help='When the user want to print some test to see if the code works as expected')
 
     return parser.parse_args()
     
@@ -196,6 +198,7 @@ if __name__ == '__main__':
     max_pixel_value = args.MAX_PIXEL_VALUE
     sub_width = args.SUB_WIDTH
     sub_height = args.SUB_HEIGHT
+    testing = args.TESTING
 
     gpus = tf.config.experimental.list_physical_devices('GPU')
 
@@ -218,7 +221,7 @@ if __name__ == '__main__':
     #                                type='as_no_default', dataset='train', 
     #                                output_path='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale/train/segmentation/as_no_default_segmented')
 
-    train_input, train_input_loss, valid_input, valid_input_loss = data_processing.get_data_processing_stain_PMC860(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+    train_input, train_input_loss, valid_input, valid_input_loss = data_processing.get_data_processing_stain_PMC860(data_path, max_pixel_value, testing) #TRAINING Change this line if you want to change the artificial defaut created. 
 
     #DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
     _, row, column, channels = train_input.shape

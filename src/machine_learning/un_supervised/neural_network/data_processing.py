@@ -375,7 +375,7 @@ class DataProcessing():
                     cv2.imwrite(f'{output_path}/{filename}_{i}', img)
         
 
-    def get_data_processing_stain_PMC860(self, data_path, max_pixel_value, test=False):
+    def get_data_processing_stain_PMC860(self, data_path, max_pixel_value, testing, test=False):
         """
         Data processing to obtain stain on the data and normalize the data between 0 and 1. 
         Called PMC860, because this dataprocessing is done using the new dataset nammed: "Datasets_segmentation_grayscale"
@@ -385,150 +385,271 @@ class DataProcessing():
             """
             Setps done during the training phase. 
             """
-            # 1. Loading the data ________________________________________________________________
+            # --------------------------------------------------------------------------------------------------------------------
+            #                            1. L0ADING THE TEST DATA WITH AND WITOUT DEFECTS
+            # --------------------------------------------------------------------------------------------------------------------
             # Loading the training data 
             print(f'Loading the training images')
-            input_train_path = f'{data_path}/train/segmentation/as_no_default'
+            input_train_path = f'{data_path}/train/segmentation/as_no_default_test'
             input_train = []
 
             for i, filename in enumerate(os.listdir(input_train_path)):
                 print(f'Loading image: {i}')
-                if filename.endswith(".jpg") and i <= 100:
-                    input_train.append(cv2.imread(f'{input_train_path}/{filename}'))
+                if filename.endswith(".jpg") and i <= 20:
+                    img_train = cv2.imread(f'{input_train_path}/{filename}')
+                    print(f'The shape for this input is {img_train.shape}')
+                    if img_train.shape[0] == 2160 and img_train.shape[1] == 3840:
+                        input_train.append(img_train)
 
             # Loading the validation data
             print(f'Loading the validation images')
-            input_valid_path = f'{data_path}/valid/segmentation/as_no_default'
+            input_valid_path = f'{data_path}/valid/segmentation/as_no_default_test'
             input_valid = []
 
             for i, filename in enumerate(os.listdir(input_valid_path)):
                 print(f'Loading image: {i}')
-                if filename.endswith(".jpg") and i <= 100:
-                    input_valid.append(cv2.imread(f'{input_valid_path}/{filename}'))
+                if filename.endswith(".jpg") and i <= 20:
+                    img_valid = cv2.imread(f'{input_valid_path}/{filename}')
+                    print(f'The shape for this input is {img_valid.shape}')
+                    if img_valid.shape[0] == 2160 and img_valid.shape[1] == 3840:
+                        input_valid.append(img_valid)
 
-            # _________________________________________________________________________________
-            # Test to see if the loading works
-            
-            # _________________________________________________________________________________
+            print(f'There are {len(input_train)} input_train and {len(input_valid)} input_valid.')
 
-            # 2. Segmenting the data __________________________________________________________
-            # Segmenting the training and validation data.
+            # --------------------------------------------------------------------------------------------------------------------
+            #                            2. SEGMENT THE IMAGES TO KEEP ONLY THE WELDING
+            # --------------------------------------------------------------------------------------------------------------------
             seg_images_training = []
             seg_images_validation = []
-
-            print(f'Image segmentation for training data')
-            for image_training in input_train:
-                # Creating bounding box where the welding are located
-                bounding_boxes = self.segment_welds_opencv(image_training)
-                # Add the bounding box to the original image
-                image_bounding_boxes = self.draw_bounding_boxes(image_training, bounding_boxes)
-
-                seg_images_training.extend(image_bounding_boxes)
-
-            input_train = seg_images_training
-            
-            print(f'Image segmentation for validation data\n')
-            for image_validation in input_valid:
-                # Creating bounding box where the welding are located
-                bounding_boxes = self.segment_welds_opencv(image_validation)
-                # Add the bounding box to the original image
-                image_bounding_boxes = self.draw_bounding_boxes(image_validation, bounding_boxes)
-
-                seg_images_validation.extend(image_bounding_boxes)
-            input_valid = seg_images_validation
-
-            # 3. Subdivise the image ________________________________________________________
-            # Subdivise the training and validation data. 
-            sub_images_training = []
-            sub_images_validating = []
-
-            print(f'Subdivising the training data')
-            for images_training in input_train:
-                if not np.all(images_training == 0):
-                    sub_images_training.extend(self.subdivise(images_training))
-            input_train = sub_images_training
-            print(f'\n\nThere are: {len(input_train)} subdivised training images that are not all 0s (black pixels)\n\n')
-
-            print(f'Subdivising the validation data\n')
-            for images_validating in input_valid:
-                if not np.all(images_validating == 0):
-                    sub_images_validating.extend(self.subdivise(images_validating))
-            input_valid = sub_images_validating
-            print(f'\n\nThere are: {len(input_train)} subdivised training images that are not all 0s (black pixels)\n\n')
-
-            # 4. Add patches to the images __________________________________________________
-            # Adding patch to the images for the training and validation set. 
-            images_stain_train = []
-            images_stain_valid = []
-            print(f'Adding patches for the training data')
-            for img in input_train:
-                images_stain_train.append(self.add_stain(img, max_pixel_value)) 
-            print(f'Adding patches for the validation data\n')
-            for img in input_valid:
-                images_stain_valid.append(self.add_stain(img, max_pixel_value))
-            images_stain_train = np.array(images_stain_train)
-            images_stain_valid = np.array(images_stain_valid)
+            images_bounding_boxes_train = []
+            images_bounding_boxes_valid = []
             input_train = np.array(input_train)
             input_valid = np.array(input_valid)
 
-            # 5. Delete images that have all pixels or <= 65% of that are 0's
-            print(f'Deleting black images')
-            filtered_train_input = []
-            filtered_train_target = []
-            cptr = 0
-            threshold = 0.65 
+            for i, image in enumerate(input_train):
+                print(f'Analysing image {i+1}')
+                # Segment the original image
+                img1 = image.copy()
+                bounding_boxes = self.segment_welds_opencv(img1, train=True)
+                # Add the bounding box to the original image
+                image_bounding_boxes = self.draw_bounding_boxes(img1, bounding_boxes, train=True)
+                print(f'The shape for the bounding box is: {image_bounding_boxes.shape}')
+                images_bounding_boxes_train.append(image_bounding_boxes)
 
-            for i, (train_input, train_target) in enumerate(zip(images_stain_train, input_train)):
-                # Flattening the first 3 channels (ignoring the defect channel)
-                pixel_count = np.prod(train_target.shape)
-                # Count the number of zero pixels in the first 3 channels
-                zero_count = np.sum(train_target == 0)
-                # Calculate the percentage of zero pixels
-                zero_percentage = zero_count / pixel_count
-                # If less than threshold, keep the image
-                if zero_percentage <= threshold:
-                    filtered_train_input.append(train_input)
-                    filtered_train_target.append(train_target)
-                else:
-                    cptr += 1
+                # Crop the original image
+                cropped_images = self.crop_weld_sections(image, bounding_boxes)
+                seg_images_training.extend(cropped_images)
 
-            print(f'We removed: {cptr} input images')
-            print(f'There are: {len(filtered_train_input)} input images after deleting black images')
+            print(f'\nThere are: {len(seg_images_training)} images.')
+            
+            for i, image in enumerate(input_valid):
+                print(f'Analyzing image {i+1}')
+                # Segment the original image
+                img2 = image.copy()
+                bounding_boxes = self.segment_welds_opencv(img2, train=True)
+                # Add the bounding box to the original image
+                image_bounding_boxes = self.draw_bounding_boxes(img2, bounding_boxes, train=True)
+                print(f'The shape for the bounding box is: {image_bounding_boxes.shape}')
+                images_bounding_boxes_valid.append(image_bounding_boxes)
+
+                # Crop the original image
+                cropped_images = self.crop_weld_sections(image, bounding_boxes)
+                seg_images_validation.extend(cropped_images)
+
+            print(f'There are: {len(seg_images_validation)} images.')
+
+            # **************************************************************************************************
+            # ********************************************** TEST **********************************************
+            # **************************************************************************************************
+            if testing:
+                path = f'{data_path}/train/segmentation/a_bounding_boxes'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                # Save the images to see what the bounding boxes looks like
+                for i, img in enumerate(images_bounding_boxes_train):
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
+
+                path = f'{data_path}/valid/segmentation/a_bounding_boxes'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(images_bounding_boxes_valid):
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
+
+                # Save the images to see if the cropping works
+                path = f'{data_path}/train/segmentation/b_cropping'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(seg_images_training):
+                    img = np.array(img)
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
+                path = f'{data_path}/valid/segmentation/b_cropping'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(seg_images_validation):
+                    img = np.array(img)
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
+
+        #     # --------------------------------------------------------------------------------------------------------------------
+        #     #                                        3. SUBDIVISE THE CROPPED IMAGES
+        #     # --------------------------------------------------------------------------------------------------------------------
+        #     # Subdivise the training and validation data. 
+        #     sub_images_training = []
+        #     sub_images_validating = []
+
+        #     print(f'Subdivising the training data')
+        #     for images_training in input_train:
+        #         if not np.all(images_training == 0):
+        #             sub_images_training.extend(self.subdivise(images_training))
+        #     input_train = sub_images_training
+        #     print(f'\n\nThere are: {len(input_train)} subdivised training images that are not all 0s (black pixels)\n\n')
+
+        #     print(f'Subdivising the validation data\n')
+        #     for images_validating in input_valid:
+        #         if not np.all(images_validating == 0):
+        #             sub_images_validating.extend(self.subdivise(images_validating))
+        #     input_valid = sub_images_validating
+        #     print(f'\n\nThere are: {len(input_train)} subdivised training images that are not all 0s (black pixels)\n\n')
+
+        # # --------------------------------------------------------------------------------------------------------------------
+        # #                                        3. SUBDIVISE THE CROPPED IMAGES
+        # # --------------------------------------------------------------------------------------------------------------------
+        # sub_images_no_defects = []
+        # sub_images_defects = []
+
+        # print(f'Subdivising the no defect images')
+        # for images_training in seg_images_training:
+        #     if not np.all(images_training[:, :, :3] == 0):
+        #         sub_images_no_defects.extend(self.subdivise(images_training))
+        # test_no_defects = sub_images_no_defects
+        # print(f'\n\nThere are: {len(test_no_defects)} subdivised images without any defect that are not all 0s (black pixels)\n\n')
+
+        # print(f'Subdivising the defect images')
+        # for images_validating in seg_images_validation:
+        #     if not np.all(images_validating[:, :, :3] == 0):
+        #         sub_images_defects.extend(self.subdivise(images_validating))
+        # test_defects = sub_images_defects
+        # print(f'\n\nThere are: {len(test_defects)} subdivised images with defect that are not all 0s (black pixels)\n\n')
+
+        # # **************************************************************************************************
+        # # ********************************************** TEST **********************************************
+        # # **************************************************************************************************
+        # if test:
+        #     # Save the images to see if the cropping works
+        #     for i, img in enumerate(test_no_defects):
+        #         img = np.array(img)
+        #         print(f'The image shape is: {img.shape}')
+        #         img = img[:, :, :3]
+        #         path = f'{data_path}/{no_defect_type}/d_subdivise'
+        #         if not os.path.exists(path):
+        #             os.makedirs(path)
+        #         img_path = os.path.join(path, f'weld_{i+1}.png')
+        #         cv2.imwrite(img_path, img)
+        #     for i, img in enumerate(test_defects):
+        #         img = np.array(img)
+        #         img = img[:, :, :3]
+        #         path = f'{data_path}/{defect_type}/d_subdivise'
+        #         if not os.path.exists(path):
+        #             os.makedirs(path)
+        #         img_path = os.path.join(path, f'weld_{i+1}.png')
+        #         cv2.imwrite(img_path, img)
+
+        # test_no_defects = np.array(test_no_defects)
+        # test_defects = np.array(test_defects)
+        # print(f'\n\nThe shape for test_no_defects is: {test_no_defects.shape} amd the shape for test_defects is: {test_defects.shape}\n\n')
+
+
+        #     # --------------------------------------------------------------------------------------------------------------------
+        #     #                               4. DELETE THE IMAGES THAT HAVE ALL PIXELS EQUALS TO 0
+        #     # --------------------------------------------------------------------------------------------------------------------
+        #     print(f'Deleting black images')
+        #     filtered_train_input = []
+        #     filtered_train_target = []
+        #     cptr = 0
+        #     threshold = 0.65 
+
+        #     for i, (train_input, train_target) in enumerate(zip(images_stain_train, input_train)):
+        #         # Flattening the first 3 channels (ignoring the defect channel)
+        #         pixel_count = np.prod(train_target.shape)
+        #         # Count the number of zero pixels in the first 3 channels
+        #         zero_count = np.sum(train_target == 0)
+        #         # Calculate the percentage of zero pixels
+        #         zero_percentage = zero_count / pixel_count
+        #         # If less than threshold, keep the image
+        #         if zero_percentage <= threshold:
+        #             filtered_train_input.append(train_input)
+        #             filtered_train_target.append(train_target)
+        #         else:
+        #             cptr += 1
+
+        #     print(f'We removed: {cptr} input images')
+        #     print(f'There are: {len(filtered_train_input)} input images after deleting black images')
                     
-            filtered_valid_input = []
-            filtered_valid_target = []
-            cptr = 0 
+        #     filtered_valid_input = []
+        #     filtered_valid_target = []
+        #     cptr = 0 
 
-            for i, (valid_input, valid_target) in enumerate(zip(images_stain_valid, input_valid)):
-                # Flattening the first 3 channels (ignoring the defect channel)
-                pixel_count = np.prod(valid_target.shape)
-                # Count the number of zero pixels in the first 3 channels
-                zero_count = np.sum(valid_target == 0)
-                # Calculate the percentage of zero pixels
-                zero_percentage = zero_count / pixel_count
-                # If less than threshold, keep the image
-                if zero_percentage <= threshold:
-                    filtered_valid_input.append(valid_input)
-                    filtered_valid_target.append(valid_target)
-                else:
-                    cptr += 1
+        #     for i, (valid_input, valid_target) in enumerate(zip(images_stain_valid, input_valid)):
+        #         # Flattening the first 3 channels (ignoring the defect channel)
+        #         pixel_count = np.prod(valid_target.shape)
+        #         # Count the number of zero pixels in the first 3 channels
+        #         zero_count = np.sum(valid_target == 0)
+        #         # Calculate the percentage of zero pixels
+        #         zero_percentage = zero_count / pixel_count
+        #         # If less than threshold, keep the image
+        #         if zero_percentage <= threshold:
+        #             filtered_valid_input.append(valid_input)
+        #             filtered_valid_target.append(valid_target)
+        #         else:
+        #             cptr += 1
 
-            print(f'We removed: {cptr} validation images')
-            print(f'There are: {len(filtered_train_input)} validation images after deleting black images')
+        #     print(f'We removed: {cptr} validation images')
+        #     print(f'There are: {len(filtered_train_input)} validation images after deleting black images')
 
-            # Normalizing the input data in range 0 to 1. 
-            print(f'Normalizing the data')
-            train_input_norm = self.normalize(filtered_train_input, max_pixel_value)    
-            train_input_loss_norm = self.normalize(filtered_train_target, max_pixel_value)
-            valid_input_norm = self.normalize(filtered_valid_input, max_pixel_value) 
-            valid_input_loss_norm = self.normalize(filtered_valid_target, max_pixel_value)
+        #     # **************************************************************************************************
+        #     # ********************************************** TEST **********************************************
+        #     # **************************************************************************************************
 
-            return np.array(train_input_norm), np.array(train_input_loss_norm), np.array(valid_input_norm), np.array(valid_input_loss_norm)
-        else:
-            non_defauts_images, defauts_images = self.load_data(data_path, segment=False, test=True) 
+        #     # --------------------------------------------------------------------------------------------------------------------
+        #     #                          5. ADDING PATCHES TO THE IMAGES
+        #     # --------------------------------------------------------------------------------------------------------------------
+        #     images_stain_train = []
+        #     images_stain_valid = []
+        #     print(f'Adding patches for the training data')
+        #     for img in input_train:
+        #         images_stain_train.append(self.add_stain(img, max_pixel_value)) 
+        #     print(f'Adding patches for the validation data\n')
+        #     for img in input_valid:
+        #         images_stain_valid.append(self.add_stain(img, max_pixel_value))
+        #     images_stain_train = np.array(images_stain_train)
+        #     images_stain_valid = np.array(images_stain_valid)
+        #     input_train = np.array(input_train)
+        #     input_valid = np.array(input_valid)
 
-            # test_input_norm = self.normalize(input_test, max_pixel_value)
-            # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
+        #     # **************************************************************************************************
+        #     # ********************************************** TEST **********************************************
+        #     # **************************************************************************************************
+
+
+
+        #     # --------------------------------------------------------------------------------------------------------------------
+        #     #                          5. NORMALIZE THE INPUT (VALUES BETWEEN 0-1)
+        #     # --------------------------------------------------------------------------------------------------------------------
+        #     print(f'Normalizing the data')
+        #     train_input_norm = self.normalize(filtered_train_input, max_pixel_value)    
+        #     train_input_loss_norm = self.normalize(filtered_train_target, max_pixel_value)
+        #     valid_input_norm = self.normalize(filtered_valid_input, max_pixel_value) 
+        #     valid_input_loss_norm = self.normalize(filtered_valid_target, max_pixel_value)
+
+        #     return np.array(train_input_norm), np.array(train_input_loss_norm), np.array(valid_input_norm), np.array(valid_input_loss_norm)
+        # else:
+        #     non_defauts_images, defauts_images = self.load_data(data_path, segment=False, test=True) 
+
+        #     # test_input_norm = self.normalize(input_test, max_pixel_value)
+        #     # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
 
             return non_defauts_images, defauts_images
         
@@ -623,6 +744,10 @@ class DataProcessing():
         Used when doing the classification in test.py. 
         """
         print("You are currently doing the data processing with stain for dataset: Datasets_segmentation_grayscale")
+
+        # --------------------------------------------------------------------------------------------------------------------
+        #                            1. L0ADING THE TEST DATA WITH AND WITOUT DEFECTS
+        # --------------------------------------------------------------------------------------------------------------------
         # Loading the test data without defects
         print(f'Loading the testing without defect data')
         no_defect_type = 'no_defect_type_I'
@@ -630,9 +755,6 @@ class DataProcessing():
         test_no_defects = []
         image_nb = 100 # This is a limit to not bust the memory when running on local computer i <= 300
 
-        # --------------------------------------------------------------------------------------------------------------------
-        #                            1. L0ADING THE TEST DATA WITH AND WITOUT DEFECTS
-        # --------------------------------------------------------------------------------------------------------------------
         for i, filename in enumerate(sorted(os.listdir(input_test_no_defects), key=self.custom_sort_key2)):
             print(f'Loading image: {i}, nammed: {filename}')
             if filename.endswith(".jpg") and i <= image_nb:
@@ -797,36 +919,36 @@ class DataProcessing():
         # **************************************************************************************************
         if test:
             # Save the images to see what the bounding boxes looks like
+            path = f'{data_path}/{no_defect_type}/b_bounding_boxes'
+            if not os.path.exists(path):
+                os.makedirs(path)
             for i, img in enumerate(images_bounding_boxes_no_defects):
                 img = img[:, :, :3]
-                path = f'{data_path}/{no_defect_type}/b_bounding_boxes'
-                if not os.path.exists:
-                    os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, img)
+            path = f'{data_path}/{defect_type}/b_bounding_boxes'
+            if not os.path.exists(path):
+                os.makedirs(path)
             for i, img in enumerate(images_bounding_boxes_defects):
                 img = img[:, :, :3]
-                path = f'{data_path}/{defect_type}/b_bounding_boxes'
-                if not os.path.exists(path):
-                    os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, img)
 
             # Save the images to see if the cropping works
+            path = f'{data_path}/{no_defect_type}/c_cropping'
+            if not os.path.exists(path):
+                os.makedirs(path)
             for i, img in enumerate(segment_images_no_defects):
                 img = np.array(img)
                 img = img[:, :, :3]
-                path = f'{data_path}/{no_defect_type}/c_cropping'
-                if not os.path.exists(path):
-                    os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, img)
+            path = f'{data_path}/{defect_type}/c_cropping'
+            if not os.path.exists(path):
+                os.makedirs(path)
             for i, img in enumerate(segment_images_defects):
                 img = np.array(img)
                 img = img[:, :, :3]
-                path = f'{data_path}/{defect_type}/c_cropping'
-                if not os.path.exists:
-                    os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, img)
 
@@ -868,7 +990,7 @@ class DataProcessing():
                 img = np.array(img)
                 img = img[:, :, :3]
                 path = f'{data_path}/{defect_type}/d_subdivise'
-                if not os.path.exists:
+                if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, img)
@@ -933,7 +1055,7 @@ class DataProcessing():
             for i, img in enumerate(filtered_no_defects):
                 img = img[:, :, :3]
                 path = f'{data_path}/{no_defect_type}/e_delete_0s'
-                if not os.path.exists:
+                if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, img)
@@ -968,7 +1090,7 @@ class DataProcessing():
             for i, images in enumerate(defect_img_anotation):
                 images = np.array(images)
                 path = f'{data_path}/{defect_type}/test_e_defect_location'
-                if not os.path.exists:
+                if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, images)
@@ -1021,12 +1143,17 @@ class DataProcessing():
                     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
                     defect_img_anotation.append(img)
 
+            path = f'{data_path}/{defect_type}/test_f_label_correction'
+            print(f'The path is: {path}')
+            if not os.path.exists(path):
+                print(f'The path do not exist')
+                os.makedirs(path)
+            else:
+                print('The path exists')
+
             # Save the image to analyze where is located the defect
             for i, images in enumerate(defect_img_anotation):
                 images = np.array(images)
-                path = f'{data_path}/{defect_type}/test_e_defect_location'
-                if not os.path.exists:
-                    os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, images)
 
@@ -1040,6 +1167,7 @@ class DataProcessing():
         print(f'The shape after the normalization is: {valid_defects_loss_norm.shape} with defects')
             
         return train_no_defects_loss_norm, valid_defects_loss_norm 
+
 
 
     def subdivise(self, image, overlap_percent=0.40):
@@ -1082,15 +1210,16 @@ class DataProcessing():
 
 
 
-    def segment_welds_opencv(self, image):
+    def segment_welds_opencv(self, image, train=False):
         """
         Take an input image which is a welding piece with a black background. 
         Create a bounding box around the welding present in the original image.
         input - image: A gray scale image of the original welding piece (4 channels, 3 channels for color and 1 channel for label)
         output - bounding_boxes: An array representing the location of the bounding box: x, y, width, height
         """
-        # Put the image in unint8 format:
-        image = (255 * image / np.max(image)).astype(np.uint8)
+        # # Put the image in unint8 format:
+        if not train:
+            image = (255 * image / np.max(image)).astype(np.uint8)
         # Convert the image to grayscale with only one channel
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -1113,7 +1242,7 @@ class DataProcessing():
         return bounding_boxes
 
 
-    def draw_bounding_boxes(self, image, bounding_boxes):
+    def draw_bounding_boxes(self, image, bounding_boxes, train=False):
         """
         Used only to test. 
         Visual representation of where the bounding boxes are located.
@@ -1122,7 +1251,8 @@ class DataProcessing():
         output- img: An array of the original image with a green box representing where each box got found in the original image. 
         """
         # Convert the image in uint8:
-        image = np.uint8(255 * image / np.max(image))
+        if not train:
+            image = np.uint8(255 * image / np.max(image))
         # Draw each bounding box on the image
         for (x, y, w, h) in bounding_boxes:
             cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)  # Green box with 2px thickness

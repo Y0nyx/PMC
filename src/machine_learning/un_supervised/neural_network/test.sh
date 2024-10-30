@@ -19,7 +19,6 @@ readonly MONITOR_METRIC='mean_squared_error'
 readonly MAX_PIXEL_VALUE=255
 readonly SUB_WIDTH=256
 readonly SUB_HEIGHT=256
-readonly TEST=True
 
 #Never change this constants (Only adapt PATH_RESULTS to the computer you are using)
 readonly PATH_RESULTS="/home/jean-sebastien/Documents/s7/PMC/results_un_supervised/${MODEL}/${TEST_NAME}"

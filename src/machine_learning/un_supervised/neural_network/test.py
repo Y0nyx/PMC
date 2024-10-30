@@ -467,7 +467,7 @@ def argparser():
                         help='Width of the image after the subtitution of the images')
     parser.add_argument('--SUB_HEIGHT', type=int, default=256,
                         help='Width of the image after the subtitution of the images')
-    parser.add_argument('--TEST', type=bool, default=True,
+    parser.add_argument('--TEST', action='store_true', default=True,
                         help='If the user want to do test ans save images.')
 
     return parser.parse_args()
