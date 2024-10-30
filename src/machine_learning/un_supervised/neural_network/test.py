@@ -467,6 +467,8 @@ def argparser():
                         help='Width of the image after the subtitution of the images')
     parser.add_argument('--SUB_HEIGHT', type=int, default=256,
                         help='Width of the image after the subtitution of the images')
+    parser.add_argument('--TEST', type=bool, default=True,
+                        help='If the user want to do test ans save images.')
 
     return parser.parse_args()
 
@@ -483,6 +485,7 @@ if __name__ =='__main__':
     max_pixel_value = args.MAX_PIXEL_VALUE
     sub_width = args.SUB_WIDTH
     sub_height = args.SUB_HEIGHT
+    test = args.TEST
 
     regression = False
     classification = True
@@ -555,7 +558,7 @@ if __name__ =='__main__':
     elif classification:
         # Loading the non defect and defect test data. 
         data_processing = dp.DataProcessing(sub_width, sub_height)
-        test_input_no_defects, test_input_defects = data_processing.get_data_processing_stain_PMC860_test_classification(data_path, max_pixel_value)
+        test_input_no_defects, test_input_defects = data_processing.get_data_processing_stain_PMC860_test_classification(data_path, max_pixel_value, test)
         
         # Creating the deep learning model architecture
         _, row, column, channels = test_input_no_defects.shape

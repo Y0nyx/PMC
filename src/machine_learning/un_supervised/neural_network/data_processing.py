@@ -615,7 +615,7 @@ class DataProcessing():
         return np.array(filtered_no_defects), np.array(filtered_defects)
 
 
-    def get_data_processing_stain_PMC860_test_classification(self, data_path, max_pixel_value):
+    def get_data_processing_stain_PMC860_test_classification(self, data_path, max_pixel_value, test):
         """
         Data processing to obtain stain on the data and normalize the data between 0 and 1. 
         Called PMC860, because this dataprocessing is done using the new dataset nammed: "Datasets_segmentation_grayscale"
@@ -723,33 +723,34 @@ class DataProcessing():
         # **************************************************************************************************
         # ********************************************** TEST **********************************************
         # **************************************************************************************************
-        # Save the image with a red bounding box where is supposed to be located the defect. 
-        defect_img_anotation = []
-        for i, img in enumerate(test_defects):
-            img_array = np.array(img)
-            # Extract the first 3 channles (color channels)
-            img = img_array[:, :, :3].astype(np.uint8)
-            # Extract the forth channle (labbel channel)
-            label_channel = img_array[:, :, 3]
-            # Find the contours in the label channel where the value is 1 (Defect area)
-            contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if test:
+            # Save the image with a red bounding box where is supposed to be located the defect. 
+            defect_img_anotation = []
+            for i, img in enumerate(test_defects):
+                img_array = np.array(img)
+                # Extract the first 3 channles (color channels)
+                img = img_array[:, :, :3].astype(np.uint8)
+                # Extract the forth channle (labbel channel)
+                label_channel = img_array[:, :, 3]
+                # Find the contours in the label channel where the value is 1 (Defect area)
+                contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-            # Draw a red rectangle around the defected defects
-            for contour in contours:
-                # Get the bounding box for each contour
-                x, y, w, h = cv2.boundingRect(contour)
-                # Draw the rectangle on the image (in red, with thickness of 2)
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-                defect_img_anotation.append(img)
+                # Draw a red rectangle around the defected defects
+                for contour in contours:
+                    # Get the bounding box for each contour
+                    x, y, w, h = cv2.boundingRect(contour)
+                    # Draw the rectangle on the image (in red, with thickness of 2)
+                    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                    defect_img_anotation.append(img)
 
-        # Save the image to analyze where is located the defect
-        for i, img in enumerate(defect_img_anotation):
-            img = np.array(img)
-            path = f'{data_path}/{defect_type}/test_a_original_image_defect_location'
-            if not os.path.exists(path):
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
+            # Save the image to analyze where is located the defect
+            for i, img in enumerate(defect_img_anotation):
+                img = np.array(img)
+                path = f'{data_path}/{defect_type}/test_a_original_image_defect_location'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
 
         # --------------------------------------------------------------------------------------------------------------------
         #                            2. SEGMENT THE IMAGES TO KEEP ONLY THE WELDING
@@ -794,39 +795,40 @@ class DataProcessing():
         # **************************************************************************************************
         # ********************************************** TEST **********************************************
         # **************************************************************************************************
-        # Save the images to see what the bounding boxes looks like
-        for i, img in enumerate(images_bounding_boxes_no_defects):
-            img = img[:, :, :3]
-            path = f'{data_path}/{no_defect_type}/b_bounding_boxes'
-            if not os.path.exists:
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
-        for i, img in enumerate(images_bounding_boxes_defects):
-            img = img[:, :, :3]
-            path = f'{data_path}/{defect_type}/b_bounding_boxes'
-            if not os.path.exists(path):
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
+        if test:
+            # Save the images to see what the bounding boxes looks like
+            for i, img in enumerate(images_bounding_boxes_no_defects):
+                img = img[:, :, :3]
+                path = f'{data_path}/{no_defect_type}/b_bounding_boxes'
+                if not os.path.exists:
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
+            for i, img in enumerate(images_bounding_boxes_defects):
+                img = img[:, :, :3]
+                path = f'{data_path}/{defect_type}/b_bounding_boxes'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
 
-        # Save the images to see if the cropping works
-        for i, img in enumerate(segment_images_no_defects):
-            img = np.array(img)
-            img = img[:, :, :3]
-            path = f'{data_path}/{no_defect_type}/c_cropping'
-            if not os.path.exists(path):
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
-        for i, img in enumerate(segment_images_defects):
-            img = np.array(img)
-            img = img[:, :, :3]
-            path = f'{data_path}/{defect_type}/c_cropping'
-            if not os.path.exists:
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
+            # Save the images to see if the cropping works
+            for i, img in enumerate(segment_images_no_defects):
+                img = np.array(img)
+                img = img[:, :, :3]
+                path = f'{data_path}/{no_defect_type}/c_cropping'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
+            for i, img in enumerate(segment_images_defects):
+                img = np.array(img)
+                img = img[:, :, :3]
+                path = f'{data_path}/{defect_type}/c_cropping'
+                if not os.path.exists:
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
 
         # --------------------------------------------------------------------------------------------------------------------
         #                                        3. SUBDIVISE THE CROPPED IMAGES
@@ -851,24 +853,25 @@ class DataProcessing():
         # **************************************************************************************************
         # ********************************************** TEST **********************************************
         # **************************************************************************************************
-        # Save the images to see if the cropping works
-        for i, img in enumerate(test_no_defects):
-            img = np.array(img)
-            print(f'The image shape is: {img.shape}')
-            img = img[:, :, :3]
-            path = f'{data_path}/{no_defect_type}/d_subdivise'
-            if not os.path.exists(path):
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
-        for i, img in enumerate(test_defects):
-            img = np.array(img)
-            img = img[:, :, :3]
-            path = f'{data_path}/{defect_type}/d_subdivise'
-            if not os.path.exists:
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
+        if test:
+            # Save the images to see if the cropping works
+            for i, img in enumerate(test_no_defects):
+                img = np.array(img)
+                print(f'The image shape is: {img.shape}')
+                img = img[:, :, :3]
+                path = f'{data_path}/{no_defect_type}/d_subdivise'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
+            for i, img in enumerate(test_defects):
+                img = np.array(img)
+                img = img[:, :, :3]
+                path = f'{data_path}/{defect_type}/d_subdivise'
+                if not os.path.exists:
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
 
         test_no_defects = np.array(test_no_defects)
         test_defects = np.array(test_defects)
@@ -925,49 +928,50 @@ class DataProcessing():
         # **************************************************************************************************
         # ********************************************** TEST **********************************************
         # **************************************************************************************************
-        # Save the images to see if the cropping works
-        for i, img in enumerate(filtered_no_defects):
-            img = img[:, :, :3]
-            path = f'{data_path}/{no_defect_type}/e_delete_0s'
-            if not os.path.exists:
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
-        for i, img in enumerate(filtered_defects):
-            img = np.array(img)
-            img = img[:, :, :3]
-            path = f'{data_path}/{defect_type}/e_delete_0s'
-            if not os.path.exists(path):
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, img)
+        if test:
+            # Save the images to see if the cropping works
+            for i, img in enumerate(filtered_no_defects):
+                img = img[:, :, :3]
+                path = f'{data_path}/{no_defect_type}/e_delete_0s'
+                if not os.path.exists:
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
+            for i, img in enumerate(filtered_defects):
+                img = np.array(img)
+                img = img[:, :, :3]
+                path = f'{data_path}/{defect_type}/e_delete_0s'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, img)
 
-        # Save the image with a red bounding box where is supposed to be located the defect. 
-        defect_img_anotation = []
-        for i, images in enumerate(filtered_defects):
-            # Extract the first 3 channles (color channels)
-            img = images[:, :, :3].astype(np.uint8)
-            # Extract the forth channle (labbel channel)
-            label_channel = images[:, :, 3]
-            # Find the contours in the label channel where the value is 1 (Defect area)
-            contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            # Save the image with a red bounding box where is supposed to be located the defect. 
+            defect_img_anotation = []
+            for i, images in enumerate(filtered_defects):
+                # Extract the first 3 channles (color channels)
+                img = images[:, :, :3].astype(np.uint8)
+                # Extract the forth channle (labbel channel)
+                label_channel = images[:, :, 3]
+                # Find the contours in the label channel where the value is 1 (Defect area)
+                contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-            # Draw a red rectangle around the defected defects
-            for contour in contours:
-                # Get the bounding box for each contour
-                x, y, w, h = cv2.boundingRect(contour)
-                # Draw the rectangle on the image (in red, with thickness of 2)
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-                defect_img_anotation.append(img)
+                # Draw a red rectangle around the defected defects
+                for contour in contours:
+                    # Get the bounding box for each contour
+                    x, y, w, h = cv2.boundingRect(contour)
+                    # Draw the rectangle on the image (in red, with thickness of 2)
+                    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                    defect_img_anotation.append(img)
 
-        # Save the image to analyze where is located the defect
-        for i, images in enumerate(defect_img_anotation):
-            images = np.array(images)
-            path = f'{data_path}/{defect_type}/test_e_defect_location'
-            if not os.path.exists:
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, images)
+            # Save the image to analyze where is located the defect
+            for i, images in enumerate(defect_img_anotation):
+                images = np.array(images)
+                path = f'{data_path}/{defect_type}/test_e_defect_location'
+                if not os.path.exists:
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, images)
 
         # --------------------------------------------------------------------------------------------------------------------
         #                          5. FIX LABELS (IF GRAYSCALE CHANNELS = 0 [BLACK], PUT LABEL TO 0)
@@ -993,32 +997,38 @@ class DataProcessing():
         # **************************************************************************************************
         # ********************************************** TEST **********************************************
         # **************************************************************************************************
-        # Save the image with a red bounding box where is supposed to be located the defect. 
-        defect_img_anotation = []
-        for i, images in enumerate(filtered_defects):
-            # Extract the first 3 channles (color channels)
-            img = images[:, :, :3].astype(np.uint8)
-            # Extract the forth channle (labbel channel)
-            label_channel = images[:, :, 3]
-            # Find the contours in the label channel where the value is 1 (Defect area)
-            contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        if test:
+            # Put the new defect area in red
+            visual_defects = filtered_defects[:, :, :, 0:3].copy()
+            target_defects = filtered_defects[:, :, :, 3].copy()
+            visual_defects[condition] = [255, 0, 0]
 
-            # Draw a red rectangle around the defected defects
-            for contour in contours:
-                # Get the bounding box for each contour
-                x, y, w, h = cv2.boundingRect(contour)
-                # Draw the rectangle on the image (in red, with thickness of 2)
-                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-                defect_img_anotation.append(img)
+            # Save the image with a red bounding box where is supposed to be located the defect. 
+            defect_img_anotation = []
+            for i, (images, target) in enumerate(zip(visual_defects,target_defects)):
+                # Extract the first 3 channles (color channels)
+                img = images
+                # Extract the forth channle (labbel channel)
+                label_channel = target
+                # Find the contours in the label channel where the value is 1 (Defect area)
+                contours, _ = cv2.findContours((label_channel == 1).astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        # Save the image to analyze where is located the defect
-        for i, images in enumerate(defect_img_anotation):
-            images = np.array(images)
-            path = f'{data_path}/{defect_type}/test_e_defect_location'
-            if not os.path.exists:
-                os.makedirs(path)
-            img_path = os.path.join(path, f'weld_{i+1}.png')
-            cv2.imwrite(img_path, images)
+                # Draw a red rectangle around the defected defects
+                for contour in contours:
+                    # Get the bounding box for each contour
+                    x, y, w, h = cv2.boundingRect(contour)
+                    # Draw the rectangle on the image (in red, with thickness of 2)
+                    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+                    defect_img_anotation.append(img)
+
+            # Save the image to analyze where is located the defect
+            for i, images in enumerate(defect_img_anotation):
+                images = np.array(images)
+                path = f'{data_path}/{defect_type}/test_e_defect_location'
+                if not os.path.exists:
+                    os.makedirs(path)
+                img_path = os.path.join(path, f'weld_{i+1}.png')
+                cv2.imwrite(img_path, images)
 
         # --------------------------------------------------------------------------------------------------------------------
         #                          5. NORMALIZE THE INPUT (VALUES BETWEEN 0-1)
