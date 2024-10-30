@@ -11,7 +11,7 @@ readonly SCRIPT_NAME='test.py'
 
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale/test/segmentation/individual_piece' #/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc #'../../../../../Datasets/grosse_piece_seg_1'   #TODO convert for docker     #same as train.sh
 readonly MODEL='aes_defect_detection'                                                     #same as train.sh
-readonly TEST_NAME='pmc860_grayscale_dataset'                                             #same as train.sh
+readonly TEST_NAME='pmc860_grayscale_dataset_0'                                             #same as train.sh
 readonly NBEST=1                                                                          #same as train.sh
 readonly NUM_TRAIN_REGENERATE=300
 readonly MONITOR_LOSS='mean_absolute_error'

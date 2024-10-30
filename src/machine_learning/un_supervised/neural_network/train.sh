@@ -15,7 +15,7 @@ readonly SCRIPT_NAME='train.py'
 readonly DATA_PATH='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale' #'/home/jean-sebastien/Documents/s7/PMC/Data/4k_dataset/original_images/sans_defauts_full_data_blanc' In PMC 760 that was the datapath
 #Variable for Callbacks
 readonly MODEL='aes_defect_detection'
-readonly TEST_NAME='pmc860_grayscale_dataset'
+readonly TEST_NAME='pmc860_grayscale_dataset_0'
 readonly MONITOR_LOSS='mean_absolute_error'
 readonly MONITOR_METRIC='mean_squared_error'
 readonly MODE_METRIC='min'

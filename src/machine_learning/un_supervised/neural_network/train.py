@@ -213,23 +213,23 @@ if __name__ == '__main__':
             print(f"Erreur lors de la configuration de la croissance de la mémoire du GPU: {e}")
 
     data_processing = dp.DataProcessing(sub_width, sub_height)
-    # Doing the segmentation for the dataset (Do this only one time, it will be saved in the files)
-    data_processing.segment_PMC860(data_path='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale',
-                                   type='as_no_default', dataset='train', 
-                                   output_path='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale/train/segmentation/as_no_default_segmented')
+    # # Doing the segmentation for the dataset (Do this only one time, it will be saved in the files)
+    # data_processing.segment_PMC860(data_path='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale',
+    #                                type='as_no_default', dataset='train', 
+    #                                output_path='/home/jean-sebastien/Documents/s7/PMC/Data/Datasets_segmentation_grayscale/train/segmentation/as_no_default_segmented')
 
-    #train_input, train_input_loss, valid_input, valid_input_loss = data_processing.get_data_processing_stain_PMC860(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
+    train_input, train_input_loss, valid_input, valid_input_loss = data_processing.get_data_processing_stain_PMC860(data_path, max_pixel_value) #TRAINING Change this line if you want to change the artificial defaut created. 
 
-    # #DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
-    # _, row, column, channels = train_input.shape
-    # image_dimentions = (row, column, channels)
+    #DO NOT CHANGE THE CODE HERE AND FOR OTHER SECTIONS!
+    _, row, column, channels = train_input.shape
+    image_dimentions = (row, column, channels)
 
-    # train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input_loss, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
-    # if do_hp_search:
-    #    print(f'We are doing a hp search')
-    #    history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search, strategy)
-    # else:
-    #    print(f'We are only training the model without hp search')
-    #    history = train_model.train_normal(epochs, batch_size, learning_rate, path_results, strategy)
+    train_model = ModelTrainer(train_input, train_input_loss, valid_input, valid_input_loss, verbose, mode_metric, monitor_metric, monitor_loss, image_dimentions)
+    if do_hp_search:
+       print(f'We are doing a hp search')
+       history = train_model.train_hp(epochs_hp, num_trials_hp, execution_per_trial_hp, path_results, nbest, hp_search, strategy)
+    else:
+       print(f'We are only training the model without hp search')
+       history = train_model.train_normal(epochs, batch_size, learning_rate, path_results, strategy)
 
-    # print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')
+    print('The training is over and works as expected. You can now go test the Neural Network with train.sh script!')

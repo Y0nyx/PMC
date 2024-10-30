@@ -591,7 +591,7 @@ if __name__ =='__main__':
         test_rmseMap = calculate_pixelwise_rmse(test_data, test_target_regression)
 
         # Defining a threshold for every metrics to define an error in the welding piece
-        mae_thr = 40 #TODO do not define arbitrary values, define a threshold based on the performance of the validation data metrics. 
+        mae_thr = 30 #TODO do not define arbitrary values, define a threshold based on the performance of the validation data metrics. 
         mse_thr = 0.4 #TODO Ibid.
         rmse_thr = 0.4 #TODO Ibid.
 
@@ -619,6 +619,17 @@ if __name__ =='__main__':
         # Create ROC graph
         find_optimal_threshold_and_plot_roc(binary_classified_map_mae, test_target_classification, path_results)
 
+        # Calculer les performances de la classification _________________________________
+        # Calculate TP = True possitif, FP = False possitif, TN = True Negatif, FN = False Negatif
+        tp, fp, tn, fn = binary_classification_analysis(binary_classified_map_mae, test_target_classification)
+        # Calculate precision, recall, accuracy and F1 score
+        precision_classification = precision(tp, fp)
+        recall_classification = recall(tp, fn)
+        accuracy_classification = accuracy(tp, fp, tn, fn)
+        f1_score_classification = f1score(precision_classification, recall_classification)
+        print(f'The classificaton performances are as follow: \n')
+        print(f'The precision is : {precision_classification}\nThe recall is : {recall_classification}\nThe accuracy is : {accuracy_classification}')
+        print(f'The f1 score is : {f1_score_classification}\n')
 
 
 
