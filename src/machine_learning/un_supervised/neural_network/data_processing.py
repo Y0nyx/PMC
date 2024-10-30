@@ -493,73 +493,50 @@ class DataProcessing():
                     img_path = os.path.join(path, f'weld_{i+1}.png')
                     cv2.imwrite(img_path, img)
 
-        #     # --------------------------------------------------------------------------------------------------------------------
-        #     #                                        3. SUBDIVISE THE CROPPED IMAGES
-        #     # --------------------------------------------------------------------------------------------------------------------
-        #     # Subdivise the training and validation data. 
-        #     sub_images_training = []
-        #     sub_images_validating = []
+            # --------------------------------------------------------------------------------------------------------------------
+            #                                        3. SUBDIVISE THE CROPPED IMAGES
+            # --------------------------------------------------------------------------------------------------------------------
+            sub_images_training = []
+            sub_images_validating = []
 
-        #     print(f'Subdivising the training data')
-        #     for images_training in input_train:
-        #         if not np.all(images_training == 0):
-        #             sub_images_training.extend(self.subdivise(images_training))
-        #     input_train = sub_images_training
-        #     print(f'\n\nThere are: {len(input_train)} subdivised training images that are not all 0s (black pixels)\n\n')
+            print(f'Subdivising the no defect images')
+            for images_training in seg_images_training:
+                if not np.all(images_training == 0):
+                    sub_images_training.extend(self.subdivise(images_training))
+            input_train = sub_images_training
+            print(f'\n\nThere are: {len(input_train)} subdivised images without any defect that are not all 0s (black pixels)\n\n')
 
-        #     print(f'Subdivising the validation data\n')
-        #     for images_validating in input_valid:
-        #         if not np.all(images_validating == 0):
-        #             sub_images_validating.extend(self.subdivise(images_validating))
-        #     input_valid = sub_images_validating
-        #     print(f'\n\nThere are: {len(input_train)} subdivised training images that are not all 0s (black pixels)\n\n')
+            print(f'Subdivising the defect images')
+            for images_validating in seg_images_validation:
+                if not np.all(images_validating == 0):
+                    sub_images_validating.extend(self.subdivise(images_validating))
+            input_valid = sub_images_validating
+            print(f'\n\nThere are: {len(input_valid)} subdivised images with defect that are not all 0s (black pixels)\n\n')
 
-        # # --------------------------------------------------------------------------------------------------------------------
-        # #                                        3. SUBDIVISE THE CROPPED IMAGES
-        # # --------------------------------------------------------------------------------------------------------------------
-        # sub_images_no_defects = []
-        # sub_images_defects = []
+            # **************************************************************************************************
+            # ********************************************** TEST **********************************************
+            # **************************************************************************************************
+            if testing:
+                # Save the images to see if the cropping works
+                path = f'{data_path}/train/segmentation/c_subdivise'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(input_train):
+                    img = np.array(img)
+                    print(f'The image shape is: {img.shape}')
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
+                path = f'{data_path}/valid/segmentation/c_subdivise'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(input_valid):
+                    img = np.array(img)
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
 
-        # print(f'Subdivising the no defect images')
-        # for images_training in seg_images_training:
-        #     if not np.all(images_training[:, :, :3] == 0):
-        #         sub_images_no_defects.extend(self.subdivise(images_training))
-        # test_no_defects = sub_images_no_defects
-        # print(f'\n\nThere are: {len(test_no_defects)} subdivised images without any defect that are not all 0s (black pixels)\n\n')
-
-        # print(f'Subdivising the defect images')
-        # for images_validating in seg_images_validation:
-        #     if not np.all(images_validating[:, :, :3] == 0):
-        #         sub_images_defects.extend(self.subdivise(images_validating))
-        # test_defects = sub_images_defects
-        # print(f'\n\nThere are: {len(test_defects)} subdivised images with defect that are not all 0s (black pixels)\n\n')
-
-        # # **************************************************************************************************
-        # # ********************************************** TEST **********************************************
-        # # **************************************************************************************************
-        # if test:
-        #     # Save the images to see if the cropping works
-        #     for i, img in enumerate(test_no_defects):
-        #         img = np.array(img)
-        #         print(f'The image shape is: {img.shape}')
-        #         img = img[:, :, :3]
-        #         path = f'{data_path}/{no_defect_type}/d_subdivise'
-        #         if not os.path.exists(path):
-        #             os.makedirs(path)
-        #         img_path = os.path.join(path, f'weld_{i+1}.png')
-        #         cv2.imwrite(img_path, img)
-        #     for i, img in enumerate(test_defects):
-        #         img = np.array(img)
-        #         img = img[:, :, :3]
-        #         path = f'{data_path}/{defect_type}/d_subdivise'
-        #         if not os.path.exists(path):
-        #             os.makedirs(path)
-        #         img_path = os.path.join(path, f'weld_{i+1}.png')
-        #         cv2.imwrite(img_path, img)
-
-        # test_no_defects = np.array(test_no_defects)
-        # test_defects = np.array(test_defects)
-        # print(f'\n\nThe shape for test_no_defects is: {test_no_defects.shape} amd the shape for test_defects is: {test_defects.shape}\n\n')
+            input_train = np.array(input_train)
+            input_valid = np.array(input_valid)
+            print(f'\n\nThe shape for input_train is: {input_train.shape} amd the shape for input_valid is: {input_valid.shape}\n\n')
 
 
         #     # --------------------------------------------------------------------------------------------------------------------
