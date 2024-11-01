@@ -43,8 +43,11 @@ function createMainWindow() {
   mainWindow.loadFile(path.join(__dirname, "./build/index.html"));
   mainWindow.maximize();
 }
-
-app.whenReady().then(() => {
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+z
+app.whenReady().then(async() => {
   configReact = require(path.join(appPath, "configReact.js"));
   createMainWindow();
 
@@ -54,6 +57,7 @@ app.whenReady().then(() => {
     }
   });
 
+  await wait(10000);
   plcPythonPath = path.join(appPath, "plc.py");
   pythonProcess = spawn("python3", [plcPythonPath]);
   pythonProcess.stdout.on("data", (data) => {
