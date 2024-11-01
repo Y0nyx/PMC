@@ -22,6 +22,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { useNavigate } from "react-router-dom";
+import { idSubstring } from "../utils/utils";
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -379,7 +381,7 @@ export default function EnhancedTable({ rows_ }) {
                       scope="row"
                       padding="none"
                     >
-                      {row.id}
+                      {idSubstring(row.id)}
                     </TableCell>
                     <TableCell
                       onClick={(event) => handleClick(event, row.id)}

@@ -295,7 +295,6 @@ function findUsbDrivePath() {
 
   ipcMain.on("restart", async (event, id) => {
     await query.deletePiece([id]);
-    writeToPython({ code: "start", data: "" });
   });
 
   ipcMain.on("powerOffMachine", async () => {

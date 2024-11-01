@@ -154,6 +154,11 @@ async def read_Web(plcToPC : PCtoPLC ,websocket):
                 plcToPC.write_to_plc(b'B') #16896 on plc
                 deserialized_data['code'] == 'done'
 
+            if deserialized_data['code'] == "ready":
+
+                print('ready', flush = True)
+                plcToPC.write_to_plc(b'R') #????? on plc
+                deserialized_data['code'] == 'done'
 
 async def main():
 
