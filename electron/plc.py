@@ -57,7 +57,6 @@ class PCtoPLC:
             Description : méthode pour lire du PLC
             size : nombre de byte a lire
             '''
-
             if self.isWriting == 0:
 
                 self.ftdi.set_cbus_gpio(0b0000) # met output cbus a 0
@@ -81,12 +80,12 @@ async def read_write_PLC(plcToPC: PCtoPLC,websocket):
 
         data = b''
         data = plcToPC.read_from_plc(8)
-
+        
         if(data != b''):
             print(data, flush = True)
 
 
-        #print(data, flush = True)
+        
         if (b'S' in data):
             data_to_send = {'code': 'error', 'data': {}}
             serialized_data = json.dumps(data_to_send)
@@ -115,11 +114,20 @@ async def read_write_PLC(plcToPC: PCtoPLC,websocket):
         if (b'I' in data and init == 0):
 
             print('I', flush =True) # I pour init, quand c'est revenu et que le UI est au menu principal
-
+           
             data_to_send = {'code': 'ready', 'data': {}}
             serialized_data = json.dumps(data_to_send)
 
             init = 1
+            await websocket.send(serialized_data)
+        
+        if (b'T' in data and init == 0):
+
+            print('T', flush =True) # I pour init, quand c'est revenu et que le UI est au menu principal
+           
+            data_to_send = {'code': 'ready', 'data': {}}
+            serialized_data = json.dumps(data_to_send)
+
             await websocket.send(serialized_data)
 
 
@@ -134,9 +142,10 @@ async def read_Web(plcToPC : PCtoPLC ,websocket):
     websocket : connection au websocket
     '''
     while True:
-
+           
             received_data = await websocket.recv() #read websocket et attend message
             # Deserialize the received data
+            
             deserialized_data = json.loads(received_data)
 
             print('Received:', deserialized_data, flush=True)
@@ -158,6 +167,7 @@ async def read_Web(plcToPC : PCtoPLC ,websocket):
 
                 print('ready', flush = True)
                 plcToPC.write_to_plc(b'R') #????? on plc
+                print('readySEND', flush = True)
                 deserialized_data['code'] == 'done'
 
 async def main():
@@ -168,7 +178,6 @@ async def main():
 
     pcWrite = PCtoPLC(url ='ftdi://0x403:0x6001/1' ) #classe pour write avec adaptateur #6001
     pcRead = PCtoPLC(url ='ftdi://0x403:0x6015/1' ) #classe pour write avec adaptateur #6015
-
     async with websockets.connect(uri) as websocket:
      # Schedule both send_receive and print_loop to run concurrently
      # Wait for both tasks to run indefinitely

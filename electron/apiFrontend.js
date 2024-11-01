@@ -387,6 +387,12 @@ function findUsbDrivePath() {
     writeToPLC({ code: "forward", data: "" });
   })
 
+  ipcMain.on("ready",() => {
+    writeToPLC({ code: "ready", data: "" });
+    console.log("ready backend")
+  })
+
+
   ipcMain.on("backward",() => {
     writeToPLC({ code: "backward", data: "" });
   })
