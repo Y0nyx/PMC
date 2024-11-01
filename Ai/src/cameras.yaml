@@ -15,7 +15,7 @@ cameras:
     capture_resolution: (3840, 3104)
     standby_resolution: (426, 240)
     fps: 30
-  #  - camera_id: 4
-  #  capture_resolution: (3840, 3104)
-  #  standby_resolution: (426, 240)
-  #  fps: 30
+  - camera_id: 8
+    capture_resolution: (3840, 3104)
+    standby_resolution: (426, 240)
+    fps: 30

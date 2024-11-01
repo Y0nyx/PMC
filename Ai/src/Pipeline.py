@@ -225,7 +225,7 @@ class Pipeline():
                     return
             print(defect_count)
             solder_defect = False
-            erreurSoudure = 1
+            erreurSoudure = 0
             if defect_count == 0:
                 solder_defect = True
                 erreurSoudure = 0
@@ -461,12 +461,12 @@ if __name__ == "__main__":
 
     # TRAINING
     pipeline = Pipeline(segmentation_model=None, supervised_detection_model=None, unsupervised_model=None, current_iteration_logging_path=current_iteration_logging_path, State=PipelineState.TRAINING)
-    models = ["yolov8x"]
+    # models = ["yolov8x"]
     #data_path = dataset.location + "/data.yaml"
-    data_path = "yolov8x"
-    for model in models:
-        pipeline.train(data_path, model, epochs=250, batch=-1, workers=0, single_cls=True)
-
+    #data_path = "yolov8x"
+    #for model in models:
+    #    pipeline.train(data_path, model, epochs=250, batch=-1, workers=0, single_cls=True)
+    pipeline.get_dataset()
     #segmentation_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
 
     #supervised_models = [YoloModel(Path(segmentation_model_path))]
