@@ -31,8 +31,8 @@ function createMainWindow() {
   //create window
   mainWindow = new BrowserWindow({
     title: "Dofa",
-    kiosk: true,
-    fullscreen: true,
+    kiosk: false,
+    fullscreen: false,
     webPreferences: {
       sandbox: false,
       nodeIntegration: true,
@@ -43,12 +43,12 @@ function createMainWindow() {
   mainWindow.loadFile(path.join(__dirname, "./build/index.html"));
   mainWindow.maximize();
 }
-function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-z
+
 app.whenReady().then(async() => {
   configReact = require(path.join(appPath, "configReact.js"));
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+  await delay(5000);
+
   createMainWindow();
 
   app.on("activate", () => {
@@ -56,8 +56,6 @@ app.whenReady().then(async() => {
       createMainWindow();
     }
   });
-
-  await wait(10000);
   plcPythonPath = path.join(appPath, "plc.py");
   pythonProcess = spawn("python3", [plcPythonPath]);
   pythonProcess.stdout.on("data", (data) => {

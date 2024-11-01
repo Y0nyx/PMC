@@ -59,7 +59,9 @@ async function fetchPieces(id_client, id_log) {
   JOIN ${table3} ON ${table}.id_type_piece = ${table3}.id
   JOIN ${table4} ON ${table}.id_client = ${table4}.id 
   JOIN ${table5} ON ${table}.id_log = ${table5}.id  
-  WHERE ${table}.id_client = '${id_client}' AND ${table}.id_log = '${id_log}';`;
+  WHERE ${table}.id_client = '${id_client}' AND ${table}.id_log = '${id_log}'
+  ORDER BY date DESC
+  ;`;
 
   let result = await makeQuery(query);
 
