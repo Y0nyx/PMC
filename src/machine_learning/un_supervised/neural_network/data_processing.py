@@ -155,7 +155,7 @@ class DataProcessing():
         return input_train, input_valid, input_test
     
     def add_stain(self, image, max_pixel_value):
-        elipse_size = "10-30"
+        elipse_size = "20-60"
         blur = 0
         pourcentage_scale_factor = 100.
 
@@ -604,26 +604,40 @@ class DataProcessing():
                     img_path = os.path.join(path, f'weld_{i+1}.png')
                     cv2.imwrite(img_path, img)
 
-        #     # --------------------------------------------------------------------------------------------------------------------
-        #     #                          5. ADDING PATCHES TO THE IMAGES
-        #     # --------------------------------------------------------------------------------------------------------------------
-        #     images_stain_train = []
-        #     images_stain_valid = []
-        #     print(f'Adding patches for the training data')
-        #     for img in input_train:
-        #         images_stain_train.append(self.add_stain(img, max_pixel_value)) 
-        #     print(f'Adding patches for the validation data\n')
-        #     for img in input_valid:
-        #         images_stain_valid.append(self.add_stain(img, max_pixel_value))
-        #     images_stain_train = np.array(images_stain_train)
-        #     images_stain_valid = np.array(images_stain_valid)
-        #     input_train = np.array(input_train)
-        #     input_valid = np.array(input_valid)
+            # --------------------------------------------------------------------------------------------------------------------
+            #                          5. ADDING PATCHES TO THE IMAGES
+            # --------------------------------------------------------------------------------------------------------------------
+            images_stain_train = []
+            images_stain_valid = []
+            print(f'Adding patches for the training data')
+            for img in filtered_input_train:
+                images_stain_train.append(self.add_stain(img, max_pixel_value)) 
+            print(f'Adding patches for the validation data\n')
+            for img in filtered_input_valid:
+                images_stain_valid.append(self.add_stain(img, max_pixel_value))
+            images_stain_train = np.array(images_stain_train)
+            images_stain_valid = np.array(images_stain_valid)
+            input_train = np.array(filtered_input_train)
+            input_valid = np.array(filtered_input_valid)
 
-        #     # **************************************************************************************************
-        #     # ********************************************** TEST **********************************************
-        #     # **************************************************************************************************
-
+            # **************************************************************************************************
+            # ********************************************** TEST **********************************************
+            # **************************************************************************************************
+            if testing:
+                # Save the images to see if the cropping works
+                path = f'{data_path}/train/segmentation/e_add_patches'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(images_stain_train):
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
+                path = f'{data_path}/valid/segmentation/e_add_patches'
+                if not os.path.exists(path):
+                    os.makedirs(path)
+                for i, img in enumerate(images_stain_valid):
+                    img = np.array(img)
+                    img_path = os.path.join(path, f'weld_{i+1}.png')
+                    cv2.imwrite(img_path, img)
 
 
         #     # --------------------------------------------------------------------------------------------------------------------
