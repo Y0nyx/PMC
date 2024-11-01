@@ -155,7 +155,7 @@ class DataProcessing():
         return input_train, input_valid, input_test
     
     def add_stain(self, image, max_pixel_value):
-        elipse_size = "20-60"
+        elipse_size = "10-30"
         blur = 0
         pourcentage_scale_factor = 100.
 
@@ -617,8 +617,6 @@ class DataProcessing():
                 images_stain_valid.append(self.add_stain(img, max_pixel_value))
             images_stain_train = np.array(images_stain_train)
             images_stain_valid = np.array(images_stain_valid)
-            input_train = np.array(filtered_input_train)
-            input_valid = np.array(filtered_input_valid)
 
             # **************************************************************************************************
             # ********************************************** TEST **********************************************
@@ -640,21 +638,21 @@ class DataProcessing():
                     cv2.imwrite(img_path, img)
 
 
-        #     # --------------------------------------------------------------------------------------------------------------------
-        #     #                          5. NORMALIZE THE INPUT (VALUES BETWEEN 0-1)
-        #     # --------------------------------------------------------------------------------------------------------------------
-        #     print(f'Normalizing the data')
-        #     train_input_norm = self.normalize(filtered_train_input, max_pixel_value)    
-        #     train_input_loss_norm = self.normalize(filtered_train_target, max_pixel_value)
-        #     valid_input_norm = self.normalize(filtered_valid_input, max_pixel_value) 
-        #     valid_input_loss_norm = self.normalize(filtered_valid_target, max_pixel_value)
+            # --------------------------------------------------------------------------------------------------------------------
+            #                          5. NORMALIZE THE INPUT (VALUES BETWEEN 0-1)
+            # --------------------------------------------------------------------------------------------------------------------
+            print(f'Normalizing the data')
+            train_input_norm = self.normalize(images_stain_train, max_pixel_value)    
+            train_input_loss_norm = self.normalize(filtered_input_train, max_pixel_value)
+            valid_input_norm = self.normalize(images_stain_valid, max_pixel_value) 
+            valid_input_loss_norm = self.normalize(filtered_input_valid, max_pixel_value)
 
-        #     return np.array(train_input_norm), np.array(train_input_loss_norm), np.array(valid_input_norm), np.array(valid_input_loss_norm)
-        # else:
-        #     non_defauts_images, defauts_images = self.load_data(data_path, segment=False, test=True) 
+            return np.array(train_input_norm), np.array(train_input_loss_norm), np.array(valid_input_norm), np.array(valid_input_loss_norm)
+        else:
+            non_defauts_images, defauts_images = self.load_data(data_path, segment=False, test=True) 
 
-        #     # test_input_norm = self.normalize(input_test, max_pixel_value)
-        #     # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
+            # test_input_norm = self.normalize(input_test, max_pixel_value)
+            # defaut_images_norm = self.normalize(defauts_images, max_pixel_value)
 
             return non_defauts_images, defauts_images
         
