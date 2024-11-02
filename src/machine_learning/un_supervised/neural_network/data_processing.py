@@ -462,7 +462,7 @@ class DataProcessing():
             # ********************************************** TEST **********************************************
             # **************************************************************************************************
             if testing:
-                path = f'{data_path}/train/segmentation/a_bounding_boxes'
+                path = f'{data_path}/train/segmentation/test/a_bounding_boxes'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 # Save the images to see what the bounding boxes looks like
@@ -470,7 +470,7 @@ class DataProcessing():
                     img_path = os.path.join(path, f'weld_{i+1}.png')
                     cv2.imwrite(img_path, img)
 
-                path = f'{data_path}/valid/segmentation/a_bounding_boxes'
+                path = f'{data_path}/valid/segmentation/test/a_bounding_boxes'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(images_bounding_boxes_valid):
@@ -478,14 +478,14 @@ class DataProcessing():
                     cv2.imwrite(img_path, img)
 
                 # Save the images to see if the cropping works
-                path = f'{data_path}/train/segmentation/b_cropping'
+                path = f'{data_path}/train/segmentation/test/b_cropping'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(seg_images_training):
                     img = np.array(img)
                     img_path = os.path.join(path, f'weld_{i+1}.png')
                     cv2.imwrite(img_path, img)
-                path = f'{data_path}/valid/segmentation/b_cropping'
+                path = f'{data_path}/valid/segmentation/test/b_cropping'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(seg_images_validation):
@@ -518,7 +518,7 @@ class DataProcessing():
             # **************************************************************************************************
             if testing:
                 # Save the images to see if the cropping works
-                path = f'{data_path}/train/segmentation/c_subdivise'
+                path = f'{data_path}/train/segmentation/test/c_subdivise'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(input_train):
@@ -526,7 +526,7 @@ class DataProcessing():
                     print(f'The image shape is: {img.shape}')
                     img_path = os.path.join(path, f'weld_{i+1}.png')
                     cv2.imwrite(img_path, img)
-                path = f'{data_path}/valid/segmentation/c_subdivise'
+                path = f'{data_path}/valid/segmentation/test/c_subdivise'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(input_valid):
@@ -590,13 +590,13 @@ class DataProcessing():
             # **************************************************************************************************
             if testing:
                 # Save the images to see if the cropping works
-                path = f'{data_path}/train/segmentation/d_delete_0s'
+                path = f'{data_path}/train/segmentation/test/d_delete_0s'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(filtered_input_train):
                     img_path = os.path.join(path, f'weld_{i+1}.png')
                     cv2.imwrite(img_path, img)
-                path = f'{data_path}/valid/segmentation/d_delete_0s'
+                path = f'{data_path}/valid/segmentation/test/d_delete_0s'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(filtered_input_valid):
@@ -623,20 +623,19 @@ class DataProcessing():
             # **************************************************************************************************
             if testing:
                 # Save the images to see if the cropping works
-                path = f'{data_path}/train/segmentation/e_add_patches'
+                path = f'{data_path}/train/segmentation/test/e_add_patches'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(images_stain_train):
                     img_path = os.path.join(path, f'weld_{i+1}.png')
                     cv2.imwrite(img_path, img)
-                path = f'{data_path}/valid/segmentation/e_add_patches'
+                path = f'{data_path}/valid/segmentation/test/e_add_patches'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 for i, img in enumerate(images_stain_valid):
                     img = np.array(img)
                     img_path = os.path.join(path, f'weld_{i+1}.png')
                     cv2.imwrite(img_path, img)
-
 
             # --------------------------------------------------------------------------------------------------------------------
             #                          5. NORMALIZE THE INPUT (VALUES BETWEEN 0-1)
@@ -871,7 +870,7 @@ class DataProcessing():
             # Save the image to analyze where is located the defect
             for i, img in enumerate(defect_img_anotation):
                 img = np.array(img)
-                path = f'{data_path}/{defect_type}/test_a_original_image_defect_location'
+                path = f'{data_path}/{defect_type}/test/a_original_image_defect_location'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
@@ -922,14 +921,14 @@ class DataProcessing():
         # **************************************************************************************************
         if test:
             # Save the images to see what the bounding boxes looks like
-            path = f'{data_path}/{no_defect_type}/b_bounding_boxes'
+            path = f'{data_path}/{no_defect_type}/test/b_bounding_boxes'
             if not os.path.exists(path):
                 os.makedirs(path)
             for i, img in enumerate(images_bounding_boxes_no_defects):
                 img = img[:, :, :3]
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, img)
-            path = f'{data_path}/{defect_type}/b_bounding_boxes'
+            path = f'{data_path}/{defect_type}/test/b_bounding_boxes'
             if not os.path.exists(path):
                 os.makedirs(path)
             for i, img in enumerate(images_bounding_boxes_defects):
@@ -938,7 +937,7 @@ class DataProcessing():
                 cv2.imwrite(img_path, img)
 
             # Save the images to see if the cropping works
-            path = f'{data_path}/{no_defect_type}/c_cropping'
+            path = f'{data_path}/{no_defect_type}/test/c_cropping'
             if not os.path.exists(path):
                 os.makedirs(path)
             for i, img in enumerate(segment_images_no_defects):
@@ -946,7 +945,7 @@ class DataProcessing():
                 img = img[:, :, :3]
                 img_path = os.path.join(path, f'weld_{i+1}.png')
                 cv2.imwrite(img_path, img)
-            path = f'{data_path}/{defect_type}/c_cropping'
+            path = f'{data_path}/{defect_type}/test/c_cropping'
             if not os.path.exists(path):
                 os.makedirs(path)
             for i, img in enumerate(segment_images_defects):
@@ -984,7 +983,7 @@ class DataProcessing():
                 img = np.array(img)
                 print(f'The image shape is: {img.shape}')
                 img = img[:, :, :3]
-                path = f'{data_path}/{no_defect_type}/d_subdivise'
+                path = f'{data_path}/{no_defect_type}/test/d_subdivise'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
@@ -992,7 +991,7 @@ class DataProcessing():
             for i, img in enumerate(test_defects):
                 img = np.array(img)
                 img = img[:, :, :3]
-                path = f'{data_path}/{defect_type}/d_subdivise'
+                path = f'{data_path}/{defect_type}/test/d_subdivise'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
@@ -1057,7 +1056,7 @@ class DataProcessing():
             # Save the images to see if the cropping works
             for i, img in enumerate(filtered_no_defects):
                 img = img[:, :, :3]
-                path = f'{data_path}/{no_defect_type}/e_delete_0s'
+                path = f'{data_path}/{no_defect_type}/test/e_delete_0s'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
@@ -1065,7 +1064,7 @@ class DataProcessing():
             for i, img in enumerate(filtered_defects):
                 img = np.array(img)
                 img = img[:, :, :3]
-                path = f'{data_path}/{defect_type}/e_delete_0s'
+                path = f'{data_path}/{defect_type}/test/e_delete_0s'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
@@ -1092,7 +1091,7 @@ class DataProcessing():
             # Save the image to analyze where is located the defect
             for i, images in enumerate(defect_img_anotation):
                 images = np.array(images)
-                path = f'{data_path}/{defect_type}/test_e_defect_location'
+                path = f'{data_path}/{defect_type}/test/f_defect_location'
                 if not os.path.exists(path):
                     os.makedirs(path)
                 img_path = os.path.join(path, f'weld_{i+1}.png')
@@ -1146,7 +1145,7 @@ class DataProcessing():
                     cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
                     defect_img_anotation.append(img)
 
-            path = f'{data_path}/{defect_type}/test_f_label_correction'
+            path = f'{data_path}/{defect_type}/test/g_label_correction'
             print(f'The path is: {path}')
             if not os.path.exists(path):
                 print(f'The path do not exist')
