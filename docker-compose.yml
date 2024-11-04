@@ -14,7 +14,7 @@ services:
       - ./Datasets:/Datasets
       - /home/dofa/Documents/pipeline_analysis:/pipeline_analysis/
     network_mode: "host"
-    command: bash -c "chmod -R 777 /pipeline_analysis && tail -F /dev/null"
+    command: python3 /PMC/Ai/src/main.py
     devices: 
       - "/dev/video0:/dev/video0"
       - "/dev/video2:/dev/video2"
