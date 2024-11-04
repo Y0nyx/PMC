@@ -76,6 +76,7 @@ app.whenReady().then(async() => {
 });
 
 app.on("window-all-closed", () => {
+  pythonProcess.kill()
   if (process.platform !== "darwin") {
     //if MacOs
     app.quit();
