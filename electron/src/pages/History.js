@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import UIStateContext from "../Context/context";
@@ -17,6 +17,9 @@ export default function History() {
   const [openError,setOpenError] = useState(false)
   const [errorMessage, setErrorMessage] = useState();
   const [loading, setLoading] = useState(true);
+  const page_ref = useRef(0)
+  const rowsPerPage_ref = useRef(4)
+
 
   useEffect(() => {
 
@@ -27,21 +30,39 @@ export default function History() {
     });
 
     ipcRenderer.on("receivePieces", async (event, message) => {
-      setPieces(await piecesParser(message));
+      setPieces(await piecesParser(message,rowsPerPage_ref.current,page_ref.current));
       setLoading(false);
     });
 
-    ipcRenderer.send(
-      "fetchPieces",
-      uicontext.ref_client.current.id,
-      uicontext.ref_log.current.id
-    );
+    fetchNextPieces()
 
     return () => {
       ipcRenderer.removeAllListeners("receivePieces");
       ipcRenderer.removeAllListeners("error");
     };
   }, []); // Empty dependency array ensures the effect runs once on mount
+
+
+  function fetchNextPieces()
+  {
+    setLoading(true);
+    ipcRenderer.send(
+      "fetchPieces",
+      uicontext.ref_client.current.id,
+      uicontext.ref_log.current.id,
+    );
+
+  }
+  
+
+function setPageParent(value){
+  page_ref.current = value
+}
+
+function setRowsPerPageParent(value){
+  rowsPerPage_ref.current = value
+}
+
 
   function back() {
     navigate("/");
@@ -67,7 +88,8 @@ export default function History() {
         </div>
       ) : (
         <div className="shadow-xl rounded-lg flex justify-center items-center w-5/6  border-gray-300 bg-gray-100">
-          {pieces.length > 0 && <HistoryTable rows_={pieces}></HistoryTable>}
+          {pieces.length > 0 && <HistoryTable rows_={pieces} rowsPerPage={rowsPerPage_ref.current} setRowsPerPage={setRowsPerPageParent} page={page_ref.current
+          } setPage={setPageParent} fetchNextPieces={fetchNextPieces}></HistoryTable>}
         </div>
       )}
        <Dialog

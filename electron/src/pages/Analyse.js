@@ -22,7 +22,6 @@ export default function Analyse() {
     });
 
     ipcRenderer.on("resultat", async (event, data) => {
-
       ipcRenderer.send("backward");
       const newPiece = {
         url: data.url,
@@ -39,11 +38,11 @@ export default function Analyse() {
       if (data.resultat == true) {
         const resultat = piece;
         uicontext.setState(protocol.state.analysePass);
-        navigate("/", { state: { resultat } });
+        navigate("/loading", { state: { command: "backward", resultat } });
       } else {
         const resultat = piece;
         uicontext.setState(protocol.state.analyseFailed);
-        navigate("/analysefailed/" + resultat.id);
+        navigate("/loading", { state: { command: "backward", resultat } });
       }
     });
 
@@ -57,7 +56,7 @@ export default function Analyse() {
     // uicontext.setState(protocol.state.analysePass) // For testing verification pass
     switch (uicontext.ref_state.current) {
       case protocol.state.analyseInProgress:
-        setTexte("Analyse en cours ...");
+        setTexte("Analyse en cours ... Ne pas ouvrir la porte");
         break;
 
       case protocol.state.analysePass:

@@ -13,7 +13,7 @@ export default function LoadingPage() {
   const [errorMessage, setErrorMessage] = useState();
   const uicontext = useContext(UIStateContext);
   const location = useLocation();
-  const { command } = location.state || {};
+  const { command, resultat } = location.state || {};
 
   useEffect(() => {
     if (command == "forward") {
@@ -21,8 +21,13 @@ export default function LoadingPage() {
       uicontext.ref_plc_ready = false;
     }
 
+    if (command == "backward") {
+      ipcRenderer.send("backward");
+      uicontext.ref_plc_ready = false;
+    }
+
     if (command == "stop") {
-      ipcRenderer.send("command", {code:"stop"});
+      ipcRenderer.send("command", { code: "stop" });
     }
 
     ipcRenderer.on("stop", () => {
@@ -30,15 +35,24 @@ export default function LoadingPage() {
       ipcRenderer.send("backward");
     });
 
+    ipcRenderer.on("init", () => {
+      if (command == "forward") {
+        ipcRenderer.send("command", { code: "start" });
+      }
+    });
     ipcRenderer.on("ready", () => {
       uicontext.ref_plc_ready = true;
       if (command == "forward") {
-        ipcRenderer.send("command", {code:"start"});
+        ipcRenderer.send("command", { code: "start" });
+      }
+
+      if (command == "backward") {
+        if (resultat.resultat == 1) navigate("/", { state: { resultat } });
+        if (resultat.resultat == 0) navigate("/analysefailed/" + resultat.id);
       }
 
       if (command == "stop") {
         uicontext.setState(protocol.state.idle);
-        console.log("stop");
         navigate("/");
       }
     });
@@ -66,7 +80,7 @@ export default function LoadingPage() {
     <div className="w-screen h-screen overflow-hidden">
       <div className="flex flex-col justify-center items-center w-full h-full">
         <span className="text-5xl font-normal text-black m-4">
-          Chargement...
+          Chargement... Ne pas ouvrir la porte
         </span>
         <Loading></Loading>
       </div>

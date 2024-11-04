@@ -24,7 +24,7 @@ export default function PagePiece() {
       setOpenError(true);
     });
     ipcRenderer.on("receivePiece", async (event, message) => {
-      let parser = await pieceParser(message);
+      let parser = await pieceParser(message,true);
 
       if (parser.result === "succès") {
         setImageSelected(0);

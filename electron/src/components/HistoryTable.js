@@ -62,42 +62,42 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "ID",
+    sortingEnable:true
   },
   {
     id: "photo",
     numeric: false,
     disablePadding: true,
     label: "Photo",
+    sortingEnable:false
   },
   {
     id: "resultat",
     numeric: false,
     disablePadding: false,
     label: "resultat",
-  },
-  {
-    id: "erreur",
-    numeric: false,
-    disablePadding: false,
-    label: "Erreur",
+    sortingEnable:true
   },
   {
     id: "date",
     numeric: false,
     disablePadding: false,
     label: "Date",
+    sortingEnable:true
   },
   {
     id: "heure",
     numeric: false,
     disablePadding: false,
     label: "Heure",
+    sortingEnable:false
   },
   {
     id: "info",
     numeric: false,
     disablePadding: false,
-    label: "info",
+    label: "",
+    sortingEnable:false
   },
 ];
 
@@ -137,18 +137,21 @@ function EnhancedTableHead(props) {
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
+
+            {headCell.sortingEnable ? <TableSortLabel
+              active={true}
+              direction={orderBy === headCell.id ? order : "desc"}
               onClick={createSortHandler(headCell.id)}
+              
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
+              {orderBy === headCell.id && headCell.sortingEnable ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
-            </TableSortLabel>
+            </TableSortLabel>:<span>{headCell.label}</span> }
+
           </TableCell>
         ))}
       </TableRow>
@@ -225,14 +228,19 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable({ rows_ }) {
+export default function EnhancedTable({
+  rows_,
+  rowsPerPage,
+  setRowsPerPage,
+  page,
+  setPage,
+  fetchNextPieces,
+}) {
   const [rows, setRows] = React.useState(rows_);
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("id");
+  const [order, setOrder] = React.useState("desc");
+  const [orderBy, setOrderBy] = React.useState("date");
   const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(4);
 
   const navigate = useNavigate();
   const ipcRenderer = window.require("electron").ipcRenderer;
@@ -269,7 +277,6 @@ export default function EnhancedTable({ rows_ }) {
   };
 
   const handleClick = (event, id) => {
-    console.log(rows);
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
@@ -295,11 +302,13 @@ export default function EnhancedTable({ rows_ }) {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    fetchNextPieces();
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    fetchNextPieces();
   };
 
   const handleChangeDense = (event) => {
@@ -390,39 +399,43 @@ export default function EnhancedTable({ rows_ }) {
                       scope="row"
                       className="py-2"
                     >
-                      {row.result == "succès" ? (
-                        <img
-                          className="w-48 h-48 rounded-lg"
-                          src={row.images[0].url}
-                        ></img>
-                      ) : (
-                        <div className="overflow-hidden  relative w-48 h-48 rounded-lg">
+                      {row.images.length > 0 ? (
+                        row.result == "succès" ? (
                           <img
-                            src={row.images[imageIndex].url}
-                            className="object-cover w-full h-full rounded-lg"
-                          />
+                            className="w-48 h-48 rounded-lg"
+                            src={row.images[0].url}
+                          ></img>
+                        ) : (
+                          <div className="overflow-hidden  relative w-48 h-48 rounded-lg">
+                            <img
+                              src={row.images[imageIndex].url}
+                              className="object-cover w-full h-full rounded-lg"
+                            />
 
-                          {row.images[imageIndex].boundingBox &&
-                            row.images[imageIndex].boundingBox.box.map(
-                              (box) => {
-                                return (
-                                  <div
-                                    style={{
-                                      top: `${
-                                        (box.yCenter - box.height / 2) * 100
-                                      }%`,
-                                      left: `${
-                                        (box.xCenter - box.width / 2) * 100
-                                      }%`,
-                                      width: `${box.width * 100}%`,
-                                      height: `${box.height * 100}%`,
-                                    }}
-                                    className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
-                                  ></div>
-                                );
-                              }
-                            )}
-                        </div>
+                            {row.images[imageIndex].boundingBox &&
+                              row.images[imageIndex].boundingBox.box.map(
+                                (box) => {
+                                  return (
+                                    <div
+                                      style={{
+                                        top: `${
+                                          (box.yCenter - box.height / 2) * 100
+                                        }%`,
+                                        left: `${
+                                          (box.xCenter - box.width / 2) * 100
+                                        }%`,
+                                        width: `${box.width * 100}%`,
+                                        height: `${box.height * 100}%`,
+                                      }}
+                                      className="absolute  bg-opacity-75 border-4 border-solid border-red-600 rounded"
+                                    ></div>
+                                  );
+                                }
+                              )}
+                          </div>
+                        )
+                      ) : (
+                        <div className="w-48 h-48 rounded-lg bg-black"></div>
                       )}
                     </TableCell>
                     <TableCell
@@ -431,13 +444,6 @@ export default function EnhancedTable({ rows_ }) {
                       align="left"
                     >
                       {row.result}
-                    </TableCell>
-                    <TableCell
-                      className="font-bold  font-normal text-lg"
-                      onClick={(event) => handleClick(event, row.id)}
-                      align="left"
-                    >
-                      {row.errorType}
                     </TableCell>
                     <TableCell
                       className="font-bold  font-normal text-lg"

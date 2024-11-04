@@ -18,23 +18,21 @@ export default function Home() {
   const { state } = useLocation();
   const { resultat } = state || {};
   const initAi = useRef(false);
-  const [openError,setOpenError] = useState(false)
+  const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
-  
-  useEffect(() => {
 
-    ipcRenderer.on("error", (event,error) => {
-      console.log(error)
+  useEffect(() => {
+    ipcRenderer.on("error", (event, error) => {
+      console.log(error);
       setErrorMessage(error);
-      setOpenError(true)
+      setOpenError(true);
     });
 
     ipcRenderer.on("init", () => {
       initAi.current = true;
-      setTimeout(function(){
+      setTimeout(function () {
         ipcRenderer.send("ready");
-    }, 4000);
-      
+      }, 4000);
     });
 
     ipcRenderer.on("ready", () => {
@@ -44,7 +42,6 @@ export default function Home() {
     });
 
     if (uicontext.ref_dev.current) uicontext.setState(protocol.state.idle);
-  
 
     return () => {
       ipcRenderer.removeAllListeners("initPLC");
@@ -96,7 +93,9 @@ export default function Home() {
                     )}
                   </div>
                 ) : (
-                  <span>Cliquer sur DÉMARRER pour analyser</span>
+                  <span>
+                    Placer une pièce et Cliquer sur DÉMARRER pour analyser
+                  </span>
                 )}
               </div>
               <div className="flex p-3 justify-center items-center my-1">
@@ -108,12 +107,26 @@ export default function Home() {
           </div>
         </div>
       ) : (
+        <div className="box-border flex flex-col justify-center items-center w-full h-full p-1 bg-gray-100">
+        <div className="flex justify-center items-center w-11/12 border-gray-200 bg-white rounded-lg p-5 my-4 h-24 shadow-sm">
+          <div className="flex justify-start items-center w-1/3 h-full">
+            
+          </div>
+          <div className="w-1/3 text-4xl text-gray-800 uppercase font-normal flex justify-center items-center">
+            {"Accueil"}
+          </div>
+          <div className="flex justify-end items-center w-1/3">
+            <SettingButton />
+          </div>
+        </div>
         <div className="flex flex-col justify-center items-center w-full h-full">
           <span className="text-5xl font-normal text-black m-4">
             Initialisation...
           </span>
           <Loading></Loading>
         </div>
+        </div>
+    
       )}
       <Dialog
         open={openError}

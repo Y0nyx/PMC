@@ -26,7 +26,7 @@ export default function AnalyseFailed() {
       setOpenError(true);
     });
     ipcRenderer.on("receivePiece", async (event, message) => {
-      let parser = await pieceParser(message);
+      let parser = await pieceParser(message,true);
       setPiece(parser);
 
       let index = parser.images.findIndex(
@@ -35,6 +35,8 @@ export default function AnalyseFailed() {
       if (index < 0) index = 0;
       setImageSelected(index);
     });
+
+    
     ipcRenderer.send("fetchPiece", id);
 
     return () => {
