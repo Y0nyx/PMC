@@ -24,5 +24,3 @@ RUN pip install --no-cache numpy==1.23.5
 
 WORKDIR /PMC/Ai/src
 
-ENTRYPOINT ["python3", "main.py"]
-
