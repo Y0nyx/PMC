@@ -87,9 +87,8 @@ async def read_write_PLC(plcToPC: PCtoPLC,websocket):
 
         
         if (b'S' in data):
-            data_to_send = {'code': 'error', 'data': {}}
+            data_to_send = {'code': 'error', 'data': {'message :"Bouton urgence pesé, séquence en pause"'}}
             serialized_data = json.dumps(data_to_send)
-
             await websocket.send(serialized_data)
 
 
@@ -120,7 +119,8 @@ async def read_write_PLC(plcToPC: PCtoPLC,websocket):
 
             init = 1
             await websocket.send(serialized_data)
-        
+
+            
         if (b'T' in data and init == 0):
 
             print('T', flush =True) # T pour initialisation, quand Le UI ouvre
@@ -129,6 +129,9 @@ async def read_write_PLC(plcToPC: PCtoPLC,websocket):
             serialized_data = json.dumps(data_to_send)
 
             await websocket.send(serialized_data)
+
+        
+
 
         if (b'O' in data):
 
