@@ -9,7 +9,7 @@ import ContinueButton from "../components/ContinueButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
-
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 export default function AnalyseFailed() {
   const uicontext = useContext(UIStateContext);
   const ipcRenderer = window.require("electron").ipcRenderer;
@@ -120,6 +120,7 @@ export default function AnalyseFailed() {
 
             <div className="flex w-5/12 flex-col justify-center items-center box-border p-3  ">
               <span className=" box-border font-normal text-xl m-2 flex justify-center items-center">
+              <MeetingRoomIcon className="text-5xl text-green-600 my-3"></MeetingRoomIcon>
                 {"La pièce " + idSubstring(piece.id) + " a échoué"}
               </span>
               <div className="box-border flex justify-between items-center w-full bg-white rounded-lg p-2 text-lg text-gray-800  font-normal m-1">

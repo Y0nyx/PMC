@@ -12,6 +12,7 @@ import { idSubstring } from "../utils/utils";
 import SettingButton from "../components/SettingButton";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 export default function Home() {
   const uicontext = useContext(UIStateContext);
   const ipcRenderer = window.require("electron").ipcRenderer;
@@ -59,6 +60,7 @@ export default function Home() {
               <OptionPieceButton></OptionPieceButton>
             </div>
             <div className="w-1/3 text-4xl text-gray-800 uppercase font-normal flex justify-center items-center">
+            <MeetingRoomIcon className="text-5xl text-green-600 my-3"></MeetingRoomIcon>
               {"Accueil"}
             </div>
             <div className="flex justify-end items-center w-1/3">
@@ -113,6 +115,7 @@ export default function Home() {
             
           </div>
           <div className="w-1/3 text-4xl text-gray-800 uppercase font-normal flex justify-center items-center">
+            <MeetingRoomIcon className="text-5xl text-green-600 my-2"></MeetingRoomIcon>
             {"Accueil"}
           </div>
           <div className="flex justify-end items-center w-1/3">

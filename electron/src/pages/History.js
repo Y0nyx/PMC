@@ -8,7 +8,7 @@ import BackButton from "../components/BackButton";
 import Loading from "../components/Loading";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
-
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 export default function History() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const uicontext = useContext(UIStateContext);
@@ -73,6 +73,7 @@ function setRowsPerPageParent(value){
       <div className="flex justify-center items-center w-5/6 border-gray-200 bg-white rounded-lg p-5 my-4 h-24 shadow-sm">
         <div className="flex justify-start items-center w-1/3 h-full"></div>
         <div className="w-1/3 text-4xl text-gray-800 uppercase font-normal flex justify-center items-center">
+        <MeetingRoomIcon className="text-5xl text-green-600 my-3"></MeetingRoomIcon>
           {"Historique"}
         </div>
         <div className="flex justify-end items-center w-1/3">

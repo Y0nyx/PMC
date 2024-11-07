@@ -6,6 +6,7 @@ import protocol from "../Protocol/protocol";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useLocation } from "react-router-dom";
 import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
 export default function LoadingPage() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   let navigate = useNavigate();
@@ -83,8 +84,9 @@ export default function LoadingPage() {
 
   return (
     <div className="w-screen h-screen overflow-hidden">
-      <div className=" animate-bounce flex flex-col justify-center items-center w-full h-full">
-        <span className="text-5xl font-normal text-black m-4">
+      <div className="flex flex-col justify-center items-center w-full h-full">
+        <span className="flex justify-center items-center text-5xl font-normal text-black m-4">
+          <NoMeetingRoomIcon className="text-7xl text-red-600 my-3"></NoMeetingRoomIcon>
           Chargement... Ne pas ouvrir la porte
         </span>
         <Loading></Loading>

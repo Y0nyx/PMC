@@ -12,7 +12,7 @@ import Keyboard from "react-simple-keyboard";
 import "react-simple-keyboard/build/css/index.css";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
-
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 export default function CreerLog() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const uicontext = useContext(UIStateContext);
@@ -109,6 +109,7 @@ export default function CreerLog() {
         <div className="box-border flex items-center w-5/6 h-1/6 border-gray-300 bg-gray-100 rounded-lg p-5 my-4">
           <div className="w-1/3"></div>
           <div className="w-1/3 text-3xl text-gray-800 uppercase font-normal flex justify-center items-center">
+          <MeetingRoomIcon className="text-5xl text-green-600 my-3"></MeetingRoomIcon>
             {"Créer un Log "}
           </div>
           <BackButton back={back}></BackButton>

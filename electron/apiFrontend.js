@@ -70,8 +70,6 @@ function apiFrontend(mainWindow, configReact) {
       } else {
 
           const availablePercentage = (info.available / info.total) * 100;
-          console.log("Available disk size:",availablePercentage)
-
           if(availablePercentage < 5){
             mainWindow.webContents.send("error", `le disque dur est presque plein, Veuillez dans les options pour réinitialiser les données`)
           }
@@ -144,7 +142,6 @@ function apiFrontend(mainWindow, configReact) {
       .replace("T", " ")
       .replace(/\.\d+Z$/, "");
 
-    console.log("piece", piece);
     let _piece = {
       id: uuid,
       date: currentDate,
@@ -176,7 +173,6 @@ function apiFrontend(mainWindow, configReact) {
 
   ipcMain.on("fetchPiece", async (event, id) => {
     let result = await query.fetchPiece(id);
-    console.log("for id", id, result);
     mainWindow.webContents.send("receivePiece", result);
   });
 
@@ -210,7 +206,7 @@ function findUsbDrivePath() {
       if (stats.isDirectory()) {
         // Check if it's writable
         fs.accessSync(drivePath, fs.constants.W_OK);
-        console.log(drivePath, "found");
+        le.log(drivePath, "found");
         return drivePath; // Return the first found USB drive
       }
     } catch (err) {
@@ -239,7 +235,7 @@ function findUsbDrivePath() {
     // Get the current date
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 10); // Format: YYYY-MM-DD
-    // Create a file name with the current date
+    // Create a file name with the current datconsoe
     const outputDir = `${formattedDate}`;
     // Full path to the output file on the USB drive
     const outputFilePath = path.join(usb, outputDir);

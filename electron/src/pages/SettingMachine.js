@@ -9,7 +9,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 export default function SettingMachine() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const uicontext = useContext(UIStateContext);
@@ -71,6 +71,7 @@ export default function SettingMachine() {
         <div className="flex items-center w-5/6 border-gray-300 bg-gray-100 rounded-lg p-5 my-4">
           <div className="w-1/3"></div>
           <div className="w-1/3 text-4xl text-gray-800 uppercase font-normal flex justify-center items-center">
+          <MeetingRoomIcon className="text-5xl text-green-600 my-3"></MeetingRoomIcon>
             {"Options de la machine "}
           </div>
           <BackButton back={back}></BackButton>

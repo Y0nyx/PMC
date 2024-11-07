@@ -7,6 +7,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useNavigate } from "react-router-dom";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import NoMeetingRoomIcon from '@mui/icons-material/NoMeetingRoom';
 export default function Analyse() {
   const uicontext = useContext(UIStateContext);
   const [texte, setTexte] = useState("Analyse en cours ...");
@@ -25,7 +26,7 @@ export default function Analyse() {
       setErrorMessage(error);
       setOpenError(true);
     });
-    
+
     ipcRenderer.on("resultat", async (event, data) => {
       ipcRenderer.send("backward");
       const newPiece = {
@@ -74,6 +75,7 @@ export default function Analyse() {
         <div className="flex justify-center items-center w-5/6 border-gray-200 bg-white rounded-lg p-5 my-4 h-24 shadow-sm">
           <div className="flex justify-start items-center w-1/3 h-full"></div>
           <div className="w-1/3 text-4xl text-gray-800 uppercase font-normal flex justify-center items-center">
+          <NoMeetingRoomIcon className="text-4xl text-red-600 my-3"></NoMeetingRoomIcon>
             {"Analyse"}
           </div>
           <div className="flex justify-end items-center w-1/3"></div>
@@ -96,6 +98,7 @@ export default function Analyse() {
           <div className="flex flex-col justify-around items-center w-3/5 my-10">
             <div className=" my-1 flex font-normal font-bold justify-center items-center text-3xl text-center">
               <div className="flex font-normal font-bold justify-center items-center text-3xl my-20 text-center m-2">
+              <NoMeetingRoomIcon className="text-6xl text-red-600 my-3"></NoMeetingRoomIcon>
                 {texte}
               </div>
               {uicontext.state_state === protocol.state.analysePass && (

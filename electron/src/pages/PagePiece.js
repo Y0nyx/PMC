@@ -8,6 +8,7 @@ import BackButton from "../components/BackButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { IconButton, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 export default function PagePiece() {
   const ipcRenderer = window.require("electron").ipcRenderer;
   const { id } = useParams();
@@ -54,6 +55,7 @@ export default function PagePiece() {
         <div className="flex items-center w-5/6 border-gray-300 bg-gray-100 rounded-lg p-5 my-4">
           <div className="w-1/3"></div>
           <div className="w-1/3 text-xl  text-gray-800 uppercase font-normal flex justify-center items-center">
+          <MeetingRoomIcon className="text-5xl text-green-600 my-3"></MeetingRoomIcon>
             {piece && "ID: " + idSubstring(piece.id)}
           </div>
           <BackButton back={back}></BackButton>
