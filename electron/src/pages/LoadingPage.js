@@ -62,6 +62,11 @@ export default function LoadingPage() {
       setErrorMessage(error);
       setOpenError(true);
     });
+
+    ipcRenderer.on("porte", (event, error) => {
+      setErrorMessage(error);
+      setOpenError(true);
+    });
     ipcRenderer.on("start", () => {
       console.log("start");
       uicontext.setState(protocol.state.analyseInProgress);
@@ -78,7 +83,7 @@ export default function LoadingPage() {
 
   return (
     <div className="w-screen h-screen overflow-hidden">
-      <div className="flex flex-col justify-center items-center w-full h-full">
+      <div className=" animate-bounce flex flex-col justify-center items-center w-full h-full">
         <span className="text-5xl font-normal text-black m-4">
           Chargement... Ne pas ouvrir la porte
         </span>

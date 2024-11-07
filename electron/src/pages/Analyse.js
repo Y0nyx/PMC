@@ -21,6 +21,11 @@ export default function Analyse() {
       setOpenError(true);
     });
 
+    ipcRenderer.on("porte", (event, error) => {
+      setErrorMessage(error);
+      setOpenError(true);
+    });
+    
     ipcRenderer.on("resultat", async (event, data) => {
       ipcRenderer.send("backward");
       const newPiece = {

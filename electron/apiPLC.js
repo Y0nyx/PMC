@@ -17,6 +17,10 @@ function apiPLC(mainWindow)
                 mainWindow.webContents.send("ready");
                 console.log("ready received");
                 break;
+              case 'porte':
+                mainWindow.webContents.send("porte","Veuillez fermer la porte pour continuer...");
+                console.log("Porte Ouverte");
+                break;
               case 'error':
                 mainWindow.webContents.send("error",receivedData.data.message);
                 console.log(receivedData);

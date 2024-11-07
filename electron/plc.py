@@ -123,12 +123,21 @@ async def read_write_PLC(plcToPC: PCtoPLC,websocket):
         
         if (b'T' in data and init == 0):
 
-            print('T', flush =True) # I pour init, quand c'est revenu et que le UI est au menu principal
+            print('T', flush =True) # T pour initialisation, quand Le UI ouvre
            
             data_to_send = {'code': 'ready', 'data': {}}
             serialized_data = json.dumps(data_to_send)
 
             await websocket.send(serialized_data)
+
+        if (b'O' in data):
+
+            print('O', flush =True) # I pour init, quand c'est revenu et que le UI est au menu principal            
+            data_to_send = {'code': 'porte', 'data': {}}
+            serialized_data = json.dumps(data_to_send)
+
+            await websocket.send(serialized_data)
+
 
 
         await asyncio.sleep(0.2)
