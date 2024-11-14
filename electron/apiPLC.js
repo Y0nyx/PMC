@@ -15,18 +15,18 @@ function apiPLC(mainWindow)
           switch (receivedData.code) {
               case 'ready':
                 mainWindow.webContents.send("ready");
-                console.log("ready received");
+                console.log("NodeJs: ready received");
                 break;
               case 'porte':
                 mainWindow.webContents.send("porte","Veuillez fermer la porte pour continuer...");
-                console.log("Porte Ouverte");
+                console.log(" NodeJs: Porte Ouverte");
                 break;
               case 'error':
                 mainWindow.webContents.send("error",receivedData.data.message);
                 console.log(receivedData);
                   break;
               default:
-                console.log("Message inconnu received: ", receivedData);
+                console.log("NodeJs: Message inconnu received: ", receivedData);
                   break;
           }
 

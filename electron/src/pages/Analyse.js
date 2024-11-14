@@ -28,7 +28,6 @@ export default function Analyse() {
     });
 
     ipcRenderer.on("resultat", async (event, data) => {
-      ipcRenderer.send("backward");
       const newPiece = {
         url: data.url,
         boundingbox: data.boundingbox,

@@ -41,7 +41,6 @@ class PCtoPLC:
                 pass
             else:
                 raise Exception("invalid type, str, int or bytes accepted for write_to_plc")
-
             self.port.write(message) #ecrit le message
             self.isWriting = 0
 
@@ -166,19 +165,19 @@ async def read_Web(plcToPC : PCtoPLC ,websocket):
             if deserialized_data['code'] == 'forward':
 
                 print('forward', flush = True)
-                plcToPC.write_to_plc(b'F') #17920 on plc
+                plcToPC.write_to_plc(b'F\0') #17920 on plc
                 deserialized_data['code'] == 'done'
 
             if deserialized_data['code'] == "backward":
 
                 print('backward', flush = True)
-                plcToPC.write_to_plc(b'B') #16896 on plc
+                plcToPC.write_to_plc(b'B\0') #16896 on plc
                 deserialized_data['code'] == 'done'
 
             if deserialized_data['code'] == "ready":
 
                 print('ready', flush = True)
-                plcToPC.write_to_plc(b'R') #????? on plc
+                plcToPC.write_to_plc(b'R\0') #????? on plc
                 print('readySEND', flush = True)
                 deserialized_data['code'] == 'done'
 

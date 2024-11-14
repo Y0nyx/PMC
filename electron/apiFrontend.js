@@ -312,14 +312,15 @@ function findUsbDrivePath() {
   });
 
   async function deleteAllimages() {
+    
     try {
       let directories = await query.getAllimages(); // Assuming this returns an array of directory paths
 
+      
       for (const dir of directories) {
-        await fs.rmSync(dir.photo, { recursive: true, force: true });
-        await fs.rmSync(dir.boundingbox, { recursive: true, force: true });
+        await fs.rmSync(path.dirname(dir.photo), { recursive: true, force: true });
       }
-      await deleteAllimages();
+      
       console.log("All directories deleted successfully.");
     } catch (error) {
       console.error("Error deleting directories:", error);

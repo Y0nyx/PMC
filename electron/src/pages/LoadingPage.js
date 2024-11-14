@@ -19,12 +19,12 @@ export default function LoadingPage() {
   useEffect(() => {
     if (command == "forward") {
       ipcRenderer.send("forward");
-      uicontext.ref_plc_ready = false;
+      uicontext.ref_plc_ready.current = false;
     }
 
     if (command == "backward") {
       ipcRenderer.send("backward");
-      uicontext.ref_plc_ready = false;
+      uicontext.ref_plc_ready.current = false;
     }
 
     if (command == "stop") {
@@ -32,7 +32,7 @@ export default function LoadingPage() {
     }
 
     ipcRenderer.on("stop", () => {
-      uicontext.ref_plc_ready = false;
+      uicontext.ref_plc_ready.current = false;
       ipcRenderer.send("backward");
     });
 
@@ -42,7 +42,7 @@ export default function LoadingPage() {
       }
     });
     ipcRenderer.on("ready", () => {
-      uicontext.ref_plc_ready = true;
+      uicontext.ref_plc_ready.current = true;
       if (command == "forward") {
         ipcRenderer.send("command", { code: "start" });
       }
@@ -79,6 +79,7 @@ export default function LoadingPage() {
       ipcRenderer.removeAllListeners("start");
       ipcRenderer.removeAllListeners("error");
       ipcRenderer.removeAllListeners("ready");
+      ipcRenderer.removeAllListeners("porte")
     };
   }, []);
 
