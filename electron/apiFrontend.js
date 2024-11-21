@@ -329,18 +329,20 @@ function findUsbDrivePath() {
 
   ipcMain.on("resetData", async () => {
     await deleteAllimages();
-    await query.resetData();
     let connection = false;
         let sql = fs.readFileSync(sqlDefaultValuesPath, "utf8");
 
         console.log("REGENERATING DATABASE");
         while (!connection) {
           try {
+            await query.resetData();
             await query.generateDatabase(sql);
             connection = true;
             console.log("DATABASE CREATED ! ");
           } catch {
             console.log("ATTEMPT TO CONNECT...");
+            let sqlDb = fs.readFileSync(sqlPath, "utf8");
+            await query.generateDatabase(sqlDb);
             await new Promise((resolve) => setTimeout(resolve, 5000));
           }
         }

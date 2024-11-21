@@ -88,7 +88,7 @@ export default function LoadingPage() {
       <div className="flex flex-col justify-center items-center w-full h-full">
         <span className="flex justify-center items-center text-5xl font-normal text-black m-4">
           <NoMeetingRoomIcon className="text-7xl text-red-600 my-3"></NoMeetingRoomIcon>
-          Chargement... Ne pas ouvrir la porte
+          Moteur en mouvement... Ne pas ouvrir la porte
         </span>
         <Loading></Loading>
       </div>

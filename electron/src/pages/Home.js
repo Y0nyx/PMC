@@ -31,9 +31,7 @@ export default function Home() {
 
     ipcRenderer.on("init", () => {
       initAi.current = true;
-      setTimeout(function () {
-        ipcRenderer.send("ready");
-      }, 4000);
+      ipcRenderer.send("ready");
     });
 
     ipcRenderer.on("ready", () => {

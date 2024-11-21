@@ -109,15 +109,15 @@ async def read_write_PLC(plcToPC: PCtoPLC,websocket):
             await websocket.send(serialized_data)
 
 
-        if (b'I' in data and init == 0):
+        #if (b'I' in data and init == 0):
 
-            print('I', flush =True) # I pour init, quand c'est revenu et que le UI est au menu principal
+            #print('I', flush =True) # I pour init, quand c'est revenu et que le UI est au menu principal
            
-            data_to_send = {'code': 'ready', 'data': {}}
-            serialized_data = json.dumps(data_to_send)
+            #data_to_send = {'code': 'ready', 'data': {}}
+            #serialized_data = json.dumps(data_to_send)
 
-            init = 1
-            await websocket.send(serialized_data)
+            #init = 1
+            #await websocket.send(serialized_data)
 
             
         if (b'T' in data and init == 0):
@@ -183,16 +183,26 @@ async def read_Web(plcToPC : PCtoPLC ,websocket):
 
 async def main():
 
-  uri = "ws://127.0.0.1:8003"
-
-  while True:
-
-    pcWrite = PCtoPLC(url ='ftdi://0x403:0x6001/1' ) #classe pour write avec adaptateur #6001
-    pcRead = PCtoPLC(url ='ftdi://0x403:0x6015/1' ) #classe pour write avec adaptateur #6015
+    uri = "ws://127.0.0.1:8003"
+    erreurUsb = 1
+   
     async with websockets.connect(uri) as websocket:
-     # Schedule both send_receive and print_loop to run concurrently
-     # Wait for both tasks to run indefinitely
-      await asyncio.gather(read_write_PLC(pcRead,websocket),read_Web(pcWrite,websocket))
+      while True:
+        try:
+            pcWrite = PCtoPLC(url ='ftdi://0x403:0x6001/1' ) #classe pour write avec adaptateur #6001
+            pcRead = PCtoPLC(url ='ftdi://0x403:0x6015/1' ) #classe pour write avec adaptateur #6015
+            erreurUsb = 1
+            await asyncio.gather(read_write_PLC(pcRead,websocket),read_Web(pcWrite,websocket))
+        except:
+            if erreurUsb == 1 :
+                data_to_send = {'code': 'error', 'data': {'message' :'USB RS-485 mal branché, Veuillez vérifier les ports USB et redmémarrer la machine'}}
+                serialized_data = json.dumps(data_to_send)
+                await websocket.send(serialized_data)
+                erreurUsb = 0
+        
+
+     
+      
 
 # # Run the main function
 asyncio.run(main())
