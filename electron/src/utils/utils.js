@@ -47,6 +47,7 @@ export async function pieceParser(piece,loadImage) {
   let row = {
     id: piece.id,
     images: images,
+    img_folder: piece.photo,
     date: date.toISOString().split("T")[0],
     hour: `${date.getHours()-4}:${date.getMinutes().toString().padStart(2, "0")}`,
     result: result,

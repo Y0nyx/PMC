@@ -46,7 +46,7 @@ export default function AnalyseFailed() {
   }, []);
 
   function RestartCommand() {
-    ipcRenderer.send("restart", piece.id);
+    ipcRenderer.send("restart", piece);
     uicontext.setState(protocol.state.loading);
     navigate("/loading",{ state: { command: "forward" } })
   }

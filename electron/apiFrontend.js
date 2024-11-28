@@ -2,11 +2,11 @@ const { ipcMain } = require("electron");
 const fs = require("fs");
 const { generateUUID } = require("./utils");
 const { writeToPython } = require("./apiAi");
-const {writeToPLC}   = require("./apiPLC")
+const { writeToPLC } = require("./apiPLC");
 const { exec } = require("child_process");
-const {parse} = require('json2csv')
+const { parse } = require("json2csv");
 const path = require("path");
-const diskusage = require('diskusage');
+const diskusage = require("diskusage");
 
 let appPath = global.appPath;
 let sqlPath;
@@ -28,13 +28,7 @@ if (!isDev) {
 const query = require("./queries/queries");
 const { type } = require("os");
 
-
-
-
 function apiFrontend(mainWindow, configReact) {
-
-
-
   ipcMain.on("fetchConfig", (event) => {
     mainWindow.webContents.send("ReceiveConfig", configReact);
   });
@@ -60,24 +54,26 @@ function apiFrontend(mainWindow, configReact) {
     }
   });
 
-
-  ipcMain.on("diskspace",()=> {
-    const drivePath=path.parse(__dirname).root
+  ipcMain.on("diskspace", () => {
+    const drivePath = path.parse(__dirname).root;
     diskusage.check(drivePath, (err, info) => {
       if (err) {
-          console.error("Error checking disk space:", err);
-          mainWindow.webContents.send("error", `Error checking disk space: ${err} `);
+        console.error("Error checking disk space:", err);
+        mainWindow.webContents.send(
+          "error",
+          `Error checking disk space: ${err} `
+        );
       } else {
-
-          const availablePercentage = (info.available / info.total) * 100;
-          if(availablePercentage < 5){
-            mainWindow.webContents.send("error", `le disque dur est presque plein, Veuillez dans les options pour réinitialiser les données`)
-          }
-   
+        const availablePercentage = (info.available / info.total) * 100;
+        if (availablePercentage < 5) {
+          mainWindow.webContents.send(
+            "error",
+            `le disque dur est presque plein, Veuillez dans les options pour réinitialiser les données`
+          );
+        }
       }
+    });
   });
-  })
-
 
   ipcMain.handle("readBoundingBox", (event, folderPath) => {
     try {
@@ -191,46 +187,43 @@ function apiFrontend(mainWindow, configReact) {
     mainWindow.webContents.send("receiveTypesPiece", result);
   });
 
+  // Function to find the USB drive path dynamically
+  function findUsbDrivePath() {
+    const mediaDir = "/media/dofa";
+    const usbDrives = fs.readdirSync(mediaDir); // Read directories in /media
 
-// Function to find the USB drive path dynamically
-function findUsbDrivePath() {
-  const mediaDir = '/media/dofa';
-  const usbDrives = fs.readdirSync(mediaDir); // Read directories in /media
+    for (const drive of usbDrives) {
+      const drivePath = path.join(mediaDir, drive);
+      try {
+        const stats = fs.statSync(drivePath);
 
-  for (const drive of usbDrives) {
-    const drivePath = path.join(mediaDir, drive);
-    try {
-      const stats = fs.statSync(drivePath);
-
-      // Check if it's a directory
-      if (stats.isDirectory()) {
-        // Check if it's writable
-        fs.accessSync(drivePath, fs.constants.W_OK);
-        le.log(drivePath, "found");
-        return drivePath; // Return the first found USB drive
+        // Check if it's a directory
+        if (stats.isDirectory()) {
+          // Check if it's writable
+          fs.accessSync(drivePath, fs.constants.W_OK);
+          le.log(drivePath, "found");
+          return drivePath; // Return the first found USB drive
+        }
+      } catch (err) {
+        // Handle the error (like logging it)
+        console.error(`Error accessing ${drivePath}: ${err.message}`);
       }
-    } catch (err) {
-      // Handle the error (like logging it)
-      console.error(`Error accessing ${drivePath}: ${err.message}`);
     }
-  }
 
-  return 0
-}
+    return 0;
+  }
 
   ipcMain.on("exportData", async (event) => {
     let client = await query.exportClient();
-    let log = await query.exportLog()
+    let log = await query.exportLog();
     let piece = await query.exportPiece();
 
-    
-    let usb = findUsbDrivePath()
-    if(usb == 0) {
-      mainWindow.webContents.send("error","No USB Found");
-      console.log("No USB found")
-      return
+    let usb = findUsbDrivePath();
+    if (usb == 0) {
+      mainWindow.webContents.send("error", "No USB Found");
+      console.log("No USB found");
+      return;
     }
-    
 
     // Get the current date
     const currentDate = new Date();
@@ -240,57 +233,66 @@ function findUsbDrivePath() {
     // Full path to the output file on the USB drive
     const outputFilePath = path.join(usb, outputDir);
 
-    if(!fs.existsSync(outputFilePath)){
-      fs.mkdirSync(outputFilePath)
+    if (!fs.existsSync(outputFilePath)) {
+      fs.mkdirSync(outputFilePath);
     }
-    
-    const outputClient = path.join(outputFilePath, `client_${formattedDate}.csv`);
+
+    const outputClient = path.join(
+      outputFilePath,
+      `client_${formattedDate}.csv`
+    );
     const outputLog = path.join(outputFilePath, `log_${formattedDate}.csv`);
     const outputPiece = path.join(outputFilePath, `piece_${formattedDate}.csv`);
 
-    const csvClient = parse(client)
-    const csvLog = parse(log)
-    let csvPiece
-    if(piece.lentgh > 0){
-      csvPiece = parse(piece)
-    }
-    else{
-      
-      csvPiece =  [
-      'ID', 
-      'Date', 
-      'Photo', 
-      'BoundingBox', 
-      'Resultat', 
-      'ID_client', 
-      'ID_log', 
-      'ID_type_piece', 
-      'ID_erreur_Soudure'
-    ].map(item => `"${item}"`).join(", ");
+    const csvClient = parse(client);
+    const csvLog = parse(log);
+    let csvPiece;
+    if (piece.lentgh > 0) {
+      csvPiece = parse(piece);
+    } else {
+      csvPiece = [
+        "ID",
+        "Date",
+        "Photo",
+        "BoundingBox",
+        "Resultat",
+        "ID_client",
+        "ID_log",
+        "ID_type_piece",
+        "ID_erreur_Soudure",
+      ]
+        .map((item) => `"${item}"`)
+        .join(", ");
     }
 
-    try{
-      fs.writeFileSync(outputClient,csvClient)
-      fs.writeFileSync(outputLog,csvLog)
-      fs.writeFileSync(outputPiece,csvPiece)
-      console.log("CSV generated ! ", outputFilePath)
-    } catch(err) {
-      console.log(err.message)
-      mainWindow.webContents.send("error",err.message)
+    try {
+      fs.writeFileSync(outputClient, csvClient);
+      fs.writeFileSync(outputLog, csvLog);
+      fs.writeFileSync(outputPiece, csvPiece);
+      console.log("CSV generated ! ", outputFilePath);
+    } catch (err) {
+      console.log(err.message);
+      mainWindow.webContents.send("error", err.message);
     }
-   
 
     mainWindow.webContents.send("exportFinish");
   });
-
-
 
   ipcMain.on("deletePiece", async (event, selected) => {
     await query.deletePiece(selected);
   });
 
-  ipcMain.on("restart", async (event, id) => {
-    await query.deletePiece([id]);
+  ipcMain.on("restart", async (event, piece) => {
+    try {
+      await fs.rmSync(path.dirname(piece.img_folder), {
+        recursive: true,
+        force: true,
+      });
+    } catch (error) {
+      console.error("Error deleting directories:", error);
+    }
+
+    await query.deletePiece([piece.id]);
   });
 
   ipcMain.on("powerOffMachine", async () => {
@@ -312,15 +314,16 @@ function findUsbDrivePath() {
   });
 
   async function deleteAllimages() {
-    
     try {
       let directories = await query.getAllimages(); // Assuming this returns an array of directory paths
 
-      
       for (const dir of directories) {
-        await fs.rmSync(path.dirname(dir.photo), { recursive: true, force: true });
+        await fs.rmSync(path.dirname(dir.photo), {
+          recursive: true,
+          force: true,
+        });
       }
-      
+
       console.log("All directories deleted successfully.");
     } catch (error) {
       console.error("Error deleting directories:", error);
@@ -330,22 +333,22 @@ function findUsbDrivePath() {
   ipcMain.on("resetData", async () => {
     await deleteAllimages();
     let connection = false;
-        let sql = fs.readFileSync(sqlDefaultValuesPath, "utf8");
+    let sql = fs.readFileSync(sqlDefaultValuesPath, "utf8");
 
-        console.log("REGENERATING DATABASE");
-        while (!connection) {
-          try {
-            await query.resetData();
-            await query.generateDatabase(sql);
-            connection = true;
-            console.log("DATABASE CREATED ! ");
-          } catch {
-            console.log("ATTEMPT TO CONNECT...");
-            let sqlDb = fs.readFileSync(sqlPath, "utf8");
-            await query.generateDatabase(sqlDb);
-            await new Promise((resolve) => setTimeout(resolve, 5000));
-          }
-        }
+    console.log("REGENERATING DATABASE");
+    while (!connection) {
+      try {
+        await query.resetData();
+        await query.generateDatabase(sql);
+        connection = true;
+        console.log("DATABASE CREATED ! ");
+      } catch {
+        console.log("ATTEMPT TO CONNECT...");
+        let sqlDb = fs.readFileSync(sqlPath, "utf8");
+        await query.generateDatabase(sqlDb);
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+    }
   });
 
   ipcMain.on("resetAll", async () => {
@@ -381,41 +384,33 @@ function findUsbDrivePath() {
     );
   });
 
-
-  ipcMain.on("forward",() => {
+  ipcMain.on("forward", () => {
     writeToPLC({ code: "forward", data: "" });
-  })
+  });
 
-  ipcMain.on("ready",() => {
+  ipcMain.on("ready", () => {
     writeToPLC({ code: "ready", data: "" });
-    console.log("ready backend")
-  })
+    console.log("ready backend");
+  });
 
-
-  ipcMain.on("backward",() => {
+  ipcMain.on("backward", () => {
     writeToPLC({ code: "backward", data: "" });
-  })
+  });
 
-
-  ipcMain.on("model",(event, req) =>{
-    writeToPython({code:"model",data:req.model})
-  })
-
+  ipcMain.on("model", (event, req) => {
+    writeToPython({ code: "model", data: req.model });
+  });
 
   ipcMain.on("command", (event, req) => {
     console.log(`${req.code} command send`);
 
-    if(req.code == "start")
-      {
-        writeToPython(req);
-      }
-    if(req.code == "stop")
-      {
-        writeToPython(req);
-      }
-    
+    if (req.code == "start") {
+      writeToPython(req);
+    }
+    if (req.code == "stop") {
+      writeToPython(req);
+    }
   });
-
 }
 
 module.exports = {
