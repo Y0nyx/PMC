@@ -4,6 +4,7 @@ services:
   pipeline:
     privileged: true
     restart: always 
+    image: ai:latest
     build:
       context: .
       dockerfile: Dockerfile.pipelines

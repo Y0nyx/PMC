@@ -1,6 +1,6 @@
 {
   "name": "dofa",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "main": "index.js",
   "author": {
@@ -103,6 +103,10 @@
       {
         "from": "../docker-compose.yml",
         "to": "./resources/docker-compose.yml"
+      },
+      {
+        "from": "../docker-composeDev.yml",
+        "to": "./resources/docker-composeDev.yml"
       },
       {
         "from": "../Dockerfile.pipelines",

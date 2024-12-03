@@ -353,9 +353,8 @@ function apiFrontend(mainWindow, configReact) {
 
   ipcMain.on("resetAll", async () => {
     await deleteAllimages();
-
     exec(
-      `sudo docker stop $(sudo docker ps -q) && sudo docker rm $(sudo docker ps -aq) && sudo docker volume rm $(sudo docker volume ls -q) && sudo docker-compose -f ${dockerComposePath} up -d`,
+      `sudo docker stop $(sudo docker ps -q) && sudo docker rm $(sudo docker ps -aq) && sudo docker volume rm $(sudo docker volume ls -q) && sudo docker compose -f ${dockerComposePath} up -d --no-build`,
       async (error, stdout, stderr) => {
         console.log("EXEC");
         if (error || stderr) {

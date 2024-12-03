@@ -47,7 +47,7 @@ export async function pieceParser(piece, loadImage) {
     images: images,
     img_folder: piece.photo,
     date: date.toISOString().split("T")[0],
-    hour: `${(date.getHours() - 4) % 24}:${date
+    hour: `${((date.getHours() - 5)+ 24) % 24}:${date
       .getMinutes()
       .toString()
       .padStart(2, "0")}`,
