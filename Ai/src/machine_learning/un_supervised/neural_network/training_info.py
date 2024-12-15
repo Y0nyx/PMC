@@ -14,6 +14,7 @@ class TrainingInformation():
             for i, trial in enumerate(n_best_hp):
                 hps = trial.hyperparameters
                 validation_loss = trial.metrics.get_best_value(monitor_metric)
+                hps.get('lr')
                 row_dict = {
                     'model_rank': i+1, 
                     'lr': hps.get('lr'),
