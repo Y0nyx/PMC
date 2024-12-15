@@ -25,14 +25,11 @@ def path_initialization():
 if __name__ == "__main__":
 
     segmentation_model_path, supervised_detection_model_path, unsupervised_model_path, current_iteration_logging_path  = path_initialization()
-    print("ur mom")
     print(segmentation_model_path)
     print(supervised_detection_model_path)
     segmentation_model = YoloModel(Path(segmentation_model_path))
     supervised_detection_model = YoloModel(Path(supervised_detection_model_path))
-    print("tabarnak")
     pipeline = Pipeline(segmentation_model=segmentation_model, supervised_detection_model=supervised_detection_model, unsupervised_model=None, current_iteration_logging_path=current_iteration_logging_path)
-    print("calisse")
     networkManager = NetworkManager(pipeline, HOST, PORT, SUPERVISED_HOST, SUPERVISED_PORT, UNSUPERVISED_HOST, UNSUPERVISED_PORT, True)
     networkManager.start()
 
