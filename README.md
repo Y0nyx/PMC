@@ -38,7 +38,7 @@ Scripts SQL pour initialiser la base de données.
 ---
 
 ### 5. **Docker**  
-Les fichiers Docker permettent d’exécuter le projet dans des conteneurs.  
+Les fichiers Docker permettent d’exécuter le projet dans des conteneurs. C'est la manière qu'il faut lancer le code pour utiliser la machine, car cela permet de lancer tous les composants en même temps dans leur propre environnement.
 
 **Pour lancer les conteneurs :**  
 ```bash
